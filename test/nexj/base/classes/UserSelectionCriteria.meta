@@ -1,0 +1,45 @@
+<Class description="Class to bind to UI elements to display user personalized selection criteria list.">
+   <Attributes>
+      <Attribute name="screenName" type="string"/>
+      <Attribute name="formRefName" type="string"/>
+      <Attribute name="association" type="string"/>
+      <Attribute name="description" type="string"/>
+      <Attribute name="where" type="any"/>
+   </Attributes>
+   <Events>
+      <Event args="attributes where orderBy count offset xlock" name="read" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(if (not (memq 'where attributes))
+   (error "UserSelectionCriteria must have where in the attribute list")
+)
+(let 
+   (
+      (result 
+         (instance-collection 
+            (UserSelectionCriteria'new (: description "Item 1"))
+            (UserSelectionCriteria'new (: description "Item 2") (: where '(= lastName "Test")))
+         )
+      )
+   )
+   result
+)
+
+;(let ((whereClause `(and ,where 
+;                     (in? (@ queryState screen principal) 
+;                     (user) ,((user)'parentTemplate) ,(SystemUserTemplate'getInstance)))))
+;   (SelectionCriteria'read attributes whereClause orderBy count offset xlock)
+;)
+
+
+;(SelectionCriteria'read '(where description) 
+;   `(and (in? (@ queryState screen principal) (user) ,((user)'parentTemplate) ,(SystemUserTemplate'getInstance)) (= (@ queryState screen name) "Person") (= (@ queryState formRefName) "EntityList"))
+;   '() -1 0 #f
+;   )]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Overrides the transaction mode (non-persisted class)." name="create" transaction="supported" visibility="public"/>
+      <Event description="Overrides the transaction mode (non-persisted class)." name="update" transaction="supported" visibility="public"/>
+      <Event description="Overrides the transaction mode (non-persisted class)." name="delete" transaction="supported" visibility="public"/>
+      <Event description="Overrides the transaction mode (non-persisted class)." name="commit" transaction="supported"/>
+   </Events>
+</Class>

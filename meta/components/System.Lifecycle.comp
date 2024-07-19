@@ -1,0 +1,22 @@
+<Component type="nexj.core.runtime.LifecycleManager" activation="singleton"
+   description="The system component life cycle management component">
+   <Properties>
+      <Collection name="component">
+         <Item>
+            <Component type="nexj.core.runtime.sys.SysCounter" activation="singleton"/>
+         </Item>
+         <Item>System.Upgrade</Item>
+         <Item>
+            <Component type="nexj.core.runtime.Initializer" activation="singleton">
+               <Properties>
+                  <Property name="contextComponent">System.InvocationContext</Property>
+               </Properties>
+            </Component>
+         </Item>
+         <Item>System.Timer</Item>
+         <Item>System.ObjectQueueDispatcher</Item>
+         <Item>System.StatManager</Item>
+         <Item>System.PoolManager</Item>
+      </Collection>
+   </Properties>
+</Component>

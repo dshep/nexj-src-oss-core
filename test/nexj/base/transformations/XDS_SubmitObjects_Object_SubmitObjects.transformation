@@ -1,0 +1,104 @@
+<Transformation destination="Object_SubmitObjects" source="XDS_SubmitObjects">
+   <Initializer><![CDATA[
+]]></Initializer>
+   <Mappings>
+      <Mapping destination="title" name="title">
+         <Sources>
+            <Source name="name" source="LeafRegistryObjectList ExtrinsicObject Classification Name LocalizedString value"/>
+         </Sources>
+      </Mapping>
+      <Mapping condition="(equal? name &quot;urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab&quot;)" destination="attachmentId" layout="y:-11;x:0.7718309859154929" name="attachmentId">
+         <Sources>
+            <Source name="value" source="LeafRegistryObjectList ExtrinsicObject ExternalIdentifier value"/>
+            <Source name="name" source="LeafRegistryObjectList ExtrinsicObject ExternalIdentifier identificationScheme"/>
+         </Sources>
+      </Mapping>
+      <Mapping condition="(equal? name &quot;urn:uuid:58a6f841-87b3-4a3e-92fd-a8ffeff98427&quot;)" destination="subject ids id" layout="y:10;x:0.3295774647887324" name="patientId">
+         <Sources>
+            <Source name="value" source="LeafRegistryObjectList ExtrinsicObject ExternalIdentifier value"/>
+            <Source name="name" source="LeafRegistryObjectList ExtrinsicObject ExternalIdentifier identificationScheme"/>
+         </Sources>
+         <Script><![CDATA[
+(value'substring 0 (value'indexOf #\^))
+      ]]></Script>
+      </Mapping>
+      <Mapping condition="(equal? name &quot;urn:uuid:58a6f841-87b3-4a3e-92fd-a8ffeff98427&quot;)" destination="subject ids type" layout="y:38;x:0.2507042253521127" name="patientIdType">
+         <Sources>
+            <Source name="value" source="LeafRegistryObjectList ExtrinsicObject ExternalIdentifier value"/>
+            <Source name="name" source="LeafRegistryObjectList ExtrinsicObject ExternalIdentifier identificationScheme"/>
+         </Sources>
+         <Script><![CDATA[
+(value'substring (+ 1 (value'indexOf #\&)) (value'lastIndexOf #\&))
+      ]]></Script>
+      </Mapping>
+      <Mapping condition="(equal? name &quot;authorInstitution&quot;)" destination="location lastName" layout="y:32;x:0.6056338028169014" name="location">
+         <Sources>
+            <Source name="value" source="LeafRegistryObjectList ExtrinsicObject Slot ValueList Value"/>
+            <Source name="name" source="LeafRegistryObjectList ExtrinsicObject Slot name"/>
+         </Sources>
+      </Mapping>
+      <Mapping condition="(equal? name &quot;creationTime&quot;)" destination="startTime" layout="y:-24;x:0.7633802816901408" name="time">
+         <Sources>
+            <Source name="value" source="LeafRegistryObjectList ExtrinsicObject Slot ValueList Value"/>
+            <Source name="name" source="LeafRegistryObjectList ExtrinsicObject Slot name"/>
+         </Sources>
+      </Mapping>
+      <Mapping condition="(equal? name &quot;referringPerson&quot;)" destination="author ids type" layout="y:-37;x:0.4394366197183099" name="authorIdType">
+         <Sources>
+            <Source name="name" source="LeafRegistryObjectList ExtrinsicObject Slot name"/>
+         </Sources>
+         <Script><![CDATA[
+"PHYSLIC"
+      ]]></Script>
+      </Mapping>
+      <Mapping condition="(equal? name &quot;referringPerson&quot;)" destination="author ids id" layout="y:43;x:0.819718309859155" name="authorId">
+         <Sources>
+            <Source name="value" source="LeafRegistryObjectList ExtrinsicObject Slot ValueList Value"/>
+            <Source name="name" source="LeafRegistryObjectList ExtrinsicObject Slot name"/>
+         </Sources>
+         <Script><![CDATA[
+(value'substring 0 (value'indexOf #\^))
+      ]]></Script>
+      </Mapping>
+      <Mapping condition="(equal? name &quot;authorPerson&quot;)" destination="performer ids type" layout="y:-48;x:0.476056338028169" name="perfIdType">
+         <Sources>
+            <Source name="name" source="LeafRegistryObjectList ExtrinsicObject Slot name"/>
+         </Sources>
+         <Script><![CDATA[
+"PHYSLIC"
+      ]]></Script>
+      </Mapping>
+      <Mapping condition="(equal? name &quot;authorPerson&quot;)" destination="performer ids id" layout="y:1;x:0.543661971830986" name="perfId">
+         <Sources>
+            <Source name="value" source="LeafRegistryObjectList ExtrinsicObject Slot ValueList Value"/>
+            <Source name="name" source="LeafRegistryObjectList ExtrinsicObject Slot name"/>
+         </Sources>
+         <Script><![CDATA[
+(value'substring 0 (value'indexOf #\^))
+      ]]></Script>
+      </Mapping>
+      <Mapping condition="(equal? name &quot;encounter&quot;)" destination="encounter title" layout="y:62;x:0.5802816901408451" name="encTitle">
+         <Sources>
+            <Source name="value" source="LeafRegistryObjectList ExtrinsicObject Slot ValueList Value"/>
+            <Source name="name" source="LeafRegistryObjectList ExtrinsicObject Slot name"/>
+         </Sources>
+      </Mapping>
+      <Mapping condition="(equal? name &quot;encounter&quot;)" destination="encounter subject" layout="y:80;x:0.5464788732394367" name="encPatIdType">
+         <Sources>
+            <Source name="name" source="LeafRegistryObjectList ExtrinsicObject Slot name"/>
+         </Sources>
+         <Script><![CDATA[(destination'subject)]]></Script>
+      </Mapping>
+   </Mappings>
+   <Finalizer><![CDATA[
+(destination':class "DiagnosticImage")
+(destination'attachmentClass "BycastAttachment")
+(destination'interpretation "Abnormal")
+(destination'statusCode "For Review")
+(destination'text "Date of procedure :15 May 2005.
+Indication: palpable breast lump.
+2.5 x 3 cm lesion is noted in L breast in lateral upper quadrant. Calicified spiculation.
+Conclusion: Suspicious lesion in left lateral breast. Surgical opinion recommended.
+Dr R. Night MD FRCP(C)")
+]]></Finalizer>
+</Transformation>

@@ -1,0 +1,7 @@
+<Component type="nexj.core.persistence.NullConverter"
+   activation="singleton" description="Local time converter">
+   <Properties>
+      <Property name="type">timestamp</Property>
+      <Property name="value">1800-01-01 00:00:00</Property>
+   </Properties>
+</Component>

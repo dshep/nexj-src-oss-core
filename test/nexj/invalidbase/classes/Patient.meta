@@ -1,0 +1,18 @@
+<Class>
+   <Attributes>
+      <Attribute collection="false" name="firstName" required="true" static="false" type="string"/>
+      <Attribute collection="false" name="lastName" required="true" type="string"/>
+      <Attribute name="fullName" type="string" value="(concat firstName &quot; &quot; lastName)"/>
+      <Attribute collection="false" name="middleName" required="false" type="string"/>
+      <Attribute collection="false" name="isDeleted" required="false" type="boolean"/>
+      <Attribute collection="false" name="birthdate" required="false" type="timestamp"/>
+      <Attribute collection="false" name="address" required="false" type="string"/>
+      <Attribute collection="false" name="prefix" required="false" type="string"/>
+      <Attribute collection="false" name="suffix" required="false" type="string"/>
+      <Attribute collection="false" name="gender" required="false" type="string"/>
+      <Attribute collection="false" name="patientId" required="false" type="string"/>
+      <!--Attribute name="visits" type="Visit" required="false" collection="true" reverse="patient"/>
+      <Attribute name="doctor" type="Doctor" required="false" collection="false"/-->
+      <Attribute initializer="&quot;UTC&quot;" name="timeZone" type="string"/>
+   </Attributes>
+</Class>

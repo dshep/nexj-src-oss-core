@@ -1,0 +1,19 @@
+<Message format="Fixed">
+   <FixedMapping/>
+   <Parts>
+      <Message maxCount="0" name="record">
+         <FixedMapping pageSize="3000"/>
+         <Parts>
+            <Value minCount="1" name="name" type="string">
+               <FixedMapping width="10"/>
+            </Value>
+            <Value minCount="1" name="recNum" type="long">
+               <FixedMapping width="10"/>
+            </Value>
+            <Value minCount="1" name="created" type="timestamp">
+               <FixedMapping width="30"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

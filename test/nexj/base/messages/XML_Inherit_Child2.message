@@ -1,0 +1,9 @@
+<Message base="XML_Inherit_Parent" format="XML">
+   <XMLMapping node="child2" xsdtype="Child2Type"/>
+   <Parts>
+      <Value name="b" type="string"/>
+      <Value name="value" type="binary">
+         <XMLMapping subtype="base64" type="value"/>
+      </Value>
+   </Parts>
+</Message>

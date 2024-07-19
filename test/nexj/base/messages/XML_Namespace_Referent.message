@@ -1,0 +1,11 @@
+<Message format="XML">
+         <XMLMapping namespace="ho" uri="http://www.nexj.com/ho"/>
+         <Parts>
+            <Value name="value" type="any">
+               <XMLMapping namespace="xsd" type="value"/>
+            </Value>
+            <Value name="type" type="string">
+               <XMLMapping namespace="xsi" type="attribute"/>
+            </Value>
+         </Parts>
+</Message>

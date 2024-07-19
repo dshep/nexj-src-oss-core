@@ -1,0 +1,66 @@
+
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<nv:Envelope xmlns:nv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <nv:Body xmlns:ns="http://www.nexjsystems.com/xml-soap" nv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <ns:Array>
+         <items nc:arrayType="xs:anyType[1]">
+            <Item href="#a"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="a">
+         <class>SysWorkflow</class>
+         <version>0</version>
+         <keys nc:arrayType="xs:string[7]">
+            <Item>serializedVariables</Item>
+            <Item>assignments</Item>
+            <Item>version</Item>
+            <Item>class</Item>
+            <Item>name</Item>
+            <Item>serializedState</Item>
+            <Item>timers</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[7]">
+            <Item xi:nil="true"/>
+            <Item href="#b"/>
+            <Item xi:type="xs:int">0</Item>
+            <Item xi:type="xs:string">HRRequest</Item>
+            <Item xi:type="xs:string">HolidayRequest_C</Item>
+            <Item xi:type="xs:string">1 23</Item>
+            <Item href="#c"/>
+         </values>
+      </ns:TransferObject>
+      <ns:Array id="b">
+         <items nc:arrayType="xs:anyType[1]">
+            <Item href="#d"/>
+         </items>
+      </ns:Array>
+      <ns:Array id="c">
+         <items nc:arrayType="xs:anyType[0]"/>
+      </ns:Array>
+      <ns:TransferObject id="d">
+         <class>SysWorkflowAssignment</class>
+         <version>0</version>
+         <keys nc:arrayType="xs:string[5]">
+            <Item>ordinal</Item>
+            <Item>nextStates</Item>
+            <Item>caption</Item>
+            <Item>manual</Item>
+            <Item>assignee</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[5]">
+            <Item xi:type="xs:int">0</Item>
+            <Item href="#e"/>
+            <Item xi:type="xs:string">Review a holiday request</Item>
+            <Item xi:type="xs:boolean">false</Item>
+            <Item href="#f"/>
+         </values>
+      </ns:TransferObject>
+      <ns:Array id="e">
+         <items nc:arrayType="xs:anyType[0]"/>
+      </ns:Array>
+      <ns:TransferObject id="f">
+         <class>User</class>
+         <version>0</version>
+      </ns:TransferObject>
+   </nv:Body>
+</nv:Envelope>

@@ -1,0 +1,83 @@
+<ClassModelCollection>
+   <ClassModel class="SysWorkflow" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/SysWorkflow.meta" visibleAttributes="oid version object parent assignments serializedVariables type serializedState class ordinal timers locking children name local state" visibleEvents="jump:2 delete:0 getStep:1 timeout:1 cleanup:1 create:0 addTimer:2 start:3 read:6 setToken:2 complete:0 forInstance:1 trigger:4 stepNames:0 getToken:1 done:0 load:1 findFlow:2 run:0 stepActive:1" x="302" y="27">
+      <Association name="children" srcAnchorAlignment="default" srcAnchorOffset="-1">
+         <Bendpoint x="554" y="557"/>
+         <Bendpoint x="624" y="557"/>
+         <Bendpoint x="624" y="480"/>
+      </Association>
+      <Association name="assignments" srcAnchorAlignment="right" srcAnchorOffset="315"/>
+   </ClassModel>
+   <ClassModel class="SysWorkflowAssignment" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/SysWorkflowAssignment.meta" visibleAttributes="locking ordinal manual step target caption object priority owner queue workflow owned nextStates updatable readable uipriority assignee form createdOn description varTarget nextState uimode" visibleEvents="read:6 delete:0 update:0 load:1 create:0" x="734" y="217">
+      <Association name="nextState" srcAnchorAlignment="default" srcAnchorOffset="-1">
+         <Bendpoint x="992" y="734"/>
+      </Association>
+      <Association name="nextStates" srcAnchorAlignment="bottom" srcAnchorOffset="136"/>
+      <Association name="queue" srcAnchorAlignment="default" srcAnchorOffset="-1">
+         <Bendpoint x="1099" y="311"/>
+      </Association>
+   </ClassModel>
+   <ClassModel class="SysWorkflowFIFOQueue" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/SysWorkflowFIFOQueue.meta" visibleAttributes="type" visibleEvents="add:1" x="1184" y="580">
+      <InheritanceAssociation>
+         <Bendpoint x="1233" y="520"/>
+      </InheritanceAssociation>
+   </ClassModel>
+   <ClassModel class="SysWorkflowLIFOQueue" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/SysWorkflowLIFOQueue.meta" visibleAttributes="type" visibleEvents="add:1" x="1129" y="530">
+      <InheritanceAssociation/>
+   </ClassModel>
+   <ClassModel class="SysWorkflowQueue" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/SysWorkflowQueue.meta" visibleAttributes="description caption type locking assignments name" visibleEvents="create:0 remove:1 getNextItem:1 assign:1 getQueue:1 add:1 update:0" x="1128" y="265"/>
+   <ClassModel class="SysWorkflowState" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/SysWorkflowState.meta" visibleAttributes="locking assignment caption ordinal description" visibleEvents="update:0 delete:0 create:0" x="852" y="664"/>
+   <ClassModel class="SysWorkflowTimeoutCommand" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/SysWorkflowTimeoutCommand.meta" visibleAttributes="ordinal workflow" visibleEvents="timeout:0" x="737" y="132">
+      <Association name="workflow" srcAnchorAlignment="default" srcAnchorOffset="-1"/>
+   </ClassModel>
+   <ClassModel class="SysService" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/SysService.meta" visibleAttributes="type" visibleEvents="setToken:2 invoke:4 complete:0 findFlow:2 load:1 getToken:1 result:0 delete:0" x="297" y="589">
+      <InheritanceAssociation srcAnchorAlignment="top" srcAnchorOffset="86"/>
+   </ClassModel>
+   <ClassModel class="SysTimer" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/SysTimer.meta" visibleAttributes="event ordinal start next workflow data principal object period" visibleEvents="invoke:5" x="20" y="132">
+      <Association name="workflow" srcAnchorAlignment="default" srcAnchorOffset="-1">
+         <Bendpoint x="274" y="217"/>
+         <Bendpoint x="283" y="282"/>
+      </Association>
+   </ClassModel>
+   <Notes>
+      <Note h="-1" w="150" x="23" y="16">
+         <Text><![CDATA[Workflow Model
+]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="24" y="310">
+         <Attachments>
+            <Attachment ref="SysTimer"/>
+         </Attachments>
+         <Text><![CDATA[The persistent system timer.  Schedules a delayed event invocation.]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="97" y="589">
+         <Attachments>
+            <Attachment ref="SysService"/>
+         </Attachments>
+         <Text><![CDATA[Service instance]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="617" y="30">
+         <Attachments>
+            <Attachment ref="SysWorkflow"/>
+         </Attachments>
+         <Text><![CDATA[Workflow instance, possibly associated with a specific primary object]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="888" y="81">
+         <Attachments>
+            <Attachment ref="SysWorkflowTimeoutCommand"/>
+         </Attachments>
+         <Text><![CDATA[Workflow timeout command]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="1051" y="175">
+         <Attachments>
+            <Attachment ref="SysWorkflowAssignment"/>
+         </Attachments>
+         <Text><![CDATA[Tracks the assignment of process steps to users. Represents the flow queues.]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="652" y="664">
+         <Attachments>
+            <Attachment ref="SysWorkflowState"/>
+         </Attachments>
+         <Text><![CDATA[Represents the manual decision states]]></Text>
+      </Note>
+   </Notes>
+</ClassModelCollection>

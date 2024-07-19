@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+  targetNamespace="http://namespaceZero"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  attributeFormDefault="qualified"
+  elementFormDefault="qualified"
+  version="1.0">
+  
+  <xsd:import namespace="http://namespaceOne" schemaLocation="multipleImport_schema1.xsd" />
+  <xsd:import namespace="http://namespaceTwo" schemaLocation="multipleImport_schema2.xsd" />
+  
+</xsd:schema>

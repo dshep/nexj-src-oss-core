@@ -1,0 +1,5 @@
+<HTTP binary="false" get="true" send="false">
+   <ServiceBindings>
+      <ServiceBinding service="SignalTestCompletion"/>
+   </ServiceBindings>
+</HTTP>

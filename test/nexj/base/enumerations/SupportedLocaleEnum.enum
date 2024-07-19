@@ -1,0 +1,818 @@
+<Enumeration base="StringEnum" description="Enumeration of supported locales" typeCode="SSUPPORTEDLOCALE">
+   <Locales>
+      <Locale caption="Enumeration of supported locales" name="en"/>
+      <Locale caption="Enumeration of supported locales" name="fr"/>
+   </Locales>
+   <Values>
+      <Value hasBehavior="true" name="ar" value="ar">
+         <Locales>
+            <Locale caption="Arabic" name="en" shortCaption="ar"/>
+            <Locale caption="arabe" name="fr" shortCaption="ar"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_AE" value="ar_AE">
+         <Locales>
+            <Locale caption="Arabic (United Arab Emirates)" name="en" shortCaption="ar_AE"/>
+            <Locale caption="arabe (Emirats Arabes Unis)" name="fr" shortCaption="ar_AE"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_BH" value="ar_BH">
+         <Locales>
+            <Locale caption="Arabic (Bahrain)" name="en" shortCaption="ar_BH"/>
+            <Locale caption="arabe (Bahreïn)" name="fr" shortCaption="ar_BH"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_DZ" value="ar_DZ">
+         <Locales>
+            <Locale caption="Arabic (Algeria)" name="en" shortCaption="ar_DZ"/>
+            <Locale caption="arabe (Algérie)" name="fr" shortCaption="ar_DZ"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_EG" value="ar_EG">
+         <Locales>
+            <Locale caption="Arabic (Egypt)" name="en" shortCaption="ar_EG"/>
+            <Locale caption="arabe (Egypte)" name="fr" shortCaption="ar_EG"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_IQ" value="ar_IQ">
+         <Locales>
+            <Locale caption="Arabic (Iraq)" name="en" shortCaption="ar_IQ"/>
+            <Locale caption="arabe (Irak)" name="fr" shortCaption="ar_IQ"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_JO" value="ar_JO">
+         <Locales>
+            <Locale caption="Arabic (Jordan)" name="en" shortCaption="ar_JO"/>
+            <Locale caption="arabe (Jordanie)" name="fr" shortCaption="ar_JO"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_KW" value="ar_KW">
+         <Locales>
+            <Locale caption="Arabic (Kuwait)" name="en" shortCaption="ar_KW"/>
+            <Locale caption="arabe (Koweit)" name="fr" shortCaption="ar_KW"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_LB" value="ar_LB">
+         <Locales>
+            <Locale caption="Arabic (Lebanon)" name="en" shortCaption="ar_LB"/>
+            <Locale caption="arabe (Liban)" name="fr" shortCaption="ar_LB"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_LY" value="ar_LY">
+         <Locales>
+            <Locale caption="Arabic (Libya)" name="en" shortCaption="ar_LY"/>
+            <Locale caption="arabe (Libye)" name="fr" shortCaption="ar_LY"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_MA" value="ar_MA">
+         <Locales>
+            <Locale caption="Arabic (Morocco)" name="en" shortCaption="ar_MA"/>
+            <Locale caption="arabe (Maroc)" name="fr" shortCaption="ar_MA"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_OM" value="ar_OM">
+         <Locales>
+            <Locale caption="Arabic (Oman)" name="en" shortCaption="ar_OM"/>
+            <Locale caption="arabe (Oman)" name="fr" shortCaption="ar_OM"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_QA" value="ar_QA">
+         <Locales>
+            <Locale caption="Arabic (Qatar)" name="en" shortCaption="ar_QA"/>
+            <Locale caption="arabe (Qatar)" name="fr" shortCaption="ar_QA"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_SA" value="ar_SA">
+         <Locales>
+            <Locale caption="Arabic (Saudi Arabia)" name="en" shortCaption="ar_SA"/>
+            <Locale caption="arabe (Arabie Saoudite)" name="fr" shortCaption="ar_SA"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_SD" value="ar_SD">
+         <Locales>
+            <Locale caption="Arabic (Sudan)" name="en" shortCaption="ar_SD"/>
+            <Locale caption="arabe (Soudan)" name="fr" shortCaption="ar_SD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_SY" value="ar_SY">
+         <Locales>
+            <Locale caption="Arabic (Syria)" name="en" shortCaption="ar_SY"/>
+            <Locale caption="arabe (Syrie)" name="fr" shortCaption="ar_SY"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_TN" value="ar_TN">
+         <Locales>
+            <Locale caption="Arabic (Tunisia)" name="en" shortCaption="ar_TN"/>
+            <Locale caption="arabe (Tunisie)" name="fr" shortCaption="ar_TN"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ar_YE" value="ar_YE">
+         <Locales>
+            <Locale caption="Arabic (Yemen)" name="en" shortCaption="ar_YE"/>
+            <Locale caption="arabe (Yémen)" name="fr" shortCaption="ar_YE"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="be" value="be">
+         <Locales>
+            <Locale caption="Belarusian" name="en" shortCaption="be"/>
+            <Locale caption="biélorusse" name="fr" shortCaption="be"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="be_BY" value="be_BY">
+         <Locales>
+            <Locale caption="Belarusian (Belarus)" name="en" shortCaption="be_BY"/>
+            <Locale caption="biélorusse (Biélo-Russie)" name="fr" shortCaption="be_BY"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="bg" value="bg">
+         <Locales>
+            <Locale caption="Bulgarian" name="en" shortCaption="bg"/>
+            <Locale caption="bulgare" name="fr" shortCaption="bg"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="bg_BG" value="bg_BG">
+         <Locales>
+            <Locale caption="Bulgarian (Bulgaria)" name="en" shortCaption="bg_BG"/>
+            <Locale caption="bulgare (Bulgarie)" name="fr" shortCaption="bg_BG"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ca" value="ca">
+         <Locales>
+            <Locale caption="Catalan" name="en" shortCaption="ca"/>
+            <Locale caption="catalan" name="fr" shortCaption="ca"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ca_ES" value="ca_ES">
+         <Locales>
+            <Locale caption="Catalan (Spain)" name="en" shortCaption="ca_ES"/>
+            <Locale caption="catalan (Espagne)" name="fr" shortCaption="ca_ES"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="cs" value="cs">
+         <Locales>
+            <Locale caption="Czech" name="en" shortCaption="cs"/>
+            <Locale caption="tchèque" name="fr" shortCaption="cs"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="cs_CZ" value="cs_CZ">
+         <Locales>
+            <Locale caption="Czech (Czech Republic)" name="en" shortCaption="cs_CZ"/>
+            <Locale caption="tchèque (République Tchèque)" name="fr" shortCaption="cs_CZ"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="da" value="da">
+         <Locales>
+            <Locale caption="Danish" name="en" shortCaption="da"/>
+            <Locale caption="danois" name="fr" shortCaption="da"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="da_DK" value="da_DK">
+         <Locales>
+            <Locale caption="Danish (Denmark)" name="en" shortCaption="da_DK"/>
+            <Locale caption="danois (Danemark)" name="fr" shortCaption="da_DK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="de" value="de">
+         <Locales>
+            <Locale caption="German" name="en" shortCaption="de"/>
+            <Locale caption="allemand" name="fr" shortCaption="de"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="de_AT" value="de_AT">
+         <Locales>
+            <Locale caption="German (Austria)" name="en" shortCaption="de_AT"/>
+            <Locale caption="allemand (Autriche)" name="fr" shortCaption="de_AT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="de_CH" value="de_CH">
+         <Locales>
+            <Locale caption="German (Switzerland)" name="en" shortCaption="de_CH"/>
+            <Locale caption="allemand (Suisse)" name="fr" shortCaption="de_CH"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="de_DE" value="de_DE">
+         <Locales>
+            <Locale caption="German (Germany)" name="en" shortCaption="de_DE"/>
+            <Locale caption="allemand (Allemagne)" name="fr" shortCaption="de_DE"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="de_LU" value="de_LU">
+         <Locales>
+            <Locale caption="German (Luxembourg)" name="en" shortCaption="de_LU"/>
+            <Locale caption="allemand (Luxembourg)" name="fr" shortCaption="de_LU"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="el" value="el">
+         <Locales>
+            <Locale caption="Greek" name="en" shortCaption="el"/>
+            <Locale caption="grec" name="fr" shortCaption="el"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="el_GR" value="el_GR">
+         <Locales>
+            <Locale caption="Greek (Greece)" name="en" shortCaption="el_GR"/>
+            <Locale caption="grec (Grèce)" name="fr" shortCaption="el_GR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="en" value="en">
+         <Locales>
+            <Locale caption="English" name="en" shortCaption="en"/>
+            <Locale caption="anglais" name="fr" shortCaption="en"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="en_AU" value="en_AU">
+         <Locales>
+            <Locale caption="English (Australia)" name="en" shortCaption="en_AU"/>
+            <Locale caption="anglais (Australie)" name="fr" shortCaption="en_AU"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="en_CA" value="en_CA">
+         <Locales>
+            <Locale caption="English (Canada)" name="en" shortCaption="en_CA"/>
+            <Locale caption="anglais (Canada)" name="fr" shortCaption="en_CA"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="en_GB" value="en_GB">
+         <Locales>
+            <Locale caption="English (United Kingdom)" name="en" shortCaption="en_GB"/>
+            <Locale caption="anglais (Royaume-Uni)" name="fr" shortCaption="en_GB"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="en_IE" value="en_IE">
+         <Locales>
+            <Locale caption="English (Ireland)" name="en" shortCaption="en_IE"/>
+            <Locale caption="anglais (Irlande)" name="fr" shortCaption="en_IE"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="en_IN" value="en_IN">
+         <Locales>
+            <Locale caption="English (India)" name="en" shortCaption="en_IN"/>
+            <Locale caption="anglais (Inde)" name="fr" shortCaption="en_IN"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="en_NZ" value="en_NZ">
+         <Locales>
+            <Locale caption="English (New Zealand)" name="en" shortCaption="en_NZ"/>
+            <Locale caption="anglais (Nouvelle-Zélande)" name="fr" shortCaption="en_NZ"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="en_US" value="en_US">
+         <Locales>
+            <Locale caption="English (United States)" name="en" shortCaption="en_US"/>
+            <Locale caption="anglais (Etats-Unis)" name="fr" shortCaption="en_US"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="en_ZA" value="en_ZA">
+         <Locales>
+            <Locale caption="English (South Africa)" name="en" shortCaption="en_ZA"/>
+            <Locale caption="anglais (Afrique du Sud)" name="fr" shortCaption="en_ZA"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es" value="es">
+         <Locales>
+            <Locale caption="Spanish" name="en" shortCaption="es"/>
+            <Locale caption="espagnol" name="fr" shortCaption="es"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_AR" value="es_AR">
+         <Locales>
+            <Locale caption="Spanish (Argentina)" name="en" shortCaption="es_AR"/>
+            <Locale caption="espagnol (Argentine)" name="fr" shortCaption="es_AR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_BO" value="es_BO">
+         <Locales>
+            <Locale caption="Spanish (Bolivia)" name="en" shortCaption="es_BO"/>
+            <Locale caption="espagnol (Bolivie)" name="fr" shortCaption="es_BO"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_CL" value="es_CL">
+         <Locales>
+            <Locale caption="Spanish (Chile)" name="en" shortCaption="es_CL"/>
+            <Locale caption="espagnol (Chili)" name="fr" shortCaption="es_CL"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_CO" value="es_CO">
+         <Locales>
+            <Locale caption="Spanish (Colombia)" name="en" shortCaption="es_CO"/>
+            <Locale caption="espagnol (Colombie)" name="fr" shortCaption="es_CO"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_CR" value="es_CR">
+         <Locales>
+            <Locale caption="Spanish (Costa Rica)" name="en" shortCaption="es_CR"/>
+            <Locale caption="espagnol (Costa Rica)" name="fr" shortCaption="es_CR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_DO" value="es_DO">
+         <Locales>
+            <Locale caption="Spanish (Dominican Republic)" name="en" shortCaption="es_DO"/>
+            <Locale caption="espagnol (République Dominicaine)" name="fr" shortCaption="es_DO"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_EC" value="es_EC">
+         <Locales>
+            <Locale caption="Spanish (Ecuador)" name="en" shortCaption="es_EC"/>
+            <Locale caption="espagnol (Equateur)" name="fr" shortCaption="es_EC"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_ES" value="es_ES">
+         <Locales>
+            <Locale caption="Spanish (Spain)" name="en" shortCaption="es_ES"/>
+            <Locale caption="espagnol (Espagne)" name="fr" shortCaption="es_ES"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_GT" value="es_GT">
+         <Locales>
+            <Locale caption="Spanish (Guatemala)" name="en" shortCaption="es_GT"/>
+            <Locale caption="espagnol (Guatemala)" name="fr" shortCaption="es_GT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_HN" value="es_HN">
+         <Locales>
+            <Locale caption="Spanish (Honduras)" name="en" shortCaption="es_HN"/>
+            <Locale caption="espagnol (Honduras)" name="fr" shortCaption="es_HN"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_MX" value="es_MX">
+         <Locales>
+            <Locale caption="Spanish (Mexico)" name="en" shortCaption="es_MX"/>
+            <Locale caption="espagnol (Mexique)" name="fr" shortCaption="es_MX"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_NI" value="es_NI">
+         <Locales>
+            <Locale caption="Spanish (Nicaragua)" name="en" shortCaption="es_NI"/>
+            <Locale caption="espagnol (Nicaragua)" name="fr" shortCaption="es_NI"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_PA" value="es_PA">
+         <Locales>
+            <Locale caption="Spanish (Panama)" name="en" shortCaption="es_PA"/>
+            <Locale caption="espagnol (Panama)" name="fr" shortCaption="es_PA"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_PE" value="es_PE">
+         <Locales>
+            <Locale caption="Spanish (Peru)" name="en" shortCaption="es_PE"/>
+            <Locale caption="espagnol (Pérou)" name="fr" shortCaption="es_PE"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_PR" value="es_PR">
+         <Locales>
+            <Locale caption="Spanish (Puerto Rico)" name="en" shortCaption="es_PR"/>
+            <Locale caption="espagnol (Porto Rico)" name="fr" shortCaption="es_PR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_PY" value="es_PY">
+         <Locales>
+            <Locale caption="Spanish (Paraguay)" name="en" shortCaption="es_PY"/>
+            <Locale caption="espagnol (Paraguay)" name="fr" shortCaption="es_PY"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_SV" value="es_SV">
+         <Locales>
+            <Locale caption="Spanish (El Salvador)" name="en" shortCaption="es_SV"/>
+            <Locale caption="espagnol (El Salvador)" name="fr" shortCaption="es_SV"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_UY" value="es_UY">
+         <Locales>
+            <Locale caption="Spanish (Uruguay)" name="en" shortCaption="es_UY"/>
+            <Locale caption="espagnol (Uruguay)" name="fr" shortCaption="es_UY"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="es_VE" value="es_VE">
+         <Locales>
+            <Locale caption="Spanish (Venezuela)" name="en" shortCaption="es_VE"/>
+            <Locale caption="espagnol (Vénézuela)" name="fr" shortCaption="es_VE"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="et" value="et">
+         <Locales>
+            <Locale caption="Estonian" name="en" shortCaption="et"/>
+            <Locale caption="estonien" name="fr" shortCaption="et"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="et_EE" value="et_EE">
+         <Locales>
+            <Locale caption="Estonian (Estonia)" name="en" shortCaption="et_EE"/>
+            <Locale caption="estonien (Estonie)" name="fr" shortCaption="et_EE"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="fi" value="fi">
+         <Locales>
+            <Locale caption="Finnish" name="en" shortCaption="fi"/>
+            <Locale caption="finnois" name="fr" shortCaption="fi"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="fi_FI" value="fi_FI">
+         <Locales>
+            <Locale caption="Finnish (Finland)" name="en" shortCaption="fi_FI"/>
+            <Locale caption="finnois (Finlande)" name="fr" shortCaption="fi_FI"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="fr" value="fr">
+         <Locales>
+            <Locale caption="French" name="en" shortCaption="fr"/>
+            <Locale caption="français" name="fr" shortCaption="fr"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="fr_BE" value="fr_BE">
+         <Locales>
+            <Locale caption="French (Belgium)" name="en" shortCaption="fr_BE"/>
+            <Locale caption="français (Belgique)" name="fr" shortCaption="fr_BE"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="fr_CA" value="fr_CA">
+         <Locales>
+            <Locale caption="French (Canada)" name="en" shortCaption="fr_CA"/>
+            <Locale caption="français (Canada)" name="fr" shortCaption="fr_CA"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="fr_CH" value="fr_CH">
+         <Locales>
+            <Locale caption="French (Switzerland)" name="en" shortCaption="fr_CH"/>
+            <Locale caption="français (Suisse)" name="fr" shortCaption="fr_CH"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="fr_FR" value="fr_FR">
+         <Locales>
+            <Locale caption="French (France)" name="en" shortCaption="fr_FR"/>
+            <Locale caption="français (France)" name="fr" shortCaption="fr_FR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="fr_LU" value="fr_LU">
+         <Locales>
+            <Locale caption="French (Luxembourg)" name="en" shortCaption="fr_LU"/>
+            <Locale caption="français (Luxembourg)" name="fr" shortCaption="fr_LU"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="hi_IN" value="hi_IN">
+         <Locales>
+            <Locale caption="Hindi (India)" name="en" shortCaption="hi_IN"/>
+            <Locale caption="hindi (Inde)" name="fr" shortCaption="hi_IN"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="hr" value="hr">
+         <Locales>
+            <Locale caption="Croatian" name="en" shortCaption="hr"/>
+            <Locale caption="croate" name="fr" shortCaption="hr"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="hr_HR" value="hr_HR">
+         <Locales>
+            <Locale caption="Croatian (Croatia)" name="en" shortCaption="hr_HR"/>
+            <Locale caption="croate (Croatie)" name="fr" shortCaption="hr_HR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="hu" value="hu">
+         <Locales>
+            <Locale caption="Hungarian" name="en" shortCaption="hu"/>
+            <Locale caption="hongrois" name="fr" shortCaption="hu"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="hu_HU" value="hu_HU">
+         <Locales>
+            <Locale caption="Hungarian (Hungary)" name="en" shortCaption="hu_HU"/>
+            <Locale caption="hongrois (Hongrie)" name="fr" shortCaption="hu_HU"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="is" value="is">
+         <Locales>
+            <Locale caption="Icelandic" name="en" shortCaption="is"/>
+            <Locale caption="islandais" name="fr" shortCaption="is"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="is_IS" value="is_IS">
+         <Locales>
+            <Locale caption="Icelandic (Iceland)" name="en" shortCaption="is_IS"/>
+            <Locale caption="islandais (Islande)" name="fr" shortCaption="is_IS"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="it" value="it">
+         <Locales>
+            <Locale caption="Italian" name="en" shortCaption="it"/>
+            <Locale caption="italien" name="fr" shortCaption="it"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="it_CH" value="it_CH">
+         <Locales>
+            <Locale caption="Italian (Switzerland)" name="en" shortCaption="it_CH"/>
+            <Locale caption="italien (Suisse)" name="fr" shortCaption="it_CH"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="it_IT" value="it_IT">
+         <Locales>
+            <Locale caption="Italian (Italy)" name="en" shortCaption="it_IT"/>
+            <Locale caption="italien (Italie)" name="fr" shortCaption="it_IT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="iw" value="iw">
+         <Locales>
+            <Locale caption="Hebrew" name="en" shortCaption="iw"/>
+            <Locale caption="hébreu" name="fr" shortCaption="iw"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="iw_IL" value="iw_IL">
+         <Locales>
+            <Locale caption="Hebrew (Israel)" name="en" shortCaption="iw_IL"/>
+            <Locale caption="hébreu (Israël)" name="fr" shortCaption="iw_IL"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ja" value="ja">
+         <Locales>
+            <Locale caption="Japanese" name="en" shortCaption="ja"/>
+            <Locale caption="japonais" name="fr" shortCaption="ja"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ja_JP" value="ja_JP">
+         <Locales>
+            <Locale caption="Japanese (Japan)" name="en" shortCaption="ja_JP"/>
+            <Locale caption="japonais (Japon)" name="fr" shortCaption="ja_JP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ko" value="ko">
+         <Locales>
+            <Locale caption="Korean" name="en" shortCaption="ko"/>
+            <Locale caption="coréen" name="fr" shortCaption="ko"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ko_KR" value="ko_KR">
+         <Locales>
+            <Locale caption="Korean (South Korea)" name="en" shortCaption="ko_KR"/>
+            <Locale caption="coréen (Corée du Sud)" name="fr" shortCaption="ko_KR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="lt" value="lt">
+         <Locales>
+            <Locale caption="Lithuanian" name="en" shortCaption="lt"/>
+            <Locale caption="lithuanien" name="fr" shortCaption="lt"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="lt_LT" value="lt_LT">
+         <Locales>
+            <Locale caption="Lithuanian (Lithuania)" name="en" shortCaption="lt_LT"/>
+            <Locale caption="lithuanien (Lithuanie)" name="fr" shortCaption="lt_LT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="lv" value="lv">
+         <Locales>
+            <Locale caption="Latvian" name="en" shortCaption="lv"/>
+            <Locale caption="letton" name="fr" shortCaption="lv"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="lv_LV" value="lv_LV">
+         <Locales>
+            <Locale caption="Latvian (Latvia)" name="en" shortCaption="lv_LV"/>
+            <Locale caption="letton (Lettonie)" name="fr" shortCaption="lv_LV"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="mk" value="mk">
+         <Locales>
+            <Locale caption="Macedonian" name="en" shortCaption="mk"/>
+            <Locale caption="macédonien" name="fr" shortCaption="mk"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="mk_MK" value="mk_MK">
+         <Locales>
+            <Locale caption="Macedonian (Macedonia)" name="en" shortCaption="mk_MK"/>
+            <Locale caption="macédonien (Macédoine)" name="fr" shortCaption="mk_MK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="nl" value="nl">
+         <Locales>
+            <Locale caption="Dutch" name="en" shortCaption="nl"/>
+            <Locale caption="néerlandais" name="fr" shortCaption="nl"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="nl_BE" value="nl_BE">
+         <Locales>
+            <Locale caption="Dutch (Belgium)" name="en" shortCaption="nl_BE"/>
+            <Locale caption="néerlandais (Belgique)" name="fr" shortCaption="nl_BE"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="nl_NL" value="nl_NL">
+         <Locales>
+            <Locale caption="Dutch (Netherlands)" name="en" shortCaption="nl_NL"/>
+            <Locale caption="néerlandais (Pays-Bas)" name="fr" shortCaption="nl_NL"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="no" value="no">
+         <Locales>
+            <Locale caption="Norwegian" name="en" shortCaption="no"/>
+            <Locale caption="norvégien" name="fr" shortCaption="no"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="no_NO" value="no_NO">
+         <Locales>
+            <Locale caption="Norwegian (Norway)" name="en" shortCaption="no_NO"/>
+            <Locale caption="norvégien (Norvège)" name="fr" shortCaption="no_NO"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="no_NO_NY" value="no_NO_NY">
+         <Locales>
+            <Locale caption="Norwegian (Norway,Nynorsk)" name="en" shortCaption="no_NO_NY"/>
+            <Locale caption="norvégien (Norvège,Nynorsk)" name="fr" shortCaption="no_NO_NY"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="pl" value="pl">
+         <Locales>
+            <Locale caption="Polish" name="en" shortCaption="pl"/>
+            <Locale caption="polonais" name="fr" shortCaption="pl"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="pl_PL" value="pl_PL">
+         <Locales>
+            <Locale caption="Polish (Poland)" name="en" shortCaption="pl_PL"/>
+            <Locale caption="polonais (Pologne)" name="fr" shortCaption="pl_PL"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="pt" value="pt">
+         <Locales>
+            <Locale caption="Portuguese" name="en" shortCaption="pt"/>
+            <Locale caption="portugais" name="fr" shortCaption="pt"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="pt_BR" value="pt_BR">
+         <Locales>
+            <Locale caption="Portuguese (Brazil)" name="en" shortCaption="pt_BR"/>
+            <Locale caption="portugais (Brésil)" name="fr" shortCaption="pt_BR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="pt_PT" value="pt_PT">
+         <Locales>
+            <Locale caption="Portuguese (Portugal)" name="en" shortCaption="pt_PT"/>
+            <Locale caption="portugais (Portugal)" name="fr" shortCaption="pt_PT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ro" value="ro">
+         <Locales>
+            <Locale caption="Romanian" name="en" shortCaption="ro"/>
+            <Locale caption="roumain" name="fr" shortCaption="ro"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ro_RO" value="ro_RO">
+         <Locales>
+            <Locale caption="Romanian (Romania)" name="en" shortCaption="ro_RO"/>
+            <Locale caption="roumain (Roumanie)" name="fr" shortCaption="ro_RO"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ru" value="ru">
+         <Locales>
+            <Locale caption="Russian" name="en" shortCaption="ru"/>
+            <Locale caption="russe" name="fr" shortCaption="ru"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ru_RU" value="ru_RU">
+         <Locales>
+            <Locale caption="Russian (Russia)" name="en" shortCaption="ru_RU"/>
+            <Locale caption="russe (Russie)" name="fr" shortCaption="ru_RU"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="sk" value="sk">
+         <Locales>
+            <Locale caption="Slovak" name="en" shortCaption="sk"/>
+            <Locale caption="slovaque" name="fr" shortCaption="sk"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="sk_SK" value="sk_SK">
+         <Locales>
+            <Locale caption="Slovak (Slovakia)" name="en" shortCaption="sk_SK"/>
+            <Locale caption="slovaque (Slovaquie)" name="fr" shortCaption="sk_SK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="sl" value="sl">
+         <Locales>
+            <Locale caption="Slovenian" name="en" shortCaption="sl"/>
+            <Locale caption="slovène" name="fr" shortCaption="sl"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="sl_SI" value="sl_SI">
+         <Locales>
+            <Locale caption="Slovenian (Slovenia)" name="en" shortCaption="sl_SI"/>
+            <Locale caption="slovène (Slovénie)" name="fr" shortCaption="sl_SI"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="sq" value="sq">
+         <Locales>
+            <Locale caption="Albanian" name="en" shortCaption="sq"/>
+            <Locale caption="albanais" name="fr" shortCaption="sq"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="sq_AL" value="sq_AL">
+         <Locales>
+            <Locale caption="Albanian (Albania)" name="en" shortCaption="sq_AL"/>
+            <Locale caption="albanais (Albanie)" name="fr" shortCaption="sq_AL"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="sr" value="sr">
+         <Locales>
+            <Locale caption="Serbian" name="en" shortCaption="sr"/>
+            <Locale caption="serbe" name="fr" shortCaption="sr"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="sr_BA" value="sr_BA">
+         <Locales>
+            <Locale caption="Serbian (Bosnia and Herzegovina)" name="en" shortCaption="sr_BA"/>
+            <Locale caption="serbe (Bosnie-Herzégovine)" name="fr" shortCaption="sr_BA"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="sr_CS" value="sr_CS">
+         <Locales>
+            <Locale caption="Serbian (Serbia and Montenegro)" name="en" shortCaption="sr_CS"/>
+            <Locale caption="serbe (Serbie et Monténégro)" name="fr" shortCaption="sr_CS"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="sv" value="sv">
+         <Locales>
+            <Locale caption="Swedish" name="en" shortCaption="sv"/>
+            <Locale caption="suédois" name="fr" shortCaption="sv"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="sv_SE" value="sv_SE">
+         <Locales>
+            <Locale caption="Swedish (Sweden)" name="en" shortCaption="sv_SE"/>
+            <Locale caption="suédois (Suède)" name="fr" shortCaption="sv_SE"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="th" value="th">
+         <Locales>
+            <Locale caption="Thai" name="en" shortCaption="th"/>
+            <Locale caption="thaï" name="fr" shortCaption="th"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="th_TH" value="th_TH">
+         <Locales>
+            <Locale caption="Thai (Thailand)" name="en" shortCaption="th_TH"/>
+            <Locale caption="thaï (Thaïlande)" name="fr" shortCaption="th_TH"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="th_TH_TH" value="th_TH_TH">
+         <Locales>
+            <Locale caption="Thai (Thailand,TH)" name="en" shortCaption="th_TH_TH"/>
+            <Locale caption="thaï (Thaïlande,TH)" name="fr" shortCaption="th_TH_TH"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="tr" value="tr">
+         <Locales>
+            <Locale caption="Turkish" name="en" shortCaption="tr"/>
+            <Locale caption="turc" name="fr" shortCaption="tr"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="tr_TR" value="tr_TR">
+         <Locales>
+            <Locale caption="Turkish (Turkey)" name="en" shortCaption="tr_TR"/>
+            <Locale caption="turc (Turquie)" name="fr" shortCaption="tr_TR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="uk" value="uk">
+         <Locales>
+            <Locale caption="Ukrainian" name="en" shortCaption="uk"/>
+            <Locale caption="ukrainien" name="fr" shortCaption="uk"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="uk_UA" value="uk_UA">
+         <Locales>
+            <Locale caption="Ukrainian (Ukraine)" name="en" shortCaption="uk_UA"/>
+            <Locale caption="ukrainien (Ukraine)" name="fr" shortCaption="uk_UA"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="vi" value="vi">
+         <Locales>
+            <Locale caption="Vietnamese" name="en" shortCaption="vi"/>
+            <Locale caption="vietnamien" name="fr" shortCaption="vi"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="vi_VN" value="vi_VN">
+         <Locales>
+            <Locale caption="Vietnamese (Vietnam)" name="en" shortCaption="vi_VN"/>
+            <Locale caption="vietnamien (Vietnam)" name="fr" shortCaption="vi_VN"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="zh" value="zh">
+         <Locales>
+            <Locale caption="Chinese" name="en" shortCaption="zh"/>
+            <Locale caption="chinois" name="fr" shortCaption="zh"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="zh_CN" value="zh_CN">
+         <Locales>
+            <Locale caption="Chinese (China)" name="en" shortCaption="zh_CN"/>
+            <Locale caption="chinois (Chine)" name="fr" shortCaption="zh_CN"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="zh_HK" value="zh_HK">
+         <Locales>
+            <Locale caption="Chinese (Hong Kong)" name="en" shortCaption="zh_HK"/>
+            <Locale caption="chinois (Hong-Kong)" name="fr" shortCaption="zh_HK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="zh_TW" value="zh_TW">
+         <Locales>
+            <Locale caption="Chinese (Taiwan)" name="en" shortCaption="zh_TW"/>
+            <Locale caption="chinois (Taiwan)" name="fr" shortCaption="zh_TW"/>
+         </Locales>
+      </Value>
+   </Values>
+</Enumeration>

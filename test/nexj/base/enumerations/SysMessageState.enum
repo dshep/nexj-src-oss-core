@@ -1,0 +1,37 @@
+<Enumeration base="SysMessageStateEnum" description="SysMessage state enumeration" typeCode="SMSGSTATEENUM">
+   <Locales>
+      <Locale caption="SysMessage state enum" description="Enumeration of SysMessage states" name="en"/>
+   </Locales>
+   <Values>
+      <Value displayUpdateable="false" hasBehavior="true" name="NEW" value="N">
+         <Locales>
+            <Locale caption="New" name="en" shortCaption="New"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="DISPATCHING" value="D">
+         <Locales>
+            <Locale caption="Dispatching" name="en" shortCaption="Dispatch"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="WAITING" value="W">
+         <Locales>
+            <Locale caption="Waiting" name="en" shortCaption="Wait"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="PROCESSING" value="P">
+         <Locales>
+            <Locale caption="Processing" name="en" shortCaption="Process"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="ERROR" value="E">
+         <Locales>
+            <Locale caption="Errored" name="en" shortCaption="Error"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="BLOCKED" value="B">
+         <Locales>
+            <Locale caption="Blocked" name="en" shortCaption="Block"/>
+         </Locales>
+      </Value>
+   </Values>
+</Enumeration>

@@ -1,0 +1,33 @@
+<Class description="This is the link class between Users and UserGroups.  By convention should be called UserUserGroup, but is UserGroupLink to avoid confusion.">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;U&quot;"/>
+      <Attribute name="user" required="true" reverse="userGroups" type="User"/>
+      <Attribute name="userGroup" required="true" reverse="users" type="UserGroup"/>
+   </Attributes>
+   <Events>
+      <Event name="create" privilege="UserGroupLinkManage" visibility="public">
+         <Actions>
+            <Action name="invalidateCache" type="before"><![CDATA[(@ user invalidateCache)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="delete" privilege="UserGroupLinkManage" visibility="public">
+         <Actions>
+            <Action name="invalidateCache" type="before"><![CDATA[(@ user invalidateCache)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="update" privilege="UserGroupLinkManage" visibility="public">
+         <Actions>
+            <Action condition="(or (this'updated 'user) (this'updated 'userGroup))" name="invalidateCache" type="before"><![CDATA[(@ user invalidateCache)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping classCodeAttribute="classCode" dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="UserGroupLink">
+         <AttributeMappings>
+            <AttributeMapping destinationKey="Principal.PK" name="user" sourceKey="UserGroupLink.FK_User"/>
+            <AttributeMapping destinationKey="Principal.PK" name="userGroup" sourceKey="UserGroupLink.FK_UserGroup"/>
+            <AttributeMapping column="classCode" name="classCode"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

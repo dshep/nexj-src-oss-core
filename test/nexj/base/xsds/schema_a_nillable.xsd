@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+   targetNamespace="urn:com.nexjsystems:ns:test:a"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:b="urn:com.nexjsystems:ns:test:b">
+   <import namespace="urn:com.nexjsystems:ns:test:b" schemaLocation="http://www.nexjsystems.com/nexj/b.xsd"/>
+   <element name="Patient">
+      <complexType>
+         <sequence>
+            <element name="player" minOccurs="0">
+               <complexType>
+                  <sequence>
+                     <element name="firstName" minOccurs="0" type="xsd:string"/>
+                     <element name="lastName" minOccurs="0" type="xsd:string"/>
+                     <element name="fullName" minOccurs="0" type="xsd:string"/>
+                     <element name="initials" minOccurs="0" type="xsd:string"/>
+                     <element name="title" nillable="true" minOccurs="0" type="xsd:string"/>
+                     <element name="affix" minOccurs="0" type="xsd:string"/>
+                     <element name="birthTime" minOccurs="0" type="xsd:dateTime"/>
+                     <element name="genderCode" minOccurs="0" type="xsd:string"/>
+                     <element name="guid" minOccurs="0" type="xsd:base64Binary"/>
+                     <element name="id" minOccurs="0" maxOccurs="unbounded">
+                        <complexType mixed="true"><!-- Added mixed content -->
+                           <sequence>
+                              <any processContents="lax" minOccurs="0" maxOccurs="unbounded"/><!-- Changed from skip to lax-->
+                           </sequence>
+                           <attribute name="type" use="required" type="xsd:string"/>
+                           <attribute use="required" ref="b:id"/>
+                        </complexType>
+                     </element>
+                     <element name="addr" minOccurs="0" maxOccurs="unbounded">
+                        <complexType>
+                           <sequence>
+                              <element name="useCode" minOccurs="0" type="xsd:string"/>
+                              <element name="city" minOccurs="0" type="xsd:string"/>
+                              <element name="address1" minOccurs="0" type="xsd:string"/>
+                              <element name="address2" minOccurs="0" type="xsd:string"/>
+                              <element name="address3" minOccurs="0" type="xsd:string"/>
+                              <element name="state" minOccurs="0" type="xsd:string"/>
+                              <element name="country" minOccurs="0" type="xsd:string"/>
+                              <element name="zip" minOccurs="0" type="xsd:string"/>
+                           </sequence>
+                        </complexType>
+                     </element>
+                     <element name="telcom" nillable="true" minOccurs="0" maxOccurs="unbounded">
+                        <complexType>
+                           <simpleContent>
+                              <extension base="xsd:string">
+                                 <attribute name="useCode" type="xsd:string"/>
+                              </extension>
+                           </simpleContent>
+                        </complexType>
+                     </element>
+                     <element name="telcom2" nillable="true" minOccurs="0" maxOccurs="unbounded">
+                        <complexType>
+                           <simpleContent>
+                              <extension base="xsd:string">
+                                 <attribute name="useCode" type="xsd:string"/>
+                              </extension>
+                           </simpleContent>
+                        </complexType>
+                     </element>
+                  </sequence>
+               </complexType>
+            </element>
+         </sequence>
+      </complexType>
+   </element>
+</schema>

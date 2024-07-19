@@ -1,0 +1,13 @@
+<ObjectQueue class="ObjectQueue" errorCount="3" errorQueue="ObjectErrorQueue">
+   <ReceiverProperties>
+      <Collection name="server">
+         <Item>
+            <Component activation="singleton" type="nexj.core.rpc.queueing.ObjectRequestServer">
+               <Properties>
+                  <Property name="server">Server.Generic</Property>
+               </Properties>
+            </Component>
+         </Item>
+      </Collection>
+   </ReceiverProperties>
+</ObjectQueue>

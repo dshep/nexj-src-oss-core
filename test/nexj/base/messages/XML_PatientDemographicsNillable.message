@@ -1,0 +1,50 @@
+<Message format="XML" base="XML_PatientDemographics">
+   <XMLMapping namespace="a" node="Patient" resource="xsds/schema_a_nillable.xsd" schema="http://www.nexjsystems.com/nexj/integration.xsd" uri="urn:com.nexjsystems:ns:test:a"/>
+   <Parts>
+      <Message name="player">
+         <Parts>
+            <Value name="lastName" type="string"/>
+            <Value name="title" type="string">
+               <XMLMapping nillable="true"/>
+            </Value>
+            <Value minCount="1" name="guid" type="binary"/>
+            <Message name="telcom">
+               <XMLMapping nillable="true"/>
+               <Parts>
+                  <Value name="useCode" type="string">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value name="address" type="string">
+                     <XMLMapping type="value"/>
+                  </Value>
+                  <Value name="isNil" type="boolean">
+                     <XMLMapping namespace="xsi" node="nil" type="attribute"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message name="telcom2">
+               <XMLMapping nillable="true"/>
+               <Parts>
+                  <Value name="useCode" type="string">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value name="address" type="string">
+                     <XMLMapping type="value"/>
+                  </Value>
+                  <Value name="sub" type="string"/>
+               </Parts>
+            </Message>
+            <Message name="telcom3">
+               <Parts>
+                  <Value name="useCode" type="string">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value name="address" type="string">
+                     <XMLMapping type="value"/>
+                  </Value>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

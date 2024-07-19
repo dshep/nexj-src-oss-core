@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+   targetNamespace="urn:com.nexjsystems:ns:test:inherit:schema1"
+   xmlns:tns="urn:com.nexjsystems:ns:test:inherit:schema1"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <complexType name="Schema1Type">
+      <sequence>
+         <element name="a" minOccurs="0" type="xsd:string"/>
+         <element name="x" minOccurs="0" type="xsd:string"/>
+      </sequence>
+   </complexType>
+   <complexType name="Schema2Type">
+      <complexContent>
+         <extension base="tns:Schema1Type">
+            <sequence>
+               <element name="b" minOccurs="0" type="xsd:string"/>
+            </sequence>
+         </extension>
+      </complexContent>
+   </complexType>
+   <element name="schema1" type="tns:Schema1Type"/>
+   <element name="schema2" type="tns:Schema2Type"/>
+</schema>

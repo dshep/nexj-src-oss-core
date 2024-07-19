@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<wsdl:definitions
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+   xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+   xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+   xmlns:ns="http://www.nexjsystems.com/xml-soap"
+   targetNamespace="http://www.nexjsystems.com/xml-soap">
+   <wsdl:types>
+      <schema targetNamespace="http://www.nexjsystems.com/xml-soap" xmlns="http://www.w3.org/2001/XMLSchema">
+         <complexType name="Array">
+            <sequence>
+               <element name="items" type="ns:anyType-array" minOccurs="0"/>
+            </sequence>
+         </complexType>
+         <complexType name="StringId">
+            <sequence>
+               <element name="id" type="xsd:string"/>
+            </sequence>
+         </complexType>
+         <complexType name="Symbol">
+            <sequence>
+               <element name="name" type="xsd:string"/>
+            </sequence>
+         </complexType>
+         <complexType name="Locale">
+            <sequence>
+               <element name="name" type="xsd:string"/>
+            </sequence>
+         </complexType>
+         <complexType name="TimeZone">
+            <sequence>
+               <element name="name" type="xsd:string"/>
+            </sequence>
+         </complexType>
+         <complexType name="Expression">
+            <sequence>
+               <element name="text" type="xsd:string"/>
+            </sequence>
+         </complexType>
+         <complexType name="Pair">
+            <sequence>
+               <element name="head" type="xsd:anyType" minOccurs="0"/>
+               <element name="tail" type="xsd:anyType" minOccurs="0"/>
+            </sequence>
+         </complexType>
+         <complexType name="PrivilegeSet">
+            <sequence>
+               <element name="mask" type="xsd:base64Binary" minOccurs="0"/>
+            </sequence>
+         </complexType>
+         <complexType name="ByteVector">
+            <sequence>
+               <element name="value" type="xsd:base64Binary" minOccurs="0"/>
+            </sequence>
+         </complexType>
+         <complexType name="Function">
+            <sequence>
+               <element name="code" type="ns:unsignedShort-array" minOccurs="0"/>
+               <element name="constants" type="ns:anyType-array" minOccurs="0"/>
+            </sequence>
+         </complexType>
+         <complexType name="Macro">
+            <complexContent>
+               <extension base="ns:Function"/>
+            </complexContent>
+         </complexType>
+         <complexType name="OID">
+            <sequence>
+               <element name="values" type="ns:anyType-array"/>
+            </sequence>
+         </complexType>
+         <complexType name="TransferObject">
+            <sequence>
+               <element name="class" type="xsd:string" minOccurs="0"/>
+               <element name="event" type="xsd:string" minOccurs="0"/>
+               <element name="version" type="xsd:int"/>
+               <element name="oid" type="ns:OID" minOccurs="0"/>
+               <element name="keys" type="ns:string-array" minOccurs="0"/>
+               <element name="values" type="ns:anyType-array" minOccurs="0"/>
+            </sequence>
+         </complexType>
+         <complexType name="Invocation">
+            <sequence>
+               <element name="object" type="ns:TransferObject"/>
+               <element name="event" type="xsd:string" minOccurs="0"/>
+               <element name="arguments" type="ns:anyType-array" minOccurs="0"/>
+               <element name="attributes" type="ns:Pair" minOccurs="0"/>
+            </sequence>
+         </complexType>
+         <complexType name="Request">
+            <sequence>
+               <element name="namespace" type="xsd:string" minOccurs="0"/>
+               <element name="version" type="xsd:string"/>
+               <element name="async" type="xsd:boolean" />
+               <element name="commit" type="xsd:boolean"/>
+               <element name="locale" type="ns:Locale" minOccurs="0"/>
+               <element name="timeZone" type="ns:TimeZone" minOccurs="0"/>
+               <element name="correlator" type="ns:TransferObject" minOccurs="0"/>
+               <element name="invocations" type="ns:Invocation-array" minOccurs="0"/>
+               <element name="filters" type="ns:TransferObject-array" minOccurs="0"/>
+            </sequence>
+         </complexType>
+         <complexType name="Response">
+            <sequence>
+               <element name="results" type="ns:anyType-array" minOccurs="0"/>
+               <element name="events" type="ns:TransferObject-array-array" minOccurs="0"/>
+            </sequence>
+         </complexType>
+         <complexType name="Exception">
+            <sequence>
+               <element name="errorCode" type="xsd:string" minOccurs="0"/>
+               <element name="errorMessage" type="xsd:string" minOccurs="0"/>
+               <element name="errorArgs" type="ns:anyType-array" minOccurs="0"/>
+               <element name="class" type="xsd:string" minOccurs="0"/>
+               <element name="oid" type="ns:OID" minOccurs="0"/>
+               <element name="ordinal" type="xsd:int"/>
+               <element name="attributes" type="ns:string-array" minOccurs="0"/>
+               <element name="attributeExceptions" type="ns:Exception-array" minOccurs="0"/>
+               <element name="exceptions" type="ns:Exception-array" minOccurs="0"/>
+            </sequence>
+         </complexType>
+         <complexType name="Exception-array">
+            <complexContent>
+               <restriction base="soapenc:Array">
+                  <attribute ref="soapenc:arrayType" wsdl:arrayType="ns:Exception[]"/>
+               </restriction>
+            </complexContent>
+         </complexType>
+         <complexType name="string-array">
+            <complexContent>
+               <restriction base="soapenc:Array">
+                  <attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:string[]"/>
+               </restriction>
+            </complexContent>
+         </complexType>
+         <complexType name="unsignedShort-array">
+            <complexContent>
+               <restriction base="soapenc:Array">
+                  <attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:unsignedShort[]"/>
+               </restriction>
+            </complexContent>
+         </complexType>
+         <complexType name="anyType-array">
+            <complexContent>
+               <restriction base="soapenc:Array">
+                  <attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:anyType[]"/>
+               </restriction>
+            </complexContent>
+         </complexType>
+         <complexType name="TransferObject-array">
+            <complexContent>
+               <restriction base="soapenc:Array">
+                  <attribute ref="soapenc:arrayType" wsdl:arrayType="ns:TransferObject[]"/>
+               </restriction>
+            </complexContent>
+         </complexType>
+         <complexType name="TransferObject-array-array">
+            <complexContent>
+               <restriction base="soapenc:Array">
+                  <attribute ref="soapenc:arrayType" wsdl:arrayType="ns:TransferObject-array[]"/>
+               </restriction>
+            </complexContent>
+         </complexType>
+         <complexType name="Invocation-array">
+            <complexContent>
+               <restriction base="soapenc:Array">
+                  <attribute ref="soapenc:arrayType" wsdl:arrayType="ns:Invocation[]"/>
+               </restriction>
+            </complexContent>
+         </complexType>
+      </schema>
+   </wsdl:types>
+   <wsdl:message name="invoke-response">
+      <wsdl:part name="response" type="ns:Response"/>
+   </wsdl:message>
+   <wsdl:message name="invoke-request">
+      <wsdl:part name="request" type="ns:Request"/>
+   </wsdl:message>
+   <wsdl:portType name="Server">
+      <wsdl:operation name="invoke" parameterOrder="request">
+         <wsdl:input message="ns:invoke-request" name="invoke-request"/>
+         <wsdl:output message="ns:invoke-response" name="invoke-response"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="ServerSoapBinding" type="ns:Server">
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="invoke">
+         <wsdlsoap:operation soapAction="Server#invoke"/>
+         <wsdl:input name="invoke-request">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+               namespace="http://www.nexjsystems.com/xml-soap" use="encoded"/>
+         </wsdl:input>
+         <wsdl:output name="invoke-response">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+               namespace="http://www.nexjsystems.com/xml-soap" use="encoded"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="GenericServer">
+      <wsdl:port binding="ns:ServerSoapBinding" name="Server">
+         <wsdlsoap:address location="${url}"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>

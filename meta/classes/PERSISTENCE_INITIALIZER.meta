@@ -1,0 +1,5 @@
+<Aspect>
+   <Events>
+      <Event description="Invoked during initial data loading" name="initializePersistence" static="true"/>
+   </Events>
+</Aspect>

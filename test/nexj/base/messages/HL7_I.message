@@ -1,0 +1,8 @@
+<Message format="HL7">
+   <HL7Mapping name="I" seq="1"/>
+   <Parts>
+      <Message name="J" ref="HL7_J">
+         <HL7Mapping seq="1"/>
+      </Message>
+   </Parts>
+</Message>

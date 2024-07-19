@@ -1,0 +1,73 @@
+<Message derivation="final" description="The SOAP 1.2 Fault response message.&#13;&#10;&#13;&#10;Used by applications that need to parse or generate a SOAP fault. Can be used as a base message of application-specific fault messages. To encode application-specific error information, override the &quot;detail&quot; element." format="XML">
+   <XMLMapping envelope="soap12" namespace="soap12" node="Fault" uri="http://www.w3.org/2003/05/soap-envelope"/>
+   <Parts>
+      <Message minCount="1" name="code">
+         <XMLMapping namespace="soap12" node="Code"/>
+         <Parts>
+            <Value minCount="1" name="value" type="string">
+               <XMLMapping namespace="soap12" node="Value"/>
+               <Enumerations>
+                  <Enumeration description="The namespace, local name, or both of the SOAP envelope do not match what is required by the SOAP specification." value="soap12:VersionMismatch"/>
+                  <Enumeration description="A SOAP header with a true mustUnderstand flag was not understood." value="soap12:MustUnderstand"/>
+                  <Enumeration description="A SOAP header block or body child uses an unsupported encodingStyle." value="soap12:DataEncodingUnknown"/>
+                  <Enumeration description="Message incorrectly formed or did not contain appropriate information in order to succeed." value="soap12:Sender"/>
+                  <Enumeration description="Message could not be processed due to processing error; not the message contents." value="soap12:Receiver"/>
+               </Enumerations>
+            </Value>
+            <Message name="subcode" ref="SOAP12Fault_Subcode">
+               <XMLMapping namespace="soap12" node="Subcode"/>
+            </Message>
+         </Parts>
+      </Message>
+      <Message minCount="1" name="reason">
+         <XMLMapping namespace="soap12" node="Reason"/>
+         <Parts>
+            <Message maxCount="0" minCount="1" name="text">
+               <XMLMapping namespace="soap12" node="Text"/>
+               <Parts>
+                  <Value minCount="1" name="lang" type="string">
+                     <XMLMapping namespace="xml" node="lang" type="attribute" uri="http://www.w3.org/XML/1998/namespace"/>
+                  </Value>
+                  <Value minCount="1" name="value" type="string">
+                     <XMLMapping type="value"/>
+                  </Value>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+      <Value description="A URI identifying the source of the fault.&#13;&#10;&#13;&#10;Indicates the source of the fault. Applications that do not act as the ultimate destination of the SOAP message must specify a node. The ultimate destination may explicitly specify the node." name="node" type="string">
+         <XMLMapping namespace="soap12" node="Node"/>
+      </Value>
+      <Value description="A URI corresponding to one of the roles assumed by the node during processing of the message." name="role" type="string">
+         <XMLMapping namespace="soap12" node="Role"/>
+      </Value>
+      <Value name="detail" type="any">
+         <XMLMapping namespace="soap12" node="Detail"/>
+      </Value>
+      <Message name="header">
+         <XMLMapping namespace="soap12" node="Header"/>
+         <Parts>
+            <Message name="upgrade">
+               <XMLMapping namespace="soap12" node="Upgrade"/>
+               <Parts>
+                  <Message maxCount="0" minCount="1" name="supportedEnvelope">
+                     <XMLMapping namespace="soap12" node="SupportedEnvelope"/>
+                     <Parts>
+                        <Value minCount="1" name="qname" type="string">
+                           <XMLMapping node="qname" type="attribute"/>
+                        </Value>
+                     </Parts>
+                  </Message>
+               </Parts>
+            </Message>
+            <Message maxCount="0" name="notUnderstood">
+               <Parts>
+                  <Value minCount="1" name="qname" type="string">
+                     <XMLMapping node="qname" type="attribute"/>
+                  </Value>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

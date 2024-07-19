@@ -1,0 +1,17 @@
+<Message format="JSON">
+   <JSONMapping subtype="array"/>
+   <Parts>
+      <Message name="value">
+         <Parts>
+            <Value name="name" type="string"/>
+            <Value name="level" type="integer"/>
+         </Parts>
+      </Message>
+      <Message name="left" ref="JSON_SubType_Array">
+         <JSONMapping subtype="array"/>
+      </Message>
+      <Message name="right" ref="JSON_SubType_Array">
+         <JSONMapping subtype="array"/>
+      </Message>
+   </Parts>
+</Message>

@@ -1,0 +1,6 @@
+<Component type="nexj.core.rpc.GenericServer" activation="new"
+   description="The generic request server">
+   <Properties>
+      <Property name="interceptor" directive="if" condition="test.record">Interceptor.Test</Property>
+   </Properties>
+</Component>

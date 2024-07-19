@@ -1,0 +1,292 @@
+<Class base="UserBase" caption="idsc.User.caption" description="Main User Object" nameAttribute="loginName">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;U&quot;"/>
+      <Attribute initializer="(SystemUserTemplate'instance)" name="parentTemplate" reverse="members" type="UserTemplate"/>
+      <Attribute description="The is the name from the principal.  Since our concept of Principal is mapped to the Java Principal, the name must be unique and must match the login name as the Java Authentication and Security Principal's name is set to the login name.  " name="name" type="string" value="(@ loginName)"/>
+      <Attribute caption="ids.loginName" description="User id used for login purposes.  For example user123@KERBEROS_DOMAIN.  The audit fields don't use this since it may be long, so the alias is used (e.g. user123)." initializer="&quot;newuser&quot;" name="loginName" required="true" type="string" validation="(this'validateUser value)"/>
+      <Attribute description="User's last name" name="lastName" type="string"/>
+      <Attribute description="User's first name" name="firstName" type="string"/>
+      <Attribute description="User's alias; this has shorter length restrictions than the loginName and therefore may not always be the same as the loginName.  Used as the &quot;short name&quot; for display/report purposes." initializer="(@ loginName)" name="alias" required="true" type="string"/>
+      <Attribute description="Acitve/Inactive Flag. Calculated attribute based on status." name="active" required="true" type="boolean" value="(= (@ status) &quot;1&quot;)"/>
+      <Attribute description="Password Object -- points to active password for this user" name="password" reverse="user" type="UserPassword" where="(@ active)"/>
+      <Attribute collection="true" description="Points to the collection of older passwords" name="oldPasswords" reverse="user" type="UserPassword" where="(not (@ active))"/>
+      <Attribute description="Special attribute to trigger a change of password object... should not be readable -- not persisted" name="updatablePassword" type="string"/>
+      <Attribute dependency="(userGroups (userGroup (privileges privilege)))" description="Complete set of privileges" name="privilegeSet" readOnly="true" type="any" value="(this'createPrivilegeSet (@ userGroups))"/>
+      <Attribute description="Calculated value of &quot;lastName, firstname&quot;" name="fullName" type="string" value="(string-affix (@ lastName) &quot;, &quot; (@ firstName))"/>
+      <Attribute collection="true" name="userGroups" reverse="user" type="UserGroupLink"/>
+      <Attribute name="MAX_ALIAS_LENGTH" static="true" type="integer" value="10"/>
+      <Attribute description="Calculated attribute to be used for retrieving custom user locale, default locale, or null." name="locale" type="string" value="(locale-name)"/>
+      <Attribute description="Status of the principal" initializer="&quot;1&quot;" name="status" required="true" type="string"/>
+      <Attribute description="Access bind on delete. Prevents deleting the current user." name="deletable" type="boolean" value="(not (= (@) (user)))"/>
+   </Attributes>
+   <Events>
+      <Event name="create" privilege="UserCreate" visibility="public">
+         <Actions>
+            <Action name="initializePassword" relative="main" type="before"><![CDATA[(logger'debug "User.create.initializePassword")
+(when (null? (@ updatablePassword))
+   (logger'debug "setting updatablePassword to default password")
+   (this'updatablePassword "password"); default password  
+)
+(let ((newPasswordHash (UserPassword'hashPassword (@ updatablePassword))))
+   (if (null? (@ password))
+      (this'password 
+         (UserPassword'new
+            (: passwordHash newPasswordHash)
+         )
+      )
+      ;else:
+      ((@ password)'passwordHash newPasswordHash)
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event name="update" privilege="UserUpdate" visibility="public">
+         <Actions>
+            <Action condition="(this'updated 'updatablePassword)" description="Updates the password hash and flushes the authentication cache - so jboss recognizes the new password" name="updatePassword" type="before"><![CDATA[(logger'debug "User.update.updatePassword")
+(let ((newPasswordHash (UserPassword'hashPassword (@ updatablePassword))))
+   (if (= (@ password passwordHash) newPasswordHash)
+      (logger'debug "password is not actually different, so not doing anything")
+      (begin
+         ;mark old password inactive
+         ((@ password)'active #f)
+         ;replace it with new password (note: doesn't delete the old one)
+         (this'password 
+            (UserPassword'new
+               (: passwordHash newPasswordHash)
+            )
+         )
+      )
+   )
+)
+
+
+
+]]></Action>
+            <Action description="Since the user has been updated, the cache is no longer correct.  " name="invalidateCache" type="before"><![CDATA[(logger'debug "Flushing system user cache for: " (@ loginName))
+(this'invalidateCache)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="commit">
+         <Actions>
+            <Action name="flushAuthenticationCache" type="before"><![CDATA[(this'invalidateAuthenticationCache)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="attributes" name="load" vararg="true">
+         <Actions/>
+      </Event>
+      <Event access="deletable" name="delete" privilege="UserDelete" visibility="public">
+         <Actions>
+            <Action description="get rid of this user's user groups associations." name="removeUserGroupLinks" type="before"><![CDATA[(for-each (lambda (groupLink)
+      (groupLink'delete)
+   )
+   (@ userGroups)
+)]]></Action>
+            <Action description="Prevent actual deletion of user, but rather set active status to 0." name="main" type="main"><![CDATA[(this'status "0")
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="userName" description="Retrieves and caches a user object with a given name." name="getUser" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let*
+   (
+      (key `(User loginName ,userName))
+      (usr
+            (SysCache'get key)
+      )
+      (userSelect 
+         '(
+            loginName 
+            alias
+            (userGroups (userGroup name (privileges privilege)))
+            (parentTemplate name)
+          )
+      )
+   )
+   (when (null? usr)
+      (suspend-transaction
+         (set! usr 
+            (read-instance this 
+               userSelect 
+               `(and active (= loginName ,userName)) 
+               #f
+            )
+         )
+         (unless (null? usr)   
+            (SysCache'putInstance key usr `(loginName alias privilegeSet parentTemplate))
+         )
+      )
+   )
+
+   ;return:
+   usr
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="firstName lastName" description="Creates a unique userName string from the given first and last names" name="getUniqueName" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define (makeUserId fn ln)
+   (string-append 
+      (if (equal? (ifnull fn "") "") "" (substring (fn'toLowerCase) 0 1))
+      (ln'toLowerCase)
+      (if (and (eqv? (((invocation-context)'metadata)'authenticationProtocol) 1)
+               (not (null? (((invocation-context)'metadata)'authenticationDomain)))
+               (not (((invocation-context)'metadata)'realmless)))
+         (string-append "@" (((invocation-context)'metadata)'authenticationDomain))
+         ""
+      )
+   )
+)
+
+(let loop ((name (makeUserId firstName lastName)) (count 1))
+   (if ((this'read '() `(= loginName ,name) '() 1 0 #f)'empty)
+      name
+      (loop
+         (makeUserId firstName (string-append lastName (number->string count)))
+         (+ count 1)
+      )
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="userGroupLinks" description="Creates a new privilege set from the given userGroupLinks" name="createPrivilegeSet" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[; populate privilege set  
+(let*
+   (
+      (metadata ((invocation-context)'metadata))
+      (privilegeSet (metadata'createPrivilegeSet))
+   )
+   (for-each
+      (lambda (userGroupLink)
+         (for-each
+            (lambda (groupPrivilege)
+               (let ((p (metadata'findPrivilege (groupPrivilege'privilege))))
+                  (if(null? p)
+                     (logger'debug "Warning: could not find privilege " (groupPrivilege'privilege)  " in metadata")
+                     (begin
+                        (logger'debug "Adding privilege " (groupPrivilege'privilege) " from userGroup " ((userGroupLink'userGroup)'name) " to privilege set of user")
+                        (p'addTo privilegeSet)
+                     )
+                  )
+               )
+             )
+            ((userGroupLink'userGroup)'privileges)
+         )
+      )
+      userGroupLinks
+   )
+   ;return:
+   privilegeSet
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="userGroupLinks" description="Creates a new OID set from the given userGroupLinks" name="createOIDSet">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let 
+      ((c (nexj.core.persistence.OIDSet'new (+ (userGroupLinks'size) 1))))
+   (c'add this) ;add self
+   (for-each 
+      (lambda (gl) 
+         (c'add (gl'userGroup))
+      ) 
+      userGroupLinks
+   ) 
+   ;return:
+   c
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="user localeName" description="Changes the locale used by this user" name="changeLocale" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[((invocation-context)'locale localeName)
+
+; return current locale name, as it may not be the same
+(locale-name)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Invalidates the user's cache." name="invalidateCache">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let ((loginName (this'old 'loginName)))
+   (SysCache'remove `(User loginName ,loginName))
+   (unless (= (@ loginName) loginName)
+      (SysCache'remove `(User loginName ,(@ loginName)))
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Invalidate's the app server's authentication cache." name="invalidateAuthenticationCache">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let ((loginName (this'old 'loginName)))
+   (when 
+      (and 
+         (not (null? loginName))
+         (= (((invocation-context)'metadata)'authenticationProtocol) 0) ; (nexj.core.meta.Metadata'AUTH_PROTOCOL_BASIC)
+         (or 
+            (this'isNew) ;new record
+            (= (@ password passwordHash) (UserPassword'hashPassword (@ updatablePassword))) ;new password
+            (not (= loginName (@ loginName))) ;new loginName (invalidates old)            
+         )
+      )
+      (try
+         (begin
+            (logger'debug "flushing authentication cache for loginName " loginName)
+            (let ((authenticationCache ((invocation-context)'getComponentInstance "System.AuthenticationCache")))
+               (authenticationCache'flushPrincipal loginName)
+               (unless (= loginName (@ loginName))
+                  (authenticationCache'flushPrincipal (@ loginName))            
+               )
+            )
+         )
+         ;catch:
+         (lambda(e) '() ); Ignore the exception: we do not run under any JAAS credential when handling a message inside an MDB.
+      )
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="value" description="To make sure there is no duplicate log in names" name="validateUser">
+         <Actions>
+            <Action description="checks for duplicate log in names" name="main" type="main"><![CDATA[(define where `(= name ,value))
+(logger'debug "login name: " value)
+(unless (this'isNew)
+   (set! where `(and (not (= (@) ,this)) ,where))
+)
+(if (null? value)
+   ;return #t as the requireness will fail validation
+   #t
+   ;else:
+   (let ((users (User'read '() where '() 1 '() #f )))
+      (cond
+         ((not (users'empty))    
+            ;return:
+            (list "err.user.duplicateLoginName" value)
+         )
+         (else
+            ;return:
+            #t
+         )    
+      )  
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="Principal">
+         <AttributeMappings>
+            <AttributeMapping column="status" name="status" table="User"/>
+            <AttributeMapping column="loginName" name="loginName" table="User"/>
+            <AttributeMapping column="lastName" name="lastName" table="User"/>
+            <AttributeMapping column="firstName" name="firstName" table="User"/>
+            <AttributeMapping column="alias" name="alias" table="User"/>
+            <AttributeMapping destinationKey="UserGroupLink.FK_User" name="userGroups" sourceKey="Principal.PK"/>
+            <AttributeMapping destinationKey="UserPassword.FK_User" name="password" sourceKey="Principal.PK"/>
+            <AttributeMapping destinationKey="UserPassword.FK_User" name="oldPasswords" sourceKey="Principal.PK"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

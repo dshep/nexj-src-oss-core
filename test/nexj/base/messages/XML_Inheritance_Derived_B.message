@@ -1,0 +1,8 @@
+<Message base="XML_Inheritance_Derived_A" format="XML">
+   <XMLMapping namespace="ns2" node="B" type="element" uri="urn:hl7-org:v3" xsdtype="B"/>
+   <Parts>
+      <Value maxCount="1" minCount="0" name="value" type="integer">
+         <XMLMapping type="attribute"/>
+      </Value>
+   </Parts>
+</Message>

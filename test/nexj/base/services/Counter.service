@@ -1,0 +1,23 @@
+<Service args="count" layout="startX:111;endY:386;startY:9;endX:111" variables="i">
+   <Script layout="y:63;x:99" name="init"><![CDATA[
+(set! i 0)
+this
+]]></Script>
+   <Dispatch layout="y:203;x:104" name="done?">
+      <Case condition="(&gt;= i count)" name="yes">
+         <Script layout="y:291;x:98" name="set-i"><![CDATA[
+(this'iterations i)
+(this'boo "~boo~")
+this
+]]></Script>
+      </Case>
+      <Case name="no">
+         <Script layout="srcAssoc1:159,158;y:206;srcAssoc0:288,159;x:254" name="increment"><![CDATA[
+(set! i (+ i 1))
+(logger'debug "i =" i)
+(message (: ego (string-append (@ ego) "+")))
+]]></Script>
+         <Goto next="done?"/>
+      </Case>
+   </Dispatch>
+</Service>

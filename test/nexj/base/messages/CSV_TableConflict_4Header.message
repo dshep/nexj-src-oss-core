@@ -1,0 +1,19 @@
+<Message format="CSV">
+   <CSVMapping quote="none" escape="\" header="true" line="\r" comment=";"/>
+   <Parts>
+      <Message maxCount="0" name="Data4H">
+         <Parts>
+            <Value description="Third Column" name="third" type="string" minCount="1">
+               <CSVMapping ordinal="3"/>
+            </Value>
+            <Value description="Fourth Column" name="fourth" type="string" minCount="0">
+            </Value>
+            <Value description="First Column" name="first" type="string" minCount="1">
+               <CSVMapping ordinal="1"/>
+            </Value>
+            <Value description="Second Column" name="second" type="string" minCount="1">
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

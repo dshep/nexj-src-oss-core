@@ -1,0 +1,13 @@
+<Class>
+   <Attributes>
+      <Attribute collection="false" name="value" required="false" type="string"/>
+      <Attribute collection="false" name="caption" required="false" type="string"/>
+   </Attributes>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="ContactType">
+         <AttributeMappings>
+            <AttributeMapping column="type_name" name="caption" table="ContactType"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

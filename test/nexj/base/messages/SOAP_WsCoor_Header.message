@@ -1,0 +1,9 @@
+<Message format="XML">
+   <XMLMapping envelope="soap" namespace="wscoor" node="CoordinationContext" uri="http://docs.oasis-open.org/ws-tx/wscoor/2006/06"/>
+   <Parts>
+      <Value name="mustUnderstand" type="boolean">
+         <XMLMapping namespace="soap" node="mustUnderstand" type="attribute"/>
+      </Value>
+      <Value name="Expires" type="long"/>
+   </Parts>
+</Message>

@@ -1,0 +1,23 @@
+<Aspect>
+   <Attributes>
+      <Attribute cached="true" description="nexj.core.runtime.InstanceLogger instance that wraps this LOGGER instance." name="logger" readOnly="true" required="true" type="any" value="(nexj.core.runtime.InstanceLogger'new (@))" visibility="protected"/>
+      <Attribute description="The most detailed level of logging that will occur on this LOGGER." initializer="(SeverityEnum'get'INFO)" name="logLevel" readPrivilege="LogManage" required="true" type="SeverityEnum" updatePrivilege="LogManage"/>
+      <Attribute description="The category of the associated J2EE logger.  Null means default to class of this." name="logCategory" type="string" visibility="protected"/>
+   </Attributes>
+   <Events>
+      <Event args="level code args exception" description="Logs an event at &quot;level&quot; (SeverityEnum) with localizable string &quot;code&quot; (String) and &quot;args&quot; (vector) and optional &quot;exception&quot; (Throwable).&#13;&#10;" name="log">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(error "err.subClassToImplement")]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMappings>
+      <PersistenceMapping dataSource="DefaultRelationalDatabase">
+         <RelationalMapping primaryTable="LOGGER">
+            <AttributeMappings>
+               <AttributeMapping destinationKey="EnumDisplay.SK1" name="logLevel" sourceKey="LOGGER.FK_logLevel"/>
+            </AttributeMappings>
+         </RelationalMapping>
+      </PersistenceMapping>
+   </PersistenceMappings>
+</Aspect>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:oasis:names:tc:ebxml-regrep:rim:xsd:2.1"
+	xmlns:tns="urn:oasis:names:tc:ebxml-regrep:rim:xsd:2.1">
+	<xsd:element name="Table">
+		<xsd:complexType>
+			<xsd:sequence>
+              <xsd:element name="Row" minOccurs="1" maxOccurs="unbounded">
+                 <xsd:complexType mixed="true">
+                    <xsd:attribute name="name" type="xsd:string" use="required"/>
+                    <xsd:attribute name="time" type="xsd:long"/>
+                    <xsd:attribute name="required" type="xsd:boolean"/>
+                    <xsd:attribute name="type">
+					   <xsd:simpleType>
+					      <xsd:restriction base="xsd:string">
+					         <xsd:enumeration value="string"/>
+					         <xsd:enumeration value="binary"/>
+					         <xsd:enumeration value="integer"/>
+					         <xsd:enumeration value="long"/>
+					         <xsd:enumeration value="decimal"/>
+					         <xsd:enumeration value="float"/>
+					         <xsd:enumeration value="double"/>
+					         <xsd:enumeration value="timestamp"/>
+					         <xsd:enumeration value="boolean"/>
+					         <xsd:enumeration value="any"/>
+					      </xsd:restriction>
+					   </xsd:simpleType>
+					</xsd:attribute>
+                 </xsd:complexType>
+              </xsd:element>
+			  <xsd:element name="Association" type="tns:AssociationType1"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="AssociationType1">
+		<xsd:annotation>
+			<xsd:documentation xml:lang = "en">
+Association is the mapping of the same named interface in ebRIM.
+It extends RegistryObject.
+
+An Association specifies references to two previously submitted
+registry entrys.
+
+The sourceObject is id of the sourceObject in association
+The targetObject is id of the targetObject in association
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name = "isConfirmedBySourceOwner" use = "optional" type = "xsd:boolean"/>
+		<xsd:attribute name = "isConfirmedByTargetOwner" use = "optional" type = "xsd:boolean"/>
+	</xsd:complexType>
+
+	<xsd:element name="recursiveElement">
+		<xsd:complexType>
+			<xsd:sequence minOccurs="0" maxOccurs="1">
+				<xsd:element ref="tns:recursiveElement2" minOccurs="0" maxOccurs="1"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="recursiveElement2">
+		<xsd:complexType>
+			<xsd:sequence minOccurs="0" maxOccurs="1">
+				<xsd:element ref="tns:recursiveElement" minOccurs="0" maxOccurs="1"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+</xsd:schema>

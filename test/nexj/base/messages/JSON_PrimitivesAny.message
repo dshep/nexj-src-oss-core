@@ -1,0 +1,5 @@
+<Message format="JSON">
+   <Parts>
+      <Value minCount="1" name="key1" type="any" />
+   </Parts>
+</Message>

@@ -1,0 +1,10 @@
+<Class aspects="LOCKING" description="This is for testing the File Persistence Adapter">
+   <Attributes>
+      <Attribute name="id" required="false" type="string"/>
+      <Attribute name="data" required="true" type="binary"/>
+   </Attributes>
+   <Events/>
+   <PersistenceMapping dataSource="TestFilePersistenceDataSource">
+      <FileStorageMapping data="data" keyGenerator="KeyGenerator.GUIDGen" name="id"/>
+   </PersistenceMapping>
+</Class>

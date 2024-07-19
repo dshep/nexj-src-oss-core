@@ -1,0 +1,21 @@
+<Transformation destination="MultiFormatReferrer" source="MultiFormatReferrer">
+   <Mappings>
+      <Mapping destination="csv">
+         <Sources>
+            <Source source="xml"/>
+         </Sources>
+         <Transformation args="&quot;PREFIX&quot; &quot;AFFIX&quot; #t" ref="&quot;XMLTestSuiteResultToCSVTestSuiteResult&quot;"/>
+      </Mapping>
+      <Mapping destination="xml">
+         <Sources>
+            <Source source="csv"/>
+         </Sources>
+         <Transformation ref="&quot;CSVTestSuiteResultToXMLTestSuiteResult&quot;"/>
+      </Mapping>
+      <Mapping destination="none">
+         <Sources>
+            <Source source="none"/>
+         </Sources>
+      </Mapping>
+   </Mappings>
+</Transformation>

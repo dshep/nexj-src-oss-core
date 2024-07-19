@@ -1,0 +1,72 @@
+<Component type="nexj.core.meta.TestComponent" activation="new"
+	description="This is JUnit test case component">
+	<Factory type="nexj.core.meta.TestComponent" method="createTestComponent" activation="singleton">
+		<Properties>
+			<Property name="cookie" override="test.component.cookie">3</Property>
+		</Properties>
+	</Factory>
+	<Properties>
+		<Collection name="integer">
+			<Item>1</Item>
+			<Item>2</Item>
+			<Item>3</Item>
+		</Collection>
+
+		<Collection name="testComponent">
+			<Item>TestComponent</Item>
+			<Item>
+				<Component type="nexj.core.meta.TestComponent" activation="singleton">
+					<Properties>
+						<Property name="cookie">1</Property>
+						<Property name="integer">7</Property>
+					</Properties>
+				</Component>
+			</Item>
+		</Collection>
+
+		<Property name="bigDecimal">123.456001</Property>
+		<Property name="bigInteger">123456789</Property>
+		<Property name="boolean">true</Property>
+		<Property name="booleanObj">1</Property>
+		<Property name="byte">123</Property>
+		<Property name="byteObj">-123</Property>
+		<Property name="character">c</Property>
+		<Property name="characterObj">C</Property>
+		<Property name="component">
+			<Component type="nexj.core.meta.TestComponent" activation="singleton">
+				<Properties>
+					<Property name="cookie">2</Property>
+				</Properties>
+			</Component>
+		</Property>
+		<Property name="date">1970-01-01</Property>
+		<Property name="double">123.625</Property>
+		<Property name="doubleObj">-123.625</Property>
+		<Property name="float">456.625</Property>
+		<Property name="floatObj">-456.625</Property>
+		<Property name="instance">
+			<Component type="nexj.core.meta.TestComponent" activation="singleton">
+				<Properties>
+					<Property name="cookie">3</Property>
+				</Properties>
+			</Component>
+		</Property>
+		<Property name="integer">123456</Property>
+		<Property name="integerObj">-123456</Property>
+		<Property name="long">1234567890123456</Property>
+		<Property name="longObj">-1234567890123456</Property>
+		<Property name="metaclass">Contact</Property>
+		<Property name="primitive">integer</Property>
+		<Property name="properties">
+			a=b+c
+			5=2+2
+		</Property>
+		<Property name="short">12345</Property>
+		<Property name="shortObj">-12345</Property>
+		<Property name="string">abcdef</Property>
+		<Property name="time">00:00:00</Property>
+		<Property name="timestamp">1970-01-01 00:00:00.000000000</Property>
+		<Property name="type">Address</Property>
+		<Property name="utilDate">1970-01-01</Property>
+	</Properties>
+</Component>

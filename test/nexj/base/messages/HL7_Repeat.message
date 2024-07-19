@@ -1,0 +1,135 @@
+<Message description="The HL7 v.2.3 ORU message structure as sent from CML LIS." format="HL7">
+   <HL7Mapping name="ORU^R01"/>
+   <Parts>
+      <Message name="MSH" ref="HL7_MSH"/>
+      <Message maxCount="0" name="RESPONSE">
+         <Parts>
+            <Message minCount="1" name="PATIENT">
+               <Parts>
+                  <Message maxCount="1" minCount="1" name="PID">
+                     <HL7Mapping name="PID" seq="30"/>
+                     <Parts>
+                        <Value name="setID" type="integer">
+                           <HL7Mapping seq="1"/>
+                        </Value>
+                        <Value name="externalPatientID" type="string">
+                           <HL7Mapping seq="2"/>
+                        </Value>
+                        <Message maxCount="0" name="internalPatientID">
+                           <HL7Mapping seq="3"/>
+                           <Parts>
+                              <Value name="id" type="string">
+                                 <HL7Mapping seq="1"/>
+                              </Value>
+                              <Value name="assigningAuthorityId" type="string">
+                                 <HL7Mapping seq="4"/>
+                              </Value>
+                              <Value name="identifierTypeCode" type="string">
+                                 <HL7Mapping seq="5"/>
+                              </Value>
+                              <Value name="facility" type="string">
+                                 <HL7Mapping seq="6"/>
+                              </Value>
+                           </Parts>
+                        </Message>
+                        <Message maxCount="0" minCount="0" name="alternatePatientID">
+                           <HL7Mapping seq="4"/>
+                           <Parts>
+                              <Value maxCount="1" name="identifier" type="string">
+                                 <HL7Mapping seq="1"/>
+                              </Value>
+                              <Value name="checkDigit" type="string">
+                                 <HL7Mapping seq="2"/>
+                              </Value>
+                              <Value name="assigningAuthority" type="string">
+                                 <HL7Mapping seq="3"/>
+                              </Value>
+                           </Parts>
+                        </Message>
+                        <Message name="patientName">
+                           <HL7Mapping seq="5"/>
+                           <Parts>
+                              <Value maxCount="1" name="familyName" type="string">
+                                 <HL7Mapping seq="1"/>
+                              </Value>
+                              <Value maxCount="1" name="givenName" type="string">
+                                 <HL7Mapping seq="2"/>
+                              </Value>
+                           </Parts>
+                        </Message>
+                        <Value maxCount="1" name="dateTimeOfBirth" type="timestamp">
+                           <HL7Mapping seq="7" subtype="DTM"/>
+                        </Value>
+                        <Value maxCount="1" name="administrativeSex" type="string">
+                           <HL7Mapping seq="8"/>
+                           <Enumerations>
+                              <Enumeration value="F"/>
+                              <Enumeration value="M"/>
+                           </Enumerations>
+                        </Value>
+                        <Message name="patientAlias">
+                           <HL7Mapping seq="9"/>
+                           <Parts>
+                              <Value name="lastName" type="string">
+                                 <HL7Mapping seq="1"/>
+                              </Value>
+                              <Value name="firstName" type="string">
+                                 <HL7Mapping seq="2"/>
+                              </Value>
+                              <Value name="dateOfBirth" type="timestamp">
+                                 <HL7Mapping seq="3" subtype="DTM"/>
+                              </Value>
+                              <Value name="sex" type="string">
+                                 <HL7Mapping seq="4"/>
+                                 <Enumerations>
+                                    <Enumeration value="M"/>
+                                    <Enumeration value="F"/>
+                                 </Enumerations>
+                              </Value>
+                           </Parts>
+                        </Message>
+                        <Message name="patientAddress">
+                           <HL7Mapping seq="11"/>
+                           <Parts>
+                              <Value name="line1" type="string">
+                                 <HL7Mapping seq="1"/>
+                              </Value>
+                              <Value name="line2" type="string">
+                                 <HL7Mapping seq="2"/>
+                              </Value>
+                              <Value name="city" type="string">
+                                 <HL7Mapping seq="3"/>
+                              </Value>
+                              <Value name="province" type="string">
+                                 <HL7Mapping seq="4"/>
+                              </Value>
+                              <Value name="postalCode" type="string">
+                                 <HL7Mapping seq="5"/>
+                              </Value>
+                              <Value name="country" type="string">
+                                 <HL7Mapping seq="6"/>
+                              </Value>
+                           </Parts>
+                        </Message>
+                        <Value name="phoneNumberHome" type="string">
+                           <HL7Mapping seq="13"/>
+                        </Value>
+                        <Message minCount="0" name="phoneNumberBusiness">
+                           <HL7Mapping seq="14"/>
+                           <Parts>
+                              <Value maxCount="1" minCount="0" name="phoneNumber" type="string">
+                                 <HL7Mapping seq="1"/>
+                              </Value>
+                              <Value name="extension" type="string">
+                                 <HL7Mapping seq="2"/>
+                              </Value>
+                           </Parts>
+                        </Message>
+                     </Parts>
+                  </Message>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

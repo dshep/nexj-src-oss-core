@@ -1,0 +1,13 @@
+Index: src/main/org/jboss/ejb/deployers/EjbDeployer.java
+===================================================================
+--- src/main/org/jboss/ejb/deployers/EjbDeployer.java	(revision 112603)
++++ src/main/org/jboss/ejb/deployers/EjbDeployer.java	(working copy)
+@@ -502,7 +502,7 @@
+          unitShortName = unitShortName.substring(unitShortName.lastIndexOf("/") + 1);
+          // 
+          unitShortName = ObjectName.quote(unitShortName);
+-         name = EjbModule.BASE_EJB_MODULE_NAME + ",module=" + unitShortName;
++         name = EjbModule.BASE_EJB_MODULE_NAME + ",module=" + unitShortName + ",uid=" + System.identityHashCode(metaData);
+       }
+ 
+       return new ObjectName(name);

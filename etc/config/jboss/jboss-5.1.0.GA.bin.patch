@@ -1,0 +1,46 @@
+diff -rupN bin//run.bat bin3//run.bat
+--- bin//run.bat	2011-03-11 15:45:42.049992900 -0500
++++ bin3//run.bat	2011-03-11 16:12:47.327504400 -0500
+@@ -16,7 +16,7 @@ if "%OS%" == "Windows_NT" (
+ 
+ rem Read an optional configuration file.
+ if "x%RUN_CONF%" == "x" (   
+-   set "RUN_CONF=%DIRNAME%run.conf.bat"
++   "set RUN_CONF=%DIRNAME%run.conf.bat"
+ )
+ if exist "%RUN_CONF%" (
+    echo Calling %RUN_CONF%
+diff -rupN bin//run.conf bin3//run.conf
+--- bin//run.conf	2011-03-11 15:45:42.068994800 -0500
++++ bin3//run.conf	2011-03-14 15:57:12.170660800 -0400
+@@ -42,7 +42,7 @@
+ # Specify options to pass to the Java VM.
+ #
+ if [ "x$JAVA_OPTS" = "x" ]; then
+-   JAVA_OPTS="-Xms128m -Xmx512m -XX:MaxPermSize=256m -Dorg.jboss.resolver.warning=true -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000"
++   JAVA_OPTS="-Xms128m -Xmx512m -XX:PermSize=256m -XX:MaxPermSize=256m -Xss1024k -XX:ThreadStackSize=1024 -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:CMSInitiatingOccupancyFraction=80 -XX:SurvivorRatio=3 -XX:NewRatio=35 -Xbootclasspath/a:%JBOSS_HOME%\lib\nexj-boot.jar -Djava.awt.headless=true -Dsun.rmi.dgc.client.gcInterval=86400000 -Dsun.rmi.dgc.server.gcInterval=86400000 -Dorg.jboss.resolver.warning=true"
+ fi
+ 
+ # Sample JPDA settings for remote socket debugging
+diff -rupN bin//run.conf.bat bin3//run.conf.bat
+--- bin//run.conf.bat	2011-03-11 15:45:42.078995800 -0500
++++ bin3//run.conf.bat	2011-03-14 15:56:57.947238600 -0400
+@@ -40,10 +40,16 @@ rem # options that are always passed by
+ rem #
+ 
+ rem # JVM memory allocation pool parameters - modify as appropriate.
+-set "JAVA_OPTS=-Xms128M -Xmx512M -XX:MaxPermSize=256M"
++set "JAVA_OPTS=-Xms128m -Xmx512m -XX:PermSize=256m -XX:MaxPermSize=256m -Xss1024k -XX:ThreadStackSize=1024 -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:CMSInitiatingOccupancyFraction=80 -XX:SurvivorRatio=3 -XX:NewRatio=35 -Xbootclasspath/a:%JBOSS_HOME%\lib\nexj-boot.jar -Djava.awt.headless=true"
+ 
++rem Eclipse Profiler options for CPU profiling
++rem set JAVA_OPTS=-noverify -XrunProfilerDLL:1 -Xbootclasspath/a:jakarta-regexp.jar;profiler_trace.jar;commons-lang.jar -D__PROFILER_PACKAGE_FILTER=__A__org.jboss.Main;__M__sun.;__M__com.sun.;__M__java.;__M__javax. -D__PROFILER_TIMING_METHOD=1 %JAVA_OPTS%
++
++rem Eclipse Profiler options for heap profiling
++rem set JAVA_OPTS=-noverify -XrunProfilerDLL:3,10,0 -D__PROFILER_PROFILE_HEAP=1 -Xbootclasspath/a:jakarta-regexp.jar;profiler_trace.jar;commons-lang.jar -D__PROFILER_PACKAGE_FILTER=__A__org.jboss.Main;__M__ -D__PROFILER_TIMING_METHOD=1 %JAVA_OPTS%
++ 
+ rem # Reduce the RMI GCs to once per hour for Sun JVMs.
+-set "JAVA_OPTS=%JAVA_OPTS% -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000"
++set "JAVA_OPTS=%JAVA_OPTS% -Dsun.rmi.dgc.client.gcInterval=86400000 -Dsun.rmi.dgc.server.gcInterval=86400000"
+ 
+ rem # Warn when resolving remote XML DTDs or schemas.
+ set "JAVA_OPTS=%JAVA_OPTS% -Dorg.jboss.resolver.warning=true"

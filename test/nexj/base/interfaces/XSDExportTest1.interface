@@ -1,0 +1,6 @@
+<Interface description="Interface for testing the XSD Exporter." format="XML">
+   <Requests>
+      <Request message="XML_NillableSubMessage"/>
+      <Request message="XML_XSDExportComprehensive"/>
+   </Requests>
+</Interface>

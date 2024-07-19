@@ -1,0 +1,48 @@
+<Class description="Version controlled rule set attribute container">
+   <Attributes>
+      <Attribute initializer="1" name="version" required="true" type="integer"/>
+      <Attribute initializer="0" name="locking" required="true" type="integer"/>
+      <Attribute name="ruleSet" required="true" reverse="versions" type="SysRuleSet"/>
+      <Attribute cascade="delete" collection="true" name="rules" reverse="ruleSetVersion" type="SysRule"/>
+   </Attributes>
+   <Events>
+      <Event name="generate">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(map
+   (lambda (rule)
+      (rule'generate)
+   )
+   (sort!
+      (filter (lambda (r) (r'enabled)) (@ rules list))
+      (sort-attribute < 'ordinal)
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event name="clearCache">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define ruleSet (@ ruleSet))
+
+(when (= (ruleSet'current) this)
+   (ruleSet'clearCache)
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event name="create" privilege="RuleSetManage" visibility="public"/>
+      <Event name="update" privilege="RuleSetManage" visibility="public"/>
+      <Event name="delete" privilege="RuleSetManage" visibility="public"/>
+      <Event args="attributes where orderBy count offset xlock" name="read" privilege="RuleSetManage" static="true" visibility="public"/>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="RuleSetVersion">
+         <AttributeMappings>
+            <AttributeMapping column="version" name="version"/>
+            <AttributeMapping column="locking" name="locking"/>
+            <AttributeMapping name="ruleSet" sourceKey="RuleSetVersion.FK1"/>
+            <AttributeMapping destinationKey="RuleDef.FK1" name="rules"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

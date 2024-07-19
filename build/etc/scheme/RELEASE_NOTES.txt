@@ -1,0 +1,30 @@
+Release Notes for NexJ Scheme
+=============================
+
+2011/01 - Release 7.1.13.0
+--------------------------
+Updated NexJ Scheme to R6RS:
+   - Nearly complete implementation of R6RS Base Library Functions
+   - Nearly complete implementation of R6RS Standard Library Functions for the
+     following groups:
+      * unicode, bytevectors, list, sorting, control structures, some I/O,
+        arithmetic (only bitwise functions), hashtables, eval, mutable pairs,
+        R5RS compatibility
+   - The following R6RS Standard Library Functions are not implemented:
+      * records, exceptions, some I/O, arithmetic (bitwise is implemented),
+        syntax-case, enumerations, mutable strings
+
+Additional features specific to NexJ Scheme:
+   - hashset functions
+   - additional (make-hashtable) constructors
+   - a destructive list append function: (append!)
+   - Half-up rounding: (round-at)
+   - OID serialization: (oid->string) and (string->oid)
+   - Additional bytevectors functions: (bytevector) and (bytevector-append)
+   - Vector and bytevector are callable types
+      * (define v (vector 5 6 7))   ; creates a vector
+      * (v 1)    ; returns value at index 1 (6)
+      * (v 1 9)  ; sets value at index 1 to 9 and returns 9
+   - A macro that wraps multiple return values in a list: (values->list)
+   - Several R6RS list functions also work for vector and collection objects
+

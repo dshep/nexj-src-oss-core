@@ -1,0 +1,8 @@
+<Message format="JSON">
+   <JSONMapping subtype="array"/>
+   <Parts>
+      <Value name="value" type="integer"/>
+      <Value maxCount="0" name="value1" type="string"/>
+      <Value maxCount="0" name="value2" type="string"/>
+   </Parts>
+</Message>

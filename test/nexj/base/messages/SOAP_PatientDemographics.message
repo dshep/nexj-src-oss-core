@@ -1,0 +1,46 @@
+<Message format="XML">
+   <XMLMapping namespace="a" uri="urn:com.nexjsystems:ns:test:a" node="Patient" envelope="soap" action="Patient#add"/>
+   <Parts>
+      <Message name="player">
+         <Parts>
+            <Value name="firstName" type="string"/>
+            <Value name="lastName" type="string"/>
+            <Value name="fullName" type="string"/>
+            <Value name="initials" type="string"/>
+            <Value name="title" type="string"/>
+            <Value name="affix" type="string"/>
+            <Value name="birthTime" type="timestamp"/>
+            <Value name="genderCode" type="string"/>
+            <Value name="guid" type="binary"/>
+            <Message name="id" maxCount="0" lax="true">
+               <Parts>
+                  <Value name="type" type="string" minCount="1">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value name="id" type="string" minCount="1">
+                     <XMLMapping type="attribute" namespace="b" uri="urn:com.nexjsystems:ns:test:b"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message name="addr" maxCount="0">
+               <Parts>
+                  <Value name="useCode" type="string"/>
+                  <Value name="city" type="string"/>
+                  <Value name="address1" type="string"/>
+                  <Value name="address2" type="string"/>
+                  <Value name="address3" type="string"/>
+                  <Value name="state" type="string"/>
+                  <Value name="country" type="string"/>
+                  <Value name="zip" type="string"/>
+               </Parts>
+            </Message>
+            <Message name="telcom" maxCount="0">
+               <Parts>
+                  <Value name="useCode" type="string"/>
+                  <Value name="address" type="string"/>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

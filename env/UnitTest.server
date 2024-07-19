@@ -1,0 +1,5 @@
+<Server description="Unit test configuration." previewThreshold="202400" secureTransport="false" test="true" type="Generic">
+   <ValidConnections>
+      <Connection name="UnitTest-MySQL"/>
+   </ValidConnections>
+</Server>

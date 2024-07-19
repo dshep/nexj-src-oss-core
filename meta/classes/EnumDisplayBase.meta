@@ -1,0 +1,53 @@
+<Class aspects="LOCKING" caption="idsc.EnumDisplay.caption" description="Abstract base class for the EnumDisplay and EnumBase classes." nameAttribute="caption" visibility="protected">
+   <Attributes>
+      <Attribute name="type" type="EnumType"/>
+      <Attribute name="code" required="true" type="EnumCode"/>
+      <Attribute cached="true" description="PART OF THE MULTI-PART PK --&gt; exposed here as a workaround" initializer="(@ code typeCode)" name="typeCode" required="true" type="string" validation="(= (@ typeCode) (@ code typeCode))"/>
+      <Attribute cached="true" description="PART OF THE MULTI-PART PK --&gt; exposed here as a workaround" name="value" required="true" type="string" validation="(= (@ value) (@ code value))" value="(@ code value)"/>
+      <Attribute initializer="&quot;en&quot;" name="locale" required="true" type="string"/>
+      <Attribute name="caption" required="true" type="string"/>
+      <Attribute name="shortCaption" type="string"/>
+      <Attribute cached="true" description="DENORMALIZED from code -- Please do NOT change here." name="displayOrder" required="true" type="integer" validation="(= (@ code displayOrder) (@ displayOrder))" value="(@ code displayOrder)"/>
+      <Attribute cached="true" description="DENORMALIZED VALUE --&gt; PLEASE DO NOT UPDATE HERE!" name="behaveAsValue" required="true" type="string" value="(@ code behaveAsValue)"/>
+      <Attribute cached="true" constrained="true" enumeration="EnumCodeClassificationEnum" name="classification" required="true" type="string" value="(@ code classification)"/>
+      <Attribute description="DENORM of parent/child relationship on codes" name="parent" reverse="children" type="EnumDisplayBase"/>
+      <Attribute collection="true" description="DENORM of parent/child relationship on codes" name="children" reverse="parent" type="EnumDisplayBase"/>
+      <Attribute cached="true" name="name" type="string" value="(@ code name)"/>
+      <Attribute cached="true" name="parentTypeCode" type="string" value="(@ code parentTypeCode)" visibility="protected"/>
+      <Attribute cached="true" name="parentValueCode" type="string" value="(@ code parentValueCode)" visibility="protected"/>
+      <Attribute cached="true" name="externalValue" type="string" value="(@ code externalValue)"/>
+      <Attribute cached="true" description="True if this is runtime editable (i.e., enum type classification is system design time display, system design time editable or custom field picklist)." name="isRuntimeEditable" type="boolean" value="(@ code hasRuntimeEditableCaptions)"/>
+      <Attribute cached="true" description="DENORMALIZED VALUE --&gt; PLEASE DO NOT UPDATE HERE!" name="active" required="true" type="boolean" value="(@ code active)"/>
+   </Attributes>
+   <Events>
+      <Event access="isRuntimeEditable" name="create" privilege="AdminEnumDisplayManage" visibility="public"/>
+      <Event access="isRuntimeEditable" name="update" privilege="AdminEnumDisplayManage" visibility="public">
+         <Actions/>
+      </Event>
+      <Event access="isRuntimeEditable" name="delete" privilege="AdminEnumDisplayManage" visibility="public">
+         <Actions/>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping primaryTable="EnumDisplay">
+         <AttributeMappings>
+            <AttributeMapping column="locking" name="locking"/>
+            <AttributeMapping column="typeCode" name="typeCode"/>
+            <AttributeMapping column="valueCode" name="value"/>
+            <AttributeMapping column="locale" name="locale"/>
+            <AttributeMapping column="caption" name="caption"/>
+            <AttributeMapping column="shortCaption" name="shortCaption"/>
+            <AttributeMapping column="displayOrder" name="displayOrder"/>
+            <AttributeMapping column="behaveAsCode" name="behaveAsValue"/>
+            <AttributeMapping column="classification" name="classification"/>
+            <AttributeMapping destinationKey="EnumType.PK" name="type" sourceKey="EnumDisplay.FK_Type"/>
+            <AttributeMapping destinationKey="EnumCode.PK" name="code" sourceKey="EnumDisplay.FK_Code"/>
+            <AttributeMapping destinationKey="EnumDisplay.PK" name="parent" sourceKey="EnumDisplay.FK_Parent"/>
+            <AttributeMapping destinationKey="EnumDisplay.FK_Parent" name="children" sourceKey="EnumDisplay.PK"/>
+            <AttributeMapping column="parentTypeCode" name="parentTypeCode"/>
+            <AttributeMapping column="parentValueCode" name="parentValueCode"/>
+            <AttributeMapping column="externalCode" name="externalValue"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

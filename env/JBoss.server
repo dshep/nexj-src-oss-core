@@ -1,0 +1,6 @@
+<Server description="Local machine with JBoss in the default location." location="c:\java\jboss-4.0.5.GA\server\default" password="jbadm1n" previewThreshold="202400" secureTransport="false" type="JBoss" user="admin">
+   <ValidConnections>
+      <Connection name="Development-MySQL"/>
+      <Connection name="Development-PostgreSQL"/>
+   </ValidConnections>
+</Server>

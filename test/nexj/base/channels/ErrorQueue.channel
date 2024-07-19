@@ -1,0 +1,1 @@
+<MessageQueue alias="NEXJ_ERROR" broadcast="false" errorCount="0" persistent="true" priority="4" receive="false" ttl="0"/>

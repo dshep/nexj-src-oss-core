@@ -1,0 +1,5 @@
+<Metadata baseNamespace="http://www.nexjsystems.com/ns/mixin-test-c" baseVersion="1" baseChecksum="80c084c5" name="NexJ Core Test Root With Linked Base Version Mismatched" namespace="http://www.nexjsystems.com/ns/mixin-test-root-base-invalid" revision="1.0" version="6" coreVersion="6.2.0.20+">
+   <Mixins>
+      <Mixin namespace="http://www.nexjsystems.com/ns/mixin-test-b" version="4" checksum="237adf44" override="true"/>
+   </Mixins>
+</Metadata>

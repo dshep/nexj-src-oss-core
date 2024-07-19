@@ -1,0 +1,9 @@
+<Message derivation="final" description="" format="XML">
+   <XMLMapping namespace="soap12" node="Subcode"/>
+   <Parts>
+      <Value description="A qualified name for an application-defined subcategory of the parent code or subcode." minCount="1" name="value" type="string">
+         <XMLMapping namespace="soap12" node="Value"/>
+      </Value>
+      <Message name="subcode" ref="SOAP12Fault_Subcode"/>
+   </Parts>
+</Message>

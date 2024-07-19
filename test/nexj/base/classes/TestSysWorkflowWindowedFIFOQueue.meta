@@ -1,0 +1,21 @@
+<Class base="SysWorkflowQueue">
+   <Attributes>
+      <Attribute name="type" required="true" type="string" value="&quot;WFWindowedFIFOQueue&quot;"/>
+      <Attribute initializer="0" name="count" static="true" type="long"/>
+   </Attributes>
+   <Events>
+      <Event args="assignment" name="add" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(assignment'priority (+ 4 (/ (cast double (@ count)) 1E3)))
+(TestSysWorkflowWindowedFIFOQueue'count (+ (@ count) 1))
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="time" description="Computes the start time of the next execution window for this queue. If time is already within a valid execution window, returns a timestamp &lt;= time." name="getWindowStartTime" variables="cal sec" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[; Window is the first ten seconds of each minute.
+(getWindowStartTime time '() '() 0 10000)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

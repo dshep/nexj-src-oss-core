@@ -1,0 +1,13 @@
+<Message format="XML">
+   <Parts>
+      <Message maxCount="0" name="tests">
+         <Parts>
+            <Value minCount="1" name="date" type="timestamp"/>
+            <Value minCount="1" name="status" type="string">
+               <XMLMapping node="result" type="attribute"/>
+            </Value>
+            <Message name="data" ref="XMLTestResult"/>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

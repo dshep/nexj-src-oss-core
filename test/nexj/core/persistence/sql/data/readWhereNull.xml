@@ -1,0 +1,35 @@
+
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<nv:Envelope xmlns:nv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <nv:Body xmlns:ns="http://www.nexjsystems.com/xml-soap" nv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <ns:Array>
+         <items nc:arrayType="xs:anyType[1]">
+            <Item href="#a"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="a">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[4]">
+            <Item>lastName</Item>
+            <Item>addresses</Item>
+            <Item>firstName</Item>
+            <Item>user</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[4]">
+            <Item xi:nil="true"/>
+            <Item href="#b"/>
+            <Item xi:type="xs:string">Gnaeus</Item>
+            <Item xi:nil="true"/>
+         </values>
+      </ns:TransferObject>
+      <ns:Array id="b">
+         <items nc:arrayType="xs:anyType[0]"/>
+      </ns:Array>
+   </nv:Body>
+</nv:Envelope>

@@ -1,0 +1,26 @@
+<Message aggregation="random" base="Raw" description="Raw JMS File" lax="true">
+   <Parts>
+      <Message aggregation="random" description="jmsErrorCount, jmsMaxErrorCount, jmsBackoffDelay, jmsOldMessageId, jmsOldDestination" lax="true" name="properties"/>
+      <Value description="Message priority 0..9" name="priority" type="integer">
+         <Enumerations>
+            <Enumeration description="Normal Lowest (Lowest priority)" value="0"/>
+            <Enumeration description="Normal Low" value="1"/>
+            <Enumeration description="Normal" value="2"/>
+            <Enumeration description="Normal High" value="3"/>
+            <Enumeration description="Normal Highest (Default)" value="4"/>
+            <Enumeration description="Expedited Lowest" value="5"/>
+            <Enumeration description="Expedited Low" value="6"/>
+            <Enumeration description="Expedited" value="7"/>
+            <Enumeration description="Expedited High" value="8"/>
+            <Enumeration description="Expedited Highest (Highest priority)" value="9"/>
+         </Enumerations>
+      </Value>
+      <Value description="Message persistence flag." name="persistent" type="boolean"/>
+      <Value description="Time to Live." name="ttl" type="long"/>
+      <Value name="type" type="string"/>
+      <Value description="Reply-to destination." name="replyTo" type="any"/>
+      <Value description="Source node" name="node" type="string"/>
+      <Value name="user" type="string"/>
+      <Value name="protected" type="string"/>
+   </Parts>
+</Message>

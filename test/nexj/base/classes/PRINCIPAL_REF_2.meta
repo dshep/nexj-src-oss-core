@@ -1,0 +1,21 @@
+<Aspect pointcuts="TestPointcut">
+   <Attributes>
+      <Attribute name="AOP1" static="true" type="string" value="&quot;PRINCIPAL_REF_2&quot;" visibility="protected"/>
+      <Attribute name="principalId" type="binary"/>
+      <Attribute name="access" required="true" type="boolean" value="#f"/>
+      <Attribute name="aspectBaseAttr" caption="aspectBaseAttrCaption" type="string"/>
+   </Attributes>
+   <Events>
+      <Event name="ref2" transaction="supported"/>
+      <Event access="access" name="testAccess" privilege="updateContact" transaction="none"/>
+   </Events>
+   <PersistenceMappings>
+      <PersistenceMapping dataSource="DefaultRelationalDatabase">
+         <RelationalMapping>
+            <AttributeMappings>
+               <AttributeMapping column="principalId" name="principalId" table="PRINCIPAL_REF"/>
+            </AttributeMappings>
+         </RelationalMapping>
+      </PersistenceMapping>
+   </PersistenceMappings>
+</Aspect>

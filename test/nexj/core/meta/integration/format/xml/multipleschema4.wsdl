@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions 
+  targetNamespace="http://test.nexj.com/wsdl/multi" 
+  xmlns="http://www.w3.org/2001/XMLSchema" 
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:types>
+        <schema 
+          targetNamespace="http://test.nexj.com/wsdl/schema1" 
+          xmlns="http://www.w3.org/2001/XMLSchema" 
+          xmlns:tns="http://test.nexj.com/wsdl/schema1">
+            
+            <element name="elementA" type="tns:complexTypeA" />
+            
+            <complexType name="complexTypeA">
+                <sequence>
+                    <element minOccurs="0" name="codeA" type="tns:CodeType" />
+                    <element minOccurs="0" name="stringA" type="string" />
+                </sequence>
+            </complexType>
+            
+            <complexType name="CodeType">
+              <sequence>
+                <element minOccurs="0" name="code" type="string"/>
+                <element minOccurs="0" name="description" type="string"/>
+              </sequence>
+            </complexType>
+        </schema>
+        <schema 
+          targetNamespace="http://test.nexj.com/wsdl/schema2" 
+          xmlns="http://www.w3.org/2001/XMLSchema" 
+          xmlns:schema1="http://test.nexj.com/wsdl/schema1" 
+          xmlns:tns="http://test.nexj.com/wsdl/schema2">
+            <import namespace="http://test.nexj.com/wsdl/schema1" />
+            
+            <element name="elementB">
+              <complexType>
+                <sequence>
+                  <element minOccurs="0" name="codeB" type="schema1:CodeType"/>
+                  <element minOccurs="0" name="childB" type="schema1:complexTypeA"/>
+                </sequence>
+              </complexType>
+            </element>
+        </schema>
+     </wsdl:types>
+</wsdl:definitions>

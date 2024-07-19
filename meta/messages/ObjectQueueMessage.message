@@ -1,0 +1,16 @@
+<Message base="Raw">
+   <Parts>
+      <Value description="A brief description of the message to display in UI." name="name" type="string"/>
+      <Value description="Determines how the message will be received, if it will not be persisted.  &#13;&#10;&#13;&#10;Null for persisted delivery.  &#13;&#10;A String node name for delivery to a single specific node.&#13;&#10;A Symbol for special delivery." name="receiver" type="any">
+         <Enumerations>
+            <Enumeration description="Received with a lock on the messaging engine." value="dispatcher"/>
+            <Enumeration description="Received by an arbitrary single node." value="one"/>
+            <Enumeration description="Received by all active nodes." value="all"/>
+            <Enumeration description="Received by all except the sending node." value="other"/>
+         </Enumerations>
+      </Value>
+      <Value description="Delay that will elapse before the message is delivered, in milliseconds.  This property is ignored if &quot;receiver&quot; is non-null." name="delay" type="long"/>
+      <Value description="The user to log in while the message is delivered.  To send a message with this property set, one must have SysMessageManage privilege.&#13;&#10;&#13;&#10;The default behaviour is for the message to be delivered as the same user who sent it." name="user" type="string"/>
+      <Value description="Ignored if message receiver is null." name="priority" type="integer"/>
+   </Parts>
+</Message>

@@ -1,0 +1,9 @@
+<Transformation base="2MsgToColSimple_Base" destination="MsgCol" source="MsgCol">
+   <Mappings>
+      <Mapping destination="c">
+         <Sources>
+            <Source source="b"/>
+         </Sources>
+      </Mapping>
+   </Mappings>
+</Transformation>

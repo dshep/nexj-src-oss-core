@@ -1,0 +1,43 @@
+<Message description="Object message for RuleSet" format="Object">
+   <ObjectMapping class="SysRuleSet"/>
+   <Parts>
+      <Value minCount="1" name="name" type="string">
+         <ObjectMapping key="true"/>
+      </Value>
+      <Value name="description" type="string"/>
+      <Message maxCount="0" minCount="1" name="versions">
+         <ObjectMapping class="SysRuleSetVersion" local="true"/>
+         <Parts>
+            <Value minCount="1" name="version" type="integer">
+               <ObjectMapping key="true"/>
+            </Value>
+            <Message maxCount="0" name="rules">
+               <ObjectMapping class="SysRule" local="true"/>
+               <Parts>
+                  <Value minCount="1" name="name" type="string">
+                     <ObjectMapping key="true" update="false"/>
+                  </Value>
+                  <Value name="description" type="string">
+                     <ObjectMapping update="false"/>
+                  </Value>
+                  <Value name="ordinal" type="double">
+                     <ObjectMapping update="false"/>
+                  </Value>
+                  <Value name="enabled" type="boolean">
+                     <ObjectMapping update="false"/>
+                  </Value>
+                  <Value name="customized" type="boolean">
+                     <ObjectMapping update="false"/>
+                  </Value>
+                  <Value name="condition" type="string">
+                     <ObjectMapping update="false"/>
+                  </Value>
+                  <Value name="action" type="string">
+                     <ObjectMapping update="false"/>
+                  </Value>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

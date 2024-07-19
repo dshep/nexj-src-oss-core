@@ -1,0 +1,124 @@
+<Class base="Contact">
+   <Attributes>
+      <Attribute collection="false" name="middleName" required="false" type="string"/>
+      <Attribute collection="false" name="isDeleted" required="false" type="boolean"/>
+      <Attribute name="classCode" required="true" type="string" value="&quot;PAT&quot;"/>
+      <Attribute collection="false" name="birthdate" required="false" type="timestamp"/>
+      <Attribute collection="false" name="prefix" required="false" type="string"/>
+      <Attribute collection="false" name="suffix" required="false" type="string"/>
+      <Attribute collection="false" name="gender" required="false" type="string"/>
+      <Attribute collection="false" name="patientId" required="false" type="string"/>
+      <Attribute collection="false" name="icon" required="false" type="string" value="(rules &quot;PatientIcon&quot;)"/>
+      <Attribute name="staticIcon" type="string" value="&quot;16/businessman&quot;"/>
+      <Attribute collection="false" name="visit" required="false" reverse="patient" type="Visit"/>
+      <Attribute collection="true" name="visits" required="false" reverse="patient" type="Visit"/>
+      <Attribute collection="true" name="externalVisits" required="false" reverse="patient" type="ExternalVisit"/>
+      <Attribute access="alwaysReadOnly" collection="true" name="visitsReadOnly" reverse="patient" type="Visit"/>
+      <Attribute name="alwaysReadOnly" type="boolean" value="#f"/>
+      <Attribute collection="false" name="doctor" required="false" reverse="patients" type="Doctor"/>
+      <Attribute access="childrenAccess" collection="true" dependency="participations" name="children" reverse="parent" type="Patient" updatePrivilege="childrenUpdate"/>
+      <Attribute name="specialist" type="Doctor"/>
+      <Attribute access="dummyAccess" name="parent" reverse="children" type="Patient"/>
+      <Attribute access="participationsAccess" collection="true" name="participations" reverse="patient" type="VisitParticipation"/>
+      <Attribute collection="true" name="requests" reverse="patient" type="Request"/>
+      <Attribute collection="true" name="externalRequests" reverse="patient" type="ExternalRequest"/>
+      <Attribute name="fullName" orderBy="lastName firstName" type="string" value="((string-append (@ firstName) &quot; &quot; (@ middleName) &quot; &quot; (@ lastName))'trim)"/>
+      <Attribute access="parentsAccess" collection="true" name="parents" type="Patient"/>
+      <Attribute dependency="(addresses type)" name="depend1" type="integer"/>
+      <Attribute initializer="&quot;UTC&quot;" name="timeZone" type="string"/>
+      <Attribute collection="false" name="businessAddress2" required="false" reverse="contact" type="BusinessAddress" where="(= type &quot;Business&quot;)"/>
+      <Attribute name="tag" type="string" value="(if (string-match (@ lastName) &quot;\\d&quot;)&#10;   (@ lastName)&#10;   &quot;A&quot;&#10;)"/>
+      <Attribute description="Controls access to children collection." name="childrenAccess" type="boolean" value="#t"/>
+      <Attribute name="deleteAccess" type="boolean" value="#t"/>
+      <Attribute name="createAccess" type="boolean" value="(= (@ lastName) &quot;Tachoma&quot;)"/>
+      <Attribute name="participationsAccess" type="boolean" value="#t&#10;"/>
+      <Attribute name="parentsAccess" type="boolean" value="#t"/>
+      <Attribute name="visibleDescription" type="string" value="(if (@ isDeleted) &quot;deleted&quot; &quot;visible&quot;)"/>
+      <Attribute name="visible" readOnly="true" required="true" type="boolean" value="#f"/>
+   </Attributes>
+   <Events>
+      <Event args="attributes" name="load" vararg="true">
+         <Actions>
+            <Action condition="(memq 'parents attributes)" name="parents" type="before"><![CDATA[(rollup this 'parents 'parent)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Overrides the privilege from the base class." name="update" privilege="updatePatient" visibility="public"/>
+      <Event access="deleteAccess" description="Overrides the privilege from the base class." name="delete" privilege="deletePatient" visibility="public"/>
+      <Event args="args" description="Creates patient with visits and requests collections" name="createWithVisits" static="true" vararg="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let*
+   (
+      (patient (apply Patient 'new (: firstName "first") (: lastName "last") args))
+      (visit (Visit'new (: reason "broken foot") (: patient patient) 
+         (: startDate (now)) (: endDate (now))))
+      (visits (instance-collection visit))
+      (requests (instance-collection (Request'new (: code "bft") (: patient patient) 
+         (: visit visit) (: startDate (now)))))
+   )
+   (patient'visits visits)
+   (visit'requests requests)
+   patient
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="patientLastName" description="Adds more patients as children to the given patient" name="addMoreChildren" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let*
+   (
+      (parent (read-instance Patient '() `(= lastName ,patientLastName) '()))
+      (children (Patient'read '() `(not (= (@) ,parent)) '() '() '() '()))
+   )
+   (for-each 
+      (lambda (child)
+         (child'parent parent)
+      )
+      children
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="triggerTestStart">
+         <Actions>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event name="triggerTest">
+         <Actions>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event name="triggerExceptionStart">
+         <Actions>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event name="triggerException">
+         <Actions>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="test.Contact">
+         <AttributeMappings>
+            <AttributeMapping column="middleName" name="middleName"/>
+            <AttributeMapping column="isDeleted" name="isDeleted"/>
+            <AttributeMapping column="birthdate" name="birthdate"/>
+            <AttributeMapping column="prefix" name="prefix"/>
+            <AttributeMapping column="suffix" name="suffix"/>
+            <AttributeMapping column="gender" name="gender"/>
+            <AttributeMapping name="visit" sourceKey="Contact.FK4"/>
+            <AttributeMapping destinationKey="Visit.FK1" name="visits" sourceKey="Contact.PK"/>
+            <AttributeMapping destinationKey="Visit.FK1" name="visitsReadOnly" sourceKey="Contact.PK"/>
+            <AttributeMapping name="parent" sourceKey="Contact.FK5"/>
+            <AttributeMapping column="icon" name="icon"/>
+            <AttributeMapping destinationKey="Contact.FK5" name="children"/>
+            <AttributeMapping destinationKey="VisitParticipation.FK1" name="participations"/>
+            <AttributeMapping destinationKey="Request.FK1" name="requests"/>
+            <AttributeMapping destinationKey="Request.FK1" name="externalRequests"/>
+            <AttributeMapping destinationKey="Address.FK1" name="businessAddress2"/>
+            <AttributeMapping name="parents" sourceKey="Contact.FK5"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

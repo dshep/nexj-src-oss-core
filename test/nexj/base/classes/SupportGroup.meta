@@ -1,0 +1,14 @@
+<Class description="A group of contacts">
+   <Attributes>
+      <Attribute collection="true" name="participants" reverse="supportGroup" type="Contact"/>
+      <Attribute name="name" type="string"/>
+   </Attributes>
+   <Events/>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.SupportGroup">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

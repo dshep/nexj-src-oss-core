@@ -1,0 +1,9 @@
+<Action caption="Set Channel" description="Sets the output channel.  If no channel is specified, the channel property of the message is used." icon="earth_network" service="true" tooltip="Set the Output Channel">
+   <Arguments>
+      <Argument default="(@ channel)" description="Expression that evaluates to the name of the desired output channel.  Default: (@ channel)" name="channel" type="any"/>
+   </Arguments>
+   <Script><![CDATA[`(begin
+   (set! :output ,channel)
+   this
+)   ]]></Script>
+</Action>

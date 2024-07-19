@@ -1,0 +1,80 @@
+<Class description="Contact Address">
+   <Attributes>
+      <Attribute collection="false" name="country" required="true" type="string"/>
+      <Attribute collection="false" name="countryEnum" required="false" type="Country"/>
+      <Attribute collection="false" constrained="true" enumeration="AddressTypeEnum" name="type" required="false" type="string"/>
+      <Attribute collection="false" name="state" required="false" type="string"/>
+      <Attribute collection="false" name="city" required="false" type="string"/>
+      <Attribute collection="false" name="cityEnum" required="false" type="City"/>
+      <Attribute collection="false" name="street" required="false" type="string"/>
+      <Attribute collection="false" name="code" required="false" type="string"/>
+      <Attribute collection="false" name="contact" readPrivilege="addressContactRead" required="true" reverse="privilegedAddresses" type="Contact"/>
+      <Attribute name="typeEnum" type="AddressType" where="(= locale &quot;en&quot;)"/>
+      <Attribute name="deletable" type="boolean" value="(= (@ type) &quot;Business&quot;)"/>
+      <Attribute name="updatable" type="boolean" value="(= (@ type) &quot;Business&quot;)"/>
+   </Attributes>
+   <Events>
+      <Event args="attributes where orderBy count offset xlock" name="read" privilege="readAddress" static="true" visibility="public"/>
+      <Event args="contact parameter" name="createAddress" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(logger'debug "---- creating address")
+(let* ((addrType 
+         (if (null? parameter) 
+               ((AddressType'read '() '(= type "Business") '() 1 0 #f)'get 0) 
+               parameter))
+         (newaddr 
+            (if (= (addrType'type) "Business")
+               (BusinessAddress'new (: contact contact) (: type (addrType'type)))
+               (Address'new (: contact contact) (: type (addrType'type)))
+            )
+         )
+      )
+      
+   ;return:
+   newaddr
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="contact type" name="createAddress2" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(logger'debug "---- creating address")
+(let ((newaddr 
+         (if (= type "Business")
+               (BusinessAddress'new (: contact contact) (: type type))
+               (Address'new (: contact contact) (: type type))
+            )
+         )
+      )
+      
+   ;return:
+   newaddr
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event name="create" visibility="public">
+         <Actions>
+            <Action name="setContactDefaults" type="before"><![CDATA[(if (= (this'type) "Home")
+   ((this'contact)'homeAddress this)
+)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.Address">
+         <AttributeMappings>
+            <AttributeMapping column="country" name="country" table="test.Address"/>
+            <AttributeMapping name="countryEnum" sourceKey="Address.FK3"/>
+            <AttributeMapping column="addr_type" name="type" table="test.Address"/>
+            <AttributeMapping column="state" name="state" table="test.Address"/>
+            <AttributeMapping column="city" name="city" table="test.Address"/>
+            <AttributeMapping name="cityEnum" sourceKey="Address.FK2"/>
+            <AttributeMapping column="street" name="street" table="test.Address"/>
+            <AttributeMapping column="code" name="code" table="test.Address"/>
+            <AttributeMapping name="contact" sourceKey="Address.FK1"/>
+            <AttributeMapping destinationKey="StringEnum.SK1" name="typeEnum" sourceKey="Address.FK4"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

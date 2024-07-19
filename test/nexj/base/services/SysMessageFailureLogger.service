@@ -1,0 +1,4 @@
+<Service layout="startX:133;endY:172;startY:176;endX:524">
+   <Script caption="log failed message" layout="y:171;x:220" name="log"><![CDATA[(logger'info this)]]></Script>
+   <Script caption="throw" layout="y:171;x:416" name="throw"><![CDATA[(error "err.test.completeAndUtterFailure")]]></Script>
+</Service>

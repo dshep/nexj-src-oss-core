@@ -1,0 +1,25 @@
+Index: src/main/java/org/jboss/xb/binding/UnmarshallerFactory.java
+===================================================================
+--- src/main/java/org/jboss/xb/binding/UnmarshallerFactory.java	(revision 4725)
++++ src/main/java/org/jboss/xb/binding/UnmarshallerFactory.java	(working copy)
+@@ -90,6 +90,9 @@
+    {
+       public Unmarshaller newUnmarshaller()
+       {
++         ClassLoader savedCl = Thread.currentThread().getContextClassLoader();
++         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
++         
+          UnmarshallerImpl unmarshaller;
+          try
+          {
+@@ -99,6 +102,10 @@
+          {
+             throw new JBossXBRuntimeException(e.getMessage(), e);
+          }
++         finally
++         {
++            Thread.currentThread().setContextClassLoader(savedCl);
++         }
+ 
+          JBossXBParser parser = unmarshaller.getParser();
+          if(validation != null)

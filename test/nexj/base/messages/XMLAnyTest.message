@@ -1,0 +1,117 @@
+<Message derivation="final" format="XML">
+   <XMLMapping/>
+   <Parts>
+      <Value name="anyTypeElement" type="any">
+         <XMLMapping/>
+      </Value>
+      <Value maxCount="0" name="anyTypeElementCollection" type="any">
+         <XMLMapping/>
+      </Value>
+      <Value name="anyInterfaceElement" type="any">
+         <XMLMapping interface="AnyTypeTest"/>
+      </Value>
+      <Value maxCount="0" name="anyInterfaceElementCollection" type="any">
+         <XMLMapping interface="AnyTypeTest"/>
+      </Value>
+      <Message name="anyTypeElementComp">
+         <XMLMapping/>
+         <Parts>
+            <Value name="attribute" type="any">
+               <XMLMapping type="attribute"/>
+            </Value>
+            <Value name="value" type="any">
+               <XMLMapping type="value"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message name="anyTypeElementCompValueCollection">
+         <XMLMapping/>
+         <Parts>
+            <Value name="attribute" type="any">
+               <XMLMapping type="attribute"/>
+            </Value>
+            <Value maxCount="0" name="value" type="any">
+               <XMLMapping type="value"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message maxCount="0" name="anyTypeElementCompCollection">
+         <XMLMapping/>
+         <Parts>
+            <Value name="attribute" type="any">
+               <XMLMapping type="attribute"/>
+            </Value>
+            <Value maxCount="0" name="value" type="any">
+               <XMLMapping type="value"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message name="anyInterfaceElementComp">
+         <XMLMapping/>
+         <Parts>
+            <Value name="attribute" type="any">
+               <XMLMapping type="attribute"/>
+            </Value>
+            <Value minCount="1" name="before" type="string"/>
+            <Value name="value" type="any">
+               <XMLMapping interface="AnyTypeTest" type="value"/>
+            </Value>
+            <Value name="after" type="string"/>
+            <Value name="subInterface" type="any">
+               <XMLMapping interface="AnyTypeTest"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message maxCount="3" name="anyInterfaceElementCompCollection">
+         <XMLMapping/>
+         <Parts>
+            <Value name="before" type="string"/>
+            <Value name="attribute" type="any">
+               <XMLMapping type="attribute"/>
+            </Value>
+            <Value maxCount="2" name="value" type="any">
+               <XMLMapping interface="AnyTypeTest" type="value"/>
+            </Value>
+            <Value name="after" type="string"/>
+         </Parts>
+      </Message>
+      <Message name="anyTypeElementCompReqValue">
+         <XMLMapping/>
+         <Parts>
+            <Value name="attribute" type="any">
+               <XMLMapping type="attribute"/>
+            </Value>
+            <Value minCount="1" name="value" type="any">
+               <XMLMapping type="value"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message maxCount="3" name="anyInterfaceElementCompCollectionReqValue">
+         <XMLMapping/>
+         <Parts>
+            <Value name="before" type="string"/>
+            <Value name="attribute" type="any">
+               <XMLMapping type="attribute"/>
+            </Value>
+            <Value maxCount="2" minCount="1" name="value" type="any">
+               <XMLMapping interface="AnyTypeTest" type="value"/>
+            </Value>
+            <Value name="after" type="string"/>
+         </Parts>
+      </Message>
+      <Message name="requiredAnyTypeElement">
+         <XMLMapping/>
+         <Parts>
+            <Value minCount="1" name="anyTypeElement" type="any">
+               <XMLMapping/>
+            </Value>
+         </Parts>
+      </Message>
+      <Value name="anyInterfaceInheritanceElement" type="any">
+         <XMLMapping interface="InheritanceTest"/>
+      </Value>
+      <Value maxCount="0" name="anyTypeElementCollectionTyped" type="any">
+         <XMLMapping nillable="true" subtype="xsi"/>
+      </Value>
+   </Parts>
+</Message>

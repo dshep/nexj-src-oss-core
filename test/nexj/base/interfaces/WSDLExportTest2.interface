@@ -1,0 +1,6 @@
+<Interface description="Interface for testing the WSDL Exporter." format="XML">
+   <Requests>
+      <Request message="XML_PatientIdReferrer1"/>
+      <Request message="XML_PatientIdReferrer2"/>
+   </Requests>
+</Interface>

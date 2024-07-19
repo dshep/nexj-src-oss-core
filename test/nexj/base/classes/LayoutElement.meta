@@ -1,0 +1,11 @@
+<Class description="Represents an individual element within a personalized layout.">
+   <Attributes>
+      <Attribute name="name" required="true" type="string"/>
+      <Attribute initializer="0" name="locking" required="true" type="integer"/>
+      <Attribute name="layoutData" type="string"/>
+      <Attribute initializer="0" name="layout" required="true" reverse="elements" type="Layout"/>
+      <Attribute initializer="#t" name="used" required="true" type="boolean"/>
+      <Attribute description="Read only attribute for human readable caption." name="caption" type="string"/>
+      <Attribute initializer="0" name="ordinal" required="true" type="integer"/>
+   </Attributes>
+</Class>

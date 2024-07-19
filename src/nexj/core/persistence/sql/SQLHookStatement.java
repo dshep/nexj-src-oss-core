@@ -1,0 +1,1526 @@
+// Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0
+package nexj.core.persistence.sql;
+
+import java.io.InputStream;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.ParameterMetaData;
+import java.sql.PreparedStatement;
+import java.sql.Ref;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Statement;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.util.Calendar;
+
+import nexj.core.meta.Primitive;
+import nexj.core.util.Binary;
+import nexj.core.util.ObjUtil;
+
+/**
+ * Statement decorator for intercepting SQL statements.
+ */
+public final class SQLHookStatement implements PreparedStatement, SQLHook.Batch
+{
+   // attributes
+
+   /**
+    * The SQL statement.
+    */
+   protected String m_sSQL;
+
+   /**
+    * The cursor name.
+    */
+   protected String m_sCursorName;
+
+   /**
+    * The result set type.
+    */
+   protected int m_nType;
+
+   /**
+    * The result set concurrency.
+    */
+   protected int m_nConcurrency;
+
+   /**
+    * The result set holdability.
+    */
+   protected int m_nHoldability;
+
+   /**
+    * The fetch direction.
+    */
+   protected int m_nFetchDirection = ResultSet.FETCH_UNKNOWN;
+
+   /**
+    * The fetch size.
+    */
+   protected int m_nFetchSize;
+
+   /**
+    * The maximum field size.
+    */
+   protected int m_nMaxFieldSize;
+
+   /**
+    * The maximum row count.
+    */
+   protected int m_nMaxRowCount;
+
+   /**
+    * The query timeout.
+    */
+   protected int m_nQueryTimeout;
+
+   /**
+    * Bind parameter count.
+    */
+   protected int m_nParamCount;
+   
+   /**
+    * Number of batch rows.
+    */
+   protected int m_nBatchSize;
+
+   /**
+    * Number of reserved batch rows.
+    */
+   protected byte m_nBatchReserved = 1;
+
+   /**
+    * The escape processing flag.
+    */
+   protected boolean m_bEscapeProcessingEnabled;
+   
+   // associations
+
+   /**
+    * The SQL hook connection.
+    */
+   protected SQLHookConnection m_con;
+
+   /**
+    * Statement that will be decorated.
+    */
+   protected Statement m_stmt;
+
+   /**
+    * Prepared statement that will be decorated (or null).
+    */
+   protected PreparedStatement m_pstmt;
+
+   /**
+    * Key auto generation argument (Integer, int[] or String[]).
+    */
+   protected Object m_autoGen;
+
+   /**
+    * Parameter type array.
+    */
+   protected int[] m_nTypeArray = new int[8];
+
+   /**
+    * Parameter value and argument array: Object[2*n], (Calendar|Integer|null)[2*n+1].
+    */
+   protected Object[] m_paramArray = new Object[16];
+
+   // constructors
+
+   /**
+    * Constructs the statement.
+    * @param con The SQL hook connection.
+    * @param sSQL The SQL statement.
+    * @param nType The result set type.
+    * @param nConcurrency The result set concurrency.
+    */
+   public SQLHookStatement(SQLHookConnection con, String sSQL, int nType, int nConcurrency, int nHoldability)
+   {
+      m_con = con;
+      m_sSQL = sSQL;
+      m_nType = nType;
+      m_nConcurrency = nConcurrency;
+      m_nHoldability = nHoldability;
+   }
+
+   /**
+    * Constructs the statement.
+    * @param con The SQL hook connection.
+    * @param sSQL The SQL statement.
+    * @param auto The key auto generation argument (Integer, int[] or String[]).
+    */
+   public SQLHookStatement(SQLHookConnection con, String sSQL, Object autoGen)
+   {
+      m_con = con;
+      m_sSQL = sSQL;
+      m_autoGen = autoGen;
+   }
+
+   /**
+    * Constructs the statement.
+    * @param con The SQL hook connection.
+    * @param stmt The underlying statement.
+    */
+   public SQLHookStatement(SQLHookConnection con, Statement stmt)
+   {
+      m_con = con;
+      m_stmt = stmt;
+   }
+
+   // operations
+
+   /**
+    * @see java.sql.Statement#addBatch(java.lang.String)
+    */
+   public void addBatch(String sSQL) throws SQLException
+   {
+      m_stmt.addBatch(inspect(sSQL));
+   }
+
+   /**
+    * @see java.sql.Statement#cancel()
+    */
+   public void cancel() throws SQLException
+   {
+      m_stmt.cancel();
+   }
+
+   /**
+    * @see java.sql.Statement#clearBatch()
+    */
+   public void clearBatch() throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         m_stmt.clearBatch();
+      }
+      else
+      {
+         setBatchSize(0);
+         setParamCount(0);
+      }
+   }
+
+   /**
+    * @see java.sql.Statement#clearWarnings()
+    */
+   public void clearWarnings() throws SQLException
+   {
+      m_stmt.clearWarnings();
+   }
+
+   /**
+    * @see java.sql.Statement#close()
+    */
+   public void close() throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         m_stmt.close();
+         m_stmt = null;
+         m_pstmt = null;
+      }
+   }
+
+   /**
+    * @see java.sql.Statement#execute(java.lang.String, int)
+    */
+   public boolean execute(String sSQL, int nAutoGeneratedKeys) throws SQLException
+   {
+      return m_stmt.execute(inspect(sSQL), nAutoGeneratedKeys);
+   }
+
+   /**
+    * @see java.sql.Statement#execute(java.lang.String, int[])
+    */
+   public boolean execute(String sSQL, int[] nColumnIndexArray) throws SQLException
+   {
+      return m_stmt.execute(inspect(sSQL), nColumnIndexArray);
+   }
+
+   /**
+    * @see java.sql.Statement#execute(java.lang.String, java.lang.String[])
+    */
+   public boolean execute(String sSQL, String[] sColumnNameArray) throws SQLException
+   {
+      return m_stmt.execute(inspect(sSQL), sColumnNameArray);
+   }
+
+   /**
+    * @see java.sql.Statement#execute(java.lang.String)
+    */
+   public boolean execute(String sSQL) throws SQLException
+   {
+      return m_stmt.execute(inspect(sSQL));
+   }
+
+   /**
+    * @see java.sql.Statement#executeBatch()
+    */
+   public int[] executeBatch() throws SQLException
+   {
+      prepare(true);
+
+      return m_stmt.executeBatch();
+   }
+
+   /**
+    * @see java.sql.Statement#executeQuery(java.lang.String)
+    */
+   public ResultSet executeQuery(String sSQL) throws SQLException
+   {
+      return m_stmt.executeQuery(inspect(sSQL));
+   }
+
+   /**
+    * @see java.sql.Statement#executeUpdate(java.lang.String, int)
+    */
+   public int executeUpdate(String sSQL, int nAutoGeneratedKeys) throws SQLException
+   {
+      return m_stmt.executeUpdate(inspect(sSQL), nAutoGeneratedKeys);
+   }
+
+   /**
+    * @see java.sql.Statement#executeUpdate(java.lang.String, int[])
+    */
+   public int executeUpdate(String sSQL, int[] nColumnIndexArray) throws SQLException
+   {
+      return m_stmt.executeUpdate(inspect(sSQL), nColumnIndexArray);
+   }
+
+   /**
+    * @see java.sql.Statement#executeUpdate(java.lang.String, java.lang.String[])
+    */
+   public int executeUpdate(String sSQL, String[] nColumnNameArray) throws SQLException
+   {
+      return m_stmt.executeUpdate(inspect(sSQL), nColumnNameArray);
+   }
+
+   /**
+    * @see java.sql.Statement#executeUpdate(java.lang.String)
+    */
+   public int executeUpdate(String sSQL) throws SQLException
+   {
+      return m_stmt.executeUpdate(inspect(sSQL));
+   }
+
+   /**
+    * @see java.sql.Statement#getConnection()
+    */
+   public Connection getConnection() throws SQLException
+   {
+      return m_con;
+   }
+
+   /**
+    * @see java.sql.Statement#setFetchDirection(int)
+    */
+   public void setFetchDirection(int nDirection) throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         m_stmt.setFetchDirection(nDirection);
+      }
+      else
+      {
+         m_nFetchDirection = nDirection;
+      }
+   }
+
+   /**
+    * @see java.sql.Statement#getFetchDirection()
+    */
+   public int getFetchDirection() throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         return m_stmt.getFetchDirection();
+      }
+
+      return  m_nFetchDirection;
+   }
+
+   /**
+    * @see java.sql.Statement#setFetchSize(int)
+    */
+   public void setFetchSize(int nRows) throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         m_stmt.setFetchSize(nRows);
+      }
+      else
+      {
+         m_nFetchSize = nRows;
+      }
+   }
+
+   /**
+    * @see java.sql.Statement#getFetchSize()
+    */
+   public int getFetchSize() throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         return m_stmt.getFetchSize();
+      }
+
+      return m_nFetchSize;
+   }
+
+   /**
+    * @see java.sql.Statement#getGeneratedKeys()
+    */
+   public ResultSet getGeneratedKeys() throws SQLException
+   {
+      return m_stmt.getGeneratedKeys();
+   }
+   /**
+    * @see java.sql.Statement#setMaxFieldSize(int)
+    */
+   public void setMaxFieldSize(int nMax) throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         m_stmt.setMaxFieldSize(nMax);
+      }
+      else
+      {
+         m_nMaxFieldSize = nMax;
+      }
+   }
+
+   /**
+    * @see java.sql.Statement#getMaxFieldSize()
+    */
+   public int getMaxFieldSize() throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         return m_stmt.getMaxFieldSize();
+      }
+
+      return m_nMaxFieldSize;
+   }
+
+   /**
+    * @see java.sql.Statement#setMaxRows(int)
+    */
+   public void setMaxRows(int nMax) throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         m_stmt.setMaxRows(nMax);
+      }
+      else
+      {
+         m_nMaxRowCount = nMax;
+      }
+   }
+
+   /**
+    * @see java.sql.Statement#getMaxRows()
+    */
+   public int getMaxRows() throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         return m_stmt.getMaxRows();
+      }
+
+      return m_nMaxRowCount;
+   }
+
+   /**
+    * @see java.sql.Statement#getMoreResults()
+    */
+   public boolean getMoreResults() throws SQLException
+   {
+      return m_stmt.getMoreResults();
+   }
+
+   /**
+    * @see java.sql.Statement#getMoreResults(int)
+    */
+   public boolean getMoreResults(int nCurrent) throws SQLException
+   {
+      return m_stmt.getMoreResults(nCurrent);
+   }
+   /**
+    * @see java.sql.Statement#setQueryTimeout(int)
+    */
+   public void setQueryTimeout(int nSeconds) throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         m_stmt.setQueryTimeout(nSeconds);
+      }
+      else
+      {
+         m_nQueryTimeout = nSeconds;
+      }
+   }
+
+   /**
+    * @see java.sql.Statement#getQueryTimeout()
+    */
+   public int getQueryTimeout() throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         return m_stmt.getQueryTimeout();
+      }
+
+      return m_nQueryTimeout;
+   }
+
+   /**
+    * @see java.sql.Statement#getResultSet()
+    */
+   public ResultSet getResultSet() throws SQLException
+   {
+      return m_stmt.getResultSet();
+   }
+
+   /**
+    * @see java.sql.Statement#getResultSetConcurrency()
+    */
+   public int getResultSetConcurrency() throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         return m_stmt.getResultSetConcurrency();
+      }
+
+      return m_nConcurrency;
+   }
+
+   /**
+    * @see java.sql.Statement#getResultSetHoldability()
+    */
+   public int getResultSetHoldability() throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         return m_stmt.getResultSetHoldability();
+      }
+
+      return m_nHoldability;
+   }
+
+   /**
+    * @see java.sql.Statement#getResultSetType()
+    */
+   public int getResultSetType() throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         return m_stmt.getResultSetType();
+      }
+
+      return m_nType;
+   }
+
+   /**
+    * @see java.sql.Statement#getUpdateCount()
+    */
+   public int getUpdateCount() throws SQLException
+   {
+      return m_stmt.getUpdateCount();
+   }
+
+   /**
+    * @see java.sql.Statement#getWarnings()
+    */
+   public SQLWarning getWarnings() throws SQLException
+   {
+      return m_stmt.getWarnings();
+   }
+
+   /**
+    * @see java.sql.Statement#setCursorName(java.lang.String)
+    */
+   public void setCursorName(String sName) throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         m_stmt.setCursorName(sName);
+      }
+      else
+      {
+         m_sCursorName = sName;
+      }
+   }
+
+   /**
+    * @see java.sql.Statement#setEscapeProcessing(boolean)
+    */
+   public void setEscapeProcessing(boolean bEnable) throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         m_stmt.setEscapeProcessing(bEnable);
+      }
+      else
+      {
+         m_bEscapeProcessingEnabled = bEnable;
+      }
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#addBatch()
+    */
+   public void addBatch() throws SQLException
+   {
+      setBatchSize(getBatchSize() + 1);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#clearParameters()
+    */
+   public void clearParameters() throws SQLException
+   {
+      if (m_pstmt != null)
+      {
+         m_pstmt.clearParameters();
+      }
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#execute()
+    */
+   public boolean execute() throws SQLException
+   {
+      prepare(false);
+
+      return m_pstmt.execute();
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#executeQuery()
+    */
+   public ResultSet executeQuery() throws SQLException
+   {
+      prepare(false);
+
+      return m_pstmt.executeQuery();
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#executeUpdate()
+    */
+   public int executeUpdate() throws SQLException
+   {
+      prepare(false);
+
+      return m_pstmt.executeUpdate();
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#getMetaData()
+    */
+   public ResultSetMetaData getMetaData() throws SQLException
+   {
+      return m_pstmt.getMetaData();
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#getParameterMetaData()
+    */
+   public ParameterMetaData getParameterMetaData() throws SQLException
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setArray(int, java.sql.Array)
+    */
+   public void setArray(int nParameterIndex, Array array) throws SQLException
+   {
+      setParam(nParameterIndex, Types.ARRAY, array);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setAsciiStream(int, java.io.InputStream, int)
+    */
+   public void setAsciiStream(int nParameterIndex, InputStream is, int nLength) throws SQLException
+   {
+      setParam(nParameterIndex, Types.LONGVARCHAR, is, nLength);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setBigDecimal(int, java.math.BigDecimal)
+    */
+   public void setBigDecimal(int nParameterIndex, BigDecimal dec) throws SQLException
+   {
+      setParam(nParameterIndex, Types.DECIMAL, dec);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setBinaryStream(int, java.io.InputStream, int)
+    */
+   public void setBinaryStream(int nParameterIndex, InputStream is, int nLength) throws SQLException
+   {
+      setParam(nParameterIndex, Types.LONGVARBINARY, is, nLength);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setBlob(int, java.sql.Blob)
+    */
+   public void setBlob(int nParameterIndex, Blob blob) throws SQLException
+   {
+      setParam(nParameterIndex, Types.BLOB, blob);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setBoolean(int, boolean)
+    */
+   public void setBoolean(int nParameterIndex, boolean b) throws SQLException
+   {
+      setParam(nParameterIndex, Types.BOOLEAN, Boolean.valueOf(b));
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setByte(int, byte)
+    */
+   public void setByte(int nParameterIndex, byte n) throws SQLException
+   {
+      setParam(nParameterIndex, Types.TINYINT, Primitive.createInteger(n));
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setBytes(int, byte[])
+    */
+   public void setBytes(int nParameterIndex, byte[] data) throws SQLException
+   {
+      setParam(nParameterIndex, Types.VARBINARY, data);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setCharacterStream(int, java.io.Reader, int)
+    */
+   public void setCharacterStream(int nParameterIndex, Reader reader, int nLength) throws SQLException
+   {
+      setParam(nParameterIndex, Types.LONGVARCHAR, reader, nLength);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setClob(int, java.sql.Clob)
+    */
+   public void setClob(int nParameterIndex, Clob clob) throws SQLException
+   {
+      setParam(nParameterIndex, Types.CLOB, clob);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setDate(int, java.sql.Date, java.util.Calendar)
+    */
+   public void setDate(int nParameterIndex, Date dt, Calendar cal) throws SQLException
+   {
+      setParam(nParameterIndex, Types.DATE, dt, cal);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setDate(int, java.sql.Date)
+    */
+   public void setDate(int nParameterIndex, Date dt) throws SQLException
+   {
+      setParam(nParameterIndex, Types.DATE, dt);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setDouble(int, double)
+    */
+   public void setDouble(int nParameterIndex, double d) throws SQLException
+   {
+      setParam(nParameterIndex, Types.DOUBLE, Primitive.createDouble(d));
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setFloat(int, float)
+    */
+   public void setFloat(int nParameterIndex, float f) throws SQLException
+   {
+      setParam(nParameterIndex, Types.FLOAT, Primitive.createFloat(f));
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setInt(int, int)
+    */
+   public void setInt(int nParameterIndex, int n) throws SQLException
+   {
+      setParam(nParameterIndex, Types.INTEGER, Primitive.createInteger(n));
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setLong(int, long)
+    */
+   public void setLong(int nParameterIndex, long l) throws SQLException
+   {
+      setParam(nParameterIndex, Types.BIGINT, Primitive.createLong(l));
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setNull(int, int, java.lang.String)
+    */
+   public void setNull(int nParameterIndex, int nSQLType, String sTypeName) throws SQLException
+   {
+      setParam(nParameterIndex, nSQLType, null, sTypeName);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setNull(int, int)
+    */
+   public void setNull(int nParameterIndex, int nSQLType) throws SQLException
+   {
+      setParam(nParameterIndex, nSQLType, null);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setObject(int, java.lang.Object, int, int)
+    */
+   public void setObject(int nParameterIndex, Object value, int nTargetSqlType, int nScale) throws SQLException
+   {
+      setParam(nParameterIndex, nTargetSqlType, value, nScale);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setObject(int, java.lang.Object, int)
+    */
+   public void setObject(int nParameterIndex, Object value, int nTargetSqlType) throws SQLException
+   {
+      setParam(nParameterIndex, nTargetSqlType, value);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setObject(int, java.lang.Object)
+    */
+   public void setObject(int nParameterIndex, Object value) throws SQLException
+   {
+      setParam(nParameterIndex, Types.OTHER, value);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setRef(int, java.sql.Ref)
+    */
+   public void setRef(int nParameterIndex, Ref ref) throws SQLException
+   {
+      setParam(nParameterIndex, Types.REF, ref);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setShort(int, short)
+    */
+   public void setShort(int nParameterIndex, short n) throws SQLException
+   {
+      setParam(nParameterIndex, Types.SMALLINT, Primitive.createInteger(n));
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setString(int, java.lang.String)
+    */
+   public void setString(int nParameterIndex, String s) throws SQLException
+   {
+      setParam(nParameterIndex, Types.VARCHAR, s);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setTime(int, java.sql.Time, java.util.Calendar)
+    */
+   public void setTime(int nParameterIndex, Time tm, Calendar cal) throws SQLException
+   {
+      setParam(nParameterIndex, Types.TIME, tm, cal);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setTime(int, java.sql.Time)
+    */
+   public void setTime(int nParameterIndex, Time tm) throws SQLException
+   {
+      setParam(nParameterIndex, Types.TIME, tm);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setTimestamp(int, java.sql.Timestamp, java.util.Calendar)
+    */
+   public void setTimestamp(int nParameterIndex, Timestamp ts, Calendar cal) throws SQLException
+   {
+      setParam(nParameterIndex, Types.TIMESTAMP, ts, cal);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setTimestamp(int, java.sql.Timestamp)
+    */
+   public void setTimestamp(int nParameterIndex, Timestamp ts) throws SQLException
+   {
+      setParam(nParameterIndex, Types.TIMESTAMP, ts);
+   }
+
+   /**
+    * @deprecated
+    * @see java.sql.PreparedStatement#setUnicodeStream(int, java.io.InputStream, int)
+    */
+   public void setUnicodeStream(int nParameterIndex, InputStream is, int nLength) throws SQLException
+   {
+      setParam(nParameterIndex, Types.LONGVARCHAR, is, nLength);
+   }
+
+   /**
+    * @see java.sql.PreparedStatement#setURL(int, java.net.URL)
+    */
+   public void setURL(int nParameterIndex, URL url) throws SQLException
+   {
+      setParam(nParameterIndex, Types.DATALINK, url);
+   }
+
+   /**
+    * Inspects the specified SQL statement though an SQL hook and sets the current SQL statement.
+    * @param sSQL The SQL statement to inspect.
+    * @return The new SQL statement.
+    */
+   protected String inspect(String sSQL) throws SQLException
+   {
+      if (m_stmt == null)
+      {
+         throw new SQLException("Prepared statement");
+      }
+      
+      m_nBatchReserved = 0;
+
+      String sNewSQL = m_con.inspect(sSQL);
+
+      if (sNewSQL == null)
+      {
+         m_sSQL = sSQL;
+         m_con.getHook().modify(this);
+         sNewSQL = m_sSQL;
+         m_sSQL = null;
+
+         if (m_con.getLogger().isLogging() && !ObjUtil.equal(sSQL, sNewSQL))
+         {
+            m_con.getLogger().log(SQLHookConnection.LOG_PREFIX + sNewSQL);
+         }
+
+         if (m_nParamCount != 0 || m_nBatchSize != 0)
+         {
+            throw new SQLException("Not a prepared statement");
+         }
+      }
+
+      return sNewSQL;
+   }
+   
+   /**
+    * Prepares the statement.
+    * @param bBatch True to prepare a batch.
+    */
+   protected void prepare(boolean bBatch) throws SQLException
+   {
+      if (m_sSQL == null)
+      {
+         throw new SQLException("Unknown SQL");
+      }
+
+      boolean bLog = m_con.getLogger().isLogging();
+
+      if (m_stmt == null)
+      {
+         String sSQL = m_sSQL;
+
+         m_nBatchReserved = 0;
+
+         if (!bBatch)
+         {
+            m_nBatchSize = 1;
+         }
+
+         m_con.getHook().modify(this);
+
+         if (bLog && !ObjUtil.equal(sSQL, m_sSQL))
+         {
+            m_con.getLogger().log(SQLHookConnection.LOG_PREFIX + m_sSQL);
+         }
+
+         Connection con = m_con.getConnection();
+         PreparedStatement stmt;
+
+         if (m_autoGen == null)
+         {
+            if (m_nConcurrency == 0)
+            {
+               stmt = con.prepareStatement(m_sSQL);
+            }
+            else if (m_nHoldability == 0)
+            {
+               stmt = con.prepareStatement(m_sSQL, m_nType, m_nConcurrency);
+            }
+            else
+            {
+               stmt = con.prepareStatement(m_sSQL, m_nType, m_nConcurrency, m_nHoldability);
+            }
+         }
+         else if (m_autoGen instanceof int[])
+         {
+            stmt = con.prepareStatement(m_sSQL, (int[])m_autoGen);
+         }
+         else if (m_autoGen instanceof String[]) 
+         {
+            stmt = con.prepareStatement(m_sSQL, (String[])m_autoGen);
+         }
+         else
+         {
+            stmt = con.prepareStatement(m_sSQL, ((Number)m_autoGen).intValue());
+         }
+
+         m_stmt = m_pstmt = stmt;
+
+         if (m_nFetchDirection != ResultSet.FETCH_UNKNOWN)
+         {
+            stmt.setFetchDirection(m_nFetchDirection);
+         }
+
+         if (m_nFetchSize != 0)
+         {
+            stmt.setFetchSize(m_nFetchSize);
+         }
+
+         if (m_nMaxFieldSize != 0)
+         {
+            stmt.setMaxFieldSize(m_nMaxFieldSize);
+         }
+
+         if (m_nMaxRowCount != 0)
+         {
+            stmt.setMaxRows(m_nMaxRowCount);
+         }
+
+         if (m_nQueryTimeout != 0)
+         {
+            stmt.setQueryTimeout(m_nQueryTimeout);
+         }
+
+         if (m_sCursorName != null)
+         {
+            stmt.setCursorName(m_sCursorName);
+         }
+
+         if (!m_bEscapeProcessingEnabled)
+         {
+            stmt.setEscapeProcessing(m_bEscapeProcessingEnabled);
+         }
+
+         for (int nRow = 0, nRowOffset = 0; nRow < m_nBatchSize; ++nRow)
+         {
+            m_con.getLogger().logBatch(nRow);
+
+            for (int nParam = 0; nParam < m_nParamCount; ++nParam)
+            {
+               int nParameterIndex = nParam + 1;
+               int nType = m_nTypeArray[nParam];
+               int i = (nRowOffset + nParam) << 1;
+               Object value = m_paramArray[i];
+               Object arg = m_paramArray[i + 1];
+
+               if (bLog)
+               {
+                  Object obj = value;
+
+                  if (Primitive.STRING.findConverter(Primitive.primitiveOf(value)) == null)
+                  {
+                     if (obj instanceof byte[])
+                     {
+                        obj = new Binary((byte[])obj);
+                     }
+                     else
+                     {
+                        obj = obj.getClass().getSimpleName() + ": " + String.valueOf(obj);
+                     }
+                  }
+
+                  m_con.getLogger().logBindValue(nParam, obj);
+               }
+
+               if (value == null)
+               {
+                  if (arg instanceof String)
+                  {
+                     stmt.setNull(nParameterIndex, nType, (String)arg);
+                  }
+                  else
+                  {
+                     stmt.setNull(nParameterIndex, nType);
+                  }
+               }
+               else if (value instanceof String)
+               {
+                  stmt.setString(nParameterIndex, (String)value);
+               }
+               else if (value instanceof Number)
+               {
+                  if (value instanceof Integer)
+                  {
+                     stmt.setInt(nParameterIndex, ((Integer)value).intValue());
+                  }
+                  if (value instanceof Long)
+                  {
+                     stmt.setLong(nParameterIndex, ((Long)value).longValue());
+                  }
+                  else if (value instanceof Float)
+                  {
+                     stmt.setFloat(nParameterIndex, ((Float)value).floatValue());
+                  }
+                  else if (value instanceof Double)
+                  {
+                     stmt.setDouble(nParameterIndex, ((Double)value).doubleValue());
+                  }
+                  else if (value instanceof BigDecimal)
+                  {
+                     stmt.setBigDecimal(nParameterIndex, (BigDecimal)value);
+                  }
+                  else if (arg instanceof Number)
+                  {
+                     stmt.setObject(nParameterIndex, value, nType, ((Number)arg).intValue());
+                  }
+                  else
+                  {
+                     stmt.setObject(nParameterIndex, value, nType);
+                  }
+               }
+               else
+               {
+                  switch (nType)
+                  {
+                     case Types.ARRAY:
+                        stmt.setArray(nParameterIndex, (Array)value);
+                        value = null;
+                        break;
+
+                     case Types.BINARY:
+                        if (value instanceof byte[])
+                        {
+                           stmt.setBytes(nParameterIndex, (byte[])value);
+                           value = null;
+                        }
+
+                        break;
+
+                     case Types.BLOB:
+                        stmt.setBlob(nParameterIndex, (Blob)value);
+                        value = null;
+                        break;
+
+                     case Types.BOOLEAN:
+                        if (value instanceof Boolean)
+                        {
+                           stmt.setBoolean(nParameterIndex, ((Boolean)value).booleanValue());
+                           value = null;
+                        }
+
+                        break;
+
+                     case Types.CLOB:
+                        stmt.setClob(nParameterIndex, (Clob)value);
+                        value = null;
+                        break;
+
+                     case Types.DATALINK:
+                        stmt.setURL(nParameterIndex, (URL)value);
+                        value = null;
+                        break;
+
+                     case Types.DATE:
+                        if (arg instanceof Calendar)
+                        {
+                           stmt.setDate(nParameterIndex, (Date)value, (Calendar)arg);
+                        }
+                        else
+                        {
+                           stmt.setDate(nParameterIndex, (Date)value);
+                        }
+
+                        value = null;
+
+                        break;
+
+                     case Types.LONGVARBINARY:
+                        if (value instanceof InputStream && arg instanceof Number)
+                        {
+                           stmt.setBinaryStream(nParameterIndex, (InputStream)value, ((Number)arg).intValue());
+                           value = null;
+                        }
+
+                        break;
+
+                     case Types.LONGVARCHAR:
+                        if (arg instanceof Number)
+                        {
+                           if (value instanceof InputStream)
+                           {
+                              stmt.setAsciiStream(nParameterIndex, (InputStream)value, ((Number)arg).intValue());
+                              value = null;
+                           }
+                           else if (value instanceof Reader)
+                           {
+                              stmt.setCharacterStream(nParameterIndex, (Reader)value, ((Number)arg).intValue());
+                              value = null;
+                           }
+                        }
+
+                        break;
+
+                     case Types.OTHER:
+                        if (arg instanceof Number)
+                        {
+                           stmt.setObject(nParameterIndex, value, nType, ((Number)arg).intValue());
+                        }
+                        else
+                        {
+                           stmt.setObject(nParameterIndex, value, nType);
+                        }
+
+                        value = null;
+                        
+                        break;
+
+                     case Types.TIME:
+                        if (arg instanceof Calendar)
+                        {
+                           stmt.setTime(nParameterIndex, (Time)value, (Calendar)arg);
+                        }
+                        else
+                        {
+                           stmt.setTime(nParameterIndex, (Time)value);
+                        }
+
+                        value = null;
+
+                        break;
+
+                     case Types.TIMESTAMP:
+                        if (arg instanceof Calendar)
+                        {
+                           stmt.setTimestamp(nParameterIndex, (Timestamp)value, (Calendar)arg);
+                        }
+                        else
+                        {
+                           stmt.setTimestamp(nParameterIndex, (Timestamp)value);
+                        }
+
+                        value = null;
+
+                        break;
+                  }
+
+                  if (value != null)
+                  {
+                     stmt.setObject(nParameterIndex, value, nType);
+                  }
+               }
+            }
+
+            if (bBatch)
+            {
+               stmt.addBatch();
+            }
+
+            nRowOffset += m_nParamCount;
+         }
+      }
+   }
+
+   /**
+    * Sets a bind parameter type, value and argument.
+    * @param nParameterIndex Parameter index (1-based).
+    * @param nType The parameter type.
+    * @param value Parameter value.
+    * @param arg Additional argument.
+    */
+   protected void setParam(int nParameterIndex, int nType, Object value, Object arg) throws SQLException
+   {
+      if (m_stmt != null)
+      {
+         throw new SQLException("Statement already executed");
+      }
+
+      if (m_nBatchSize == 0)
+      {
+         if (nParameterIndex > m_nParamCount)
+         {
+            setParamCount(nParameterIndex);
+         }
+         else
+         {
+            validateParamOrdinal(nParameterIndex - 1);
+         }
+
+         m_nTypeArray[nParameterIndex - 1] = nType;
+      }
+      else
+      {
+         validateParamOrdinal(nParameterIndex - 1);
+      }
+
+      nParameterIndex = (m_nParamCount * m_nBatchSize + nParameterIndex - 1) << 1;
+
+      m_paramArray[nParameterIndex] = value;
+      m_paramArray[nParameterIndex + 1] = arg;
+   }
+
+   /**
+    * Sets a bind parameter type, value and size.
+    * @param nParameterIndex Parameter index (1-based).
+    * @param nType The parameter type.
+    * @param value Parameter value.
+    * @param nSize The parameter size.
+    */
+   protected void setParam(int nParameterIndex, int nType, Object value, int nSize) throws SQLException
+   {
+      setParam(nParameterIndex, nType, value, Primitive.createInteger(nSize));
+   }
+
+   /**
+    * Sets a bind parameter type and value.
+    * @param nParameterIndex Parameter index (1-based).
+    * @param nType The parameter type.
+    * @param value Parameter value.
+    */
+   protected void setParam(int nParameterIndex, int nType, Object value) throws SQLException
+   {
+      setParam(nParameterIndex, nType, value, null);
+   }
+
+   /**
+    * @see nexj.core.persistence.sql.SQLHook.Batch#setSQL(java.lang.String)
+    */
+   public void setSQL(String sSQL)
+   {
+      m_sSQL = sSQL;
+   }
+
+   /**
+    * @see nexj.core.persistence.sql.SQLHook.Batch#getSQL()
+    */
+   public String getSQL()
+   {
+      return m_sSQL;
+   }
+
+   /**
+    * @see nexj.core.persistence.sql.SQLHook.Batch#setBatchSize(int)
+    */
+   public void setBatchSize(int nSize)
+   {
+      if (nSize < 0)
+      {
+         throw new IllegalArgumentException();
+      }
+
+      int n = (nSize + m_nBatchReserved) * m_nParamCount << 1;
+
+      if (n > m_paramArray.length)
+      {
+         Object[] paramArray = new Object[Math.max(n, m_paramArray.length << 1)];
+
+         System.arraycopy(m_paramArray, 0, paramArray, 0, (m_nBatchSize + m_nBatchReserved) * m_nParamCount << 1);
+         m_paramArray = paramArray;
+      }
+
+      m_nBatchSize = nSize;
+   }
+
+   /**
+    * @see nexj.core.persistence.sql.SQLHook.Batch#getBatchSize()
+    */
+   public int getBatchSize()
+   {
+      return m_nBatchSize;
+   }
+
+   /**
+    * @see nexj.core.persistence.sql.SQLHook.Batch#setParamCount(int)
+    */
+   public void setParamCount(int nCount)
+   {
+      if (nCount < 0)
+      {
+         throw new IllegalArgumentException();
+      }
+
+      if (nCount < m_nParamCount)
+      {
+         for (int i = 0, n = m_nBatchSize + m_nBatchReserved; i < n; ++i)
+         {
+            System.arraycopy(m_paramArray, i * m_nParamCount << 1, m_paramArray, i * nCount << 1, nCount << 1);
+         }
+      }
+      else if (nCount > m_nParamCount)
+      {
+         Object[] paramArray = m_paramArray;
+         int n = nCount * (m_nBatchSize + m_nBatchReserved) << 1;
+
+         if (n > m_paramArray.length)
+         {
+            paramArray = new Object[Math.max(n, m_paramArray.length << 1)];
+         }
+
+         for (int i = m_nBatchSize + m_nBatchReserved - 1; i >= 0; --i)
+         {
+            System.arraycopy(m_paramArray, i * m_nParamCount << 1, paramArray, i * nCount << 1, m_nParamCount << 1);
+         }
+
+         m_paramArray = paramArray;
+
+         if (nCount > m_nTypeArray.length)
+         {
+            int[] nTypeArray = new int[Math.max(m_nTypeArray.length << 1, nCount)];
+
+            System.arraycopy(m_nTypeArray, 0, nTypeArray, 0, m_nParamCount);
+            m_nTypeArray = nTypeArray;
+         }
+      }
+
+      m_nParamCount = nCount;
+   }
+
+   /**
+    * @see nexj.core.persistence.sql.SQLHook.Batch#getParamCount()
+    */
+   public int getParamCount()
+   {
+      return m_nParamCount;
+   }
+
+   /**
+    * @see nexj.core.persistence.sql.SQLHook.Batch#setParamType(int, int)
+    */
+   public void setParamType(int nOrdinal, int nType)
+   {
+      validateParamOrdinal(nOrdinal);
+
+      m_nTypeArray[nOrdinal] = nType;
+   }
+
+   /**
+    * @see nexj.core.persistence.sql.SQLHook.Batch#getParamType(int)
+    */
+   public int getParamType(int nOrdinal)
+   {
+      validateParamOrdinal(nOrdinal);
+
+      return m_nTypeArray[nOrdinal];
+   }
+
+   /**
+    * @see nexj.core.persistence.sql.SQLHook.Batch#setParamValue(int, int, java.lang.Object)
+    */
+   public void setParamValue(int nRow, int nOrdinal, Object value)
+   {
+      m_paramArray[getIndex(nRow, nOrdinal)] = value;
+   }
+
+   /**
+    * @see nexj.core.persistence.sql.SQLHook.Batch#getParamValue(int, int)
+    */
+   public Object getParamValue(int nRow, int nOrdinal)
+   {
+      return m_paramArray[getIndex(nRow, nOrdinal)];
+   }
+
+   /**
+    * @see nexj.core.persistence.sql.SQLHook.Batch#setParamSize(int, int, int)
+    */
+   public void setParamSize(int nRow, int nOrdinal, int nSize)
+   {
+      m_paramArray[getIndex(nRow, nOrdinal) + 1] = Primitive.createInteger(nSize);
+   }
+
+   /**
+    * @see nexj.core.persistence.sql.SQLHook.Batch#getParamSize(int, int)
+    */
+   public int getParamSize(int nRow, int nOrdinal)
+   {
+      Object obj = m_paramArray[getIndex(nRow, nOrdinal) + 1];
+
+      return (obj instanceof Integer) ? ((Integer)obj).intValue() : Integer.MIN_VALUE;
+   }
+
+   /**
+    * @see nexj.core.persistence.sql.SQLHook.Batch#setParamCalendar(int, int, java.util.Calendar)
+    */
+   public void setParamCalendar(int nRow, int nOrdinal, Calendar calendar)
+   {
+      m_paramArray[getIndex(nRow, nOrdinal) + 1] = calendar;
+   }
+
+   /**
+    * @see nexj.core.persistence.sql.SQLHook.Batch#getParamCalendar(int, int)
+    */
+   public Calendar getParamCalendar(int nRow, int nOrdinal)
+   {
+      Object obj = m_paramArray[getIndex(nRow, nOrdinal) + 1];
+
+      return (obj instanceof Calendar) ? (Calendar)obj : null;
+   }
+
+   /**
+    * Gets a parameter array index for a bind parameter.
+    * @param nRow The batch row ordinal number.
+    * @param nOrdinal The bind parameter ordinal number.
+    * @return The parameter arary index.
+    * @throws IndexOutOfBoundsException if the ordinal number is out of bounds.
+    */
+   protected int getIndex(int nRow, int nOrdinal)
+   {
+      validateParamCoord(nRow, nOrdinal);
+
+      return (m_nParamCount * nRow + nOrdinal) << 1;
+   }
+
+   /**
+    * Validates a batch row ordinal and a bind parameter ordinal.
+    * @param nRow The row ordinal number.
+    * @param nOrdinal The bind parameter ordinal number.
+    * @throws IndexOutOfBoundsException if the ordinal number is out of bounds.
+    */
+   protected void validateParamCoord(int nRow, int nOrdinal) throws IndexOutOfBoundsException
+   {
+      if (nRow < 0 || nRow >= m_nBatchSize)
+      {
+         throw new IndexOutOfBoundsException("Batch row");
+      }
+
+      validateParamOrdinal(nOrdinal);
+   }
+
+   /**
+    * Validates a bind parameter ordinal number.
+    * @param nOrdinal The bind parameter ordinal number.
+    * @throws IndexOutOfBoundsException if the ordinal number is out of bounds.
+    */
+   protected void validateParamOrdinal(int nOrdinal) throws IndexOutOfBoundsException
+   {
+      if (nOrdinal < 0 || nOrdinal >= m_nParamCount)
+      {
+         throw new IndexOutOfBoundsException("Bind param ordinal");
+      }
+   }
+
+   /**
+    * @see java.lang.Object#toString()
+    */
+   public String toString()
+   {
+      return (m_sSQL == null) ? super.toString() : m_sSQL;
+   }
+}

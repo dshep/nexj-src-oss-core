@@ -1,0 +1,25 @@
+<ObjectQueue class="TestObjectQueue" errorCount="2" errorQueue="SignalErrorQueue">
+   <ReceiverProperties>
+      <Collection name="server">
+         <Item>
+            <Component activation="singleton" type="nexj.core.rpc.queueing.ObjectRequestServer">
+               <Properties>
+                  <Property name="server">Server.Generic</Property>
+               </Properties>
+            </Component>
+         </Item>
+         <Item>
+            <Component activation="singleton" type="nexj.core.rpc.queueing.ObjectCommandServer">
+               <Properties>
+                  <Collection name="commandClass">
+                     <Item>nexj.test.teee.TestCompletionCommand</Item>
+                  </Collection>
+               </Properties>
+            </Component>
+         </Item>
+      </Collection>
+   </ReceiverProperties>
+   <ServiceBindings>
+      <ServiceBinding service="SignalTestCompletion"/>
+   </ServiceBindings>
+</ObjectQueue>

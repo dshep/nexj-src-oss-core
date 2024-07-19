@@ -1,0 +1,6 @@
+<Message format="XML">
+   <XMLMapping namespace="ns2" nillable="true" node="B" uri="urn:hl7-org:v3"/>
+   <Parts>
+      <Value minCount="1" name="classCode" type="string"/>
+   </Parts>
+</Message>

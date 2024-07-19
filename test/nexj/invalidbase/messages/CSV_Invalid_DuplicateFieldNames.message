@@ -1,0 +1,28 @@
+<Message format="CSV">
+   <CSVMapping header="true"/>
+   <Parts>
+      <Message maxCount="0" name="Row">
+         <Parts>
+            <Value description="First Column" name="firstName" type="string" minCount="1"/>
+            <Value description="Second Column" name="lastName" type="string" minCount="1">
+               <CSVMapping ordinal="2"/>
+            </Value>
+            <Value name="age" type="integer" minCount="1">
+               <CSVMapping ordinal="3"/>
+            </Value>
+            <Value name="balance" type="integer" minCount="1">
+               <CSVMapping ordinal="4" field="location"/>
+            </Value>
+            <Message name="Phone1">
+               <Parts>
+                  <Value name="location" type="string" minCount="0">
+                     <CSVMapping ordinal="5"/>
+                  </Value>
+                  <Value name="number" type="string" minCount="0">
+                  </Value>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

@@ -1,0 +1,8 @@
+<Message aggregation="sequential" format="XML">
+   <XMLMapping namespace="ns2" node="BA" type="element" uri="urn:hl7-org:v3" xsdtype="BA"/>
+   <Parts>
+      <Value maxCount="1" minCount="0" name="baseValue" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+   </Parts>
+</Message>

@@ -1,0 +1,28 @@
+<Message format="CSV">
+   <CSVMapping quote='"' escape="none" header="false" comment=";"/>
+   <Parts>
+      <Message maxCount="0" name="Data">
+         <Parts>
+            <Value description="Device Name" name="deviceName" type="string" minCount="1"/>
+            <Value description="RO community string" name="roCommunity" type="string" minCount="1"/>
+            <Value description="RW community string" name="rwCommunity" type="string" minCount="1"/>
+            <Value description="Serial Number" name="serNum" type="string" minCount="1"/>
+            
+            <Value description="User Field 1" name="userField1" type="string" minCount="1"/>
+            <Value description="User Field 2" name="userField2" type="string" minCount="0"/>
+            <Value description="User Field 3" name="userField3" type="string" minCount="0"/>
+            <Value description="User Field 4" name="userField4" type="string" minCount="0"/>
+            
+            <Value description="Telnet password" name="telnetPasswd" type="string" minCount="0"/>
+            <Value description="Enable password" name="enPasswd" type="string" minCount="0"/>
+            <Value description="Enable secret" name="enSecret" type="string" minCount="0"/>
+            <Value description="Tacas user" name="tacasUser" type="string" minCount="0"/>
+            <Value description="Tacas password" name="tacasPasswd" type="string" minCount="0"/>
+            <Value description="Tacas enable user" name="enTacasUser" type="string" minCount="0"/>
+            <Value description="Tacas enable password" name="enTacasPasswd" type="string" minCount="0"/>
+            <Value description="Local user" name="localUser" type="string" minCount="0"/>
+            <Value description="Local password" name="localPassword" type="string" minCount="0"/>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

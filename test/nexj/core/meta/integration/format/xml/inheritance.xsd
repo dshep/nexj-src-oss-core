@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+  targetNamespace="http://namespaceZero"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://namespaceZero"
+  attributeFormDefault="qualified"
+  elementFormDefault="qualified"
+  version="1.0">
+  
+   <xsd:element name="myElement" type="extensionType" />
+  
+   <xsd:complexType name="extensionType">
+      <xsd:complexContent>
+         <xsd:extension base="myBaseType">
+            <xsd:choice>
+               <xsd:element name="extensionElement" type="xsd:string" nillable="true" minOccurs="0"/>
+            </xsd:choice>
+            <xsd:attribute name="extensionAttribute" type="xsd:string" use="optional"/>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="myBaseType" abstract="true">
+      <xsd:choice>
+         <xsd:element name="baseElement" type="xsd:string"/>
+      </xsd:choice>
+      <xsd:attribute name="baseAttribute" type="xsd:string" use="optional"/>
+   </xsd:complexType>
+
+   <xsd:element name="parent">
+      <xsd:complexType>
+         <xsd:choice>
+            <xsd:element name="child">
+               <xsd:complexType>
+                  <xsd:complexContent>
+                     <xsd:extension base="myBaseType">
+                        <xsd:attribute name="childAttribute" type="xsd:string"/>
+                     </xsd:extension>
+                  </xsd:complexContent>
+               </xsd:complexType>
+            </xsd:element>
+         </xsd:choice>
+      </xsd:complexType>
+   </xsd:element>
+
+</xsd:schema>

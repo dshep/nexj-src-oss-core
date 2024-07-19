@@ -1,0 +1,53 @@
+<Action caption="Create Object Instance" description="Creates an instance of an object." icon="cube_blue" tooltip="Create an instance of an object" workflow="true">
+   <Arguments>
+      <Argument description="the class of the object to be created" name="className" type="any"/>
+      <Argument description="the argument to be passed to the create factory (if any)" name="parameter" type="any"/>
+      <Argument default="'()" description="the variable arguments to be passed to the creator or create factory (if any)" name="args" type="any"/>
+      <Argument description="the name of the create factory for the class" name="createFactory" type="any"/>
+      <Argument description="the variable where the created class instance is place" name="result" type="any"/>
+      <Argument default="'()" description="script to execute before creating the class instance" name="preProcessingScript" type="any"/>
+      <Argument default="'()" description="script to execute after creating the class instance" name="postProcessingScript" type="any"/>
+   </Arguments>
+   <Script><![CDATA[(define resultExpr
+   (cond
+      ((and (null? parameter) (null? args))
+         `(,className',createFactory)
+      )
+      ((null? args)
+         `(,className',createFactory ,parameter)
+      )
+      ((null? parameter)
+         `(,className',createFactory ,@args)
+      )
+      (else
+         `(,className',createFactory ,parameter ,@args)
+      )
+   )
+)
+`(begin
+   ,@
+   (if (not (null? preProcessingScript))
+      `(,preProcessingScript)
+   )
+   ,@
+   (cond
+      ((or (null? result) (null? resultExpr))
+         '()
+      )
+      ((and (list? result) (eq? (car result) '@))
+         `(,(append (expand-macro result) (list resultExpr)))
+      )
+      ((symbol? result)
+         `((set! ,result ,resultExpr))
+      )
+      (else
+        (error "Invalid result specification (expected (@ assoc1 ...) or variable name)")
+      )
+   )
+   ,@
+   (if (not (null? postProcessingScript))
+      `(,postProcessingScript)
+   )
+)
+]]></Script>
+</Action>

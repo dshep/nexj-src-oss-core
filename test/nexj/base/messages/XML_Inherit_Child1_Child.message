@@ -1,0 +1,6 @@
+<Message base="XML_Inherit_Child1" format="XML">
+   <XMLMapping node="child1child" xsdtype="Child1ChildType"/>
+   <Parts>
+      <Value name="c1c" type="string"/>
+   </Parts>
+</Message>

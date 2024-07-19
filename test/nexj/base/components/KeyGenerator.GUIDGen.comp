@@ -1,0 +1,3 @@
+<Component type="nexj.core.persistence.GUIDGenerator"
+	activation="singleton"
+	description="GUID key generator"/>

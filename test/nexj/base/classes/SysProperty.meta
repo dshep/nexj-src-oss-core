@@ -1,0 +1,16 @@
+<Class description="Represents a name-value pair in an instance. Used for transforming instance values to list of instances each containing a name and a value. ">
+   <Attributes>
+      <Attribute description="The attribute name." name="name" required="true" type="string"/>
+      <Attribute description="The attribute group name" initializer="&quot;&quot;" name="group" type="string"/>
+      <Attribute description="The attirbute type name." name="type" required="true" type="string"/>
+      <Attribute description="The attribute value." name="value" required="true" type="any"/>
+      <Attribute description="The referenced instances." name="refs" type="any"/>
+   </Attributes>
+   <Events>
+      <Event args="attributes where orderBy count offset xlock" name="read" static="true" visibility="public">
+         <Actions>
+            <Action description="Performs main read processing" name="main" type="main"><![CDATA[(instance-collection)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

@@ -1,0 +1,7 @@
+<Message base="Object_Inherit_Contact_NonPoly" format="Object">
+   <ObjectMapping class="Patient"/>
+   <Parts>
+      <Value name="middleName" type="string"/>
+      <Value name="lastName" type="string"/>
+   </Parts>
+</Message>

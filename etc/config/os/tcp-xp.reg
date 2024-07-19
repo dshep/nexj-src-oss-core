@@ -1,0 +1,11 @@
+REGEDIT4
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
+"KeepAliveTime"=dword:000493E0
+"MaxUserPort"=dword:0000fffe
+"ReservedPorts"=hex(7):31,30,32,34,2d,34,39,31,35,31,00,00
+"StrictTimeWaitSeqCheck"=dword:00000001
+"Tcp1323Opts"=dword:00000003
+"TcpTimedWaitDelay"=dword:0000001e
+"TcpWindowSize"=dword:0003EBC0
+"GlobalMaxTcpWindowSize"=dword:0003EBC0

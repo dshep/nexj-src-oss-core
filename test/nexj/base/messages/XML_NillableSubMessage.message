@@ -1,0 +1,19 @@
+<Message format="XML">
+   <XMLMapping action="http://www.nexj.com/soap/action/NillableAction" namespace="test1" node="outer" operation="NillableOp" uri="http://www.nexj.com/schema/test/one"/>
+   <Parts>
+      <Value name="a" type="string"/>
+      <Value name="b" type="string">
+         <XMLMapping nillable="true"/>
+      </Value>
+      <Message name="c">
+         <XMLMapping nillable="true"/>
+         <Parts>
+            <Value minCount="1" name="x" type="string"/>
+            <Value name="y" type="string"/>
+            <Value name="z" type="string">
+               <XMLMapping type="attribute"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

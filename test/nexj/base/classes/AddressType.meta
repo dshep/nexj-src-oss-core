@@ -1,0 +1,19 @@
+<Class description="Contact Address" where="(= enum &quot;address&quot;)">
+   <Attributes>
+      <Attribute collection="true" name="addresses" required="false" type="Address"/>
+      <Attribute collection="false" name="type" required="false" type="string"/>
+      <Attribute initializer="&quot;address&quot;" name="enum" required="true" type="string"/>
+      <Attribute initializer="&quot;en&quot;" name="locale" type="string"/>
+      <Attribute name="unique" type="boolean" value="(equal? (@ type) &quot;Business&quot;)"/>
+   </Attributes>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="test.StringEnum">
+         <AttributeMappings>
+            <AttributeMapping column="value" name="type" table="test.StringEnum"/>
+            <AttributeMapping column="name" name="enum" table="test.StringEnum"/>
+            <AttributeMapping column="locale" name="locale" table="test.StringEnum"/>
+            <AttributeMapping destinationKey="Address.FK4" name="addresses" sourceKey="StringEnum.SK1"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

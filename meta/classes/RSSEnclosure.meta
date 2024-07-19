@@ -1,0 +1,7 @@
+<Class description="Describes a media object that is attached to the item.">
+   <Attributes>
+      <Attribute description="URL where the enclosure is located" name="url" required="true" type="string"/>
+      <Attribute description="Size in bytes" name="length" required="true" type="integer"/>
+      <Attribute description="MIME media-type of the enclosure" name="type" required="true" type="string"/>
+   </Attributes>
+</Class>

@@ -1,0 +1,5 @@
+<Class base="Address" description="Class to test the inheritance" where="(= type &quot;Business&quot;)">
+   <Attributes>
+      <Attribute name="main" required="true" type="boolean" value="#t"/>
+   </Attributes>
+</Class>

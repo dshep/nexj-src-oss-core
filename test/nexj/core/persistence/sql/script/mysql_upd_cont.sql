@@ -1,0 +1,1 @@
+update test.Contact set rec_ver=1, first_name='a' where id=0x00000000000000000000000000000001;

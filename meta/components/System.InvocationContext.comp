@@ -1,0 +1,7 @@
+<Component activation="new" description="The system invocation context" type="nexj.core.runtime.InvocationContext">
+   <Properties>
+      <Property name="transactionManager">System.TransactionManager</Property>
+      <Property name="userClass">User</Property>
+      <Property name="metadata"/>
+   </Properties>
+</Component>

@@ -1,0 +1,45 @@
+<Class description="Audit log object">
+   <Attributes>
+      <Attribute name="class" required="true" type="string"/>
+      <Attribute name="oid" type="binary" visibility="protected"/>
+      <Attribute name="event" required="true" type="string"/>
+      <Attribute name="argCount" required="true" type="integer"/>
+      <Attribute name="user" required="true" type="User"/>
+      <Attribute initializer="(now)" name="createdOn" required="true" type="timestamp"/>
+      <Attribute initializer="'()" name="serializedValues" type="string" visibility="protected"/>
+      <Attribute name="object" type="Object" visibility="protected"/>
+      <Attribute name="objectCaption" type="string"/>
+      <Attribute name="values" type="any" visibility="protected"/>
+      <Attribute name="valuesCaption" type="string"/>
+   </Attributes>
+   <Events>
+      <Event args="attributes" description="Loads the calculated attributes" name="load" vararg="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysAuditLog.load" name="load" type="before"/>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="AuditLog">
+         <AttributeMappings>
+            <AttributeMapping column="class" name="class"/>
+            <AttributeMapping column="oid" name="oid"/>
+            <AttributeMapping column="eventName" name="event"/>
+            <AttributeMapping column="argCount" name="argCount"/>
+            <AttributeMapping name="user" sourceKey="AuditLog.FK1"/>
+            <AttributeMapping column="createdOn" name="createdOn"/>
+            <AttributeMapping column="serializedValues" name="serializedValues"/>
+         </AttributeMappings>
+         <Hook activation="singleton" type="nexj.core.persistence.sql.SQLStateSerializer">
+            <Properties>
+               <Property name="metaclass">SysObjectLog</Property>
+               <Property name="objectAttribute">object</Property>
+               <Property name="OIDAttribute">oid</Property>
+               <Property name="variablesAttribute">values</Property>
+               <Property name="serializedVariablesAttribute">serializedValues</Property>
+               <Property name="serializingDeleted">true</Property>
+            </Properties>
+         </Hook>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

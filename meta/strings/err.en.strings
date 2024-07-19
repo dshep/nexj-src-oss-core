@@ -1,0 +1,10 @@
+err.SysQueue.deleteSystem=Cannot delete a system queue "{0}".
+err.SysQueue.renameSystem=Cannot rename a system queue (from "{0}" to "{1}").
+err.rpc.queueing.disabled=Send operation on SysObjectQueue "{0}" is disabled.
+err.rpc.queueing.invalidState=SysMessage "state" is invalid.
+err.rpc.queueing.privilege=Operation requires "{0}" privilege.
+fail.SysUpgrade.queueExists=Cannot seed system Queue "{0}" when there is an existing user Queue of the same name.
+fail.integration.send-receive.invalidChannel=Invalid channel argument (expected channel name or Channel object).
+fail.integration.send-receive.invalidInterface=Invalid interface argument (expected interface object, list of messages, or pair of Interfaces/message lists).
+fail.integration.send-receive.invalidMessage=Invalid message "{0}" (expected message name or Message object).
+fail.workflow.wakeSemaphore=Unable to find Semaphore to awaken for assignment "{0}".

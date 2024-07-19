@@ -1,0 +1,179 @@
+<!-- Copyright 2011 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<nv:Envelope xmlns:nv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <nv:Body xmlns:ns="http://www.nexjsystems.com/xml-soap" nv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <ns:Array>
+         <items nc:arrayType="xs:anyType[5]">
+            <Item href="#a"/>
+            <Item href="#b"/>
+            <Item href="#c"/>
+            <Item href="#d"/>
+            <Item href="#e"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="a">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[6]">
+            <Item>_ln</Item>
+            <Item>_f</Item>
+            <Item>_x2</Item>
+            <Item>firstName</Item>
+            <Item>_fnLen</Item>
+            <Item>_n</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[6]">
+            <Item xi:type="xs:string">Test</Item>
+            <Item href="#f"/>
+            <Item xi:type="xs:int">4</Item>
+            <Item xi:type="xs:string">Joe</Item>
+            <Item xi:type="xs:int">3</Item>
+            <Item xi:type="xs:int">123</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="b">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAg==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[6]">
+            <Item>_ln</Item>
+            <Item>_f</Item>
+            <Item>_x2</Item>
+            <Item>firstName</Item>
+            <Item>_fnLen</Item>
+            <Item>_n</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[6]">
+            <Item xi:type="xs:string">Test</Item>
+            <Item href="#g"/>
+            <Item xi:type="xs:int">4</Item>
+            <Item xi:type="xs:string">Zoe</Item>
+            <Item xi:type="xs:int">3</Item>
+            <Item xi:type="xs:int">123</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="c">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAw==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[6]">
+            <Item>_ln</Item>
+            <Item>_f</Item>
+            <Item>_x2</Item>
+            <Item>firstName</Item>
+            <Item>_fnLen</Item>
+            <Item>_n</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[6]">
+            <Item xi:type="xs:string">Smith</Item>
+            <Item href="#h"/>
+            <Item xi:type="xs:int">4</Item>
+            <Item xi:type="xs:string">John</Item>
+            <Item xi:type="xs:int">4</Item>
+            <Item xi:type="xs:int">123</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="d">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABA==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[6]">
+            <Item>_ln</Item>
+            <Item>_f</Item>
+            <Item>_x2</Item>
+            <Item>firstName</Item>
+            <Item>_fnLen</Item>
+            <Item>_n</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[6]">
+            <Item xi:type="xs:string">Julius</Item>
+            <Item href="#i"/>
+            <Item xi:type="xs:int">4</Item>
+            <Item xi:type="xs:string">Gaius</Item>
+            <Item xi:type="xs:int">5</Item>
+            <Item xi:type="xs:int">123</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="e">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[6]">
+            <Item>_ln</Item>
+            <Item>_f</Item>
+            <Item>_x2</Item>
+            <Item>firstName</Item>
+            <Item>_fnLen</Item>
+            <Item>_n</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[6]">
+            <Item xi:nil="true"/>
+            <Item href="#j"/>
+            <Item xi:type="xs:int">4</Item>
+            <Item xi:type="xs:string">Gnaeus</Item>
+            <Item xi:type="xs:int">6</Item>
+            <Item xi:type="xs:int">123</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:Function id="f">
+         <code nc:arrayType="xs:unsignedShort[4]">
+            <Item>28</Item>
+            <Item>1</Item>
+            <Item>17</Item>
+            <Item>23</Item>
+         </code>
+      </ns:Function>
+      <ns:Function id="g">
+         <code nc:arrayType="xs:unsignedShort[4]">
+            <Item>28</Item>
+            <Item>1</Item>
+            <Item>17</Item>
+            <Item>23</Item>
+         </code>
+      </ns:Function>
+      <ns:Function id="h">
+         <code nc:arrayType="xs:unsignedShort[4]">
+            <Item>28</Item>
+            <Item>1</Item>
+            <Item>17</Item>
+            <Item>23</Item>
+         </code>
+      </ns:Function>
+      <ns:Function id="i">
+         <code nc:arrayType="xs:unsignedShort[4]">
+            <Item>28</Item>
+            <Item>1</Item>
+            <Item>17</Item>
+            <Item>23</Item>
+         </code>
+      </ns:Function>
+      <ns:Function id="j">
+         <code nc:arrayType="xs:unsignedShort[4]">
+            <Item>28</Item>
+            <Item>1</Item>
+            <Item>17</Item>
+            <Item>23</Item>
+         </code>
+      </ns:Function>
+   </nv:Body>
+</nv:Envelope>

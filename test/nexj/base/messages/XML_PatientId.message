@@ -1,0 +1,11 @@
+<Message format="XML" lax="true">
+   <XMLMapping node="id" resource="(http://www.nexjsystems.com/nexj/b.xsd xsds/schema_b.xsd)"/>
+   <Parts>
+      <Value minCount="1" name="type" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value minCount="1" name="id" type="string">
+         <XMLMapping namespace="b" schema="http://www.nexjsystems.com/nexj/b.xsd" type="attribute" uri="urn:com.nexjsystems:ns:test:b"/>
+      </Value>
+   </Parts>
+</Message>

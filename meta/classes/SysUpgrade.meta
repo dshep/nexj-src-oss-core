@@ -1,0 +1,235 @@
+<Class description="Loads/upgrades the system initial (seed) data." visibility="protected">
+   <Events>
+      <Event description="Loads/upgrades the system initial (seed) data." name="seed" static="true" transaction="required">
+         <Actions>
+            <Action name="log" type="before"><![CDATA[(logger'info "Loading the initial (seed) data")
+]]></Action>
+            <Action name="counters" type="before"><![CDATA[(define counters
+   '(
+      #("hl7.message" 1 1 64)
+      #("file.seq" 1 1 64)
+      #("process.processNumber" 100 1 64)
+   )
+)
+
+(define col (SysCounter'read '(name) `(in? (@ name) ,@(map (lambda (cnt) (cnt 0)) counters)) '() '() '() '()))
+
+(for-each
+   (lambda (cnt)
+      (unless
+         (some
+            (lambda (inst) (equal? (inst'name) (cnt 0)))
+            col
+         )
+         (SysCounter'new (: name (cnt 0)) (: value (cnt 1)) (: increment (cnt 2)) (: cache (cnt 3)))
+      )
+   )
+   counters
+)
+
+(pre-commit)
+]]></Action>
+            <Action name="enumerations" type="before"><![CDATA[(begin-transaction
+   (((invocation-context)'unitOfWork)'maxChangeCount -1)
+
+   (this'seed ".enum" "Enumeration" "enum" "SysXMLEnum-SysObjEnum"
+      (lambda (enum)
+         (or (null? (enum'base))
+            (EnumBase'isUpcast (((invocation-context)'metadata)'getMetaclass (enum'base)))
+         )
+      )
+      (lambda (enum)
+         (when (equal? (ifnull (enum'classification) "system") "system")
+            (for-each
+               (lambda (inst) (inst'delete))
+               (EnumType'read '() `(= typeCode ,(enum'typeCode)) '() '() '() '())
+            )
+         )
+      )
+   )
+)
+]]></Action>
+            <Action description="Seeds the Workflow queue scheduler singleton, if it doesn't already exist. Also seeds the throttle counter batch job." name="scheduler" type="before"><![CDATA[(if (null? (read-instance SysWorkflowSchedulerBatchJob '() '() '()))
+   (SysWorkflowSchedulerBatchJob'new
+      (: name "Workflow Queue Scheduler")
+      (: concurrency 4)
+   )
+)
+
+(when (null? (read-instance SysQueueThrottleCounterBatchJob '() '() '()))
+   (SysQueueThrottleCounterBatchJob'new
+      (: name "Workflow Queue Throttle Manager")
+   )
+)
+
+(pre-commit)
+]]></Action>
+            <Action name="objqueues" type="before"><![CDATA[(define systemQueueList '())
+(define errorQueueList '())
+(define objQueueNameList (collection))
+
+(for-each 
+   (lambda (channel) 
+      (when (instance? channel nexj.core.meta.integration.channel.queueing.ObjectQueue)
+         (objQueueNameList'add (channel'name))
+      )
+   )
+   (((invocation-context)'metadata)'channelIterator)
+)
+
+(this'seed objQueueNameList ".channel" "Channel" "Channel" "SysXMLObjQueue-SysObjObjQueue"
+   (lambda (queue)
+      (set! systemQueueList (cons (queue'name) systemQueueList))
+      (let*
+         (  (current (read-instance SysObjectQueue '(customized system) `(= (@ name) ,(queue'name)) #f ))
+            (update
+               (if (null? current)
+                  #t
+                  ; else:
+                  (cond
+                     ((and (current'system) (not (current'customized))) #t)
+                     ((and (current'customized) (not (current'system)))
+                        (logger'warn (format "fail.SysUpgrade.queueExists" (queue'name)))
+                        #f
+                     )
+                     (else #f)
+                  )
+               )
+            )
+         )
+         (when update
+            (set! errorQueueList (cons (cons (queue'name) (queue'errorQueue)) errorQueueList))
+         )
+         update
+      )
+   )
+   '() ; no delete function
+)
+
+; Set the error queues.  This cannot be done by "seed" because some of the error queues may exist only after the
+; seed has completed.
+(for-each
+   (lambda (queue-error)
+      (let ((queue (read-instance SysObjectQueue '(customized errorQueue) `(= (@ name) ,(car queue-error)) #f )))
+         (if (null? (cdr queue-error))
+            (queue'errorQueue '())
+            (queue'errorQueue (read-instance SysObjectQueue '(customized) `(= (@ name) ,(cdr queue-error)) #f ))
+         )
+         (queue'customized ()) ; signal that this is not a customization
+      )
+   )
+   errorQueueList
+)
+
+(for-each
+   (lambda (oldSystemQueue)
+      (oldSystemQueue'system #f)
+      (oldSystemQueue'customized #t)
+   )
+   (SysObjectQueue'read '(customized)
+      (if (null? systemQueueList)
+         '(@ system)
+         `(and (not (in? (@ name) ,@systemQueueList)) (@ system))
+      ) '() '() '() '()
+   )
+)
+
+(pre-commit)]]></Action>
+            <Action name="wfqueues" type="before"><![CDATA[(define systemQueueList '())
+
+(this'seed ".wfqueue" "WorkflowQueue" "workflowQueue" "SysXMLWFQueue-SysObjWFQueue"
+   (lambda (queue)
+      (set! systemQueueList (cons (queue'name) systemQueueList))
+      (let
+         (
+            (
+               current
+               (read-instance
+                  SysWorkflowQueue
+                  '(customized system)
+                  `(= (@ name) ,(queue'name)) #f
+               )
+            )
+         )
+         (if (null? current)
+            #t
+            ; else:
+            (cond
+               ((and (current'system) (not (current'customized))) #t)
+               ((and (current'customized) (not (current'system)))
+                  (logger'warn (format "fail.SysUpgrade.queueExists" (queue'name)))
+                  #f
+               )
+               (else #f)
+            )
+         )
+      )
+   )
+   '() ; no delete function
+)
+
+(for-each
+   (lambda (oldSystemQueue)
+      (oldSystemQueue'system #f)
+      (oldSystemQueue'customized #t)
+   )
+   (SysWorkflowQueue'read '(customized)
+      (if (null? systemQueueList)
+         '(@ system)
+         `(and (not (in? (@ name) ,@systemQueueList)) (@ system))
+      ) '() '() '() '()
+   )
+)
+
+(pre-commit)]]></Action>
+            <Action name="rulesets" type="before"><![CDATA[(this'seed ".ruleset" "RuleSet" "ruleset" "SysXMLRuleSet-SysObjRuleSet" '()
+   (lambda (set)
+      (for-each
+         (lambda (rule) (rule'delete))
+         (SysRule'read '()
+            `(and
+               (= (@ ruleSetVersion version) ,(ifnull (set'version) 0))
+               (= (@ ruleSetVersion ruleSet name) ,(set'name))
+               (not (@ customized))
+             )
+             '() '() '() '()
+         )
+      )
+   )
+)
+]]></Action>
+            <Action name="system" type="before"><![CDATA[(when (null? (read-instance SysMailBatchJob '() '() '()))
+   (SysMailBatchJob'new)
+)
+(pre-commit)]]></Action>
+            <Action method="nexj.core.runtime.sys.SysUpgrade.initializePersistence" name="initializePersistence" type="before"/>
+            <Action name="main" type="main"><![CDATA[(logger'info "Loading complete")]]></Action>
+         </Actions>
+      </Event>
+      <Event args="ext type property transformation enabled delete" description="Loads/upgrades data from all metadata resources with the given extension." name="seed" static="true" transaction="required">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysUpgrade.seed" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="nameList ext type property transformation enabled delete" description="Loads/upgrades data from a list of metadata resources." name="seed" static="true" transaction="required">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysUpgrade.seed" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event description="Upgrades the system." name="upgrade" static="true" transaction="required">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define metadata ((invocation-context)'metadata))
+(define version (read-instance SysVersion '(loaded)
+   `(and (= namespace ,(metadata'namespace)) (= version ,(metadata'version))) #t))
+
+(if (not (version'loaded))
+   (begin-privileged
+      (this'seed)
+      (version'loaded #t)
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

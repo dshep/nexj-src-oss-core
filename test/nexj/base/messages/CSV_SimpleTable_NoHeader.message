@@ -1,0 +1,19 @@
+<Message format="CSV">
+   <CSVMapping comment=";#" escape="\" header="false" line="\r" quote="\u001e"/>
+   <Parts>
+      <Message maxCount="0" name="Data">
+         <Parts>
+            <Value description="First Column" name="firstName" type="string">
+               <CSVMapping ordinal="2"/>
+            </Value>
+            <Value description="Second Column" minCount="1" name="lastName" type="string">
+               <CSVMapping ordinal="1"/>
+            </Value>
+            <Value name="age" type="integer">
+               <CSVMapping ordinal="3"/>
+            </Value>
+            <Value name="eventtime" type="timestamp"/>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

@@ -1,0 +1,80 @@
+<Class description="Class to define an RSS service to provide to the outside world.">
+   <Attributes>
+      <Attribute name="name" type="string"/>
+      <Attribute name="title" type="string"/>
+      <Attribute name="description" type="string"/>
+      <Attribute name="portalName" type="string"/>
+      <Attribute name="portalScreen" type="string"/>
+      <Attribute name="portletName" type="string"/>
+      <Attribute name="nexjFormRef" type="string"/>
+      <Attribute description="Title for the header of the RSS Feed" name="rssTitle" type="string"/>
+      <Attribute description="Description for the header of the RSS Feed" name="rssDescription" type="string"/>
+      <Attribute description="Class to iterate over for items" name="itrClass" type="string"/>
+      <Attribute description="Attributes to return to the RSS feed" name="itrAttributes" type="string"/>
+      <Attribute description="Where clause to limit the contents in the items" name="itrWhereClause" type="string"/>
+      <Attribute description="Sort criteria used for the items collection" name="itrSort" type="string"/>
+      <Attribute description="The locking attribute should be on all classes shown in the UI.  It allows for the implementation of optimistic locking where two users can edit the same record at the same time, but the first one to commit the change will win and the second will be notified that another user has updated that record." initializer="0" name="locking" required="true" type="integer"/>
+   </Attributes>
+   <Events>
+      <Event description="calls clearCachedFunctions" name="commit" transaction="mandatory">
+         <Actions>
+            <Action description="Clears the SysCache of all cached compiled functions" name="clearCachedFunctions" type="before"><![CDATA[(this'clearCachedFunctions)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="attributes where orderBy count offset xlock" name="read" privilege="RSSFeedManage" static="true" visibility="public"/>
+      <Event name="create" privilege="RSSFeedManage" transaction="required" visibility="public"/>
+      <Event name="update" privilege="RSSFeedManage" transaction="required" visibility="public">
+         <Actions>
+            <Action name="clearCachedFunctions" type="before"><![CDATA[(this'clearCachedFunctions)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="calls clearCachedFunctions" name="delete" privilege="RSSFeedManage" transaction="required" visibility="public">
+         <Actions>
+            <Action name="clearCachedFunctions" type="before"><![CDATA[(this'clearCachedFunctions)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="clears the caches of read-attrib functions for the class instances" name="clearCachedFunctions">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(for-each
+   (lambda (a) 
+      (let ((cacheKey (list (@ :oid) (a'symbol) (@ :class symbol)))) 
+         (SysCache'remove cacheKey)))
+   (@ :class instanceAttributeIterator)
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="attrib" description="caches read-attrib functions for the class instances that reads and evalutes the scheme script" name="readScriptAttrib">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define cacheKey (list (@ :oid) attrib (@ :class symbol)))
+(define func (SysCache'get cacheKey))
+
+(when (null? func)
+   (set! func (eval `(lambda (this) ,(read (open-input-string (this attrib))))))
+   (SysCache'putReference cacheKey func)
+)
+func]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="RSSFeed">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name"/>
+            <AttributeMapping column="title" name="title"/>
+            <AttributeMapping column="description" name="description"/>
+            <AttributeMapping column="portalName" name="portalName"/>
+            <AttributeMapping column="portalScreen" name="portalScreen"/>
+            <AttributeMapping column="portletName" name="portletName"/>
+            <AttributeMapping column="nexjFormRef" name="nexjFormRef"/>
+            <AttributeMapping column="rssTitle" name="rssTitle"/>
+            <AttributeMapping column="rssDescription" name="rssDescription"/>
+            <AttributeMapping column="itrClass" name="itrClass"/>
+            <AttributeMapping column="itrAttributes" name="itrAttributes"/>
+            <AttributeMapping column="itrWhereClause" name="itrWhereClause"/>
+            <AttributeMapping column="itrSort" name="itrSort"/>
+            <AttributeMapping column="locking" name="locking"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

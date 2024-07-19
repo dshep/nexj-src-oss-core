@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions 
+  targetNamespace="http://test.nexj.com/wsdl/multi" 
+  xmlns="http://www.w3.org/2001/XMLSchema" 
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:types>
+        <schema 
+          targetNamespace="http://test.nexj.com/wsdl/schema1" 
+          xmlns="http://www.w3.org/2001/XMLSchema" 
+          xmlns:tns="http://test.nexj.com/wsdl/schema1">
+            
+            <element name="elementA" type="tns:complexTypeA" />
+            
+            <complexType name="complexTypeA">
+                <sequence>
+                    <element minOccurs="0" name="booleanA" type="boolean" />
+                    <element minOccurs="0" name="stringA" type="string" />
+                </sequence>
+            </complexType>
+        </schema>
+        <schema 
+          targetNamespace="http://test.nexj.com/wsdl/schema2" 
+          xmlns="http://www.w3.org/2001/XMLSchema" 
+          xmlns:schema1="http://test.nexj.com/wsdl/schema1" 
+          xmlns:tns="http://test.nexj.com/wsdl/schema2">
+            <import namespace="http://test.nexj.com/wsdl/schema1" />
+            
+            <element name="elementB" type="schema1:complexTypeA" />
+        </schema>
+     </wsdl:types>
+</wsdl:definitions>

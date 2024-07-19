@@ -1,0 +1,41 @@
+<Class description="The reader command object. Implements paging and first-match correlated reading.">
+   <Attributes>
+      <Attribute description="Symbol of the class to read." name="class" required="true" type="any"/>
+      <Attribute description="Event specification: (&lt;name&gt; &lt;arg1&gt; ... &lt;argN&gt;). By default, (read &lt;attributes&gt; &lt;where&gt; &lt;orderBy&gt; &lt;count&gt; &lt;offset&gt; &lt;xlock&gt;)." name="event" type="any"/>
+      <Attribute description="Attribute list to retrieve: (attr1 (assoc1 attr1_1 ... attr1_M) ... attrN)." initializer="()" name="attributes" type="any"/>
+      <Attribute description="Where clause - boolean expression retricting the returned instances." initializer="()" name="where" type="any"/>
+      <Attribute description="Ordering clause: ((expr1 . bAsc1) ... (exprN . bAscN))." initializer="()" name="orderBy" type="any"/>
+      <Attribute description="Maximum count of class instances to retrieve. -1 to retrieve all." initializer="-1" name="count" type="integer"/>
+      <Attribute description="Count of instances to skip from the beginning." initializer="0" name="offset" type="integer"/>
+      <Attribute description="Exclusive locking flag. When true, the instances on the specified class (but not the associated ones) are exclusively locked in the persistence storage until the end of the transaction." initializer="#f" name="xlock" type="boolean"/>
+      <Attribute description="Paging bookmark corresponding to the orderBy clause: (value1 ... valueN)." initializer="()" name="bookmark" type="any"/>
+      <Attribute description="Paging direction. True to page to the next page relative to the bookmark, false to page to the previous one." initializer="#t" name="next" type="boolean"/>
+      <Attribute description="True to include the bookmarked instance in the result." initializer="#f" name="inclusive" type="boolean"/>
+      <Attribute collection="true" description="Collection of parents for a first-match query. Their read events must have been invoked before the one of this object." initializer="()" name="parents" type="SysReader"/>
+      <Attribute description="Collection of associations corresponding to the parent SysReader instances, relative to the corresponding parent classes: [(assoc1_1 ...) ... (assocN_1 ...))." initializer="()" name="associations" type="any"/>
+      <Attribute collection="true" description="Collection of retrieved instances, used in a first-match query." initializer="()" name="results" type="Object" visibility="protected"/>
+      <Attribute description="SysReader object, the first instance from which results is used to determine whether this object should be executed based on dispatchAttribute and dispatchValues." initializer="()" name="dispatchParent" type="SysReader"/>
+      <Attribute description="Association for retrieving the dispatch value from the first instance of the dispatchParent results: (attrib1 ... attribN). Null to dispatch by class." initializer="()" name="dispatchAttribute" type="any"/>
+      <Attribute description="List of dispatch values to match: (value1 ... valueN). The values should be symbols if dispatching by class." initializer="()" name="dispatchValues" type="any"/>
+      <Attribute description="Specifies the first element of a grouped SysReader objects." initializer="()" name="dispatchGroup" type="SysReader"/>
+      <Attribute description="The value must match the same flag in the dispatchGroup for the reader to be executed. Then it is set to #t." initializer="#f" name="dispatched" type="boolean"/>
+      <Attribute description="If set, the query will be executed only if (&quot;read&quot; &lt;((user)':oid)&gt; &lt;key&gt;) key cannot be found in the cache, then session info will be cached under this key." initializer="'()" name="key" type="string"/>
+      <Attribute description="Session identifier used in combination with the key. Obtained from (SysClientState'createSession)." initializer="(cast binary &quot;&quot;)" name="session" type="binary"/>
+      <Attribute description="Cache expiration time offset in msec. Used in combination with the key." initializer="'()" name="expiration" type="long"/>
+   </Attributes>
+   <Events>
+      <Event description="Reads the instances specified in the command object." name="read" static="false" visibility="public">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysReader.read" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event description="Overrides the transaction mode." name="create" transaction="supported" visibility="public">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysReader.updateAttributes" name="updateAttributes" type="before"/>
+         </Actions>
+      </Event>
+      <Event description="Overrides the transaction mode." name="update" transaction="supported" visibility="public"/>
+      <Event description="Overrides the transaction mode." name="delete" transaction="supported" visibility="public"/>
+      <Event description="Overrides the transaction mode." name="commit" transaction="supported"/>
+   </Events>
+</Class>

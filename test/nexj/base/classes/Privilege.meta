@@ -1,0 +1,14 @@
+<Class description="User privilege object">
+<Attributes>
+      <Attribute name="name" required="true" type="string"/>
+      <Attribute name="user" required="true" reverse="privileges" type="User"/>
+   </Attributes>
+<PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.UsrPriv">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name" table="test.UsrPriv"/>
+            <AttributeMapping name="user" sourceKey="UsrPriv.FK1"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

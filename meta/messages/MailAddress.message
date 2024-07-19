@@ -1,0 +1,6 @@
+<Message aggregation="random" description="Raw Mail Message Address&#13;&#10;Used as the value of Mail.message-&gt;from/to/cc/bcc/replyTo">
+   <Parts>
+      <Value description="Mail address" name="address" type="string"/>
+      <Value description="Mail name (i.e. personal)" name="name" type="string"/>
+   </Parts>
+</Message>

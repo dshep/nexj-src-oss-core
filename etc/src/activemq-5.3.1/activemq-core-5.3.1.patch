@@ -1,0 +1,168 @@
+Index: src/main/java/org/apache/activemq/ActiveMQXASession.java
+===================================================================
+--- src/main/java/org/apache/activemq/ActiveMQXASession.java	(revision 964218)
++++ src/main/java/org/apache/activemq/ActiveMQXASession.java	(working copy)
+@@ -69,7 +69,7 @@
+     }
+ 
+     public boolean getTransacted() throws JMSException {
+-        return true;
++       return getTransactionContext().isInXATransaction();
+     }
+ 
+     public void rollback() throws JMSException {
+@@ -97,18 +97,15 @@
+     }
+ 
+     /**
+-     * This is called before transacted work is done by
+-     * the session.  XA Work can only be done when this
+-     * XA resource is associated with an Xid.
+-     *
+-     * @throws JMSException not associated with an Xid
++     * This is called before transacted work is done by the session.
++     * XA transactions are controlled outside of the session so
++     * nothing has to be done here.  The only reason for this method
++     * to be here is to override the parent.
+      */
+-    protected void doStartTransaction() throws JMSException {
+-
+-        if (!getTransactionContext().isInXATransaction()) {
+-            throw new JMSException("Session's XAResource has not been enlisted in a distributed transaction.");
+-        }
+-
++    protected void doStartTransaction() {
+     }
+ 
++    public boolean isAutoAcknowledge() {
++       return true;
++    }
+ }
+Index: src/main/java/org/apache/activemq/broker/region/PrefetchSubscription.java
+===================================================================
+--- src/main/java/org/apache/activemq/broker/region/PrefetchSubscription.java	(revision 964218)
++++ src/main/java/org/apache/activemq/broker/region/PrefetchSubscription.java	(working copy)
+@@ -60,6 +60,7 @@
+     protected PendingMessageCursor pending;
+     protected final List<MessageReference> dispatched = new CopyOnWriteArrayList<MessageReference>();
+     protected int prefetchExtension;
++    protected boolean usePrefetchExtension = false;
+     protected long enqueueCounter;
+     protected long dispatchCounter;
+     protected long dequeueCounter;
+@@ -257,7 +258,7 @@
+                             // contract prefetch if dispatch required a pull
+                             if (getPrefetchSize() == 0) {
+                                 prefetchExtension = Math.max(0, prefetchExtension - index);
+-                            } else if (context.isInTransaction()) {
++                            } else if (usePrefetchExtension && context.isInTransaction()) {
+                                 // extend prefetch window only if not a pulling consumer
+                                 prefetchExtension = Math.max(prefetchExtension, index);
+                             }
+@@ -306,7 +307,9 @@
+                         node.getRegionDestination().getDestinationStatistics().getInflight().decrement();
+                     }
+                     if (ack.getLastMessageId().equals(node.getMessageId())) {
+-                        prefetchExtension = Math.max(prefetchExtension, index + 1);
++                    if (usePrefetchExtension) {
++                    	    prefetchExtension = Math.max(prefetchExtension, index + 1);
++                    }
+                         destination = node.getRegionDestination();
+                         callDispatchMatched = true;
+                         break;
+@@ -745,4 +748,12 @@
+     public void setMaxAuditDepth(int maxAuditDepth) {
+         this.maxAuditDepth = maxAuditDepth;
+     }
++    
++    public boolean isUsePrefetchSubscription() {
++        return usePrefetchExtension;
++    }
++
++    public void setUsePrefetchSubscription(boolean usePrefetchExtension) {
++        this.usePrefetchExtension = usePrefetchExtension;
++    }
+ }
+Index: src/main/java/org/apache/activemq/broker/region/policy/PolicyEntry.java
+===================================================================
+--- src/main/java/org/apache/activemq/broker/region/policy/PolicyEntry.java	(revision 964218)
++++ src/main/java/org/apache/activemq/broker/region/policy/PolicyEntry.java	(working copy)
+@@ -83,6 +83,7 @@
+     private int queueBrowserPrefetch=ActiveMQPrefetchPolicy.DEFAULT_QUEUE_BROWSER_PREFETCH;
+     private int topicPrefetch=ActiveMQPrefetchPolicy.DEFAULT_TOPIC_PREFETCH;
+     private int durableTopicPrefetch=ActiveMQPrefetchPolicy.DEFAULT_DURABLE_TOPIC_PREFETCH;
++    private boolean usePrefetchExtesion = false;
+     private int cursorMemoryHighWaterMark=70;
+     
+    
+@@ -193,7 +194,7 @@
+         }
+         sub.setMaxAuditDepth(getMaxAuditDepth());
+         sub.setMaxProducersToAudit(getMaxProducersToAudit());
+-        
++        sub.setUsePrefetchSubscription(isUsePrefetchExtesion());        
+     }
+     
+     public void configure(Broker broker, SystemUsage memoryManager, QueueBrowserSubscription sub) {
+@@ -205,6 +206,7 @@
+             sub.setPrefetchSize(getQueueBrowserPrefetch());
+         }
+         sub.setCursorMemoryHighWaterMark(getCursorMemoryHighWaterMark());
++        sub.setUsePrefetchSubscription(isUsePrefetchExtesion());
+     }
+     
+     public void configure(Broker broker, SystemUsage memoryManager, QueueSubscription sub) {
+@@ -216,6 +218,7 @@
+             sub.setPrefetchSize(getQueuePrefetch());
+         }
+         sub.setCursorMemoryHighWaterMark(getCursorMemoryHighWaterMark());
++        sub.setUsePrefetchSubscription(isUsePrefetchExtesion());
+     }
+ 
+     // Properties
+@@ -690,6 +693,20 @@
+         this.durableTopicPrefetch = durableTopicPrefetch;
+     }
+     
++    /**
++     * @return the usePrefetchExtesion
++     */
++    public boolean isUsePrefetchExtesion() {
++        return this.usePrefetchExtesion;
++    }
++
++    /**
++     * @param usePrefetchExtesion the usePrefetchExtesion to set
++     */
++    public void setUsePrefetchExtesion(boolean usePrefetchExtesion) {
++        this.usePrefetchExtesion = usePrefetchExtesion;
++    }
++    
+     public int getCursorMemoryHighWaterMark() {
+ 		return this.cursorMemoryHighWaterMark;
+ 	}
+Index: src/main/java/org/apache/activemq/command/ActiveMQMessage.java
+===================================================================
+--- src/main/java/org/apache/activemq/command/ActiveMQMessage.java   (revision 964218)
++++ src/main/java/org/apache/activemq/command/ActiveMQMessage.java   (working copy)
+@@ -269,7 +269,7 @@
+ 
+     public boolean propertyExists(String name) throws JMSException {
+         try {
+-            return this.getProperties().containsKey(name);
++            return this.getProperties().containsKey(name) || getObjectProperty(name) != null;
+         } catch (IOException e) {
+             throw JMSExceptionSupport.create(e);
+         }
+@@ -277,7 +277,9 @@
+ 
+     public Enumeration getPropertyNames() throws JMSException {
+         try {
+-            return new Vector<String>(this.getProperties().keySet()).elements();
++            Vector<String> propsVector = new Vector<String>(this.getProperties().keySet());
++            propsVector.addAll(new Vector<String>(JMS_PROPERTY_SETERS.keySet()));
++            return propsVector.elements();
+         } catch (IOException e) {
+             throw JMSExceptionSupport.create(e);
+         }
+ 

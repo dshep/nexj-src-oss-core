@@ -1,0 +1,126 @@
+<Message aggregation="sequential" format="XML">
+   <XMLMapping node="Enumeration" type="element"/>
+   <Parts>
+      <Value maxCount="1" minCount="0" name="base" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value maxCount="1" minCount="0" name="parent" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value maxCount="1" minCount="0" name="association" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value maxCount="1" minCount="0" name="reverse" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value maxCount="1" minCount="1" name="typeCode" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value maxCount="1" minCount="0" name="userQuickpick" type="boolean">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value maxCount="1" minCount="0" name="allowNewValues" type="boolean">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value maxCount="1" minCount="0" name="upgradeable" type="boolean">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value maxCount="1" minCount="0" name="classification" type="string">
+         <XMLMapping type="attribute"/>
+         <Enumerations>
+            <Enumeration value="custom"/>
+            <Enumeration value="sysDisplay"/>
+            <Enumeration value="sysEdit"/>
+            <Enumeration value="system"/>
+         </Enumerations>
+      </Value>
+      <Value maxCount="1" minCount="0" name="description" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Message aggregation="sequential" maxCount="1" minCount="0" name="Locales">
+         <XMLMapping type="element"/>
+         <Parts>
+            <Message aggregation="sequential" maxCount="2147483647" minCount="0" name="Locale">
+               <XMLMapping type="element"/>
+               <Parts>
+                  <Value maxCount="1" minCount="1" name="name" type="string">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value maxCount="1" minCount="1" name="caption" type="string">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="description" type="string">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+      <Message aggregation="sequential" maxCount="1" minCount="0" name="Values">
+         <XMLMapping type="element"/>
+         <Parts>
+            <Message aggregation="sequential" maxCount="2147483647" minCount="0" name="Value">
+               <XMLMapping type="element"/>
+               <Parts>
+                  <Value maxCount="1" minCount="1" name="name" type="string">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value maxCount="1" minCount="1" name="value" type="string">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="hasBehavior" type="boolean">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="behaveAsValue" type="string">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="externalValue" type="string">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="parentValue" type="string">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="hideable" type="boolean">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="deletable" type="boolean">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="codeUpdateable" type="boolean">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="displayUpdateable" type="boolean">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="upgradeUpdateable" type="boolean">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="description" type="string">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Message aggregation="sequential" maxCount="1" minCount="0" name="Locales">
+                     <XMLMapping type="element"/>
+                     <Parts>
+                        <Message aggregation="sequential" maxCount="2147483647" minCount="0" name="Locale">
+                           <XMLMapping type="element"/>
+                           <Parts>
+                              <Value maxCount="1" minCount="1" name="name" type="string">
+                                 <XMLMapping type="attribute"/>
+                              </Value>
+                              <Value maxCount="1" minCount="1" name="caption" type="string">
+                                 <XMLMapping type="attribute"/>
+                              </Value>
+                              <Value maxCount="1" minCount="0" name="shortCaption" type="string">
+                                 <XMLMapping type="attribute"/>
+                              </Value>
+                           </Parts>
+                        </Message>
+                     </Parts>
+                  </Message>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>
+

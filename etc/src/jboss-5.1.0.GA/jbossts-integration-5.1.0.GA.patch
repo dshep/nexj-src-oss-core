@@ -1,0 +1,88 @@
+--- D:/JBoss source/JBOSSTS_4_6_1_GA/atsintegration/classes/com/arjuna/ats/internal/jbossatx/jta/AppServerJDBCXARecovery.java	Mon Apr 04 16:10:51 2011
++++ C:/work/WS/JBossTS/src/JBOSSTS_4_6_1_GA/atsintegration/classes/com/arjuna/ats/internal/jbossatx/jta/AppServerJDBCXARecovery.java	Thu Nov 03 10:51:43 2011
+@@ -284,7 +284,15 @@
+                     }
+                 }
+ 
+-                _connection = _dataSource.getXAConnection();
++                if (_dbusername != null)
++                {
++                   _connection = _dataSource.getXAConnection(_dbusername,_dbpassword);
++                }
++                else
++                {
++                   _connection = _dataSource.getXAConnection();
++                }
++
+                 _connection.addConnectionEventListener(_connectionEventListener);
+                 log.debug("Created new XAConnection");
+             }
+@@ -303,7 +311,17 @@
+         }
+     }
+ 
+-    private class LocalConnectionEventListener implements ConnectionEventListener
++   public String getDBPassword()
++   {
++      return _dbpassword;
++   }
++
++   public void setDBPassword(String dbPassword)
++   {
++      _dbpassword = dbPassword;
++   }
++
++   private class LocalConnectionEventListener implements ConnectionEventListener
+     {
+         public void connectionErrorOccurred(ConnectionEvent connectionEvent)
+         {
+@@ -385,14 +403,30 @@
+                 {
+                     _username =data.substring(9);
+                 }
+-                if(_PASSWORD.equalsIgnoreCase(data.substring(0,8)))
++                else if(_PASSWORD.equalsIgnoreCase(data.substring(0,8)))
+                 {
+                     _password =data.substring(9);
+                 }
+-                if(_JNDINAME.equalsIgnoreCase(data.substring(0,8)))
++                else if(_JNDINAME.equalsIgnoreCase(data.substring(0,8)))
+                 {
+                     _dataSourceId=data.substring(9);
+                 }
++                else
++                {
++                   String[] stArray = data.split("=", 2);
++
++                   if(stArray.length == 2)
++                   {
++                      if(_DBUSERNAME.equalsIgnoreCase(stArray[0]))
++                      {
++                         _dbUsername = stArray[1];
++                      } 
++                      if(_DBPASSWORD.equalsIgnoreCase(stArray[0]))
++                      {
++                         _dbPassword = stArray[1];
++                      }
++                   }      
++                }
+             }
+         }
+         
+@@ -411,11 +445,15 @@
+     private String _dataSourceId;
+     private String _username;
+     private String _password;
+-    
++    private String _dbusername;
++    private String _dbpassword;
++
+     private final String _JNDINAME = "jndiname";
+     private final String _USERNAME = "username";
+     private final String _PASSWORD = "password";
+     private final String _DELIMITER = ",";
++    private final String _DBUSERNAME = "dbusername";
++    private final String _DBPASSWORD = "dbpassword";
+     
+     private Logger log = org.jboss.logging.Logger.getLogger(AppServerJDBCXARecovery.class);
+ }

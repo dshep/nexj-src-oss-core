@@ -1,0 +1,408 @@
+<Class description="Contact, an entity for which we track contact info">
+   <Attributes>
+      <Attribute collection="false" name="firstName" required="false" static="false" type="string"/>
+      <Attribute name="netWorth" type="integer"/>
+      <Attribute name="date" type="timestamp"/>
+      <Attribute caption="IDS_LAST_NAME" collection="false" name="lastName" type="string"/>
+      <Attribute name="fullName" orderBy="lastName firstName" readOnly="true" type="string" value="((string-append (ifnull (@ firstName) &quot;&quot;) &quot; &quot; (ifnull (@ lastName) &quot;&quot;) (if (null? (@ type)) &quot;&quot; (string-append &quot; [&quot; (@ type type) &quot;]&quot;)) (if (null? (@ user)) &quot;&quot; (string-append &quot; {&quot; (((@ user name)'toString)'toString) &quot;}&quot;)))'trim)"/>
+      <Attribute name="fullName2" readOnly="true" type="string" value="(string-affix (@ lastName) &quot;, &quot; (@ firstName))"/>
+      <Attribute name="fullNameDetail" type="string" value="(string-affix (@ fullName2) &quot; &quot; (if (null? (@ firstName)) '() (string-append &quot;(&quot; (@ firstName) &quot;)&quot;)))&#10;"/>
+      <Attribute collection="true" name="data" type="Data" value="(@ getData)"/>
+      <Attribute collection="true" name="addresses" required="false" reverse="contact" type="Address"/>
+      <Attribute collection="true" name="privilegedAddresses" reverse="contact" type="AddressPrivilege"/>
+      <Attribute collection="true" name="noAddresses" reverse="contact" type="Address" where="(and (null? (user)) (not (null? city)))"/>
+      <Attribute name="addressCount" readOnly="true" type="integer" value="(count (@ addresses))"/>
+      <Attribute cascade="delete" collection="true" name="phones" required="false" reverse="contact" type="Phone"/>
+      <Attribute collection="false" name="primaryAddress" required="false" reverse="contact" type="Address"/>
+      <Attribute collection="true" name="primaryAddresses" reverse="contact" type="Address" where="(= (@) (@ contact primaryAddress))"/>
+      <Attribute collection="true" name="primaryAddresses2" reverse="contact" type="Address" where="(= (@) (@ contact primaryAddress))"/>
+      <Attribute collection="false" name="user" required="false" reverse="contact" type="User"/>
+      <Attribute collection="false" initializer="(user)" name="readPrincipal" required="true" type="Principal" updatePrivilege="updateContactSecurity"/>
+      <Attribute collection="false" initializer="0" name="version" required="true" type="integer"/>
+      <Attribute name="overriddenSecurity" type="string" updatePrivilege="SyncManage"/>
+      <Attribute name="defaultReadPrincipalName" static="true" type="string" value="&quot;Public&quot;"/>
+      <Attribute name="type" static="false" type="ContactType"/>
+      <Attribute name="subType" type="ContactSubType"/>
+      <Attribute collection="false" name="businessAddress" required="false" reverse="contact" type="BusinessAddress"/>
+      <Attribute collection="false" name="businessAddress2" required="false" reverse="contact" type="Address" where="(= type &quot;Business&quot;)"/>
+      <Attribute collection="false" name="businessAddress3" required="false" reverse="contact" type="Address" where="(= (@ typeEnum type) &quot;Business&quot;)"/>
+      <Attribute name="businessAddress4" reverse="contact" type="Address" value="(derive-from (@ addresses))" where="(= (@ type) &quot;Business&quot;)"/>
+      <Attribute collection="true" name="businessAddresses" reverse="contact" type="Address" value="(derive-from (@ addresses))" where="(= (@ type) &quot;Business&quot;)"/>
+      <Attribute collection="true" initializer=" " name="dynAssocAddresses" type="Address" value="(@ addresses (= (@ country) &quot;Canada&quot;) contact (= (@ firstName) &quot;Joe&quot;) addresses)"/>
+      <Attribute initializer="(@ user name)" name="uname" type="string" value="(@ user name)"/>
+      <Attribute name="qaUser" reverse="contact" type="User" where="(= (@ ugassocs group name) &quot;QA&quot;)"/>
+      <Attribute name="readable" type="boolean" value="(in? (@ readPrincipal) ((user)'principalSet))"/>
+      <Attribute name="classCode" required="true" type="string" value="&quot;CON&quot;"/>
+      <Attribute name="testCategory" type="string"/>
+      <Attribute name="lastUpdated" type="timestamp"/>
+      <Attribute cached="false" description="This tests persistent uncached attribute invalidation" name="lastUpdatedMillisecond" type="integer" value="(remainder (cast long (@ lastUpdated)) 1000)"/>
+      <Attribute name="homeAddress" reverse="contact" type="Address"/>
+      <Attribute access="dummyAccess" collection="false" name="firstNamePrivilege" readPrivilege="dummyRead" required="false" static="false" type="string" updatePrivilege="dummyUpdate"/>
+      <Attribute name="dummyAccess" type="boolean"/>
+      <Attribute name="dummyAccessTri" type="boolean"/>
+      <Attribute name="businessAddressCount" type="integer" value="(vector-length&#10;   (filter&#10;      (lambda (a) (= (a'type) &quot;Business&quot;))&#10;      (@ addresses)&#10;   )&#10;)&#10;"/>
+      <Attribute name="accounts" reverse="contact" type="Account"/>
+      <Attribute name="image" reverse="subject" type="Obj"/>
+      <Attribute name="supportGroup" reverse="participants" type="SupportGroup"/>
+      <Attribute name="firstAddress" reverse="contact" type="Address" value="(unless (or (null? (@ addresses)) (= 0 ((@ addresses)'size)))&#10;   ((@ addresses)'get 0)&#10;)"/>
+      <Attribute name="isHome" type="boolean" value="(if (null? (@ firstAddress))&#10;   #f&#10;   ((@ firstAddress)'isHome)&#10;)"/>
+      <Attribute name="isHome2" type="boolean" value="(if (null? (@ supportGroup))&#10;   #f&#10;   (@ firstAddress isHome)&#10;)"/>
+      <Attribute description="Generates a note of a random length." name="note" type="string" value="(let ((value &quot;&quot;))&#10;   (unless (or (null? (@ lastName)) (= 0 (string-length (@ lastName))))&#10;      (let ((i ((@ lastName)'hashCode))) &#10;         (let ((n ((java.util.Random'new i)'nextInt 60)))&#10;            (for ((k 0)) (&lt; k n) (set! k (+ k 1))&#10;               (set! value (string-join (list value &quot;word&quot; (number-&gt;string k))))&#10;               (when (&lt; k (- n 1))&#10;                  (set! value (string-join (list value &quot; &quot;)))&#10;               )&#10;            )&#10;         )&#10;      )&#10;   )&#10;      &#10;   value&#10;)&#10;"/>
+      <Attribute description="The first letter of last name to group on." name="alphaGroup" type="string" value="(if (or (null? (@ lastName)) (= 0 (string-length (@ lastName))))&#10;   &quot;(empty)&quot;&#10;   (string (string-ref (@ lastName) 0))&#10;)"/>
+      <Attribute name="isTorontoBasedEmployee" type="boolean" value="(and&#10;   (= (@ type type) &quot;Employee&quot;)&#10;   (any (and (= (@ addresses type) &quot;Business&quot;) (= (@ addresses city) &quot;Toronto&quot;)))&#10;)&#10;"/>
+      <Attribute name="tax" type="decimal" value="(*&#10;   (+&#10;      (@ businessAddressCount)&#10;      (if (any (= (@ addresses type) &quot;Business&quot;))&#10;         (if (if (&gt; (@ businessAddressCount) 0) (&gt;= (@ businessAddressCount) 1) #f) 3 2)  &#10;         1.5&#10;      )&#10;   )&#10;   10000&#10;)"/>
+      <Attribute name="lastNameLengthPlus1" type="integer" value="(+ (string-length (@ lastName)) 1)"/>
+      <Attribute name="lastNameInitial" type="string" value="(substring (@ lastName) 0 1)"/>
+      <Attribute name="allowClearPreferred" type="boolean" value="(and (@ tax) (not (null? ((@ supportGroup) (@ note)))))"/>
+      <Attribute name="wizardIcon" type="string" value="(if (null? (@ firstName)) &quot;32/folder&quot; ((@ firstName)'replaceAll &quot;16&quot; &quot;32&quot;))"/>
+      <Attribute name="isCommit" type="boolean" value=" (isCommit)"/>
+      <Attribute name="clientLib" type="integer" value="(+ (one-plus (@ tax)) (two))"/>
+      <Attribute name="note2" type="string"/>
+      <Attribute name="note3" type="string"/>
+      <Attribute name="visible" readOnly="true" required="true" type="boolean" value="#t"/>
+      <Attribute name="probability" type="double"/>
+      <Attribute collection="true" name="attachments" type="SysExternalReport"/>
+      <Attribute description="Access attribute for delete event." name="deletable" type="boolean" value="#t"/>
+   </Attributes>
+   <Events>
+      <Event access="readable" args="attributes where orderBy count offset xlock" description="This is the framework read event. The main action is implemented by the framework." name="read" privilege="readContact" static="true" visibility="public">
+         <Actions>
+            <Action condition="(= (((invocation-context)'principal)'name) &quot;guest&quot;)" description="Check functional access rights. Deny access for the user account 'guest'." name="checkAccess" relative="addSecurityClause" type="before"><![CDATA[;; Throw a new instance of an AccessViolationException, created with
+;; the Contact class object, the event symbol and the current user instance as arguments
+(throw (AccessViolationException'new this 'read user))
+            ]]></Action>
+            <Action name="processWhereClause" type="before"><![CDATA[(replaceAttributeClause where '= '(@ soundsLike) (lambda () (= (@ lastName) "Babb")))]]></Action>
+            <Action condition="(= (((invocation-context)'principal)'name) &quot;guest&quot;)" description="Add a security clause to restrict the selected contacts." name="addSecurityClause" relative="main" type="around"><![CDATA[;; Create the security clause "(in user (group1 group2 ... groupN))"
+(let ((secClause `(in user ,(map (lambda (ugassoc)(ugassoc'group)) (user'ugassocs)))))
+   (set! where
+      ;; If the where clause is not specified,
+      (if (null? where)
+         ;; then use the security clause as a where clause
+         secClause
+         ;; Else combine the where and the security clause with an and operator
+         `(and ,where ,secClause)
+      )
+   )
+)
+;; Invoke the next action
+(call-next)
+            ]]></Action>
+         </Actions>
+      </Event>
+      <Event name="getData">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let ((dcol (instance-collection)))
+   (dcol'add (Data'createFactory "Test Title One"))
+   (dcol'add (Data'createFactory "Test Title Two"))
+   ;return:
+   dcol
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="create" privilege="createContact" visibility="public">
+         <Actions>
+            <Action condition="(every (lambda (a) (this'isUpdated a)) '(firstName lastName))" name="computePreFullName" type="before"><![CDATA[(((invocation-context)'unitOfWork)'cacheLocal this (this'pre'fullName))]]></Action>
+         </Actions>
+      </Event>
+      <Event name="update" privilege="updateContact" visibility="public">
+         <Actions>
+            <Action name="updateLastUpdated" type="before"><![CDATA[(this'lastUpdated (now))
+(set! update-count (+ update-count 1))
+]]></Action>
+         </Actions>
+      </Event>
+      <Event access="deletable" name="delete" privilege="deleteContact" visibility="public"/>
+      <Event name="commit">
+         <Actions>
+            <Action name="updateCommitCount" type="before"><![CDATA[(set! commit-count (+ commit-count 1))]]></Action>
+         </Actions>
+      </Event>
+      <Event name="makeHidden" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let ((u (User'new (: name "test1")))
+      (c ((Contact'read '() '(= lastName "Smith") '() '() '() '())'get 0))
+      (p ((Patient'read '() '(= lastName "Babb") '() '() '() '())'get 0)))
+      (u'contact c)
+      (p'readPrincipal u)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="tx b" name="testTxSupported" static="true" transaction="supported">
+         <Actions>
+            <Action condition="(not (eq? tx (((invocation-context)'unitOfWork)'transaction)))" name="checkTx" type="before"><![CDATA[(error "tx does not match")]]></Action>
+            <Action condition="b" name="invokeRequired" type="before"><![CDATA[(this'testTxRequired (((invocation-context)'unitOfWork)'transaction) b)]]></Action>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="tx b" name="testTxRequired" static="true" transaction="required">
+         <Actions>
+            <Action condition="(null? (((invocation-context)'unitOfWork)'transaction))" name="nullTx" type="before"><![CDATA[(error "tx is null")]]></Action>
+            <Action condition="(and (not (null? tx)) (not (eq? tx (((invocation-context)'unitOfWork)'transaction))))" name="checkTx" type="before"><![CDATA[(error "tx does not match")]]></Action>
+            <Action condition="b" name="invokeSupported" type="before"><![CDATA[(this'testTxSupported (((invocation-context)'unitOfWork)'transaction) #f)]]></Action>
+            <Action name="invokeNew" type="before"><![CDATA[(this'testTxNew (((invocation-context)'unitOfWork)'transaction) b)]]></Action>
+            <Action condition="b" name="invokeNone" type="before"><![CDATA[(this'testTxNone (((invocation-context)'unitOfWork)'transaction) b)]]></Action>
+            <Action condition="b" name="invokeError" type="before"><![CDATA[(try
+   (begin
+      (this'invokeNew (((invocation-context)'unitOfWork)'transaction) 'error)
+      (error "expected exception")
+   )
+   (lambda (e) #t)
+)
+]]></Action>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="tx b" name="testTxNew" static="true" transaction="new">
+         <Actions>
+            <Action condition="(null? (((invocation-context)'unitOfWork)'transaction))" name="nullTx" type="before"><![CDATA[(error "null tx")]]></Action>
+            <Action condition="(eq? (((invocation-context)'unitOfWork)'transaction) tx)" name="checkTx" type="before"><![CDATA[(error "no new tx")]]></Action>
+            <Action name="main" type="main"><![CDATA[(Contact'new '(firstName . "tx") '(lastName . "new")
+   `(readPrincipal . ,((Principal'read '() '(= name "users") '() 1 0 #f)'get 0)))
+(try
+   (begin
+      (this'testTxUnsupported (((invocation-context)'unitOfWork)'transaction) b)
+      (error "exception expected")
+   )
+   (lambda (e) #t)
+)
+(this'testTxMandatory (((invocation-context)'unitOfWork)'transaction) b)
+]]></Action>
+            <Action condition="(eq? b 'error)" name="create" type="before"><![CDATA[(Contact'new '(firstName . "tx") '(lastName . "error")
+   `(principal . ,((Principal'read '() '(= name "users") '() 1 0 #f)'get 0)))]]></Action>
+         </Actions>
+      </Event>
+      <Event args="tx b" name="testTxNone" static="true" transaction="none">
+         <Actions>
+            <Action condition="(not (null? (((invocation-context)'unitOfWork)'transaction)))" name="checkTx" type="before"><![CDATA[(error "tx not null")]]></Action>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="tx b" name="testTxMandatory" static="true" transaction="mandatory">
+         <Actions>
+            <Action condition="(null? (((invocation-context)'unitOfWork)'transaction))" name="checkTx" type="before"><![CDATA[(error "no tx")]]></Action>
+            <Action condition="(eq? b 'error)" name="error" type="before"><![CDATA[(error "unwind")]]></Action>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="tx b" name="testTxUnsupported" static="true" transaction="unsupported">
+         <Actions>
+            <Action condition="(not (null? (((invocation-context)'unitOfWork)'transaction)))" name="nullTx" type="before"><![CDATA[(error "tx unsupported")
+]]></Action>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event name="testException" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(import '(nexj.core.util.UncheckedException))
+
+(let ((e (nexj.core.util.UncheckedException'new "err.contact.test")))
+   (throw e)
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="parameter" name="testExceptionWithRetry" static="true" vararg="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(import '(nexj.core.util.UncheckedException))
+
+; throw exception if parameter is null
+(if (null? parameter)
+   (let ((e (nexj.core.util.UncheckedException'new "err.contact.test.parametermissing")))
+      (throw e)
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event name="testAsync">
+         <Actions/>
+      </Event>
+      <Event args="parameter" name="testAsync">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(logger'debug "parameter =" parameter)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="assocList" name="testInvoke" static="true" vararg="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define (obj) 
+   (message
+      (: :class "Contact")
+      (: :oid ((cdadar assocList)':oid))
+      (: firstName "Gnaeus")
+   )
+)
+(: contact (obj))]]></Action>
+         </Actions>
+      </Event>
+      <Event args="parameter1 parameter2" name="testInvokeDelegate">
+         <Actions>
+            <Action name="before" type="before"><![CDATA[(this'firstName parameter1)]]></Action>
+            <Action name="main" type="main"><![CDATA[(this'lastName parameter2)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="parameter1 parameter2" name="testInvokeInstanceAttrList" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(this'testInvokeDelegate parameter1 parameter2)
+this]]></Action>
+         </Actions>
+      </Event>
+      <Event args="parameter1 parameter2" name="testInvokeInstanceFilterList" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(this'testInvokeDelegate parameter1 parameter2)
+'()]]></Action>
+         </Actions>
+      </Event>
+      <Event name="testInvokeInstanceNoArgAttrList" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(this'testInvokeDelegate "Malice" "Fractal")
+this]]></Action>
+         </Actions>
+      </Event>
+      <Event name="testInvokeInstanceNoArgFilterList" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(this'testInvokeDelegate "Malice" "Fractal")
+'()]]></Action>
+         </Actions>
+      </Event>
+      <Event args="firstName lastName" name="testPreValueUpdate" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(this'firstName firstName)
+(this'lastName lastName)
+(this'pre'fullName)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Workflow trigger (PersistedLoop.workflow)" name="start">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[; Workflow trigger]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Workflow trigger (PersistedLoop.workflow)" name="process">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[; Workflow trigger]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Workflow trigger (PersistedLoop.workflow)" name="break">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[; Workflow trigger]]></Action>
+         </Actions>
+      </Event>
+      <Event args="contact suffix" name="getFullName" static="true" visibility="public">
+         <Actions>
+            <Action description="(string-append (contact'fullName) suffix)" name="main" type="main"><![CDATA[(string-append (contact'fullName) suffix)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="suffix" name="getFullName" visibility="public">
+         <Actions>
+            <Action description="(string-append (@ fullName) suffix)" name="main" type="main"><![CDATA[(string-append (@ fullName) suffix)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="getPreFullName" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(((invocation-context)'unitOfWork)'getCachedLocal this)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="args" name="createContact" static="true" vararg="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(apply Contact 'new args)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="whereClause" name="removeContacts" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let ((contacts (Contact'read '() whereClause '() -1 0 #f)))
+   (for-each 
+      (lambda (c)
+         (c'delete)
+      ) 
+   contacts)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="args" name="createContactWithAddresses" static="true" vararg="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let* 
+   (
+      (contact (apply Contact 'createContact args))
+      (addr1 (Address'createAddress2 contact "Business"))
+      (addr2 (Address'createAddress2 contact "Home"))  
+   )
+   (addr1'street "business st.")
+   (addr1'country "USA")
+   (addr2'street "home st.")
+   (addr2'country "USA")
+   contact
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="args" name="createContactWithAddressesMulti" static="true" vararg="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let* 
+   (
+      (contact1 (apply Contact 'createContact args))
+      (contact2 (apply Contact 'createContact args))
+      (addr11 (Address'createAddress2 contact1 "Business"))
+      (addr12 (Address'createAddress2 contact1 "Home"))  
+      (addr21 (Address'createAddress2 contact2 "Business"))
+      (addr22 (Address'createAddress2 contact2 "Home"))  
+   )
+   (addr11'street "business st.")
+   (addr11'country "USA")
+   (addr12'street "home st.")
+   (addr12'country "USA")
+   
+   (addr21'street "business st.")
+   (addr21'country "USA")
+   (addr22'street "home st.")
+   (addr22'country "USA")
+   
+   contact1
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="attributes where orderBy count offset xlock" compatible="true" name="readList" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(Contact'read attributes where orderBy count offset xlock)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="attributes where orderBy count offset" compatible="true" name="readList" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(Contact'read attributes where orderBy count offset #f)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="attributes where orderBy count offset xlock" compatible="true" name="readDetail" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(Contact'read attributes where orderBy count offset xlock)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping classCodeAttribute="classCode" dataSource="DefaultRelationalDatabase" lockingAttribute="version">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.Contact">
+         <AttributeMappings>
+            <AttributeMapping column="first_name" name="firstName" table="test.Contact"/>
+            <AttributeMapping column="last_name" name="lastName" table="test.Contact"/>
+            <AttributeMapping column="rec_ver" name="version" table="test.Contact"/>
+            <AttributeMapping name="primaryAddress" sourceKey="Contact.FK1"/>
+            <AttributeMapping name="primaryAddresses" sourceKey="Contact.FK1"/>
+            <AttributeMapping destinationKey="Address.FK1" name="primaryAddresses2"/>
+            <AttributeMapping name="readPrincipal" sourceKey="Contact.FK2"/>
+            <AttributeMapping name="type" sourceKey="Contact.FK3"/>
+            <AttributeMapping destinationKey="Address.FK1" name="noAddresses"/>
+            <AttributeMapping destinationKey="Address.FK1" name="businessAddress"/>
+            <AttributeMapping destinationKey="Address.FK1" name="businessAddress2"/>
+            <AttributeMapping destinationKey="Address.FK1" name="businessAddress3"/>
+            <AttributeMapping destinationKey="Address.FK1" name="businessAddress4"/>
+            <AttributeMapping destinationKey="Address.FK1" name="businessAddresses"/>
+            <AttributeMapping destinationKey="Usr.FK1" name="qaUser"/>
+            <AttributeMapping column="classCode" name="classCode"/>
+            <AttributeMapping column="testCategory" name="testCategory"/>
+            <AttributeMapping column="lastUpdated" name="lastUpdated"/>
+            <AttributeMapping column="lastUpdatedMillisecond" name="lastUpdatedMillisecond"/>
+            <AttributeMapping column="businessAddressCount" name="businessAddressCount"/>
+            <AttributeMapping destinationKey="Account.FK1" name="accounts"/>
+            <AttributeMapping destinationKey="Object.PK" name="image" sourceKey="Contact.FK_Object"/>
+            <AttributeMapping destinationKey="SupportGroup.PK" name="supportGroup" sourceKey="Contact.FK7"/>
+            <AttributeMapping column="note2" name="note2"/>
+            <AttributeMapping column="note3" name="note3"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

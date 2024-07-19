@@ -1,0 +1,37 @@
+
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+   <xsd:element name="nestedGroups">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:group ref="RecurrencePatternTypes" />
+            <xsd:group ref="RecurrenceRangeTypes" />
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+
+   <xsd:element name="sequenceChoice">
+      <xsd:complexType>
+         <xsd:group ref="RecurrencePatternTypes" />
+      </xsd:complexType>
+   </xsd:element>
+
+   <xsd:group name="RecurrenceRangeTypes">
+      <xsd:sequence>
+         <xsd:choice>
+            <xsd:element name="a" type="xsd:string" />
+            <xsd:element name="b" type="xsd:string" />
+         </xsd:choice>
+      </xsd:sequence>
+   </xsd:group>
+
+   <xsd:group name="RecurrencePatternTypes">
+      <xsd:sequence>
+         <xsd:choice>
+            <xsd:element name="d" type="xsd:string" />
+            <xsd:element name="e" type="xsd:string" />
+         </xsd:choice>
+      </xsd:sequence>
+   </xsd:group>
+</xsd:schema>

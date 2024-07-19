@@ -1,0 +1,8 @@
+<Component type="nexj.core.rpc.queueing.DefaultObjectQueueDispatcher" activation="singleton"
+   description="The concurrency manager for messaging">
+   <Properties>
+      <Property name="contextComponent">System.InvocationContext</Property>
+      <Property name="metadata"/>
+      <Property name="enabled" override="queueing.enabled">true</Property>
+   </Properties>
+</Component>

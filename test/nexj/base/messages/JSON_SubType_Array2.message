@@ -1,0 +1,22 @@
+<Message format="JSON">
+   <JSONMapping subtype="array"/>
+   <Parts>
+      <Value name="value" type="string"/>
+      <Value maxCount="0" name="value1" type="integer"/>
+      <Message name="message">
+         <Parts>
+            <Message maxCount="0" name="message2">
+               <Parts>
+                  <Value name="value2" type="string"/>
+                  <Value maxCount="0" name="value3" type="integer"/>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+      <Message maxCount="0" name="message1">
+         <Parts>
+            <Value name="value4" type="string"/>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

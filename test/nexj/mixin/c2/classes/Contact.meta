@@ -1,0 +1,53 @@
+<Class description="Contact, an entity for which we track contact info">
+   <Attributes>
+      <Attribute collection="false" name="firstName" required="true" static="false" type="string"/>
+      <Attribute collection="false" name="lastName" required="true" type="string"/>
+      <Attribute name="fullName" type="string" value="(concat firstName &quot; &quot; lastName)"/>
+      <!--Attribute name="addresses" type="Address" required="false" collection="true" reverse="contact"/>
+      <Attribute name="primaryAddress" type="Address" required="false" collection="false" reverse="contact"/>
+      <Attribute name="user" type="User" required="false" collection="false" reverse="contact"/>
+      <Attribute name="readPrincipal" type="Principal" required="true" collection="false"/>
+      <Attribute name="defaultReadPrincipalName" type="string" static="true" value="&quot;Public&quot;"/-->
+   </Attributes>
+
+   <Events>
+      <Event args="attributes where orderBy count offset xlock" description="This is the framework read event. The main action is implemented by the framework." name="read" static="true" visibility="public">
+         <Actions>
+            <Action condition="(= (user'name) &quot;guest&quot;)" description="Check functional access rights. Deny access for the user account 'guest'." name="checkAccess" relative="addSecurityClause" type="before">
+                  ;; Throw a new instance of an AccessViolationException, created with
+                  ;; the Contact class object, the event symbol and the current user instance as arguments
+                  (throw (AccessViolationException'new this 'read user))
+            </Action>
+            <Action description="Add a security clause to restrict the selected contacts." name="addSecurityClause" relative="main" type="around">
+                  ;; Create the security clause "(in user (group1 group2 ... groupN))"
+                  (let ((secClause `(in user ,(map (lambda (ugassoc)(ugassoc'group)) (user'ugassocs)))))
+                     (set! where
+                        ;; If the where clause is not specified,
+                        (if (null? where)
+                           ;; then use the security clause as a where clause
+                           secClause
+                           ;; Else combine the where and the security clause with an and operator
+                           `(and ,where ,secClause)
+                        )
+                     )
+                  )
+                  ;; Invoke the next action
+                  (call-next)
+            </Action>
+         </Actions>
+      </Event>
+   </Events>
+	
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="Contact">
+         <AttributeMappings>
+            <AttributeMapping column="first_name" name="firstName" table="Contact"/>
+            <AttributeMapping column="last_name" name="lastName" table="Contact"/>
+            <!--AttributeMapping name="addresses" destinationKey="Address_FK1"/>
+            <AttributeMapping name="primaryAddress" sourceKey="Contact_FK1"/>
+            <AttributeMapping name="user" destinationKey="User_FK1"/>
+            <AttributeMapping name="readPrincipal" sourceKey="Contact_FK2"/-->
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

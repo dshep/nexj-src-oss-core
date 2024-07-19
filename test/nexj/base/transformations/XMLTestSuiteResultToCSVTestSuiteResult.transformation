@@ -1,0 +1,20 @@
+<Transformation args="status_prefix status_affix mapDate" destination="CSVTestSuiteResult" source="XMLTestSuiteResult">
+   <Mappings>
+      <Mapping condition="mapDate" destination="rows date">
+         <Sources>
+            <Source source="tests date"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="rows status">
+         <Sources>
+            <Source name="s" source="tests status"/>
+         </Sources>
+         <Script><![CDATA[(string-append status_prefix s status_affix)]]></Script>
+      </Mapping>
+      <Mapping destination="rows result">
+         <Sources>
+            <Source source="tests data"/>
+         </Sources>
+      </Mapping>
+   </Mappings>
+</Transformation>

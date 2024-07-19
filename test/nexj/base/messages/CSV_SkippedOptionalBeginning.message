@@ -1,0 +1,15 @@
+<Message format="CSV">
+   <CSVMapping escape="\" header="false" line="\r" comment=";#"/>
+   <Parts>
+      <Message maxCount="0" name="Data">
+         <Parts>
+            <Value description="First Datum" name="first" type="string" minCount="0">
+               <CSVMapping ordinal="3"/>
+            </Value>
+            <Value description="Second Datum" name="second" type="string" minCount="0">
+               <CSVMapping ordinal="6"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

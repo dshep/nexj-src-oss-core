@@ -1,0 +1,27 @@
+<Service layout="startX:133;startY:176;endX:400;endY:173">
+   <Script caption="Run Task" layout="y:168;x:226" name="scrRunTask"><![CDATA[(define body (this'body))
+(define args (text-deserialize (body'args)))
+(define spec (body'spec))
+(logger'debug "Dispatching" (spec'id) "func:" (body'code) "args:" args)
+(let*
+   (
+      (result
+         (try
+            (apply (body'code) args)
+            ; catch:
+            (lambda (ex)
+               (spec'exception ex)
+               ()
+            )
+         )
+      )
+   )
+   (logger'debug "Done" (spec'id))
+
+   ; Signal local node that the task is done.
+   ((spec'readySemaphore)'acquire) ; "spec" is shared data
+   (spec'result result)
+   (spec'ready #t)
+   ((spec'semaphore)'release)
+)]]></Script>
+</Service>

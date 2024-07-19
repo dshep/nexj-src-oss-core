@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+<connector xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd" version="1.5">
+   <display-name>NexJ Tomcat Resource Adapter</display-name>
+   <vendor-name>NexJ Systems, Inc.</vendor-name>
+   <eis-type>Internal</eis-type>
+   <resourceadapter-version>1.0</resourceadapter-version>
+   <resourceadapter>
+      <resourceadapter-class>nexj.core.rpc.tomcat.ra.TomcatResourceAdapter</resourceadapter-class>
+      <inbound-resourceadapter>
+         <messageadapter>
+            <messagelistener>
+               <messagelistener-type>nexj.core.rpc.tomcat.TomcatListener</messagelistener-type>
+               <activationspec>
+                  <activationspec-class>nexj.core.rpc.tomcat.ra.TomcatConfig</activationspec-class>
+               </activationspec>
+            </messagelistener>
+         </messageadapter>
+      </inbound-resourceadapter>
+   </resourceadapter>
+</connector>

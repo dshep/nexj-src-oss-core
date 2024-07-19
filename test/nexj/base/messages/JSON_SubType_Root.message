@@ -1,0 +1,26 @@
+<Message format="JSON">
+   <JSONMapping subtype="root"/>
+   <Parts>
+      <Message maxCount="0" minCount="1" name="messages">
+         <Parts>
+            <Message name="rootPrimitive">
+               <JSONMapping subtype="root"/>
+               <Parts>
+                  <Value name="primitive" type="integer"/>
+               </Parts>
+            </Message>
+            <Message name="object">
+               <Parts>
+                  <Value name="key" type="integer"/>
+               </Parts>
+            </Message>
+            <Message name="rootArray">
+               <JSONMapping subtype="root"/>
+               <Parts>
+                  <Value maxCount="0" name="values" type="integer"/>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

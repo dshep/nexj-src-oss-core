@@ -1,0 +1,6 @@
+<Metadata name="NexJ Core Test Dual Invalid 3" namespace="http://www.nexjsystems.com/ns/mixin-test-dual-3" revision="1.0" version="3" coreVersion="6.2.0.20+">
+   <Mixins>
+      <Mixin namespace="http://www.nexjsystems.com/ns/mixin-test-c" version="1" checksum="911e822f" override="true"/>
+      <Mixin namespace="http://www.nexjsystems.com/ns/mixin-test-b" version="4" checksum="237adf44" override="true"/>
+   </Mixins>
+</Metadata>

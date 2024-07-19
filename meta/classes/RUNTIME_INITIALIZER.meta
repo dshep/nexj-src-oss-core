@@ -1,0 +1,5 @@
+<Aspect>
+   <Events>
+      <Event description="Invoked during startup" name="initializeRuntime" static="true"/>
+   </Events>
+</Aspect>

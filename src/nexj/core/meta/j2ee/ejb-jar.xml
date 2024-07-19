@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+<ejb-jar id="ejb-jar" version="2.1" 
+      xmlns="http://java.sun.com/xml/ns/j2ee" 
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd">
+   <display-name>NexJ EJB</display-name>
+   <enterprise-beans>
+      ${ifcontainer:!generic:        
+         <message-driven id="mdb-DynamicProcessor">
+            <display-name>Dynamic Processor MDB</display-name>
+            <ejb-name>DynamicProcessor</ejb-name>
+            <ejb-class>nexj.core.rpc.pool.ra.DynamicMDB</ejb-class>
+            <messaging-type>nexj.core.rpc.pool.ra.DynamicProcessor</messaging-type>
+            <transaction-type>Bean</transaction-type>
+            ${resource-ref:mdb-DynamicProcessor}
+            ${resource-env-ref:mdb-DynamicProcessor}
+         </message-driven>
+         <message-driven id="mdb-TxDynamicProcessor">
+            <display-name>Transactional Dynamic Processor MDB</display-name>
+            <ejb-name>TxDynamicProcessor</ejb-name>
+            <ejb-class>nexj.core.rpc.pool.ra.DynamicMDB</ejb-class>
+            <messaging-type>nexj.core.rpc.pool.ra.DynamicProcessor</messaging-type>
+            <transaction-type>Container</transaction-type>
+            <activation-config>
+               <activation-config-property>
+                  <activation-config-property-name>transactional</activation-config-property-name>
+                  <activation-config-property-value>true</activation-config-property-value>
+               </activation-config-property>
+            </activation-config>
+            ${resource-ref:mdb-TxDynamicProcessor}
+            ${resource-env-ref:mdb-TxDynamicProcessor}
+         </message-driven>
+      }
+      ${message-driven}
+   </enterprise-beans>
+   <assembly-descriptor>
+      ${ifcontainer:!generic:
+         <container-transaction>
+            <method>
+               <ejb-name>TxDynamicProcessor</ejb-name>
+               <method-name>process</method-name>
+            </method>
+            <trans-attribute>Required</trans-attribute>
+         </container-transaction>
+      }
+      ${container-transaction}
+   </assembly-descriptor>
+</ejb-jar>

@@ -1,0 +1,13 @@
+<Class aspects="!VERSIONED">
+   <Attributes>
+      <Attribute collection="false" name="type" required="false" type="string"/>
+      <Attribute collection="true" name="subTypes" type="ContactSubType"/>
+   </Attributes>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="ContactType">
+         <AttributeMappings>
+            <AttributeMapping column="type_name" name="type" table="ContactType"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

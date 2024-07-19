@@ -1,0 +1,14 @@
+<Aspect>
+   <Attributes>
+      <Attribute initializer="8" name="y" type="integer"/>
+   </Attributes>
+   <PersistenceMappings>
+      <PersistenceMapping dataSource="DefaultRelationalDatabase">
+         <RelationalMapping primaryTable="DS1ASPECT">
+            <AttributeMappings>
+               <AttributeMapping column="y" name="y"/>
+            </AttributeMappings>
+         </RelationalMapping>
+      </PersistenceMapping>
+   </PersistenceMappings>
+</Aspect>

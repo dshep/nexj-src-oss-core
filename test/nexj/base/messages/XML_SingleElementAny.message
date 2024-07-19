@@ -1,0 +1,11 @@
+<Message derivation="final" format="XML">
+   <XMLMapping node="root"/>
+   <Parts>
+      <Value name="value" type="any">
+         <XMLMapping subtype="xsi"/>
+      </Value>
+      <Value description="This part exists to test that one can specify a well-known namespace (e.g. &quot;soap&quot;) on a part, without specifying a URI." name="namespacePart" type="string">
+         <XMLMapping namespace="soap"/>
+      </Value>
+   </Parts>
+</Message>

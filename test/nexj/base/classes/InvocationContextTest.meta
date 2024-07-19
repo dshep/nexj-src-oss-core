@@ -1,0 +1,31 @@
+<Class description="Used by InvocationContextTest.java to assist in testing the funcationality of the InvocationContext and related classes.">
+   <Attributes/>
+   <Events>
+      <Event name="testSuspendTransaction" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(suspend-transaction
+   (logger'debug "Inside suspend-transaction")
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="testTransactionModeNONE" static="true" transaction="none">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(logger'debug "Inside event with transaction mode none")]]></Action>
+         </Actions>
+      </Event>
+      <Event name="testCommitTransaction" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(logger'debug "Going to commit the transaction")
+(commit)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="create" visibility="public">
+         <Actions>
+            <Action name="before" type="before"><![CDATA[(begin-transaction
+   (logger'debug "Inside begin-transaction")
+   (Patient'new (: lastName "Spock"))
+)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

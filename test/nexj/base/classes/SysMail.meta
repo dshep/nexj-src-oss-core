@@ -1,0 +1,9 @@
+<Class description="The e-mail client wrapper.&#13;&#10;@deprecated" visibility="protected">
+   <Events>
+      <Event args="to from subject message properties" description="Sends an e-mail.&#13;&#10;@deprecated" name="send" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysMail.send" name="main" type="main"/>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

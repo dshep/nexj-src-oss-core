@@ -1,0 +1,46 @@
+<Class base="EnumDisplayBase" where="(= (@ locale) (locale-name '()))">
+   <Attributes>
+      <Attribute description="Required for ActTemplateStatusPicker uniqueness since duplicates were being allowed." name="isUnique" required="true" type="boolean" value="#t"/>
+   </Attributes>
+   <Events>
+      <Event args="value" description="read a single instance and retrieve the caption." name="findCaption" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[((this'get value)'caption)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="value" description="reads a single instance by value" name="get" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(when (symbol? value)
+   (set! value (this value))
+)
+
+(let
+   (
+      (where `(= (@ value) ,value))
+      (attributes 
+         '(value behaveAsValue caption locale typeCode classification displayOrder locking
+            externalValue
+         )
+      )
+   )
+   ;return:
+   (read-instance this attributes where #f) ;Uses class object caching.
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="value" description="read a single instance and retrieve the behaveAsValue" name="findBehaveAsValue" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[((this'get value)'behaveAsValue)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="behaveAsValue" name="getBehaveAsInstances" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(this'read '(value behaveAsValue caption typeCode locale classification displayOrder) `(= behaveAsValue ,behaveAsValue) '((displayOrder . #t)) '() '() #f)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping caching="class" classCodeAttribute="typeCode" classCodeForced="true" dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping primaryTable="EnumDisplay"/>
+   </PersistenceMapping>
+</Class>

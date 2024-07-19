@@ -1,0 +1,31 @@
+<Class base="EnumDisplayBase" caption="idsc.EnumDisplay.caption" nameAttribute="caption">
+   <Attributes>
+      <Attribute cascade="clear" name="code" required="true" reverse="displayValues" type="EnumCode"/>
+   </Attributes>
+   <Events>
+      <Event args="typeCode valueCode" description="Gets an enum display by typecode and value code.  Not to be used for subclasses of EnumBase such as the metadata enumerations." name="get" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(read-instance EnumDisplay
+   '(value behaveAsValue caption locale typeCode
+      classification displayOrder locking externalValue
+    )
+   `(and (= (@ typeCode) ,typeCode) (= (@ value) ,valueCode)
+         (= (@ locale) ,(locale-name '()))
+   )
+   #f
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event access="isRuntimeEditable" name="update" privilege="EnumDisplayManage" visibility="public">
+         <Actions/>
+      </Event>
+      <Event access="isRuntimeEditable" name="create" privilege="EnumDisplayManage" visibility="public"/>
+      <Event access="isRuntimeEditable" name="delete" privilege="EnumDisplayManage" visibility="public">
+         <Actions/>
+      </Event>
+   </Events>
+   <PersistenceMapping caching="instance" dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping primaryTable="EnumDisplay"/>
+   </PersistenceMapping>
+</Class>

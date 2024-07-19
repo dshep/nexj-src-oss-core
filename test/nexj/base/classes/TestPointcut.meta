@@ -1,0 +1,5 @@
+<Class>
+   <Attributes>
+      <Attribute name="ATTR1" static="true" type="integer" value="1" visibility="protected"/>
+   </Attributes>
+</Class>

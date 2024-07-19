@@ -1,0 +1,2 @@
+<Component type="nexj.core.persistence.TimeZoneConverter"
+   activation="singleton" description="Local time converter"/>

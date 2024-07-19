@@ -1,0 +1,8 @@
+<Message format="XML">
+   <XMLMapping envelope="soap12" namespace="ns2" node="A" uri="urn:hl7-org:v3"/>
+   <Parts>
+      <Message name="B" ref="XML_NillableRef">
+         <XMLMapping namespace="ns2" nillable="true"/>
+      </Message>
+   </Parts>
+</Message>

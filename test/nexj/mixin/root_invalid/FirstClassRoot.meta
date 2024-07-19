@@ -1,0 +1,5 @@
+<Class>
+   <Attributes>
+      <Attribute name="name" type="string"/>
+   </Attributes>
+</Class>

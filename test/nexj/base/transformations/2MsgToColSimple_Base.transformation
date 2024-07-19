@@ -1,0 +1,9 @@
+<Transformation destination="MsgCol" source="MsgCol">
+   <Mappings>
+      <Mapping destination="c">
+         <Sources>
+            <Source source="a"/>
+         </Sources>
+      </Mapping>
+   </Mappings>
+</Transformation>

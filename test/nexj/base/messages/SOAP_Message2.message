@@ -1,0 +1,12 @@
+<Message format="XML">
+   <XMLMapping envelope="soap" namespace="x" node="Record" uri="http://www.nexj.com/ns/example/x"/>
+   <Parts>
+      <Message minCount="1" name="headers" ref="SOAP_CommonHeader"/>
+      <Value minCount="1" name="description" type="string">
+         <XMLMapping node="description"/>
+      </Value>
+      <Value minCount="1" name="data" type="binary">
+         <XMLMapping node="data"/>
+      </Value>
+   </Parts>
+</Message>

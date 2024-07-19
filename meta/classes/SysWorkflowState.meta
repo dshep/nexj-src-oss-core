@@ -1,0 +1,24 @@
+<Class description="Represents the manual decision states">
+   <Attributes>
+      <Attribute name="assignment" required="true" reverse="nextStates" type="SysWorkflowAssignment"/>
+      <Attribute description="Ordinal number of the next step in the workflow" name="ordinal" required="true" type="integer"/>
+      <Attribute description="String Id of the decision branch" name="caption" type="string"/>
+      <Attribute description="Human-readable description of the decision branch" name="description" type="string" value="(format (@ caption))"/>
+      <Attribute description="Persistence locking" initializer="0" name="locking" required="true" type="integer"/>
+   </Attributes>
+   <Events>
+      <Event description="Overrides the privileges" name="create" privilege="WorkflowManage" visibility="public"/>
+      <Event description="Overrides the privileges" name="update" privilege="WorkflowManage" visibility="public"/>
+      <Event description="Overrides the privileges" name="delete" privilege="WorkflowManage" visibility="public"/>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="WFState">
+         <AttributeMappings>
+            <AttributeMapping name="assignment" sourceKey="WFState.FK1"/>
+            <AttributeMapping column="ordinal" name="ordinal"/>
+            <AttributeMapping column="caption" name="caption"/>
+            <AttributeMapping column="locking" name="locking"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

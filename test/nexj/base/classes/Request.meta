@@ -1,0 +1,20 @@
+<Class>
+   <Attributes>
+      <Attribute initializer="0" name="version" required="true" type="integer"/>
+      <Attribute collection="false" name="startDate" required="true" static="false" type="timestamp"/>
+      <Attribute collection="false" name="code" required="true" static="false" type="string"/>
+      <Attribute collection="false" name="patient" required="true" reverse="requests" static="false" type="Patient"/>
+      <Attribute collection="false" name="visit" required="false" reverse="requests" static="false" type="Visit"/>
+   </Attributes>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="version">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.Request">
+         <AttributeMappings>
+            <AttributeMapping column="rec_ver" name="version"/>
+            <AttributeMapping column="startDate" name="startDate"/>
+            <AttributeMapping column="code" name="code"/>
+            <AttributeMapping name="patient" sourceKey="Request.FK1"/>
+            <AttributeMapping name="visit" sourceKey="Request.FK2"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

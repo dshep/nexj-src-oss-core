@@ -1,0 +1,157 @@
+<!-- Copyright 2010-2011 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<Class description="This is the root class in the inheritance hierarchy" visibility="protected">
+   <Events>
+      <Event args="attributes where orderBy count offset xlock" description="Reads specified instances of this class. The main action is implemented by the framework.&#13;&#10;@detail&#13;&#10;Associated objects can be retrieved using nested lists in the attributes argument. Simply specify a non-primitive attribute name then a list of one or more attributes.  e.g. (Entity'read '(firstName lastName (addrs city state zip))  These nestings can continue... e.g. (Entity'read '(firstName lastName (addrs city state zip (type name)))&#13;&#10;&#13;&#10;Attributes can also be retrieved polymorphically - meaning attributes that only exist on subclasses can be retrieved when reading the base class. (see examples)&#13;&#10;&#13;&#10;Attribute names in the where and order by clauses may take the simple form of &lt;attributeName&gt; or (@ &lt;attributeName&gt;).  The second form is recommended.  In this case the &quot;@&quot; represents the current instance and may be used to traverse arbitrarily long association paths.  e.g. on User we may specify (= (@ person homeAddress city) &quot;Toronto&quot;)&#13;&#10;&#13;&#10;One cannot pass in a larger count than readLimit defined in the data source.  A count of -1 will not restrict the count, but if more than readLimit instances are returned, an error will be thrown. In cases where more than readLimit instances are desired, the openCursor method should be used.  The helper function for-each-page can normally be used and provides a simplified API to openCursor.&#13;&#10;@arg attributes list The list of attributes, or associated objects, to proactively retrieve.  '() retrieves no attributes and any attributes accessed after such a read will trigger a lazy load.  See examples for special downcast (@@) syntax and annotation syntax.&#13;&#10;@arg where list The where clause.  See examples for information on associations, reverse associations and qualified associations.&#13;&#10;@arg orderBy list The expressions on which to order the collection - a list of (&lt;sort-expr&gt; . &lt;ascending?&gt;) pairs.&#13;&#10;@arg count integer The number of instances to retrieve. Null '() for the default value of -1, meaning up to the readLimit specified in the data source.&#13;&#10;@arg offset integer The number of top level instances to skip from the beginning of the retrieved collection. Null '() for the default value of 0.&#13;&#10;@arg xlock boolean If true, an exclusive lock is set in persistent storage on the matching top level objects until the transaction is finished.  null '() for the default value of #f.&#13;&#10;@ret instance-collection Collection of instances matching the where clause.&#13;&#10;@see read-instance aggregate openCursor openAggregateCursor for-each-page&#13;&#10;@example&#13;&#10;(Person'read '(firstName lastName) '(and ( = (@ firstName) &quot;Joe&quot;) (= (@ lastName) &quot;Test&quot;)) '(((@ firstName) . #t) ((@ lastName) . #f)) 1 0 #f)&#13;&#10;=&gt; ; #&lt;[]&gt; if Joe doesn't exist&#13;&#10;=&gt; ; #&lt;[Instance&lt;Person, OID:1:V32:4AA92BA6E6A64CE5BBEB8... if Joe does exist&#13;&#10;&#13;&#10;;  More advanced read&#13;&#10;(define fn &quot;Joe&quot;)&#13;&#10;(Person'read &#13;&#10;   '(firstName lastName (addrs city state (type name))) ; read in city and state attributes as well as the type and it's name for all of Joe's addresses&#13;&#10;   `(and ( = (@ firstName) ,fn) (= (@ lastName) &quot;Test&quot;))  ; variable substitution for the value of the firstName&#13;&#10;   '((firstName . #t) (lastName . #f)) 1 0 #f)  ; order by firstName ascending then lastName descending&#13;&#10;&#13;&#10;; Use of the any operator&#13;&#10;(Person'read&#13;&#10;   '(firstName lastName)&#13;&#10;   '(any (= (@ addrs city) &quot;Toronto&quot;)) ; two part association path&#13;&#10;   '() '() '() '())&#13;&#10;&#13;&#10;; Annotations in the attributes list - create calculated attributes on-the-fly&#13;&#10;; In this example, return the lastName attribute, a calculated _lnLen attribute which is the length of the last name, and a _fullName calculated attribute&#13;&#10;; We use the underscore here just to avoid name collisions.&#13;&#10;(Person'read&#13;&#10;   '(lastName (: _lnLen (string-length (@ lastName))) (: _fullName (string-affix (@ lastName) &quot;, &quot; (@ firstName))))&#13;&#10;   '() '() '() '() '())&#13;&#10;&#13;&#10;; Aggregate functions - can be applied to subcollections on instances&#13;&#10;; Supported opperators include count, average, min, max, sum&#13;&#10;; For aggregation at the top level of the class, see the aggregate method&#13;&#10;(Person'read&#13;&#10;   '(firstName lastName &#13;&#10;      (: _countryCnt (count (@ addrs country))) &#13;&#10;      (: _uniqueCountryCnt (count (unique (@ addrs country)))) &#13;&#10;      (: _nullCodeCnt (count (null? (@ addrs zip)))) &#13;&#10;      (: _avg (average (string-length (@ addrs city)))) &#13;&#10;      (: _min (minimum (string-length (@ addrs city)))) &#13;&#10;      (: _max (maximum (@ addrs city))) &#13;&#10;      (: _sum (sum (string-length (@ addrs city)))))&#13;&#10;      '() '() '() '() '())&#13;&#10;&#13;&#10;;  Attribute downcast syntax (@@) - Polymorphic read&#13;&#10;;  Used to proactively load subclass specific attributes when reading from a base class&#13;&#10;(Entity'read &#13;&#10;   '(fullName lastName (@@ Person homePhone)) ; only retrieve the homePhone attribute for the Person subclass of Entity&#13;&#10;   `()  '(((@ lastName) . #t)) &#13;&#10;   100 ; read only the first 100 instances&#13;&#10;   0 &#13;&#10;   #f)&#13;&#10;&#13;&#10;; Conditions in where clause association paths&#13;&#10;; This syntax allows us to restrict parts of association paths to specific subclasses and also to apply arbitrary conditions on association paths&#13;&#10;; 1) Most common use case: limit an association based on a qualifier e.g. look for all Entities with a user named &quot;Shaw&quot; playing their advisor role&#13;&#10;(Entity'read&#13;&#10;   '(fullName)&#13;&#10;   '(= (@ coverage (= (@ role) &quot;Advisor&quot;) userPerson lastName) &quot;Shaw&quot;)&#13;&#10;   '() '() '() '())&#13;&#10;&#13;&#10;; 2) Subclass restriction example: note that homeAddress is an attribute that is only found on the Person subclass of Entity&#13;&#10;(Telcom'read&#13;&#10;   '(fullName)&#13;&#10;   '(= (@ entity (instance? (@) Person) homeAddress city) &quot;Toronto&quot;)&#13;&#10;   '() '() '() '())&#13;&#10;&#13;&#10;; 3) Arbitrary condition example: reads all instances of the Telcom class that has an entity with a lastname of &quot;Shaw&quot; that has an address in &quot;Toronto&quot; with and address2 line that is not null.&#13;&#10;(Telcom'read&#13;&#10;   '(fullName)&#13;&#10;   '(not (null? (@ entity (= (@ lastName) &quot;Shaw&quot;) addrs (= (@ city) &quot;Toronto&quot;) address2)))&#13;&#10;   '() '() '() '())&#13;&#10;&#13;&#10;; Note that conditions may be applied in reverse associations as well as forward associations&#13;&#10;&#13;&#10;; Where Clause reverse association syntax (@@)&#13;&#10;; Used to query from the end of an association &quot;back&quot; to the class you are reading.&#13;&#10;; Forward associations take the form (@ part1 part2 part3 ...).  The @ represents an instance of the class being read.&#13;&#10;; Revese associations take the form (@@ &lt;ClassName&gt; part3 part2 part1) where part1 represents an attribute with a type of the class being read.&#13;&#10;; You can usually just navigate the forward association, but you may see this syntax if you are tracing requests from NexJ UI clients&#13;&#10;(Address'read '() `(= (@@ User person addrs) ,(user)) '() '() '() '()) ; reverse from Address. note that this is equivalent to (((user)'person)'addrs)&#13;&#10;(Address'read '() `(= (@ entity user) ,(user)) '() '() '() '()) ; forward from Address is also equivalent" name="read" static="true" transaction="supported" visibility="public">
+         <Actions>
+            <Action description="An optimization. Runs the read in transaction==&quot;required&quot; mode only if xlock is true; otherwise runs in transaction==&quot;supported&quot; mode." name="beginTransactionIfXLock" relative="main" type="around"><![CDATA[(let*
+   (
+      (transacted (eq? xlock #t))
+      (oldUnitOfWork (when transacted (sys:tx-require)))
+      (result
+         (try
+            (call-next)
+            ; rollback and rethrow error:
+            (lambda (e)
+               (when transacted
+                  (sys:tx-rollback oldUnitOfWork)
+               )
+               (throw e)
+            )
+         )
+      )
+   )
+   (when transacted
+      (sys:tx-commit oldUnitOfWork)
+   )
+   result
+)
+]]></Action>
+            <Action description="Performs main read processing" method="nexj.core.runtime.sys.SysObject.read" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="attributes where groupBy having orderBy count offset" description="Runs an aggregate query, returning instances of class Object. The main action is implemented by the framework.&#13;&#10;@detail&#13;&#10;See the read method documentation for more information on the use of the attributes list and where clause.&#13;&#10;&#13;&#10;One cannot pass in a larger count than readLimit defined in the data source.  A count of -1 will not restrict the count, but if more than readLimit instances are returned, an error will be thrown.  In cases where more than readLimit instances are desired, the openCursor method should be used.  The helper function for-each-page can normally be used and provides a simplified API to openCursor.&#13;&#10;@arg attributes list The list of associations and annotations to compute. The annotations must be aggregate expressions including count sum average minimum maximum unique&#13;&#10;@arg where list The where clause, which restricts the results before grouping. See the read method documentation for more information.&#13;&#10;@arg groupBy list The expressions on which to group the aggregates.&#13;&#10;@arg having list The having clause, which restricts the results after grouping.&#13;&#10;@arg orderBy list The expressions on which to order the collection - a list of (&lt;sort-expr&gt; . &lt;ascending?&gt;) pairs.&#13;&#10;@arg count integer The number of instances to retrieve. Null '() for the default value of -1, meaning up to the readLimit specified in the data source.&#13;&#10;@arg offset integer The number of top level instances to skip from the beginning of the retrieved collection. Null '() for the default value of 0.&#13;&#10;@ret instance-collection Collection of instances matching the where clause.&#13;&#10;@see openAggregateCursor read openCursor for-each-page count sum average minimum maximum unique&#13;&#10;@example&#13;&#10;; Simple aggregation&#13;&#10;(Person'aggregate '((: c (count (@))) (: n 1))  '() '() '() '() '() '())&#13;&#10;; #&lt;[Instance&lt;Object, null, CLEAN&gt;(c=99, n=1)]&gt;&#13;&#10;&#13;&#10;; Group and count Persons by the first letter of their last name excluding the &quot;B&quot;s&#13;&#10;(Person'aggregate&#13;&#10;   '((: letter (maximum (substring (@ lastName) 0 1))) (: letterCount (count (substring (@ lastName) 0 1)))) ; attributes&#13;&#10;   '() ; where&#13;&#10;   '((substring (@ lastName) 0 1)) ; groupBy &#13;&#10;   ''(!= (maximum (substring (@ lastName) 0 1)) &quot;B&quot;) ; having&#13;&#10;   '() '() '()&#13;&#10;)" name="aggregate" static="true" transaction="supported">
+         <Actions>
+            <Action description="Performs main read processing" method="nexj.core.runtime.sys.SysObject.aggregate" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="attributes where orderBy count offset xlock" description="Opens a cursor over the specified instances of this class. The main action is implemented by the framework.&#13;&#10;See the read method for more information on the options avialable for attributes, where, orderby, count, offset and xlock&#13;&#10;@arg attributes list The list of attributes, or associated objects, to proactively retrieve.  '() retrieves no attributes and any attributes accessed after such a read will trigger a lazy load.&#13;&#10;@arg where list The where clause.  See the read method documentation for more information.&#13;&#10;@arg orderBy list The expressions on which to order the collection - a list of (&lt;sort-expr&gt; . &lt;ascending?&gt;) pairs.&#13;&#10;@arg count integer The number of instances to retrieve. Null '() for the default value of -1, meaning up to the readLimit specified in the data source.&#13;&#10;@arg offset integer The number of top level instances to skip from the beginning of the retrieved collection. Null '() for the default value of 0.&#13;&#10;@arg xlock boolean If true, an exclusive lock is set in persistent storage until the transaction is finished. This applies to the top-level instances only.  null '() for the default value of #f.&#13;&#10;@ret Cursor A cursor object which supports 'next, 'next pageSize, 'close, and 'step map.&#13;&#10;@see for-each-page openAggregateCursor&#13;&#10;@example&#13;&#10;; implementation of simple-for-each-page - simplified version of for-each-page&#13;&#10;(define (simple-for-each-page class attributes where order-by max-count page-size fun)&#13;&#10;   (let ((cursor (class'openCursor attributes where order-by max-count '() '())))&#13;&#10;      (try&#13;&#10;         (do ((page (cursor'next page-size) (cursor'next page-size)))&#13;&#10;            ((page'empty))&#13;&#10;            (fun page)&#13;&#10;         )&#13;&#10;         ()&#13;&#10;         (cursor'close)&#13;&#10;      )&#13;&#10;   )&#13;&#10;)&#13;&#10;" name="openCursor" static="true" transaction="supported" visibility="protected">
+         <Actions>
+            <Action description="An optimization. Runs the read in transaction==&quot;required&quot; mode only if xlock is true; otherwise runs in transaction==&quot;supported&quot; mode." name="beginTransactionIfXLock" relative="main" type="around"><![CDATA[(let*
+   (
+      (transacted (eq? xlock #t))
+      (oldUnitOfWork (when transacted (sys:tx-require)))
+      (result
+         (try
+            (call-next)
+            ; rollback and rethrow error:
+            (lambda (e)
+               (when transacted
+                  (sys:tx-rollback oldUnitOfWork)
+               )
+               (throw e)
+            )
+         )
+      )
+   )
+   (when transacted
+      (sys:tx-commit oldUnitOfWork)
+   )
+   result
+)
+]]></Action>
+            <Action method="nexj.core.runtime.sys.SysObject.openCursor" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="attributes where groupBy having orderBy count offset" description="Opens a cursor over the results of an aggerate query. The resulting instances are of class Object. The main action is implemented by the framework.&#13;&#10;@arg attributes list The list of associations and annotations to compute. The annotations must be aggregate expressions.&#13;&#10;@arg where list The where clause, which restricts the results before grouping.&#13;&#10;@arg groupBy list The expressions on which to group the aggregates.&#13;&#10;@arg having list The having clause, which restricts the results after grouping.&#13;&#10;@arg orderBy list The expressions on which to order the collection - a list of (&lt;sort-expr&gt; . &lt;ascending?&gt;) pairs.&#13;&#10;@arg count integer The number of instances to retrieve. Null '() for the default value of -1, meaning up to the readLimit specified in the data source.&#13;&#10;@arg offset integer The number of top level objects to skip from the beginning of the retrieved collection.  null '() for the default value of 0.&#13;&#10;@ret Cursor A cursor object which supports 'next, 'next pageSize, 'close, and 'step map.&#13;&#10;@see for-each-page openCursor count sum average minimum maximum unique&#13;&#10;" name="openAggregateCursor" static="true" transaction="supported" visibility="protected">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.openAggregateCursor" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="attributes" description="Loads attributes which have not been previously loaded (and so are currently undefined). The main action is implemented by the framework.&#13;&#10;@detail&#13;&#10;If any primitive attribute is loaded, all non-initialized primitive attributes are loaded as well.&#13;&#10;@arg attributes list&#13;&#10;The list of attributes to retrieve. e.g. 'firstName 'lastName&#13;&#10;@ret ()&#13;&#10;@example&#13;&#10;(p'load&#13;&#10;   'firstName 'lastName '(addresses country city) ; attributes&#13;&#10;)&#13;&#10;; where p is an instance of Person" name="load" vararg="true" visibility="protected">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.aroundLoad" name="aroundLoad" relative="main" type="around"/>
+            <Action method="nexj.core.runtime.sys.SysObject.load" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="values" description="Creates and initializes an instance of this class. The main action is implemented by the framework.&#13;&#10;@detail&#13;&#10;This is a static method and is used to create new objects by specifying their initial values - think of it as the constructor. The 'create' method is called by the new method when an instance of the requested object is created@arg values list The list of attribute value pairs to use in creating the new object.&#13;&#10;e.g. '(firstName . &quot;Joe&quot;) '(lastName . &quot;Test&quot;)&#13;&#10;e.g. (: firstName firstNameParam) (: lastName &quot;Test&quot;)&#13;&#10;@ret Object A new instance of the class.&#13;&#10;@example&#13;&#10;(Person'new&#13;&#10;   '(firstName . &quot;Joe&quot;) '(lastName . &quot;Test&quot;)&#13;&#10;)&#13;&#10;&#13;&#10;; Another scheme example of &quot;new&quot; which demonstrates creating a subcollection follows:&#13;&#10;&#13;&#10;(Person'new&#13;&#10;   '(firstName . &quot;Joe&quot;)&#13;&#10;   '(lastName . &quot;Test&quot;)&#13;&#10;   `(telcoms . , (instance-collection (Telcom'new '(name . &quot;home&quot;) '(address . &quot;416-555-1212&quot;))))&#13;&#10;)&#13;&#10;&#13;&#10;; an alternative -  and preferred - syntax to using pairs is the (: operator.&#13;&#10;&#13;&#10;(Person'new&#13;&#10;   (: firstName &quot;Joe&quot;)&#13;&#10;   (: lastName &quot;Test&quot;)&#13;&#10;   (: telcoms (instance-collection (Telcom'new (: name &quot;home&quot;) (: address &quot;416-555-1212&quot;))))&#13;&#10;)&#13;&#10;" name="new" static="true" vararg="true" visibility="protected">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.newInstance" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event description="Returns #t if the instance is new in an uncommitted unit of work, otherwise returns #f.&#13;&#10;@ret boolean" name="isNew">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.isNew" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event description="Invoked after the instance has been created and initialized. The main action is implemented by the framework.&#13;&#10;@ret ()&#13;&#10;@detail&#13;&#10;'create' (as with 'update') may be called multiple times. It is called once on object instantiation and again prior to the object being persisted. It may be called again if 'after' actions have affected attributes on the object prior to commit. It is important to understand this when writing actions for this event. You must assume that the actions you are invoking in this event may have been executed already and have conditional statements to handle this correctly. Consider the following example in create.initializeHistory:&#13;&#10;&#13;&#10;  (this'history (string-append (isNull? this'history &quot;&quot;) comment))&#13;&#10;&#13;&#10;this code will result in the comment being added to the history twice. The correct approach is as follows:&#13;&#10;&#13;&#10;  ; comment won't be added again the second time that create is called&#13;&#10;  (if (null? (this'history))&#13;&#10;     (this'history (string-append (isNull? this'history &quot;&quot;) comment))&#13;&#10;  )&#13;&#10;&#13;&#10;@example&#13;&#10;; Typically, create isn't called on the server directly, 'new' is used to easily initialize new instances and will implicitly call 'create'. There is no harm in calling 'create' after 'new' but there really is no effect.&#13;&#10;(MyInstance'create)" name="create" transaction="required" visibility="public">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.create" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event description="Invoked to update the instance. The main action is implemented by the framework.&#13;&#10;@detail&#13;&#10;If the instance is modified after the main action, another update is scheduled in the same unit of work.&#13;&#10;Although it can be explicity called, update is typically called by the clients or server frameworks.&#13;&#10;@ret ()&#13;&#10;@example&#13;&#10;((@ entity)'update) ; trigger an update" name="update" transaction="required" visibility="public">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.update" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event description="Invoked to delete the instance. The main action is implemented by the framework.&#13;&#10;@ret ()&#13;&#10;@example&#13;&#10;(myInstance'delete)&#13;&#10;" name="delete" transaction="required" visibility="public">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.delete" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event description="Invoked by the framework on a new or an updated instance, after all the events, before a unit of work is committed, only once per unit of work. The main action is implemented by the framework.&#13;&#10;@ret ()&#13;&#10;@detail&#13;&#10;Invoked before the instance is committed. 'commit' is called after all the other events (e.g. 'create' and 'update' resulting from the business logic), and only when a transaction is about to commit. If a transaction does not commit (e.g. there was an exception), 'commit' is not called.&#13;&#10;&#13;&#10;Unlike 'create' or 'update', 'commit' is called only once. When 'commit' makes changes to the instance, 'update' will be called again, but 'commit' will not. Thus, be careful in updating instances during 'commit' to avoid undesirable behavior.&#13;&#10;&#13;&#10;'commit' event is well suited for initiating asynchronous processing. " name="commit" transaction="mandatory">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.commit" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event description="Locks the instance. The main action is implemented by the framework.&#13;&#10;@ret ()&#13;&#10;@example&#13;&#10;(myObject'lock)&#13;&#10;; do some processing that requires the lock" name="lock" transaction="required">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.lock" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="symbol value" description="Sets an arbitrary named value on the instance. The main action is implemented by the framework.&#13;&#10;@ret ()&#13;&#10;@example&#13;&#10;(myObject'annotation':shard (cons &quot;ExternalDatabase&quot; &quot;frag0123&quot;))&#13;&#10;(myObject'annotation':shard) =&gt; (&quot;ExternalDatabase&quot; . &quot;frag0123&quot;)" name="annotation">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.setAnnotation" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="symbol" description="Gets an annotation value from the instance. The main action is implemented by the framework.&#13;&#10;@ret ()&#13;&#10;@example&#13;&#10;(myObject'annotation':shard (cons &quot;ExternalDatabase&quot; &quot;frag0123&quot;))&#13;&#10;(myObject'annotation':shard) =&gt; (&quot;ExternalDatabase&quot; . &quot;frag0123&quot;)" name="annotation">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.getAnnotation" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="attribute" description="Returns the value of the attribute as it was in the beginning of the unit of work.&#13;&#10;@arg attribute symbol Name of the attribute for which to get the old value.&#13;&#10;@ret any The old value of the specified attribute&#13;&#10;@see pre isUpdated isDirty&#13;&#10;@example&#13;&#10;(define es (Entity'read '() '() '() 1 0 #f)) ; read an entity&#13;&#10;(when (not (es'empty)) ; if there is one...&#13;&#10;&#9;((es 0)'firstName) ; get the value of the firstName&#13;&#10;)&#13;&#10;=&gt; ; &quot;Joe&quot;&#13;&#10;(when (not (es'empty))&#13;&#10;&#9;((es 0)'firstName &quot;Riley&quot;) ; change the firstName&#13;&#10;&#9;((es 0)'old'firstName) ; check the old value of the firstName&#13;&#10;)&#13;&#10;=&gt; ; &quot;Joe&quot;&#13;&#10;(when (not (es'empty)) ; if there is one...&#13;&#10;&#9;((es 0)'firstName) ; get the value of the firstName&#13;&#10;)&#13;&#10;=&gt; ; &quot;Riley&quot;" name="old">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.getOldValue" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="attribute" description="Returns the value of the attribute as it was immediately after the last create or update event main action (or at unit of work start if none).&#13;&#10;@arg attribute symbol Name of the attribute for which to get the previous value.&#13;&#10;@ret any The previous value of the specified attribute&#13;&#10;@see old isUpdated isDirty&#13;&#10;@example&#13;&#10;(define es (Entity'read '() '() '() 1 0 #f)) ; read an entity&#13;&#10;(when (not (es'empty)) ; if there is one...&#13;&#10;&#9;((es 0)'firstName) ; get the value of the firstName&#13;&#10;)&#13;&#10;=&gt; ; &quot;Joe&quot;&#13;&#10;(when (not (es'empty))&#13;&#10;&#9;((es 0)'firstName &quot;Riley&quot;) ; change the firstName&#13;&#10;&#9;((es 0)'pre'firstName) ; check the previous value of the firstName&#13;&#10;)&#13;&#10;=&gt; ; &quot;Joe&quot;&#13;&#10;(when (not (es'empty)) ; if there is one...&#13;&#10;&#9;((es 0)'firstName) ; get the value of the firstName&#13;&#10;)&#13;&#10;=&gt; ; &quot;Riley&quot;&#13;&#10;(when (not (es'empty)) ; if there is one...&#13;&#10;&#9;((es 0)'update)&#13;&#10;&#9;((es 0)'pre'firstName) ; get the value of the firstName&#13;&#10;)&#13;&#10;=&gt; ; &quot;Riley&quot;&#13;&#10;" name="pre">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.getPreValue" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="attribute" description="Returns #t if the attribute has been updated but not committed since the beginning of the unit of work.&#13;&#10;@arg attribute Symbol Name of the attribute to test.&#13;&#10;@ret boolean #t if the attribute has been updated but not committed since the beginning of the unit of work.&#13;&#10;@see old pre isUpdated&#13;&#10;@example&#13;&#10;(define es (Entity'read '() '() '() 1 0 #f)) ; read an entity&#13;&#10;(when (not (es'empty)) ; if there is one...&#13;&#10;&#9;((es 0)'isDirty 'firstName) ; check the updated status of the firstName attribute&#13;&#10;)&#13;&#10;=&gt; ; #f&#13;&#10;(when (not (es'empty))&#13;&#10;&#9;((es 0)'firstName &quot;Ed&quot;) ; change the firstName&#13;&#10;&#9;((es 0)'isDirty 'firstName) ; check the updated status of the firstName attribute&#13;&#10;)&#13;&#10;=&gt; ; #t" name="isDirty" visibility="protected">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.isDirty" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="attribute" description="Returns #t if the attribute has been updated since the last create or update event main action (or the unit of work start if none).&#13;&#10;@arg attribute Symbol Name of the attribute to test.&#13;&#10;@ret boolean #t if the attribute has been updated but not committed since the beginning of the unit of work.&#13;&#10;@see pre old isDirty&#13;&#10;@example&#13;&#10;(define es (Entity'read '() '() '() 1 0 #f)) ; read an entity&#13;&#10;(when (not (es'empty)) ; if there is one...&#13;&#10;&#9;((es 0)'isUpdated 'firstName) ; check the updated status of the firstName attribute&#13;&#10;)&#13;&#10;=&gt; ; #f&#13;&#10;(when (not (es'empty))&#13;&#10;&#9;((es 0)'firstName &quot;Ed&quot;) ; change the firstName&#13;&#10;&#9;((es 0)'isUpdated 'firstName) ; check the updated status of the firstName attribute&#13;&#10;)&#13;&#10;=&gt; ; #t" name="isUpdated" visibility="protected">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.isUpdated" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="attribute" description="Returns #t if the attribute has been updated but not committed since the beginning of the unit of work.&#13;&#10;@deprecated Equivalent to isDirty. Use isUpdated or isDirty instead.&#13;&#10;@arg attribute Symbol Name of the attribute to test.&#13;&#10;@ret boolean #t if the attribute has been updated but not committed since the beginning of the unit of work.&#13;&#10;@see isDirty isUpdated&#13;&#10;@example&#13;&#10;(define es (Entity'read '() '() '() 1 0 #f)) ; read an entity&#13;&#10;(when (not (es'empty)) ; if there is one...&#13;&#10;&#9;((es 0)'updated 'firstName) ; check the updated status of the firstName attribute&#13;&#10;)&#13;&#10;=&gt; ; #f&#13;&#10;(when (not (es'empty))&#13;&#10;&#9;((es 0)'firstName &quot;Ed&quot;) ; change the firstName&#13;&#10;&#9;((es 0)'updated 'firstName) ; check the updated status of the firstName attribute&#13;&#10;)&#13;&#10;=&gt; ; #t" name="updated" visibility="protected">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.isDirty" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event description="Returns the class object of this instance.&#13;&#10;@ret class The class object of this instance.&#13;&#10;@example&#13;&#10;(define es (Entity'read '() '() '() 1 0 #f))&#13;&#10;(when (not (es'empty))&#13;&#10;&#9;((es 0)':class) &#13;&#10;)&#13;&#10;=&gt; ; #&lt;Metaclass UserPerson&gt;" name=":class" static="true" visibility="protected">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.getClass" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event description="Returns the instance OID.&#13;&#10;@ret oid The instance OID.&#13;&#10;@example&#13;&#10;(define es (Entity'read '() '() '() 1 0 #f))&#13;&#10;(when (not (es'empty))&#13;&#10;&#9;((es 0)':oid) &#13;&#10;)&#13;&#10;=&gt; ; #&lt;OID:1:V32:00000000000010008000BEEF0000000D&gt;" name=":oid">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.getOID" name="main" type="main"/>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

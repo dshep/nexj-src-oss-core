@@ -1,0 +1,530 @@
+<Enumeration description="Enumeration of all available time zones." typeCode="STIMEZONEENUM">
+   <Locales>
+      <Locale caption="Enumeration of all available time zones." description="Enumeration of all available time zones." name="en"/>
+      <Locale caption="Énumération de tous les fuseaux horaires disponibles" name="fr"/>
+   </Locales>
+   <Values>
+      <Value hasBehavior="true" name="EtcslashGMTminus12" value="Etc/GMT-12">
+         <Locales>
+            <Locale caption="(GMT-12:00) International Date Line West" name="en" shortCaption="GMT+12:00"/>
+            <Locale caption="(GMT -12) Ligne internationale de changement de date - Ouest" name="fr" shortCaption="GMT +12"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="PacificslashApia" value="Pacific/Apia">
+         <Locales>
+            <Locale caption="(GMT-11:00) Midway Island, Samoa" name="en" shortCaption="WST"/>
+            <Locale caption="(GMT -11) Midway, Samoa" name="fr" shortCaption="WST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="PacificslashHonolulu" value="Pacific/Honolulu">
+         <Locales>
+            <Locale caption="(GMT-10:00) Hawaii" name="en" shortCaption="HST"/>
+            <Locale caption="(GMT - 10) Hawaii" name="fr" shortCaption="HST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashAnchorage" value="America/Anchorage">
+         <Locales>
+            <Locale caption="(GMT-09:00) Alaska" name="en" shortCaption="AKST"/>
+            <Locale caption="(GMT- 9) Alaska" name="fr" shortCaption="AKST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashLos_Angeles" value="America/Los_Angeles">
+         <Locales>
+            <Locale caption="(GMT-08:00) Pacific Time (US &amp; Canada); Tijuana" name="en" shortCaption="PST"/>
+            <Locale caption="(GMT - 8) Heure nornale du Pacifique (ÉU et Canada); Tijuana" name="fr" shortCaption="PST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashDenver" value="America/Denver">
+         <Locales>
+            <Locale caption="(GMT-07:00) Mountain Time (US &amp; Canada)" name="en" shortCaption="MST"/>
+            <Locale caption="(GMT - 7) Heure normales des Rocheuses (ÉU et Canada)" name="fr" shortCaption="MST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashTegucigalpa" value="America/Tegucigalpa">
+         <Locales>
+            <Locale caption="(GMT-07:00) Chihuahua, La Paz, Mazatlan" name="en" shortCaption="CST"/>
+            <Locale caption="(GMT - 7) Chihuahua, La Paz, Mazatlan" name="fr" shortCaption="CST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashPhoenix" value="America/Phoenix">
+         <Locales>
+            <Locale caption="(GMT-07:00) Arizona" name="en" shortCaption="MST"/>
+            <Locale caption="(GMT - 7) Arizona" name="fr" shortCaption="MST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashWinnipeg" value="America/Winnipeg">
+         <Locales>
+            <Locale caption="(GMT-06:00) Saskatchewan" name="en" shortCaption="CST"/>
+            <Locale caption="(GMT - 6) Saskatchewan" name="fr" shortCaption="CST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashMexico_City" value="America/Mexico_City">
+         <Locales>
+            <Locale caption="(GMT-06:00) Guadalajara, Mexico City, Monterrey" name="en" shortCaption="CST"/>
+            <Locale caption="(GMT - 6) Guadalajara, Mexico, Monterrey" name="fr" shortCaption="CST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashChicago" value="America/Chicago">
+         <Locales>
+            <Locale caption="(GMT-06:00) Central Time (US &amp; Canada)" name="en" shortCaption="CST"/>
+            <Locale caption="(GMT - 6) Heure normale du Centre (É-U et Canada)" name="fr" shortCaption="CST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashCosta_Rica" value="America/Costa_Rica">
+         <Locales>
+            <Locale caption="(GMT-06:00) Central America" name="en" shortCaption="CST"/>
+            <Locale caption="(GMT - 6) Amérique centrale" name="fr" shortCaption="CST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashIndianaslashIndianapolis" value="America/Indiana/Indianapolis">
+         <Locales>
+            <Locale caption="(GMT-05:00) Indiana (East)" name="en" shortCaption="EST"/>
+            <Locale caption="(GMT - 5) Indiana (Est)" name="fr" shortCaption="EST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashNew_York" value="America/New_York">
+         <Locales>
+            <Locale caption="(GMT-05:00) Eastern Time (US &amp; Canada)" name="en" shortCaption="EST"/>
+            <Locale caption="(GMT - 5) Heure normale de l'Est (É-U et Canada)" name="fr" shortCaption="EST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashBogota" value="America/Bogota">
+         <Locales>
+            <Locale caption="(GMT-05:00) Bogota, Lima, Quito" name="en" shortCaption="COT"/>
+            <Locale caption="(GMT- 5) Bogota, Lima, Quito" name="fr" shortCaption="COT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashSantiago" value="America/Santiago">
+         <Locales>
+            <Locale caption="(GMT-04:00) Santiago" name="en" shortCaption="CLT"/>
+            <Locale caption="(GMT - 4) Santiago" name="fr" shortCaption="CLT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashCaracas" value="America/Caracas">
+         <Locales>
+            <Locale caption="(GMT-04:00) Caracas, La Paz" name="en" shortCaption="VET"/>
+            <Locale caption="(GMT- 4) Caracas, La Paz" name="fr" shortCaption="VET"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashAnguilla" value="America/Anguilla">
+         <Locales>
+            <Locale caption="(GMT-04:00) Atlantic Time (Canada)" name="en" shortCaption="AST"/>
+            <Locale caption="(GMT- 4) Heure de l'Atlantique (Canada)" name="fr" shortCaption="AST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashSt_Johns" value="America/St_Johns">
+         <Locales>
+            <Locale caption="(GMT-03:30) Newfoundland" name="en" shortCaption="NST"/>
+            <Locale caption="(GMT - 3:30) Terre-Neuve" name="fr" shortCaption="NST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashThule" value="America/Thule">
+         <Locales>
+            <Locale caption="(GMT-03:00) Greenland" name="en" shortCaption="AST"/>
+            <Locale caption="(GMT - 3) Groenland" name="fr" shortCaption="AST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashArgentinaslashBuenos_Aires" value="America/Argentina/Buenos_Aires">
+         <Locales>
+            <Locale caption="(GMT-03:00) Buenos Aires, Georgetown" name="en" shortCaption="ART"/>
+            <Locale caption="(GMT- 3) Buenos Aires, Georgetown" name="fr" shortCaption="ART"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashSao_Paulo" value="America/Sao_Paulo">
+         <Locales>
+            <Locale caption="(GMT-03:00) Brasilia" name="en" shortCaption="BRT"/>
+            <Locale caption="(GMT - 3) Brasilia" name="fr" shortCaption="BRT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AtlanticslashSouth_Georgia" value="Atlantic/South_Georgia">
+         <Locales>
+            <Locale caption="(GMT-02:00) Mid-Atlantic" name="en" shortCaption="GST"/>
+            <Locale caption="(GMT - 2) Médio-atlantique" name="fr" shortCaption="GST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AtlanticslashCape_Verde" value="Atlantic/Cape_Verde">
+         <Locales>
+            <Locale caption="(GMT-01:00) Cape Verde Is." name="en" shortCaption="CVT"/>
+            <Locale caption="(GMT - 1) Îles du Cap-Vert" name="fr" shortCaption="CVT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AtlanticslashAzores" value="Atlantic/Azores">
+         <Locales>
+            <Locale caption="(GMT-01:00) Azores" name="en" shortCaption="AZOT"/>
+            <Locale caption="(GMT - 1) Açores" name="fr" shortCaption="AZOT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AfricaslashCasablanca" value="Africa/Casablanca">
+         <Locales>
+            <Locale caption="(GMT) Casablanca, Monrovia" name="en" shortCaption="WET"/>
+            <Locale caption="(GMT) Casablanca, Monrovia" name="fr" shortCaption="WET"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EuropeslashDublin" value="Europe/Dublin">
+         <Locales>
+            <Locale caption="(GMT) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London" name="en" shortCaption="GMT"/>
+            <Locale caption="(GMT) Temps moyen de Greenwich: Dublin, Édimbourg, Lisbonne, Londre" name="fr" shortCaption="GMT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EtcslashUTC" value="Etc/UTC">
+         <Locales>
+            <Locale caption="(UTC) Coordinated Universal Time" name="en" shortCaption="UTC"/>
+            <Locale caption="(UTC) Temps universel coordonné" name="fr" shortCaption="UTC"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EuropeslashAmsterdam" value="Europe/Amsterdam">
+         <Locales>
+            <Locale caption="(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna" name="en" shortCaption="CET"/>
+            <Locale caption="(GMT+ 1) Amsterdam, Berlin, Berne, Rome, Stockholm, Vienne" name="fr" shortCaption="CET"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EuropeslashBelgrade" value="Europe/Belgrade">
+         <Locales>
+            <Locale caption="(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague" name="en" shortCaption="CET"/>
+            <Locale caption="(GMT + 1) Belgrade, Bratislava, Budapest, Ljubljana, Prague" name="fr" shortCaption="CET"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EuropeslashBrussels" value="Europe/Brussels">
+         <Locales>
+            <Locale caption="(GMT+01:00) Brussels, Copenhagen, Madrid, Paris" name="en" shortCaption="CET"/>
+            <Locale caption="(GMT + 1) Bruxelles, Copenhague, Madrid, Paris" name="fr" shortCaption="CET"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EuropeslashWarsaw" value="Europe/Warsaw">
+         <Locales>
+            <Locale caption="(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb" name="en" shortCaption="CET"/>
+            <Locale caption="(GMT + 1) Sarajevo, Skopje, Varsovie, Zagreb" name="fr" shortCaption="CET"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AfricaslashLagos" value="Africa/Lagos">
+         <Locales>
+            <Locale caption="(GMT+01:00) West Central Africa" name="en" shortCaption="WAT"/>
+            <Locale caption="(GMT + 1) Afrique du Centre-Ouest" name="fr" shortCaption="WAT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EuropeslashAthens" value="Europe/Athens">
+         <Locales>
+            <Locale caption="(GMT+02:00) Athens, Istanbul, Minsk" name="en" shortCaption="EET"/>
+            <Locale caption="(GMT + 2) Athènes, Istanbul, Minsk" name="fr" shortCaption="EET"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EuropeslashBucharest" value="Europe/Bucharest">
+         <Locales>
+            <Locale caption="(GMT+02:00) Bucharest" name="en" shortCaption="EET"/>
+            <Locale caption="(GMT + 2) Bucarest" name="fr" shortCaption="EET"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AfricaslashCairo" value="Africa/Cairo">
+         <Locales>
+            <Locale caption="(GMT+02:00) Cairo" name="en" shortCaption="EET"/>
+            <Locale caption="(GMT+ 2) Le Caire" name="fr" shortCaption="EET"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AfricaslashHarare" value="Africa/Harare">
+         <Locales>
+            <Locale caption="(GMT+02:00) Harare, Pretoria" name="en" shortCaption="CAT"/>
+            <Locale caption="(GMT+ 2) Harare, Pretoria" name="fr" shortCaption="CAT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EuropeslashHelsinki" value="Europe/Helsinki">
+         <Locales>
+            <Locale caption="(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius" name="en" shortCaption="EET"/>
+            <Locale caption="(GMT + 2) Helsinki, Kiev, Riga, Sofia, Tallinn, Vilnius" name="fr" shortCaption="EET"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashJerusalem" value="Asia/Jerusalem">
+         <Locales>
+            <Locale caption="(GMT+02:00) Jerusalem" name="en" shortCaption="IST"/>
+            <Locale caption="(GMT + 2) Jérusalem" name="fr" shortCaption="IST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashBaghdad" value="Asia/Baghdad">
+         <Locales>
+            <Locale caption="(GMT+03:00) Baghdad" name="en" shortCaption="AST"/>
+            <Locale caption="(GMT + 3) Bagdad" name="fr" shortCaption="AST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashKuwait" value="Asia/Kuwait">
+         <Locales>
+            <Locale caption="(GMT+03:00) Kuwait, Riyadh" name="en" shortCaption="AST"/>
+            <Locale caption="(GMT + 3) Koweit, Riyad" name="fr" shortCaption="AST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EuropeslashMoscow" value="Europe/Moscow">
+         <Locales>
+            <Locale caption="(GMT+03:00) Moscow, St. Petersburg, Volgograd" name="en" shortCaption="MSK"/>
+            <Locale caption="(GMT + 3) Moscou, Saint-Pétersbourg, Volgograd" name="fr" shortCaption="MSK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AfricaslashNairobi" value="Africa/Nairobi">
+         <Locales>
+            <Locale caption="(GMT+03:00) Nairobi" name="en" shortCaption="EAT"/>
+            <Locale caption="(GMT+ 3) Nairobi" name="fr" shortCaption="EAT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashTehran" value="Asia/Tehran">
+         <Locales>
+            <Locale caption="(GMT+03:30) Tehran" name="en" shortCaption="IRST"/>
+            <Locale caption="(GMT + 3) Téhéran" name="fr" shortCaption="IRST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashDubai" value="Asia/Dubai">
+         <Locales>
+            <Locale caption="(GMT+04:00) Abu Dhabi, Muscat" name="en" shortCaption="GST"/>
+            <Locale caption="(GMT + 4) Abu Dhabi, Oman" name="fr" shortCaption="GST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashBaku" value="Asia/Baku">
+         <Locales>
+            <Locale caption="(GMT+04:00) Baku, Tbilisi, Yerevan" name="en" shortCaption="AZT"/>
+            <Locale caption="(GMT + 4) Bakou, Tbilissi, Erevan" name="fr" shortCaption="AZT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashKabul" value="Asia/Kabul">
+         <Locales>
+            <Locale caption="(GMT+04:30) Kabul" name="en" shortCaption="AFT"/>
+            <Locale caption="(GMT + 4:30) Kaboul" name="fr" shortCaption="AFT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashYekaterinburg" value="Asia/Yekaterinburg">
+         <Locales>
+            <Locale caption="(GMT+05:00) Ekaterinburg" name="en" shortCaption="YEKT"/>
+            <Locale caption="(GMT + 5) Iekaterinbourg" name="fr" shortCaption="YEKT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashKarachi" value="Asia/Karachi">
+         <Locales>
+            <Locale caption="(GMT+05:00) Islamabad, Karachi, Tashkent" name="en" shortCaption="PKT"/>
+            <Locale caption="(GMT + 5) Islamabad, Karachi, Tachkent" name="fr" shortCaption="PKT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashCalcutta" value="Asia/Calcutta">
+         <Locales>
+            <Locale caption="(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi" name="en" shortCaption="IST"/>
+            <Locale caption="(GMT + 5:30) Chennai, Kolkata, Mumbai, New Delhi" name="fr" shortCaption="IST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashKatmandu" value="Asia/Katmandu">
+         <Locales>
+            <Locale caption="(GMT+05:45) Kathmandu" name="en" shortCaption="NPT"/>
+            <Locale caption="(GMT + 5:45) Kathmandu" name="fr" shortCaption="NPT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashAlmaty" value="Asia/Almaty">
+         <Locales>
+            <Locale caption="(GMT+06:00) Almaty, Novosibirsk" name="en" shortCaption="ALMT"/>
+            <Locale caption="(GMT + 6) Almaty, Novossibirsk" name="fr" shortCaption="ALMT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashDhaka" value="Asia/Dhaka">
+         <Locales>
+            <Locale caption="(GMT+06:00) Astana, Dhaka" name="en" shortCaption="BDT"/>
+            <Locale caption="(GMT + 6) Astana, Dhaka" name="fr" shortCaption="BDT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashColombo" value="Asia/Colombo">
+         <Locales>
+            <Locale caption="(GMT+06:00) Sri Jayawardenepura" name="en" shortCaption="LKT"/>
+            <Locale caption="(GMT + 6) Sri Jayawardenepura" name="fr" shortCaption="LKT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashRangoon" value="Asia/Rangoon">
+         <Locales>
+            <Locale caption="(GMT+06:30) Rangoon" name="en" shortCaption="MMT"/>
+            <Locale caption="(GMT + 6:30) Rangoon" name="fr" shortCaption="MMT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashBangkok" value="Asia/Bangkok">
+         <Locales>
+            <Locale caption="(GMT+07:00) Bangkok, Hanoi, Jakarta" name="en" shortCaption="ICT"/>
+            <Locale caption="(GMT + 7) Bangkok, Hanoi, Jakarta" name="fr" shortCaption="ICT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashKrasnoyarsk" value="Asia/Krasnoyarsk">
+         <Locales>
+            <Locale caption="(GMT+07:00) Krasnoyarsk" name="en" shortCaption="KRAT"/>
+            <Locale caption="(GMT + 7) Krasnoiarsk" name="fr" shortCaption="KRAT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashHong_Kong" value="Asia/Hong_Kong">
+         <Locales>
+            <Locale caption="(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi" name="en" shortCaption="HKT"/>
+            <Locale caption="(GMT + 8) Beijing, Chongqing, Hong Kong, Urumqui" name="fr" shortCaption="HKT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashIrkutsk" value="Asia/Irkutsk">
+         <Locales>
+            <Locale caption="(GMT+08:00) Irkutsk, Ulaan Bataar" name="en" shortCaption="IRKT"/>
+            <Locale caption="(GMT + 8) Irkoutsk, Oulan-Bator" name="fr" shortCaption="IRKT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashKuala_Lumpur" value="Asia/Kuala_Lumpur">
+         <Locales>
+            <Locale caption="(GMT+08:00) Kuala Lumpur, Singapore" name="en" shortCaption="MYT"/>
+            <Locale caption="(GMT + 8) Kuala Lumpur, Singapour" name="fr" shortCaption="MYT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AustraliaslashPerth" value="Australia/Perth">
+         <Locales>
+            <Locale caption="(GMT+08:00) Perth" name="en" shortCaption="WST"/>
+            <Locale caption="(GMT + 8) Perth" name="fr" shortCaption="WST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashTaipei" value="Asia/Taipei">
+         <Locales>
+            <Locale caption="(GMT+08:00) Taipei" name="en" shortCaption="CST"/>
+            <Locale caption="(GMT + 8) Taipei" name="fr" shortCaption="CST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashTokyo" value="Asia/Tokyo">
+         <Locales>
+            <Locale caption="(GMT+09:00) Osaka, Sapporo, Tokyo" name="en" shortCaption="JST"/>
+            <Locale caption="(GMT + 9) Osaka, Sapporo, Tokyo" name="fr" shortCaption="JST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashSeoul" value="Asia/Seoul">
+         <Locales>
+            <Locale caption="(GMT+09:00) Seoul" name="en" shortCaption="KST"/>
+            <Locale caption="(GMT + 9) Séoul" name="fr" shortCaption="KST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashYakutsk" value="Asia/Yakutsk">
+         <Locales>
+            <Locale caption="(GMT+09:00) Yakutsk" name="en" shortCaption="YAKT"/>
+            <Locale caption="(GMT + 9) Iakoutsk" name="fr" shortCaption="YAKT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AustraliaslashAdelaide" value="Australia/Adelaide">
+         <Locales>
+            <Locale caption="(GMT+09:30) Adelaide" name="en" shortCaption="CST"/>
+            <Locale caption="(GMT + 9:30) Adélaide" name="fr" shortCaption="CST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AustraliaslashDarwin" value="Australia/Darwin">
+         <Locales>
+            <Locale caption="(GMT+09:30) Darwin" name="en" shortCaption="CST"/>
+            <Locale caption="(GMT + 9:30) Darwin" name="fr" shortCaption="CST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AustraliaslashBrisbane" value="Australia/Brisbane">
+         <Locales>
+            <Locale caption="(GMT+10:00) Brisbane" name="en" shortCaption="EST"/>
+            <Locale caption="(GMT + 10) Brisbane" name="fr" shortCaption="EST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AustraliaslashSydney" value="Australia/Sydney">
+         <Locales>
+            <Locale caption="(GMT+10:00) Canberra, Melbourne, Sydney" name="en" shortCaption="EST"/>
+            <Locale caption="(GMT + 10) Canberra, Melbourne, Sydney" name="fr" shortCaption="EST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="PacificslashGuam" value="Pacific/Guam">
+         <Locales>
+            <Locale caption="(GMT+10:00) Guam, Port Moresby" name="en" shortCaption="ChST"/>
+            <Locale caption="(GMT +10) Guam, Port Moresby" name="fr" shortCaption="ChST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AustraliaslashHobart" value="Australia/Hobart">
+         <Locales>
+            <Locale caption="(GMT+10:00) Hobart" name="en" shortCaption="EST"/>
+            <Locale caption="(GMT + 10) Hobart" name="fr" shortCaption="EST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashVladivostok" value="Asia/Vladivostok">
+         <Locales>
+            <Locale caption="(GMT+10:00) Vladivostok" name="en" shortCaption="VLAT"/>
+            <Locale caption="(GMT + 10) Vladivostok" name="fr" shortCaption="VLAT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashMagadan" value="Asia/Magadan">
+         <Locales>
+            <Locale caption="(GMT+11:00) Magadan, Solomon Is., New Caledonia" name="en" shortCaption="MAGT"/>
+            <Locale caption="(GMT + 11) Magadan, Îles Salomon, Nouvelle-Calédonie" name="fr" shortCaption="MAGT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="PacificslashAuckland" value="Pacific/Auckland">
+         <Locales>
+            <Locale caption="(GMT+12:00) Auckland, Wellington" name="en" shortCaption="NZST"/>
+            <Locale caption="(GMT + 12) Auckland, Wellington" name="fr" shortCaption="NZST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="PacificslashFiji" value="Pacific/Fiji">
+         <Locales>
+            <Locale caption="(GMT+12:00) Fiji, Kamchatka, Marshall Is." name="en" shortCaption="FJT"/>
+            <Locale caption="(GMT +12) Fidji, Kamtchatka, Îles Marshall" name="fr" shortCaption="FJT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="PacificslashTongatapu" value="Pacific/Tongatapu">
+         <Locales>
+            <Locale caption="(GMT+13:00) Nuku'alofa" name="en" shortCaption="TOT"/>
+            <Locale caption="(GMT + 13) Nukualofa" name="fr" shortCaption="TOT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashYerevan" value="Asia/Yerevan">
+         <Locales>
+            <Locale caption="+04:00 Armenia Time-Asia/Yerevan" name="en" shortCaption="+04:00 Armenia Time-"/>
+            <Locale caption="+04:00 Heure de l'Arménie-Asie/Yerevan" name="fr" shortCaption="+04:00 H. Arménie-"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashBeirut" value="Asia/Beirut">
+         <Locales>
+            <Locale caption="+02:00 Eastern European Time-Asia/Beirut" name="en" shortCaption="+02:00 Eastern Europ"/>
+            <Locale caption="+02:00 Heure de l'Europe de l'Est-Asie/Beyrouth" name="fr" shortCaption="+02:00 Europe Est"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashMontevideo" value="America/Montevideo">
+         <Locales>
+            <Locale caption="-03:00 Uruguay Time-America/Montevideo" name="en" shortCaption="-03:00 Uruguay Time-"/>
+            <Locale caption="-03:00 Heure de l'Uruguay-Amérique/Montevideo" name="fr" shortCaption="-03:00 H. Uruguay-"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AsiaslashNovosibirsk" value="Asia/Novosibirsk">
+         <Locales>
+            <Locale caption="+06:00 Novosibirsk Time-Asia/Novosibirsk" name="en" shortCaption="+06:00 Novosibirsk T"/>
+            <Locale caption="+06:00 Heure de Novosibirsk-Asie/Novosibirsk" name="fr" shortCaption="+06:00 Novosibirsk"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashChihuahua" value="America/Chihuahua">
+         <Locales>
+            <Locale caption="-07:00 Mountain Standard Time-America/Chihuahua" name="en" shortCaption="-07:00 Mountain Stan"/>
+            <Locale caption="-07:00 Heure normale des Rocheuses-Amérique/Chihuahua" name="fr" shortCaption="-07:00 Norm. Roch."/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashCampo_Grande" value="America/Campo_Grande">
+         <Locales>
+            <Locale caption="-04:00 Amazon Time-America/Campo_Grande" name="en" shortCaption="-04:00 Amazon Time-A"/>
+            <Locale caption="-04:00 Heure de l'Amazone-Amérique/Campo_Grande" name="fr" shortCaption="-04:00 Heure Amaz.-A"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashAraguaina" value="America/Araguaina">
+         <Locales>
+            <Locale caption="-03:00 Brasilia Time-America/Araguaina" name="en" shortCaption="-03:00 Brasilia Time"/>
+            <Locale caption="-03:00 Heure de Brasilia-Amérique/Araguaina" name="fr" shortCaption="-03:00 H. Brasilia"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AmericaslashEnsenada" value="America/Ensenada">
+         <Locales>
+            <Locale caption="-08:00 Pacific Standard Time-America/Ensenada" name="en" shortCaption="-08:00 Pacific Stand"/>
+            <Locale caption="-08:00 Heure normale du Pacifique-Amérique/Ensenada" name="fr" shortCaption="-08:00 Norm. Pacif."/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EuropeslashKaliningrad" value="Europe/Kaliningrad">
+         <Locales>
+            <Locale caption="+02:00 Eastern European Time-Europe/Kaliningrad" name="en" shortCaption="+02:00 Eastern Europ"/>
+            <Locale caption="+02:00 Heure de l'Europe de l'Est-Europe/Kaliningrad" name="fr" shortCaption="+02:00 Europe Est"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EtcslashGMTplus12" value="Etc/GMT+12">
+         <Locales>
+            <Locale caption="-12:00 GMT-12:00-Etc/GMT+12" name="en" shortCaption="-12:00 GMT-12:00-Etc"/>
+            <Locale caption="-12:00 GMT-12:00-Etc/GMT+12" name="fr" shortCaption="-12:00 GMT-12:00-Etc"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EtcslashGMTminus11" value="Etc/GMT-11">
+         <Locales>
+            <Locale caption="+11:00 GMT+11:00-Etc/GMT-11" name="en" shortCaption="+11:00 GMT+11:00-Etc"/>
+            <Locale caption="+11:00 GMT+11:00-Etc/GMT-11" name="fr" shortCaption="+11:00 GMT+11:00-Etc"/>
+         </Locales>
+      </Value>
+   </Values>
+</Enumeration>

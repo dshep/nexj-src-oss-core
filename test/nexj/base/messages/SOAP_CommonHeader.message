@@ -1,0 +1,20 @@
+<Message format="XML">
+   <XMLMapping envelope="soap" namespace="soap" node="Header"/>
+   <Parts>
+      <Message name="context" ref="SOAP_WsCoor_Header"/>
+      <Message name="action">
+         <XMLMapping namespace="wsa" node="Action" uri="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+         <Parts>
+            <Value name="role" type="string">
+               <XMLMapping namespace="soap" node="role" type="attribute"/>
+            </Value>
+            <Value name="mustUnderstand" type="boolean">
+               <XMLMapping namespace="soap" node="mustUnderstand" type="attribute"/>
+            </Value>
+            <Value name="value" type="string">
+               <XMLMapping type="value"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

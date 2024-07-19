@@ -1,0 +1,29 @@
+<Class>
+   <Attributes>
+      <Attribute name="name" type="string"/>
+      <Attribute name="issued" type="timestamp"/>
+      <Attribute name="expires" type="timestamp"/>
+      <Attribute name="animal" reverse="licenses" type="Animal"/>
+   </Attributes>
+   <PersistenceMapping dataSource="MemoryVirtualSource">
+      <ServiceMapping derived="true">
+         <KeyParts>
+            <KeyPart type="binary"/>
+         </KeyParts>
+         <AttributeMappings>
+            <AttributeMapping name="name"/>
+            <AttributeMapping name="issued"/>
+            <AttributeMapping name="expires"/>
+         </AttributeMappings>
+         <UpdateMapping>
+            <Case attributes="name issued expires">
+               <Script><![CDATA[
+(unless ((DomesticAnimalLicenseStore'updateByOID) (this':oid) this)
+   (throw-optimistic-lock this)
+)
+]]></Script>
+            </Case>
+         </UpdateMapping>
+      </ServiceMapping>
+   </PersistenceMapping>
+</Class>

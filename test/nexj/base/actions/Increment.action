@@ -1,0 +1,10 @@
+<Action caption="Increment" tooltip="Increments a variable" icon="add2" workflow="true">
+   <Arguments>
+      <Argument name="variable" type="any" description="Variable to increment"/>
+      <Argument name="delta" type="any" description="Amount by which to increment" default="1"/>
+   </Arguments>
+   <Script><![CDATA[
+`(set! ,variable (+ ,variable ,delta))
+   ]]>
+   </Script>
+</Action>

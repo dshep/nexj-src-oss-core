@@ -1,0 +1,24 @@
+<Message format="Fixed">
+   <FixedMapping/>
+   <Parts>
+      <Message maxCount="0" name="record">
+         <Parts>
+            <Value minCount="1" name="fld_String" type="string">
+               <FixedMapping width="10"/>
+            </Value>
+            <Value minCount="1" name="fld_Integer" type="integer">
+               <FixedMapping width="10"/>
+            </Value>
+            <Value minCount="1" name="fld_Double" type="double">
+               <FixedMapping width="10"/>
+            </Value>
+            <Value minCount="1" name="fld_Boolean" type="boolean">
+               <FixedMapping width="10"/>
+            </Value>
+            <Value minCount="1" name="fld_Timestamp" type="timestamp">
+               <FixedMapping width="30"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

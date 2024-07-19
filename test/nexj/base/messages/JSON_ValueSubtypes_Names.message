@@ -1,0 +1,19 @@
+<Message format="JSON">
+   <Parts>
+      <Value name="binary1" type="binary">
+         <JSONMapping subtype="hex" name="hex"/>
+      </Value>
+      <Value name="binary2" type="binary">
+         <JSONMapping subtype="base64" name="base64"/>
+      </Value>
+      <Value name="timestamp1" type="timestamp">
+         <JSONMapping subtype="date" name="date"/>
+      </Value>
+      <Value name="timestamp2" type="timestamp">
+         <JSONMapping subtype="time" name="time"/>
+      </Value>
+      <Value name="timestamp3" type="timestamp">
+         <JSONMapping subtype="dateTime" name="datetime"/>
+      </Value>
+   </Parts>
+</Message>

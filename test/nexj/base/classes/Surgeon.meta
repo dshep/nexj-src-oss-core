@@ -1,0 +1,13 @@
+<Class base="Doctor">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;SRG&quot;"/>
+      <Attribute name="speciality" type="string"/>
+   </Attributes>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="test.Contact">
+         <AttributeMappings>
+            <AttributeMapping column="speciality" name="speciality"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

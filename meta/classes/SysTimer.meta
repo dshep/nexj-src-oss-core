@@ -1,0 +1,42 @@
+<Class description="The persistent system timer.  Schedules a delayed event invocation." visibility="protected">
+   <Attributes>
+      <Attribute description="Timer ordinal number needed for triggering the workflow state changes" initializer="0" name="ordinal" type="integer" visibility="protected"/>
+      <Attribute cascade="clear" description="Optional workflow instance, with which the timer is associated" initializer="'()" name="workflow" reverse="timers" type="SysWorkflow" visibility="protected"/>
+      <Attribute description="The start time.  Null to use the current time." initializer="(now)" name="start" required="true" type="timestamp" visibility="protected"/>
+      <Attribute description="The period in ms.  Null or 0 for an aperiodic invocation." initializer="0" name="period" required="true" type="long" visibility="protected"/>
+      <Attribute initializer="(@ start)" name="next" required="true" type="timestamp" visibility="protected"/>
+      <Attribute description="The account under which to execute the timer, null to use the default." name="principal" type="string" visibility="protected"/>
+      <Attribute initializer="'()" name="data" type="binary" visibility="protected"/>
+      <Attribute description="The metaclass or instance to invoke." initializer="'()" name="object" type="Object" visibility="protected"/>
+      <Attribute description="The event to invoke." initializer="'()" name="event" type="any" visibility="protected"/>
+   </Attributes>
+   <Events>
+      <Event args="object event start period user" description="Schedules a delayed method invocation and returns the timer object" name="invoke" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysTimer.invoke" name="main" type="main"/>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="Timer">
+         <AttributeMappings>
+            <AttributeMapping column="startTime" name="start"/>
+            <AttributeMapping column="period" name="period"/>
+            <AttributeMapping column="nextTime" name="next"/>
+            <AttributeMapping column="data" name="data"/>
+            <AttributeMapping column="principal" name="principal"/>
+            <AttributeMapping column="ordinal" name="ordinal"/>
+            <AttributeMapping name="workflow" sourceKey="Timer.FK1"/>
+         </AttributeMappings>
+         <Hook activation="singleton" type="nexj.core.persistence.sql.SQLRequestSerializer">
+            <Properties>
+               <Property name="metaclass">SysTimer</Property>
+               <Property name="objectAttribute">object</Property>
+               <Property name="eventAttribute">event</Property>
+               <Property name="binaryAttribute">data</Property>
+               <Property name="startAttribute">start</Property>
+            </Properties>
+         </Hook>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

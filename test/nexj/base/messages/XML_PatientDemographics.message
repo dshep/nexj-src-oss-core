@@ -1,0 +1,37 @@
+<Message format="XML">
+   <XMLMapping namespace="a" node="Patient" resource="xsds/schema_a.xsd" schema="http://www.nexjsystems.com/nexj/integration.xsd" uri="urn:com.nexjsystems:ns:test:a"/>
+   <Parts>
+      <Message name="player">
+         <Parts>
+            <Value name="firstName" type="string"/>
+            <Value minCount="1" name="lastName" type="string"/>
+            <Value name="fullName" type="string"/>
+            <Value name="initials" type="string"/>
+            <Value name="title" type="string"/>
+            <Value name="affix" type="string"/>
+            <Value name="birthTime" type="timestamp"/>
+            <Value name="genderCode" type="string"/>
+            <Value name="guid" type="binary"/>
+            <Message maxCount="0" name="id" ref="XML_PatientId"/>
+            <Message maxCount="0" name="addr">
+               <Parts>
+                  <Value name="useCode" type="string"/>
+                  <Value name="city" type="string"/>
+                  <Value name="address1" type="string"/>
+                  <Value name="address2" type="string"/>
+                  <Value name="address3" type="string"/>
+                  <Value name="state" type="string"/>
+                  <Value name="country" type="string"/>
+                  <Value name="zip" type="string"/>
+               </Parts>
+            </Message>
+            <Message maxCount="0" name="telcom">
+               <Parts>
+                  <Value name="useCode" type="string"/>
+                  <Value name="address" type="string"/>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

@@ -1,0 +1,7 @@
+<Message aggregation="random" base="XML_Inherit_Parent" format="XML" derivation="final">
+   <XMLMapping node="child1" xsdtype="Child1Type"/>
+   <Parts>
+      <Value name="a" type="string"/>
+      <Value minCount="1" name="c1" type="integer"/>
+   </Parts>
+</Message>

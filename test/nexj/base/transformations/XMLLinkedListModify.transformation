@@ -1,0 +1,42 @@
+<Transformation args="prefix affix" destination="XML_LinkedList" source="XML_LinkedList">
+   <Initializer><![CDATA[(logger'info "Greetings from base transformation!")]]></Initializer>
+   <Mappings>
+      <Mapping destination="data" layout="y:8;x:0.52063495" name="mapping">
+         <Sources>
+            <Source name="s" source="data"/>
+         </Sources>
+         <Script><![CDATA[(string-append prefix s affix)]]></Script>
+      </Mapping>
+      <Mapping destination="next">
+         <Sources>
+            <Source source="next"/>
+         </Sources>
+         <Transformation args="(string-append prefix prefix) affix" ref="&quot;XMLLinkedListModify&quot;"/>
+      </Mapping>
+      <Mapping description="Test that a mapping source that references a mapping in this file can be inherited." destination="dataCopy_InheritMapping">
+         <Sources>
+            <Source mapping="mapping"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="dataCopy_ReplaceMapping" name="mapping2">
+         <Sources>
+            <Source mapping="mapping"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="dataCopy_Collection">
+         <Sources>
+            <Source mapping="mapping"/>
+         </Sources>
+      </Mapping>
+      <Mapping description="Test mapping to a part that is single in the base message and a collection in the derived message." destination="dataCopy">
+         <Sources>
+            <Source mapping="mapping"/>
+         </Sources>
+      </Mapping>
+      <Mapping description="Test that the base transformation can reference an overridden mapping in the derived transformation." destination="dataCopy_Polymorphic">
+         <Sources>
+            <Source mapping="mapping2"/>
+         </Sources>
+      </Mapping>
+   </Mappings>
+</Transformation>

@@ -1,0 +1,8 @@
+<Class base="Contact">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;SPC&quot;"/>
+   </Attributes>
+   <Events>
+      <Event access="readable" args="attributes where orderBy count offset xlock" name="read" privilege="readSpecial" static="true" visibility="public"/>
+   </Events>
+</Class>

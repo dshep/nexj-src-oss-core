@@ -1,0 +1,94 @@
+<Transformation source="XML_PatientDemographics" destination="Object_PatientDemographics">
+<Mappings>
+   <Mapping name="FN" destination="player firstName">
+      <Sources>
+         <Source source="player firstName" name="fn"/>
+      </Sources>
+   </Mapping>
+   <Mapping name="LN" destination="player lastName">
+      <Sources>
+         <Source source="player lastName"/>
+      </Sources>
+   </Mapping>
+   <Mapping destination="player initials">
+      <Sources>
+         <Source source="player initials"/>
+      </Sources>
+   </Mapping>
+   <Mapping destination="player title">
+      <Sources>
+         <Source source="player title"/>
+      </Sources>
+   </Mapping>
+   <Mapping destination="player affix">
+      <Sources>
+         <Source source="player affix"/>
+      </Sources>
+   </Mapping>
+   <Mapping destination="player birthTime">
+      <Sources>
+         <Source source="player birthTime"/>
+      </Sources>
+   </Mapping>
+   <Mapping destination="player genderCode value">
+      <Sources>
+         <Source source="player genderCode"/>
+      </Sources>
+   </Mapping>   
+   <Mapping destination="player ids type">
+      <Sources>
+         <Source source="player id type"/>
+      </Sources>
+   </Mapping>
+   <Mapping destination="player ids id">
+      <Sources>
+         <Source source="player id id"/>
+      </Sources>
+   </Mapping>
+   <Mapping destination="player addrs type useCodes code">
+      <Sources>
+         <Source name="type" source="player addr useCode"/>
+      </Sources>
+   </Mapping>
+   <Mapping destination="player addrs address1">
+      <Sources>
+         <Source source="player addr address1"/>
+      </Sources>
+   </Mapping>
+   <Mapping destination="player addrs address2">
+      <Sources>
+         <Source source="player addr address2"/>
+      </Sources>
+   </Mapping>
+   <Mapping destination="player addrs city">
+      <Sources>
+         <Source source="player addr city"/>
+      </Sources>
+   </Mapping>
+   <Mapping destination="player addrs state">
+      <Sources>
+         <Source source="player addr state"/>
+      </Sources>
+   </Mapping>
+   <Mapping destination="player addrs country">
+      <Sources>
+         <Source source="player addr country"/>
+      </Sources>
+   </Mapping>
+   <Mapping destination="player addrs zip">
+      <Sources>
+         <Source source="player addr zip"/>
+      </Sources>
+   </Mapping>
+   <Mapping destination="player telcoms type useCodes code" name="HP">
+      <Sources>
+         <Source source="player telcom useCode"/>
+      </Sources>
+   </Mapping>
+   <Mapping destination="player telcoms address">
+      <Sources>
+         <Source source="player telcom address"/>
+      </Sources>
+   </Mapping>
+</Mappings>
+</Transformation>

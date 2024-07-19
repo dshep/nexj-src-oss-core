@@ -1,0 +1,53 @@
+<Class>
+   <Attributes>
+      <Attribute collection="false" name="patient" required="true" reverse="participations" static="false" type="Patient"/>
+      <Attribute description="Added for JUnit test testQueryIMState" name="patientFullName" type="string" value="(@ patient fullName)"/>
+      <Attribute collection="false" name="visit" required="true" reverse="participants" static="false" type="Visit"/>
+   </Attributes>
+   <Events>
+      <Event args="patient visit" name="createWithChildren" static="true" variables="participation" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(set! participation 
+   (VisitParticipation'new (: patient patient) (: visit visit))
+)
+
+(logger'debug "New participation" participation)
+
+(let ((patient (participation'patient)))
+   (logger'debug "Participation's patient" patient)
+   (unless (null? patient)
+      (let ((newP (Patient'new (: lastName "newP") (: firstName "newP"))))
+         ((patient'children)'add newP)
+         (logger'debug "Patient's children:" (patient'children))
+      )
+   )
+)
+
+participation]]></Action>
+         </Actions>
+      </Event>
+      <Event name="create" visibility="public">
+         <Actions>
+            <Action condition="(not (null? (@ visit)))" name="updateDenorm" type="before"><![CDATA[((@ visit)'triggerLightVisitParticipants)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="delete" visibility="public">
+         <Actions>
+            <Action name="updateDenorm" type="before"><![CDATA[((@ visit)'triggerLightVisitParticipants)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="update" visibility="public">
+         <Actions>
+            <Action condition="(or (this'isUpdated 'visit) (this'isUpdated 'patient))" name="updateDenorm" type="before"><![CDATA[((@ visit)'triggerLightVisitParticipants)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.VisitParticipation">
+         <AttributeMappings>
+            <AttributeMapping name="patient" sourceKey="VisitParticipation.FK1"/>
+            <AttributeMapping name="visit" sourceKey="VisitParticipation.FK2"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

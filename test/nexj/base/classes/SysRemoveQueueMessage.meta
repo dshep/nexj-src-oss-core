@@ -1,0 +1,42 @@
+<Class aspects="!LOCKING" base="SysMessage">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;RQMSG&quot;"/>
+   </Attributes>
+   <Events>
+      <Event name="receive">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define queue (SysQueue'getQueue (@ body queue)))
+
+(if ((SysMessage'read '() `(= (@ queue) ,queue) '() 1 0 #f)'empty)
+   (queue'hardDelete)
+   (begin
+      (this'resendRequired #t)
+      (this'delay
+         (if (= (this'delay) 0)
+            1
+            (* (this'delay) 2)
+         )
+      )
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="queue" description="Creates an instance of SysRemoveQueueMessage that when received will remove the queue." name="createRemoveQueue" static="true">
+         <Arguments>
+            <Argument description="The queue to remove." name="queue" required="true" type="SysObjectQueue"/>
+         </Arguments>
+         <Result description="An instance of SysRemoveQueueMessage that when received will cancel msgs and remove the queue" type="SysRemoveQueueMessage"/>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(SysRemoveQueueMessage'new (: name (string-append "Remove SysObjectQueue " (queue'name)))
+   (: body
+      (message
+         (: queue (queue'name))
+      )
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

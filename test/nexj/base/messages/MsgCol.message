@@ -1,0 +1,22 @@
+<Message>
+   <Parts>
+      <Message name="a">
+         <Parts>
+            <Value name="s" type="string"/>
+            <Value name="n" type="integer"/>
+         </Parts>
+      </Message>
+      <Message name="b">
+         <Parts>
+            <Value name="s" type="string"/>
+            <Value name="n" type="integer"/>
+         </Parts>
+      </Message>
+      <Message maxCount="0" name="c">
+         <Parts>
+            <Value name="s" type="string"/>
+            <Value name="n" type="integer"/>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

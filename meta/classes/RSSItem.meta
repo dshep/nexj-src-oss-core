@@ -1,0 +1,16 @@
+<Class>
+   <Attributes>
+      <Attribute description="The title of the item." name="title" type="string"/>
+      <Attribute description="The URL of the item." name="link" type="string"/>
+      <Attribute description="The item synopsis." name="description" type="string"/>
+      <Attribute description="Email address of the author of the item." name="author" type="string"/>
+      <Attribute collection="true" description="Includes the item in one or more categories." name="categories" type="RSSCategory"/>
+      <Attribute description="URL of a page for comments relating to the item." name="comments" type="string"/>
+      <Attribute name="channel" reverse="items" type="RSSChannel"/>
+      <Attribute description="Describes a media object that is attached to the item.&#10;" name="enclosure" type="RSSEnclosure"/>
+      <Attribute name="isPermalink" type="boolean"/>
+      <Attribute name="guidValue" type="string"/>
+      <Attribute description="Indicates when the item was published." name="pubDate" type="timestamp"/>
+      <Attribute description="The RSS channel that the item came from." name="sourceURL" type="string"/>
+   </Attributes>
+</Class>

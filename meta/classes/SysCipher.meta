@@ -1,0 +1,14 @@
+<Class description="Object to allow hooking into the cipher API" visibility="protected">
+   <Events>
+      <Event args="data" description="This method returns the Binary data decripted with global data password" name="decrypt" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCipher.decrypt" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="data" description="This method returns the Binary data encripted with global data password" name="encrypt" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCipher.encrypt" name="main" type="main"/>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

@@ -1,0 +1,19 @@
+<Connections description="MS SQL Server JUnit test environment">
+   <DataSourceConnections>
+      <RelationalDatabaseConnection adapter="MySQL" dataSource="DefaultRelationalDatabase" database="test" host="tor-sv-mysql" password="test" port="3306" user="test"/>
+      <RelationalDatabaseConnection adapter="MySQL" dataSource="ExternalRelationalDatabase" database="test" host="tor-sv-mysql" password="test" port="3306" user="test"/>
+      <!--Parameters here are placeholders, to be modified by the unit test code-->
+      <FileStorageConnection adapter="Generic" dataSource="TestFilePersistenceDataSource"
+         description="File persistence adapter testing"
+         dataDirectory="data"
+         temporaryDirectory="tmp"
+         journalDirectory="journal"/>
+   </DataSourceConnections>
+   <ChannelConnections>
+      <MessageQueueConnection channel="ErrorQueue" user="mq" password="mqpass"/>
+      <MailConnection channel="Mail"
+         user="mailtest" password="mail123pass" from="mailtest@nexjsystems.com"
+         inProtocol="pop3" inHost="192.168.25.1" inEncryption="TLS"
+         outProtocol="smtp" outHost="192.168.25.1"/>
+   </ChannelConnections>
+</Connections>

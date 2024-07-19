@@ -1,0 +1,12 @@
+<Message base="XML_LocalPrice" format="XML">
+   <XMLMapping node="internationalPrice"/>
+   <Parts>
+      <Value minCount="1" name="currency" type="string">
+         <XMLMapping type="attribute"/>
+         <Enumerations>
+            <Enumeration description="UK Pound" value="GBP"/>
+            <Enumeration description="Chinese Yuan (Renminbi)" value="CNY"/>
+         </Enumerations>
+      </Value>
+   </Parts>
+</Message>

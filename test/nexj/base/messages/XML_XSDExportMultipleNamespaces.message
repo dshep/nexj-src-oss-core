@@ -1,0 +1,34 @@
+<Message format="XML" response="XML_XSDExportMultipleNamespaces">
+   <XMLMapping action="http://www.nexj.com/soap/action/MultipleNamespacesAction" namespace="test1" node="top" operation="MultipleNamespacesOp" uri="http://www.nexj.com/schema/test/one"/>
+   <Parts>
+      <Message minCount="1" name="comp">
+         <XMLMapping namespace="test2" node="comp" uri="http://www.nexj.com/schema/test/two"/>
+         <Parts>
+            <Value minCount="1" name="pns2" type="string">
+               <XMLMapping namespace="test2" node="pns2"/>
+            </Value>
+            <Value minCount="1" name="pns1" type="string">
+               <XMLMapping namespace="test1" node="pns1"/>
+            </Value>
+            <Value minCount="1" name="nons1" type="string">
+               <XMLMapping node="nons1"/>
+            </Value>
+            <Value minCount="1" name="pns3" type="string">
+               <XMLMapping namespace="test3" node="pns3" uri="http://www.nexj.com/schema/test/three"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Value minCount="1" name="pns2" type="string">
+         <XMLMapping namespace="test2" node="pns2"/>
+      </Value>
+      <Value minCount="1" name="p2ns1" type="string">
+         <XMLMapping namespace="test1" node="p2ns1"/>
+      </Value>
+      <Value minCount="1" name="nons2" type="string">
+         <XMLMapping node="nons2"/>
+      </Value>
+      <Value minCount="1" name="pns3" type="string">
+         <XMLMapping namespace="test3" node="pns3"/>
+      </Value>
+   </Parts>
+</Message>

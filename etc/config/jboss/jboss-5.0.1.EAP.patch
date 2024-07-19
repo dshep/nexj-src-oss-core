@@ -1,0 +1,138 @@
+diff -durN jboss-5.0.1.EAP-original/server/all/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml jboss-5.0.1.EAP-patched/server/all/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml
+--- jboss-5.0.1.EAP-original/server/all/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml   2010-09-14 20:29:14.000000000 -0400
++++ jboss-5.0.1.EAP-patched/server/all/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml 2011-04-27 16:10:34.565089100 -0400
+@@ -963,6 +963,7 @@
+ 
+      <xsl:variable name="portAJP" select="$port - 71"/>
+      <xsl:variable name="portHttps" select="$port + 363"/>
++   <xsl:variable name="portAJPHttps" select="$portHttps - 8000"/>
+ 
+      <xsl:template match="/">
+        <xsl:apply-templates/>
+@@ -978,9 +979,12 @@
+                <xsl:when test="(name() = 'port' and . = '8009')">
+                   <xsl:attribute name="port"><xsl:value-of select="$portAJP" /></xsl:attribute>
+                </xsl:when>
+-               <xsl:when test="(name() = 'redirectPort')">
++               <xsl:when test="(name() = 'redirectPort' and . = '8443')">
+                   <xsl:attribute name="redirectPort"><xsl:value-of select="$portHttps" /></xsl:attribute>
+                </xsl:when>
++           <xsl:when test="(name() = 'redirectPort' and . = '443')">
++                  <xsl:attribute name="redirectPort"><xsl:value-of select="$portAJPHttps" /></xsl:attribute>
++               </xsl:when>
+                <xsl:when test="(name() = 'port' and . = '8443')">
+                   <xsl:attribute name="port"><xsl:value-of select="$portHttps" /></xsl:attribute>
+                </xsl:when>
+diff -durN jboss-5.0.1.EAP-original/server/all/conf/jboss-service.xml jboss-5.0.1.EAP-patched/server/all/conf/jboss-service.xml
+--- jboss-5.0.1.EAP-original/server/all/conf/jboss-service.xml 2010-09-14 20:29:14.000000000 -0400
++++ jboss-5.0.1.EAP-patched/server/all/conf/jboss-service.xml  2011-04-27 16:07:09.259560600 -0400
+@@ -158,7 +158,7 @@
+       <!--  The address to use for the host portion of the RMI codebase URL -->
+       <attribute name="Host">${java.rmi.server.hostname}</attribute>
+       <!-- Should non-EJB .class files be downloadable -->
+-      <attribute name="DownloadServerClasses">true</attribute>
++      <attribute name="DownloadServerClasses">false</attribute>
+       <!-- Should resources other than .class files be downloadable. Both
+          DownloadServerClasses and DownloadResources must be true for resources
+          to be downloadable. This is false by default because its generally a
+diff -durN jboss-5.0.1.EAP-original/server/all/deploy/jbossweb.sar/server.xml jboss-5.0.1.EAP-patched/server/all/deploy/jbossweb.sar/server.xml
+--- jboss-5.0.1.EAP-original/server/all/deploy/jbossweb.sar/server.xml  2010-09-14 20:29:28.000000000 -0400
++++ jboss-5.0.1.EAP-patched/server/all/deploy/jbossweb.sar/server.xml   2011-04-27 16:07:09.265561200 -0400
+@@ -21,13 +21,12 @@
+       <Connector protocol="AJP/1.3" port="8009" address="${jboss.bind.address}"
+          redirectPort="8443" />
+ 
+-      <!-- SSL/TLS Connector configuration using the admin devl guide keystore
++      <!-- SSL/TLS Connector configuration using the admin devl guide keystore -->
+       <Connector protocol="HTTP/1.1" SSLEnabled="true" 
+            port="8443" address="${jboss.bind.address}"
+            scheme="https" secure="true" clientAuth="false" 
+-           keystoreFile="${jboss.server.home.dir}/conf/chap8.keystore"
+-           keystorePass="rmi+ssl" sslProtocol = "TLS" />
+-      -->
++           keystoreFile="${jboss.server.home.dir}/conf/ssl.keystore"
++           keystorePass="keypass" sslProtocol = "TLS" />
+ 
+       <Engine name="jboss.web" defaultHost="localhost">
+ 
+diff -durN jboss-5.0.1.EAP-original/server/all/deploy/jmx-console.war/WEB-INF/web.xml jboss-5.0.1.EAP-patched/server/all/deploy/jmx-console.war/WEB-INF/web.xml
+--- jboss-5.0.1.EAP-original/server/all/deploy/jmx-console.war/WEB-INF/web.xml   2011-04-25 11:32:56.000000000 -0400
++++ jboss-5.0.1.EAP-patched/server/all/deploy/jmx-console.war/WEB-INF/web.xml 2012-01-10 11:18:08.946737500 -0400
+@@ -109,6 +109,9 @@
+      <auth-constraint>
+        <role-name>JBossAdmin</role-name>
+      </auth-constraint>
++   <user-data-constraint>
++       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
++     </user-data-constraint>
+    </security-constraint>
+ 
+    <login-config>
+diff -durN jboss-5.0.1.EAP-original/server/all/deploy/jmx-invoker-service.xml jboss-5.0.1.EAP-patched/server/all/deploy/jmx-invoker-service.xml
+--- jboss-5.0.1.EAP-original/server/all/deploy/jmx-invoker-service.xml  2011-04-25 10:33:02.000000000 -0400
++++ jboss-5.0.1.EAP-patched/server/all/deploy/jmx-invoker-service.xml   2011-04-27 16:07:09.281562800 -0400
+@@ -114,6 +114,8 @@
+                   <!-- Interceptor to require authenticated users -->
+                   <interceptor code="org.jboss.jmx.connector.invoker.AuthenticationInterceptor"
+                      securityDomain="java:/jaas/jmx-console"/>
++                  <interceptor code="org.jboss.jmx.connector.invoker.AuthorizationInterceptor"
++                     authorizingClass="org.jboss.jmx.connector.invoker.RolesAuthorization"/>
+                   <!-- Interceptor that deals with non-serializable results -->
+                   <interceptor code="org.jboss.jmx.connector.invoker.SerializableInterceptor"
+                      policyClass="StripModelMBeanInfoPolicy"/>
+diff -durN jboss-5.0.1.EAP-original/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/web.xml jboss-5.0.1.EAP-patched/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/web.xml
+--- jboss-5.0.1.EAP-original/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/web.xml   2011-04-25 11:32:52.000000000 -0400
++++ jboss-5.0.1.EAP-patched/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/web.xml 2012-01-10 11:19:40.386737500 -0400
+@@ -352,6 +352,9 @@
+    <auth-constraint>
+    <role-name>JBossAdmin</role-name>
+    </auth-constraint>
++   <user-data-constraint>
++      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
++   </user-data-constraint>
+    </security-constraint>
+ 
+    <login-config>
+diff -durN jboss-5.0.1.EAP-original/server/all/deploy/messaging/messaging-jboss-beans.xml jboss-5.0.1.EAP-patched/server/all/deploy/messaging/messaging-jboss-beans.xml
+--- jboss-5.0.1.EAP-original/server/all/deploy/messaging/messaging-jboss-beans.xml  2011-04-25 10:32:56.000000000 -0400
++++ jboss-5.0.1.EAP-patched/server/all/deploy/messaging/messaging-jboss-beans.xml   2011-04-27 16:07:09.289563600 -0400
+@@ -10,7 +10,6 @@
+    <application-policy xmlns="urn:jboss:security-beans:1.0" name="messaging">
+       <authentication>
+          <login-module code="org.jboss.security.auth.spi.DatabaseServerLoginModule" flag="required">
+-            <module-option name="unauthenticatedIdentity">guest</module-option>
+             <module-option name="dsJndiName">java:/DefaultDS</module-option>
+             <module-option name="principalsQuery">SELECT PASSWD FROM JBM_USER WHERE USER_ID=?</module-option>
+             <module-option name="rolesQuery">SELECT ROLE_ID, 'Roles' FROM JBM_ROLE WHERE USER_ID=?</module-option>
+@@ -19,15 +18,7 @@
+    </application-policy>
+ 
+    <bean name="SecurityStore" class="org.jboss.jms.server.jbosssx.JBossASSecurityMetadataStore">
+-      <!-- default security configuration -->
+-      <property name="defaultSecurityConfig">
+-         <![CDATA[
+-            <security>
+-               <role name="guest" read="true" write="true" create="true"/>
+-            </security>
+-         ]]>
+-      </property>
+-      <property name="suckerPassword">CHANGE ME!!</property>
++      <property name="suckerPassword">chang3d</property>
+       <property name="securityDomain">messaging</property>
+       <property name="securityManagement"><inject bean="JNDIBasedSecurityManagement"/></property>
+       <!-- @JMX annotation to export the management view of this bean -->
+diff -durN jboss-5.0.1.EAP-original/server/all/deploy/messaging/messaging-service.xml jboss-5.0.1.EAP-patched/server/all/deploy/messaging/messaging-service.xml
+--- jboss-5.0.1.EAP-original/server/all/deploy/messaging/messaging-service.xml   2010-09-14 20:29:18.000000000 -0400
++++ jboss-5.0.1.EAP-patched/server/all/deploy/messaging/messaging-service.xml 2011-04-27 16:07:09.307565400 -0400
+@@ -85,9 +85,8 @@
+       <attribute name="EnableMessageCounters">false</attribute>
+       
+       <!-- The password used by the message sucker connections to create connections.
+-           THIS SHOULD ALWAYS BE CHANGED AT INSTALL TIME TO SECURE SYSTEM
+-      <attribute name="SuckerPassword"></attribute>
+-      -->
++           THIS SHOULD ALWAYS BE CHANGED AT INSTALL TIME TO SECURE SYSTEM -->
++      <attribute name="SuckerPassword">9ed8a1bb552efa1</attribute>
+ 
+       <!-- The name of the server aspects configuration resource
+       <attribute name="ServerAopConfig">aop/jboss-aop-messaging-server.xml</attribute>

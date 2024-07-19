@@ -1,0 +1,17 @@
+<Message format="XML">
+   <XMLMapping envelope="soap" namespace="x" node="Record" uri="http://www.nexj.com/ns/example/x"/>
+   <Parts>
+      <Value minCount="1" name="description" type="string">
+         <XMLMapping node="description"/>
+      </Value>
+      <Value minCount="1" name="data" type="binary">
+         <XMLMapping node="data"/>
+      </Value>
+      <Value name="dummy_for_namespace" type="string">
+         <XMLMapping namespace="wsa" node="DummyForNamespace" uri="http://schemas.xmlsoap.org/ws/2004/08/addressing"/>
+      </Value>
+      <Value name="headers" type="string">
+         <XMLMapping namespace="soap" node="Header"/>
+      </Value>
+   </Parts>
+</Message>

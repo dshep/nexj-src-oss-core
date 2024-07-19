@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  targetNamespace="http://namespaceOne"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:ns3="http://namespaceThree"
+  elementFormDefault="qualified"
+  attributeFormDefault="qualified">
+	
+  <import namespace="http://namespaceThree" schemaLocation="multipleImport_schema3part1.xsd"/>
+  
+  <element name="itemOne" type="ns3:TypeOne" />
+
+</schema>

@@ -1,0 +1,7 @@
+<Message format="XML">
+   <XMLMapping namespace="is1" node="schema1" resource="(http://www.nexjsystems.com/ns/test/inherit/schema1.xsd xsds/inherit_schema1.xsd) (http://www.nexjsystems.com/ns/test/inherit/schema3.xsd xsds/inherit_schema3.xsd)" schema="http://www.nexjsystems.com/ns/test/inherit/schema1.xsd" uri="urn:com.nexjsystems:ns:test:inherit:schema1" xsdtype="Schema1Type"/>
+   <Parts>
+      <Value name="a" type="string"/>
+      <Value name="x" type="string"/>
+   </Parts>
+</Message>

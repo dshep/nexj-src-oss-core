@@ -1,0 +1,16 @@
+<Class base="Principal" description="User Base Class - provides hierarchy model to allow USER - TYPE - SYSTEM rollup -- base for user and usertemplate">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string"/>
+      <Attribute name="parentTemplate" reverse="members" type="UserTemplate"/>
+   </Attributes>
+   <Events>
+      <Event name="test" static="true"/>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="Principal">
+         <AttributeMappings>
+            <AttributeMapping destinationKey="Principal.PK" name="parentTemplate" sourceKey="UserBase.FK_ParentTemplate"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

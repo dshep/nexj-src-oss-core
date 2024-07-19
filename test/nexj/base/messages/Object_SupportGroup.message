@@ -1,0 +1,13 @@
+<Message format="Object">
+   <ObjectMapping class="SupportGroup"/>
+   <Parts>
+      <Value name="name" type="string"/>
+      <Message maxCount="0" name="participants">
+         <ObjectMapping class="Doctor" local="false"/>
+         <Parts>
+            <Value name="lastName" type="string"/>
+            <Value name="licenseNumber" type="string"/>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

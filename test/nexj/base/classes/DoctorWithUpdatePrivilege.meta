@@ -1,0 +1,16 @@
+<Class base="Doctor">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;DWP&quot;"/>
+   </Attributes>
+   <Events>
+      <Event name="update" privilege="updateDoctor" visibility="public"/>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="test.Contact">
+         <AttributeMappings>
+            <AttributeMapping column="licenseNumber" name="licenseNumber"/>
+            <AttributeMapping destinationKey="Contact.FK6" name="patients"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

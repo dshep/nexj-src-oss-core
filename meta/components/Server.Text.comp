@@ -1,0 +1,6 @@
+<Component type="nexj.core.rpc.text.TextServer" activation="context"
+   description="The generic text stream request server">
+   <Properties>
+      <Property name="server">Server.Generic</Property>
+   </Properties>
+</Component>

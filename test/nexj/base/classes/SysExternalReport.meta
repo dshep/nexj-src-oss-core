@@ -1,0 +1,41 @@
+<Class description="Manages externally defined reports">
+   <Attributes>
+      <Attribute description="Class code" name="classCode" required="true" type="string"/>
+      <Attribute description="Url of report" name="url" type="string"/>
+      <Attribute description="Report name" name="name" required="true" type="string"/>
+      <Attribute description="Original report file name" name="fileName" type="string"/>
+      <Attribute description="Report source. Maybe XML format" name="data" type="binary"/>
+      <Attribute description="Report source data mime type" name="sourceMime" type="string"/>
+      <Attribute description="Compiled report" name="binaryData" type="binary"/>
+      <Attribute description="Report design preview data" name="previewMimeData" type="binary"/>
+      <Attribute description="Report design preview data mime type" name="previewMime" type="string"/>
+      <Attribute description="Optimistic locking counter" initializer="0" name="locking" required="true" type="integer"/>
+   </Attributes>
+   <Events>
+      <Event name="compile">
+         <Actions>
+            <Action description="Compiles report source and stores it in the binaryData" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="command" name="generate" visibility="public">
+         <Actions>
+            <Action description="Runs a report based on the command object, and returns a generated object." name="main" type="main"/>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping classCodeAttribute="classCode" dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="ExternalReport">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name"/>
+            <AttributeMapping column="classCode" name="classCode"/>
+            <AttributeMapping column="fileName" name="fileName"/>
+            <AttributeMapping column="sourceData" name="data"/>
+            <AttributeMapping column="sourceMime" name="sourceMime"/>
+            <AttributeMapping column="binaryData" name="binaryData"/>
+            <AttributeMapping column="previewData" name="previewMimeData"/>
+            <AttributeMapping column="previewMime" name="previewMime"/>
+            <AttributeMapping column="locking" name="locking"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

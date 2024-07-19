@@ -1,0 +1,16 @@
+<Message aggregation="random" description="Raw Mail Message Content&#13;&#10;Used as the array of values for Mail.message-&gt;body or MailPart.message-&gt;body">
+   <Parts>
+      <Message aggregation="random" description="Mail custom headers&#13;&#10;TransferObject of key-&gt;value" lax="true" name="headers">
+         <Parts>
+            <Value name="content-id" type="string"/>
+            <Value name="content-md5" type="string"/>
+            <Value name="content-description" type="string"/>
+            <Value name="content-disposition" type="string"/>
+            <Value name="content-transfer-encoding" type="string"/>
+            <Value name="content-type" type="string"/>
+         </Parts>
+      </Message>
+      <Value description="Mail part filename" name="filename" type="string"/>
+      <Value description="Mail body" name="body" type="any"/>
+   </Parts>
+</Message>

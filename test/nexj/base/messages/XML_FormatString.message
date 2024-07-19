@@ -1,0 +1,33 @@
+<Message format="XML">
+   <XMLMapping node="format"/>
+   <Parts>
+      <Value name="normalDT" type="timestamp">
+         <XMLMapping subtype="dateTime"/>
+      </Value>
+      <Value name="formatDT" type="timestamp">
+         <XMLMapping format="yyyyMMddHHmmss.SSSZ"/>
+      </Value>
+      <Value name="formatLocaleDT" type="timestamp">
+         <XMLMapping format="fullDate"/>
+      </Value>
+      <Value maxCount="0" name="normalInteger" type="integer"/>
+      <Value maxCount="0" name="formatInteger" type="integer">
+         <XMLMapping format="0;(0)"/>
+      </Value>
+      <Value maxCount="0" name="normalDouble" type="double"/>
+      <Value maxCount="0" name="formatDouble" type="double">
+         <XMLMapping format="#,##0.00;(#,##0.00)"/>
+      </Value>
+      <Value name="normalBool" type="boolean"/>
+      <Value name="formatBool" type="boolean">
+         <XMLMapping format="Yes,Oui;No,Non"/>
+      </Value>
+      <Value name="localizedBool" type="boolean">
+         <XMLMapping format="ids.format.longBoolean"/>
+      </Value>
+      <Value name="normalDecimal" type="decimal"/>
+      <Value name="formatDecimal" type="decimal">
+         <XMLMapping format="0.00000000000000000"/>
+      </Value>
+   </Parts>
+</Message>

@@ -1,0 +1,194 @@
+<Class aspects="LOCKING" description="The body of a SysMessage.  SysMessageBody has overridable behaviour defining how the message is to be processed and accounted for." nameAttribute="name">
+   <Attributes>
+      <Attribute description="classCode" name="classCode" required="true" type="string" value="&quot;MSG&quot;"/>
+      <Attribute description="the name of the message, for identification in the admin UI." name="name" type="string"/>
+      <Attribute description="denormalized queue priority." initializer="(@ LAST_PRIORITY)" name="priority" required="true" type="integer"/>
+      <Attribute description="time at which this message is to be delivered." initializer="(now)" name="deliveryTime" type="timestamp" updatePrivilege="SysObjectQueueDispatch"/>
+      <Attribute description="ordinal for breaking ties in deliveryTime, required to ensure fixed delivery order when queue concurrency is 1." name="ordinal" type="integer"/>
+      <Attribute description="the state of the message." initializer="(SysMessageState'get'NEW)" name="state" required="true" type="SysMessageState"/>
+      <Attribute description="the message that this follows." name="preceding" type="SysMessage"/>
+      <Attribute description="the message that this precedes." name="following" type="SysMessage"/>
+      <Attribute description="the queue to which this message is to be delivered." name="queue" type="SysObjectQueue"/>
+      <Attribute description="the queue to which this message was originally sent." name="originalQueue" type="SysObjectQueue"/>
+      <Attribute description="id of the resource on which this is waiting." name="resource" type="binary" updatePrivilege="SysObjectQueueDispatch" visibility="protected"/>
+      <Attribute description="message data." name="body" type="any" value="(@ values body)" visibility="protected"/>
+      <Attribute description="serialized property values." name="values" type="any" value="(let ((valueMap (serializable-property-map (nexj.core.runtime.GenericSerializablePropertyMap'RAW))))&#10;   (unless (null? (@ serializedValues))&#10;      (valueMap':deserialize  (@ serializedValues) (invocation-context))&#10;   )&#10;   valueMap&#10;)" visibility="protected"/>
+      <Attribute description="serialized message data." name="serializedValues" type="binary" visibility="protected"/>
+      <Attribute description="true after message is first dispatched." initializer="#f" name="sent" required="true" type="boolean"/>
+      <Attribute description="true if the message has acquired any resources returned by &quot;getResources&quot;, or if the message is processing.  If resourceHeld is true, the message must be recovered following any server failure." initializer="#f" name="resourceHeld" required="true" type="boolean"/>
+      <Attribute description="number of previous failed deliveries." initializer="0" name="errorCount" required="true" type="integer"/>
+      <Attribute description="name of the user under which this message will be delivered." name="user" type="string" updatePrivilege="SysMessageManage"/>
+      <Attribute description="flag set by receive method.  Set to true to commit transaction upon return, false to rollback." name="commitRequired" type="boolean" visibility="protected"/>
+      <Attribute description="flag set by receive method.  Set to true to resend this upon return, false to delete it." name="resendRequired" type="boolean" visibility="protected"/>
+      <Attribute description="delay set by receive method.  If resend is true, the number of milliseconds before redelivering this." name="delay" type="long" visibility="protected"/>
+      <Attribute description="queue set by receive method.  If resend is true, the queue to which to send this." name="resendQueue" type="SysObjectQueue" visibility="protected"/>
+      <Attribute description="true if the state of the message is PROCESSING." name="isProcessing" required="true" type="boolean" value="(= (@ state) (SysMessageState'get'PROCESSING))"/>
+      <Attribute cached="false" dependency="updateEnabled" description="true if any user other than the dispatcher can update this." name="dispatcherUnlocked" readOnly="true" required="true" type="boolean" value="(or (and (this'isNew) (not (this'old'sent))) (@ updateEnabled) (in-privilege? &quot;SysObjectQueueDispatch&quot;))"/>
+      <Attribute description="true if the dispatcher has enabled updates to this." name="updateEnabled" required="true" type="boolean" updatePrivilege="SysObjectQueueDispatch" value="#f"/>
+      <Attribute description="priority of a message for which the deliveryTime has not yet expired." initializer="(java.lang.Integer'MAX_VALUE)" name="LAST_PRIORITY" readOnly="true" required="true" static="true" type="integer"/>
+   </Attributes>
+   <Events>
+      <Event args="values" description="Wrap in privileged block, so that server code can invoke create." name="new" static="true" vararg="true">
+         <Actions>
+            <Action name="around" type="around"><![CDATA[(begin-privileged
+   (call-next)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Overrides the privileges." name="create" privilege="SysMessageManage" visibility="public">
+         <Actions/>
+      </Event>
+      <Event access="dispatcherUnlocked" description="Overrides the privileges." name="update" visibility="public">
+         <Actions/>
+      </Event>
+      <Event description="set serialized values." name="commit">
+         <Actions>
+            <Action condition="(or (this'isNew) (this'isUpdated'body))" description="copy body to values" name="setValues" type="before"><![CDATA[(when (null? (@ values))
+   (this'values (serializable-property-map))
+)
+((this'values)'body (@ body))]]></Action>
+            <Action condition="(and (this'isNew) (not (or (= (@ state) (SysMessageState'get'NEW)) (= (@ state) (SysMessageState'get'DISPATCHING)))))" description="If the message is new, verify that its state is either NEW or DISPATCHING.  Other states could break the dispatcher." name="validateState" type="before"><![CDATA[(error "err.rpc.queueing.invalidState")]]></Action>
+         </Actions>
+      </Event>
+      <Event args="attributes where orderBy count offset xlock" description="Overrides the privileges.  Use begin-privileged to read in server code." name="read" privilege="SysMessageView" static="true" visibility="public">
+         <Actions/>
+      </Event>
+      <Event description="Invoked to delete the instance. The main action is implemented by the framework.&#13;&#10;@ret ()  &#13;&#10;@example&#13;&#10;(myInstance'delete)&#13;&#10;" name="delete" privilege="SysObjectQueueDispatch" transaction="required" visibility="public">
+         <Actions/>
+      </Event>
+      <Event description="Cancels delivery of this message." name="cancel" privilege="SysMessageManage" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[((@ queue)'cancel this)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="queue" description="Send this message to queue." name="send" privilege="SysMessageManage" visibility="public">
+         <Arguments>
+            <Argument name="queue" required="true" type="SysObjectQueue"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(queue'send this)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="overridable, called on dispatcher thread: Return list of semaphore ( resource . count ) pairs which must be acquired prior to delivery.  Resource must be binary, count must be an integer." name="getSemaphores">
+         <Result description="a (resource . count) pair: resource is a binary, count is an integer" type="any"/>
+         <Actions>
+            <Action name="main" type="main"><![CDATA['()
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="overridable, called by receiver thread: process message." name="receive">
+         <Actions>
+            <Action name="main" type="main"><![CDATA['()
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="exception" description="overridable: called when &quot;receive&quot; transaction unexpectedly rolls-back, or when recovering from system crash.  Exception is the error which caused the  roll-back, or null following system crash." name="fail">
+         <Arguments>
+            <Argument description="the java exception that caused this failure, or null" name="exception" required="true" type="any"/>
+         </Arguments>
+         <Actions>
+            <Action name="setDefault" type="before"><![CDATA[(this'commitRequired #f)
+(this'resendRequired #t)
+(this'delay 0)
+(this'resendQueue (@ queue))
+(this'errorCount (+ 1 (this'errorCount)))
+(unless 
+   (or 
+      (null? (@ queue errorCount))
+      (= 0 (@ queue errorCount))
+      (< (@ errorCount) (@ queue errorCount))
+   )
+   (if (null? (@ queue errorQueue))
+      (this'resendRequired #f)
+      (begin
+         (this'resendQueue (@ queue errorQueue))
+         (this'errorCount 0)
+      )
+   )
+)]]></Action>
+            <Action name="main" type="main"><![CDATA[(logger'debug "Message delivery failed:" (@))
+(cond
+   ((not (@ resendRequired))
+      (logger'error "Dropping failed message with id" (@ :oid) exception)
+   )
+   ((= (@ queue) (@ resendQueue))
+      (logger'debug "Resubmitting failed message with id" (@ :oid) exception)
+   )
+   (else
+      (logger'warn "Forwarding failed message with id" (@ :oid) "to queue" (@ resendQueue name) exception)
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="overridable, called on dispatcher thread: called when message is sent to a queue." name="onSend">
+         <Actions>
+            <Action name="jmxQueueCounter" type="before"><![CDATA[(SysStat'incrCounter (@ queue statPath) "Persistent Sent Count" 1)
+]]></Action>
+            <Action name="main" type="main"><![CDATA['()]]></Action>
+         </Actions>
+      </Event>
+      <Event description="overridable, called on dispatcher thread: called before message is delivered to the queue." name="onDelivery">
+         <Actions>
+            <Action name="main" type="main"><![CDATA['()
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="overridable, called on dispatcher thread: called after receive returns and commit succeeds." name="onCompletion">
+         <Actions>
+            <Action name="jmxQueueCounter" type="before"><![CDATA[(SysStat'incrCounter (@ queue statPath) "Persistent Received Count" 1)
+]]></Action>
+            <Action name="main" type="main"><![CDATA['()
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="overridable, called on dispatcher thread: called after receive raises exception or returns and rolls back." name="onFailure">
+         <Actions>
+            <Action name="jmxQueueCounter" type="before"><![CDATA[(SysStat'incrCounter (@ queue statPath) "Persistent Failed Count" 1)
+]]></Action>
+            <Action name="main" type="main"><![CDATA['()
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="overridable, called on dispatcher thread: called before message is canceled." name="onCancel">
+         <Actions>
+            <Action name="jmxQueueCounter" type="before"><![CDATA[(SysStat'incrCounter (@ queue statPath) "Persistent Cancelled Count" 1)
+]]></Action>
+            <Action name="main" type="main"><![CDATA['()]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping classCodeAttribute="classCode" dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="Message">
+         <AttributeMappings>
+            <AttributeMapping column="classCode" name="classCode"/>
+            <AttributeMapping column="deliveryTime" name="deliveryTime"/>
+            <AttributeMapping column="errorCount" name="errorCount"/>
+            <AttributeMapping column="name" name="name"/>
+            <AttributeMapping destinationKey="Queue.PK" name="originalQueue" sourceKey="Message.FK_originalQueue"/>
+            <AttributeMapping destinationKey="Queue.PK" name="queue" sourceKey="Message.FK_queue"/>
+            <AttributeMapping column="rsrc" name="resource"/>
+            <AttributeMapping destinationKey="EnumDisplay.SK1" name="state" sourceKey="Message.FK_state"/>
+            <AttributeMapping column="usr" name="user"/>
+            <AttributeMapping column="serializedValues" name="serializedValues"/>
+            <AttributeMapping destinationKey="Message.PK" name="preceding" sourceKey="Message.FK_preceding"/>
+            <AttributeMapping destinationKey="Message.PK" name="following" sourceKey="Message.FK_following"/>
+            <AttributeMapping column="committed" name="commitRequired"/>
+            <AttributeMapping column="resent" name="resendRequired"/>
+            <AttributeMapping destinationKey="Queue.PK" name="resendQueue" sourceKey="Message.FK_resendQueue"/>
+            <AttributeMapping column="delay" name="delay"/>
+            <AttributeMapping column="resourceHeld" name="resourceHeld"/>
+            <AttributeMapping column="sent" name="sent"/>
+            <AttributeMapping column="priority" name="priority"/>
+            <AttributeMapping column="ordinal" name="ordinal"/>
+            <AttributeMapping column="locking" name="locking"/>
+         </AttributeMappings>
+         <Hook activation="singleton" type="nexj.core.persistence.sql.SQLStateSerializer">
+            <Properties>
+               <Property name="metaclass">SysMessage</Property>
+               <Property name="variablesAttribute">values</Property>
+               <Property name="serializedVariablesAttribute">serializedValues</Property>
+            </Properties>
+         </Hook>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

@@ -1,0 +1,26 @@
+<Message format="JSON">
+   <JSONMapping key="key1:values"/>
+   <Parts>
+      <Value name="timestamp" type="timestamp">
+         <JSONMapping format="yyyyMMddHHmmss.SSSZ" />
+      </Value>
+      <Value name="decimal" type="decimal">
+         <JSONMapping format="0.0000000000" />
+      </Value>
+      <Value name="double" type="double">
+         <JSONMapping format="#,##0.00;(#,##0.00)" />
+      </Value>
+      <Value name="float" type="float">
+         <JSONMapping format="#,##0.00;(#,##0.00)" />
+      </Value>
+      <Value name="integer" type="integer">
+         <JSONMapping format="0;(0)" />
+      </Value>
+      <Value name="long" type="long">
+         <JSONMapping format="0;(0)" />
+      </Value>
+      <Value name="boolean" type="boolean">
+         <JSONMapping format="T;F" />
+      </Value>
+   </Parts>
+</Message>

@@ -1,0 +1,75 @@
+<ClassModelCollection>
+   <ClassModel class="EnumType" hideAttributes="false" hideDerivations="false" hideDescription="true" hideEvents="false" iFilePath="meta/classes/EnumType.meta" visibleAttributes="description typeCode userQuickpickEnabled classification" visibleEvents="" x="243" y="150">
+      <DescriptionNoteAssociation h="-1" w="150" x="0" y="0"/>
+      <Association name="typeDisplayValues" srcAnchorAlignment="default" srcAnchorOffset="-1"/>
+   </ClassModel>
+   <ClassModel class="EnumCode" hideAttributes="false" hideDerivations="false" hideDescription="true" hideEvents="false" iFilePath="meta/classes/EnumCode.meta" visibleAttributes="hideable externalValue value behaveAsValue description classification displayOrder deleteable hasBehavior type displayUpdateable parent typeCode codeUpdateable children" visibleEvents="update:0" x="520" y="152">
+      <DescriptionNoteAssociation h="-1" w="150" x="0" y="0"/>
+      <Association name="type" srcAnchorAlignment="left" srcAnchorOffset="51"/>
+      <Association name="displayValues" srcAnchorAlignment="default" srcAnchorOffset="-1">
+         <Bendpoint x="724" y="383"/>
+         <Bendpoint x="724" y="514"/>
+      </Association>
+      <Association name="children" srcAnchorAlignment="default" srcAnchorOffset="-1">
+         <Bendpoint x="804" y="329"/>
+         <Bendpoint x="804" y="307"/>
+         <Bendpoint x="804" y="278"/>
+         <Bendpoint x="750" y="278"/>
+      </Association>
+      <Association name="display" srcAnchorAlignment="default" srcAnchorOffset="-1">
+         <Bendpoint x="565" y="663"/>
+      </Association>
+   </ClassModel>
+   <ClassModel class="EnumDisplay" hideAttributes="false" hideDerivations="false" hideDescription="true" hideEvents="false" iFilePath="meta/classes/EnumDisplay.meta" visibleAttributes="code" visibleEvents="" x="788" y="493">
+      <InheritanceAssociation>
+         <Bendpoint x="851" y="454"/>
+         <Bendpoint x="936" y="454"/>
+      </InheritanceAssociation>
+      <DescriptionNoteAssociation h="-1" w="150" x="0" y="0"/>
+   </ClassModel>
+   <ClassModel class="EnumBase" hideAttributes="false" hideDerivations="false" hideDescription="true" hideEvents="false" iFilePath="meta/classes/EnumBase.meta" visibleAttributes="isUnique" visibleEvents="findCaption:1 get:1 findBehaveAsValue:1 getBehaveAsInstances:1" x="954" y="492">
+      <InheritanceAssociation>
+         <Bendpoint x="1050" y="454"/>
+         <Bendpoint x="936" y="454"/>
+      </InheritanceAssociation>
+      <DescriptionNoteAssociation h="-1" w="150" x="0" y="0"/>
+   </ClassModel>
+   <ClassModel class="EnumTypeDisplay" hideAttributes="false" hideDerivations="false" hideDescription="true" hideEvents="false" iFilePath="meta/classes/EnumTypeDisplay.meta" visibleAttributes="description typeCode caption locale type" visibleEvents="" x="-22" y="141">
+      <DescriptionNoteAssociation h="-1" w="150" x="0" y="0"/>
+   </ClassModel>
+   <ClassModel class="EnumDisplayBase" hideAttributes="false" hideDerivations="false" hideDescription="true" hideEvents="false" iFilePath="meta/classes/EnumDisplayBase.meta" visibleAttributes="type code typeCode value locale caption shortCaption displayOrder behaveAsValue classification parent children name parentTypeCode parentValueCode externalValue isRuntimeEditable active" visibleEvents="create:0 update:0 delete:0" x="862" y="38">
+      <DescriptionNoteAssociation h="-1" w="150" x="0" y="0"/>
+      <Association name="type" srcAnchorAlignment="default" srcAnchorOffset="-1">
+         <Bendpoint x="381" y="92"/>
+      </Association>
+      <Association name="code" srcAnchorAlignment="default" srcAnchorOffset="-1"/>
+      <Association name="children" srcAnchorAlignment="default" srcAnchorOffset="-1">
+         <Bendpoint x="985" y="395"/>
+         <Bendpoint x="1090" y="395"/>
+         <Bendpoint x="1090" y="304"/>
+      </Association>
+   </ClassModel>
+   <ClassModel class="EnumDisplayLocalized" hideAttributes="false" hideDerivations="false" hideDescription="true" hideEvents="false" iFilePath="meta/classes/EnumDisplayLocalized.meta" visibleAttributes="" visibleEvents="" x="746" y="642">
+      <InheritanceAssociation/>
+      <DescriptionNoteAssociation h="-1" w="150" x="0" y="0"/>
+   </ClassModel>
+   <Notes>
+      <Note h="92" w="150" x="1045" y="625">
+         <Attachments>
+            <Attachment ref="EnumBase"/>
+         </Attachments>
+         <Text><![CDATA[Base class for all metadata enumerations.
+Classcode attribute set to typeCode.Class Caching turned on.]]></Text>
+      </Note>
+      <Note h="70" w="178" x="582" y="548">
+         <Attachments>
+            <Attachment ref="EnumDisplay"/>
+         </Attachments>
+         <Text><![CDATA[This class is used for runtime enumerations.
+
+Instance caching turned on.  
+
+]]></Text>
+      </Note>
+   </Notes>
+</ClassModelCollection>

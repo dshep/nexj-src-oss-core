@@ -1,0 +1,105 @@
+
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<nv:Envelope xmlns:nv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <nv:Body xmlns:ns="http://www.nexjsystems.com/xml-soap" nv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <ns:Array>
+         <items nc:arrayType="xs:anyType[2]">
+            <Item href="#a"/>
+            <Item href="#b"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="a">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABA==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[4]">
+            <Item>lastName</Item>
+            <Item>addresses</Item>
+            <Item>firstName</Item>
+            <Item>user</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[4]">
+            <Item xi:type="xs:string">Julius</Item>
+            <Item href="#c"/>
+            <Item xi:type="xs:string">Gaius</Item>
+            <Item xi:nil="true"/>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="b">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[4]">
+            <Item>lastName</Item>
+            <Item>addresses</Item>
+            <Item>firstName</Item>
+            <Item>user</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[4]">
+            <Item xi:nil="true"/>
+            <Item href="#d"/>
+            <Item xi:type="xs:string">Gnaeus</Item>
+            <Item xi:nil="true"/>
+         </values>
+      </ns:TransferObject>
+      <ns:Array id="c">
+         <items nc:arrayType="xs:anyType[2]">
+            <Item href="#e"/>
+            <Item href="#f"/>
+         </items>
+      </ns:Array>
+      <ns:Array id="d">
+         <items nc:arrayType="xs:anyType[0]"/>
+      </ns:Array>
+      <ns:TransferObject id="e">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABg==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[4]">
+            <Item>street</Item>
+            <Item>country</Item>
+            <Item>city</Item>
+            <Item>code</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[4]">
+            <Item xi:type="xs:string">III Forum Publicum</Item>
+            <Item xi:type="xs:string">Italy</Item>
+            <Item xi:type="xs:string">Roma</Item>
+            <Item xi:type="xs:string">DLXV.I</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="f">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABw==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[4]">
+            <Item>street</Item>
+            <Item>country</Item>
+            <Item>city</Item>
+            <Item>code</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[4]">
+            <Item xi:type="xs:string">Via Ampla</Item>
+            <Item xi:type="xs:string">Italy</Item>
+            <Item xi:type="xs:string">Pompeii</Item>
+            <Item xi:type="xs:string">XVCC.V</Item>
+         </values>
+      </ns:TransferObject>
+   </nv:Body>
+</nv:Envelope>

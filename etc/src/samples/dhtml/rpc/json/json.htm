@@ -1,0 +1,541 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+      <script type="text/javascript">
+
+         /**
+          * NexJ Server Objects
+          */
+
+         //used to send requests to the server
+         function Request(invocations)
+         {
+            this[":namespace"] = null;
+            this[":version"] = null;
+            this[":async"] = false;
+            this[":commit"] = true;
+            this[":locale"] = null;
+            this[":timezone"] = null;
+            this[":correlator"] = null;
+            this[":invocations"] = invocations;         
+            this[":filters"] = null;
+         }
+
+         function Pair(head, tail)
+         {
+            switch (arguments.length)
+            {
+               case 0:
+                  this[":head"] = null;
+                  break;
+
+               case 1:
+                  this[":head"] = head;
+                  break;
+
+               case 2:
+                  this[":head"] = head;
+                  this[":tail"] = tail;
+                  break;
+            }
+         };
+
+         Pair.list = function()
+         {
+            var pair = null;
+
+            for (var i = arguments.length - 1; i >= 0; --i)
+            {
+               pair = new Pair(arguments[i], pair);
+            }
+
+            return pair;
+         };
+
+         function Symbol(value)
+         {
+            this[":symbol"] = value;
+         };
+
+         // builds the where clause: (condition (@ attribute) value)
+         function where(condition, attribute, value)
+         {
+            return Pair.list(new Symbol(condition), Pair.list(new Symbol("@"), new Symbol(attribute)), value);
+         }
+
+         // Contains a scheme expression that will be parsed by the server
+         function SchemeExp(expression)
+         {
+            this[":expression"] = "(" + expression + ")";
+         }
+
+         /******************    End of NexJ Server Objects   **************************************/
+
+         //associations
+
+         var result;
+         var whereRowCount = 0;
+         var divRead, divCreate, divResults;
+         var firstName, lastName, loginName;
+
+         window.onload = function()
+         {
+            //divs
+            divRead = document.getElementById("divRead");
+            divCreate = document.getElementById("divCreate");
+            divResults = document.getElementById("divResults");
+
+            //form variables
+            firstName = document.getElementById("txtFName");
+            lastName = document.getElementById("txtLName");
+            loginName = document.getElementById("txtLogin");
+         };
+
+         //Send request object to server
+         function postToNexJServer(query)
+         {
+            var xhr = new XMLHttpRequest();
+
+            xhr.open("POST", location.protocol + "//" + location.host +
+               location.pathname.substring(0, location.pathname.lastIndexOf("/") + 1) + "json", true);
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.onreadystatechange = function(aEvt)
+            {
+               if (xhr.readyState == 4)
+               {
+                  if (xhr.status == 200)
+                  {
+                     showResults(xhr.responseText); //and show result
+                  }
+                  else
+                  {
+                     alert(xhr.responseText); //alert error
+                  }
+               }
+            };
+
+            xhr.send(query);
+         }
+
+         //populate create request to create new user
+         function createUser()
+         {
+            postToNexJServer(JSON.stringify(new Request(new Array(
+               {
+                  // for the enterprise model, use e.g. "InternalUser" instead
+                  object: {":class" : "User", ":event" : "create",
+                     firstName: firstName.value, lastName: lastName.value,
+                     loginName: loginName.value}
+               }))));
+         }
+
+         //populate read request to load users from server
+         function readUsers()
+         {
+            var attributes = "";
+
+            for (var i = 1; i < 5; i++)
+            {
+               var chkbx = document.getElementById("chkbx" + i);
+
+               if (chkbx.checked)
+               {
+                  attributes += (chkbx.value + " ");
+               }
+            }
+
+            if (attributes == "")
+            {
+               attributes = null;
+            }
+            else
+            {
+               attributes = new SchemeExp(attributes);
+            }
+
+            var orderBy1 = document.getElementById("optionOrder1");
+            var orderBy2 = document.getElementById("optionOrder2");
+            var orderBy = null;
+
+            if (orderBy1.selectedIndex != 0)
+            {
+               orderBy1 = orderBy1.options[orderBy1.selectedIndex].value;
+               orderBy2 = (orderBy2.options[orderBy2.selectedIndex].value == "true") ? "t" : "f";
+
+               orderBy = new SchemeExp("(" + orderBy1 + " . #" + orderBy2 + ")");
+            }
+
+            postToNexJServer(JSON.stringify(new Request(new Array(
+               {
+                  object: {":class":"User"},
+                  event: "read",
+                  arguments: [attributes, whereClause(), orderBy, null, null, null]
+               }))));
+         }
+
+         //build 'where clause' from where dialog
+         function whereClause()
+         {
+            var where1, where2;
+            var optionCondition = document.getElementById("optionCondition1");
+            var optionAttribute = document.getElementById("optionAttribute1");
+
+            optionCondition = optionCondition.options[optionCondition.selectedIndex].value;
+            optionAttribute = optionAttribute.options[optionAttribute.selectedIndex].value;
+            txtValue = document.getElementById("txtValue1").value;
+
+            if (optionCondition != "" && optionAttribute != "" && txtValue != "")
+            {
+               where1 = where(optionCondition, optionAttribute, txtValue);
+            }
+
+            optionCondition = document.getElementById("optionCondition2");
+            optionCondition = optionCondition.options[optionCondition.selectedIndex].value;
+            optionAttribute = document.getElementById("optionAttribute2");
+            optionAttribute = optionAttribute.options[optionAttribute.selectedIndex].value;
+            txtValue = document.getElementById("txtValue2").value;
+
+            if (optionCondition != "" && optionAttribute != "" && txtValue != "")
+            {
+               where2 = where(optionCondition, optionAttribute, txtValue);
+            }
+
+            optionCondition = document.getElementById("optionCondition");
+            optionCondition = optionCondition.options[optionCondition.selectedIndex].value;
+
+            if (where1 && where2 && optionCondition != "")
+            {
+               return new Pair(new Symbol(optionCondition), new Pair(where1, new Pair(where2, null)));
+            }
+
+            if (where1)
+            {
+               return where1;
+            }
+
+            return null;
+         }
+
+         function isArray(obj)
+         {
+            if (obj == null)
+            {
+               return false;
+            }
+
+            return obj.constructor === Array;
+         }
+
+         function showDivRead()
+         {
+            divRead.style.visibility = "visible";
+            divCreate.style.visibility = "hidden";
+            divResults.style.display = "none";
+         }
+
+         function showDivCreate()
+         {
+            divCreate.style.visibility = "visible";
+            divRead.style.visibility = "hidden";
+            divResults.style.display = "none";
+         }
+
+         //show response from server
+         function showResults(responseText)
+         {
+            var resultRead = JSON.parse(responseText);
+
+            if (resultRead[":results"] === undefined)
+            {
+               divResults.replaceChild(errorDiv(resultRead, "init"), divResults.lastChild);
+               divResults.style.display = "block";
+
+               return;
+            }
+
+            resultRead = resultRead[":results"][0];
+
+            var table = document.createElement("table");
+            var tableHeader = "<caption><strong>Results</strong></caption><thead><tr>";
+
+            table.id = "tableResults";
+
+            if (isArray(resultRead))
+            {
+               //header
+               for (var attr in resultRead[0])
+               {
+                  tableHeader += "<th scope='col'>" + attr + "</th>";
+               }
+
+               tableHeader += "</tr></thead>";
+
+               //rows
+               var length = resultRead.length;
+               var tableBody = "<tbody>";
+
+               for (var i = 0; i < length; i++)
+               {
+                  tableBody = tableBody + "<tr>";
+
+                  for (var attr in resultRead[i])
+                  {
+                     tableBody += "<td>" + resultRead[i][attr] + "</td>";
+                  }
+
+                  tableBody += "</tr>";
+               }
+
+               tableBody += "</tbody>";
+            }
+            else
+            {
+               //header
+               for (var attr in resultRead)
+               {
+                  tableHeader += "<th>" + attr + "</th>";
+               }
+
+               tableHeader += "</tr></thead>";
+
+               //rows
+               var tableBody = "<tbody><tr>";
+
+               for (var attr in resultRead)
+               {
+                  tableBody += "<td>" + resultRead[attr] + "</td>";
+               }
+
+               tableBody += "</tr></tbody>";
+            }
+
+            divResults.innerHTML = "<table>" + tableHeader + tableBody + "</table>"; //show table
+            divResults.style.display = "block";
+         }
+
+         // show error response
+         function errorDiv(Error, init)
+         {
+            if (arguments[1] !== undefined)
+            {
+               errorDiv.indent = "";
+               errorDiv.divErr = document.createElement("div");
+               errorDiv.divErr.id = "results";
+               errorDiv.divErr.style.color = "red";
+            }
+
+            if (typeof Error == "string")
+            {
+               errorDiv.divErr.innerHTML += errorDiv.indent + Error + "<br/>";
+            }
+            else
+            {
+               for (var errAttribute in Error)
+               {
+                  if (isArray(Error[errAttribute]))
+                  {
+                     errorDiv.divErr.innerHTML += errorDiv.indent + errAttribute + "-> <br/>";
+                     errorDiv.indent += "\u00a0\u00a0\u00a0"; //3 spaces
+
+                     var length = Error[errAttribute].length
+
+                     for (var i = 0; i < length; i++)
+                     {
+                        errorDiv(Error[errAttribute][i]);
+                     }
+
+                     errorDiv.indent = errorDiv.indent.substr(3);
+                  }
+                  else
+                  {
+                     errorDiv.divErr.innerHTML += errorDiv.indent + errAttribute + "-> " + Error[errAttribute] + "<br/>";
+                  }
+               }
+            }
+
+            return errorDiv.divErr;
+         }
+      </script>
+      <style type="text/css">
+         body {
+             font: 0.75em / 1.73em Verdana, Arial, Geneva, Helvetica, sans-serif;
+         }
+
+         #tableResults {
+             background: none repeat scroll 0 0 #FFFFFF;
+             border-collapse: collapse;
+             font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+             font-size: 12px;
+             margin: 20px;
+             text-align: left;
+         }
+
+         #tableResults th {
+             border-bottom: 2px solid #6678B1;
+             color: #003399;
+             font-size: 14px;
+             font-weight: normal;
+             padding: 10px 8px;
+         }
+
+         #tableResults td {
+             border-bottom: 1px solid #CCCCCC;
+             color: #666699;
+             padding: 6px 8px;
+         }
+
+         #tableResults tbody tr:hover td {
+             color: #000099;
+         }
+      </style>
+      <title>JSON Adapter Sample</title>
+   </head>
+   <body>
+      <table id="commands">
+         <tbody>
+            <tr>
+               <td>
+                  <input type="button" onclick="showDivRead()" value="Read Users">
+               </td>
+               <td>
+                  <input type="button" onclick="showDivCreate()" value="New User">
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <br/>
+      <br/>
+      <div id="divRead" style="visibility:hidden;float:left;">
+         <input type="button" id="btnRead" value="Read" onclick="readUsers()">
+         <br/>
+         <br/>
+         <strong>Attributes</strong>
+         <br/>
+         <input type="checkbox" id="chkbx1" value="firstName" checked="checked">First Name<input type="checkbox" id="chkbx2" value="lastName" checked="checked">Last Name<input type="checkbox" id="chkbx3" value="fullName" checked="checked">Full Name<input type="checkbox" id="chkbx4" value="loginName" checked="checked">Login Name
+         <br/>
+         <br/>
+         <strong>OrderBy</strong>
+         <br/>
+         <select id="optionOrder1">
+            <option></option>
+            <option value="firstName">first name</option>
+            <option value="lastName">last name</option>
+            <option value="loginName">login name</option>
+         </select>&nbsp;&nbsp;Order
+         <select id="optionOrder2">
+            <option value="true">ASC</option>
+            <option value="false">DESC</option>
+         </select>
+         <br/>
+         <br/>
+         <table border="1" id="read" style=" border-collapse: collapse;">
+            <caption>
+               <strong>Where clause</strong>
+            </caption>
+            <thead>
+               <tr>
+                  <th>
+                     Condition
+                  </th>
+                  <th>
+                     Attribute
+                  </th>
+                  <th>
+                     Value
+                  </th>
+               </tr>
+            </thead>
+            <tr>
+               <td>
+                  <select id="optionCondition1">
+                     <option></option>
+                     <option value="=">equal</option>
+                     <option value="like?">like</option>
+                  </select>
+               </td>
+               <td>
+                  <select id="optionAttribute1">
+                     <option></option>
+                     <option value="firstName">first name</option>
+                     <option value="lastName">last name</option>
+                     <option value="loginName">login name</option>
+                  </select>
+               </td>
+               <td>
+                  <input type="text" id="txtValue1">
+               </td>
+            </tr>
+            <tr>
+               <td>
+                  <select id="optionCondition">
+                     <option></option>
+                     <option value="and">and</option>
+                     <option value="or">or</option>
+                  </select>
+               </td>
+            </tr>
+            <tr>
+               <td>
+                  <select id="optionCondition2">
+                     <option></option>
+                     <option value="=">equal</option>
+                     <option value="like?">like</option>
+                  </select>
+               </td>
+               <td>
+                  <select id="optionAttribute2">
+                     <option></option>
+                     <option value="firstName">first name</option>
+                     <option value="lastName">last name</option>
+                     <option value="loginName">login name</option>
+                  </select>
+               </td>
+               <td>
+                  <input type="text" id="txtValue2">
+               </td>
+            </tr>
+         </table>
+         <br/>
+      </div>
+      <div id="divCreate" style="visibility:hidden;float:left;">
+         <table>
+            <tr>
+               <td>
+                  Last Name
+               </td>
+               <td>
+                  <input type="text" id="txtLName">
+               </td>
+            </tr>
+            <tr>
+               <td>
+                  First Name
+               </td>
+               <td>
+                  <input type="text" id="txtFName">
+               </td>
+            </tr>
+            <tr>
+               <td>
+                  Login
+               </td>
+               <td>
+                  <input type="text" id="txtLogin">
+               </td>
+            </tr>
+            <tr>
+               <td>
+               </td>
+               <td>
+                  <input type="button" id="btnCreate" value="Create User" onclick="createUser()">
+               </td>
+            </tr>
+         </table>
+      </div>
+      <div id="divResults" style="clear:both;">
+         <table>
+         </table>
+      </div>
+   </body>
+</html>

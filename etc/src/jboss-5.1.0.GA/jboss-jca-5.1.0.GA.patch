@@ -1,0 +1,15 @@
+--- src/main/org/jboss/resource/connectionmanager/JBossManagedConnectionPool.java	Fri May 22 09:16:36 2009
++++ src/main/org/jboss/resource/connectionmanager/JBossManagedConnectionPool.java	Wed Sep 07 14:37:56 2011
+@@ -909,7 +909,11 @@
+                {
+                   SubPoolContext subPoolContext = (SubPoolContext) i.next();
+                   InternalManagedConnectionPool other = subPoolContext.getSubPool();
+-                  if (other == pool && pool.isEmpty())
++
++                  // only remove the context if its pool has no free connections and no in-use connections
++                  // context must remain if it has only in-use connections because it tracks
++                  // TransactionLocal used for mapping to connections in-use by a given transaction
++                  if (other == pool && pool.isEmpty() && pool.getConnectionInUseCount() == 0)
+                   {
+                      pool.shutdown();
+                      i.remove();

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+		targetNamespace="http://namespaceThree"
+		xmlns:ns3="http://namespaceThree"
+		elementFormDefault="qualified" attributeFormDefault="qualified">
+
+	<element name="element2" type="ns3:TypeTwo"/>
+	
+	<complexType name="TypeTwo">
+		<sequence>
+			<element name="code" type="boolean" minOccurs="0"/>
+			<element name="message" type="string" minOccurs="0"/>
+		</sequence>
+	</complexType>
+</schema>

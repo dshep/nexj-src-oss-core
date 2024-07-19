@@ -1,0 +1,127 @@
+
+[patterns]
+# The first matching rule for a file is what applies. Files containing nulls are not translated even if a rule matches. 
+# Files containing mixed line endings are not translated (by default).
+**.hgignore = LF
+**.hgtags = LF
+
+# Many of these rules need not exist or should be something other than native, but since they were previously stored on the server with 
+# Unix line endings changing them would require the line endings to change on the server, removing annotation information.  
+**.java = native
+**.patch = native
+**.hta = native
+**.inf = native
+**.css = native
+**.rb = native
+**.vb = native
+**.xsd = native
+**.config = native
+**.config.template = native
+**.xsl = native
+**.xslt = native
+**.xml = native
+**.project = native
+**.vbs = native
+**.jnlp = native
+**.xmi = native
+**.cpp = native
+**.h = native
+**.rtf = native
+**.cs = native
+**.csproj = native
+**.vcproj = native
+**.def = native
+**.csproj.user = native
+**.rgs = native
+**/Makefile = native
+**.properties = native
+**.js = native
+**.sln = native
+**.as = native
+**.tmplt = native
+**.bat = native
+**.wxi = native
+**.wxs = native
+**.xaml = native
+**.mf = native
+**.MF = native
+**.lst = native
+**.conf = native
+**.jacl = native
+**.nsi = native
+.classpath = native
+.hgeol = CRLF
+**.alx = native
+**.jad = native
+**.html = native
+**/was.policy = native
+**.rc = native
+**.reg = native
+**.svg = native
+**.dbt = native
+**.chtypes = native
+**.dstypes = native
+**.tmpl = native
+**/micro.tran = native
+**/README = native
+**.wsdl = native
+**.ini = native
+**.launch = native
+
+**.PST = BIN
+**.jar = BIN
+**.pdf = BIN
+**.png = BIN
+**.jpg = BIN
+**.jpeg = BIN
+
+**.strings = native
+**.comp = native
+**.application = native
+**.bicontext = native
+**.cd = native
+**.channel = native
+**.colors = native
+**.connections = native
+**.cvsignore = native
+**.datasource = native
+**.dump = BIN
+**.enum = native
+**.environment = native
+**.extlib = native
+**.extreport = native
+**.form = native
+**.formats = native
+**.htm = native
+**.interface = native
+**.jrxml = native
+**.locale = native
+**.message = native
+**.meta = native
+**.metadata = native
+**.report = native
+**.ruleset = native
+**.scm = native
+**.screen = native
+**.security = native
+**.server = native
+**.service = native
+**.sql = native
+**.stylesheet = native
+**.transformation = native
+**.txt = native
+**.uievents = native
+**.upgrade = native
+**.utest = native
+**.wfqueue = native
+**.workflow = native
+**.action = native
+**.xml = native
+
+# Checksum is calculated on every file so these should be recursive
+meta/** = native
+test/nexj/base/** = native
+test/nexj/invalidbase/** = native
+
+[repository]
+native = LF

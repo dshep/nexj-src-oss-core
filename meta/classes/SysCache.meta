@@ -1,0 +1,64 @@
+<Class description="The global data cache" visibility="protected">
+<Events>
+      <Event args="key" description="Gets a cached item by key" name="get" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.get" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="key" description="Gets data from the local cache" name="getLocal" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.getLocal" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="key" description="Gets data from the transient cache" name="getTransient" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.getTransient" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="key ref" description="Caches a reference to an immutable object" name="putReference" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.putReference" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="key obj" description="Caches a serialized copy of an object" name="putCopy" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.putCopy" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="key instance attributes" description="Caches an instance or an instance collection" name="putInstance" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.putInstance" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="key obj" description="Adds data to the local UOW cache. The local cache is invalidated upon commit/rollback." name="putLocal" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.putLocal" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="key obj" description="Caches a reference to an immutable object. The same as putReference(), but the key is not committed. The difference from putLocal() is that the global cache name space is used." name="putTemporary" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.putTemporary" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="key obj" description="Adds data to the transient cache.The transient cache is invalidated at the end of the request processing by the server." name="putTransient" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.putTransient" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="key" description="Removes an item coresponding to a given key" name="remove" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.remove" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="key" description="Removes an entry from the local cache" name="removeLocal" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.removeLocal" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="key" description="Removes an entry from the transient cache" name="removeTransient" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.removeTransient" name="main" type="main"/>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

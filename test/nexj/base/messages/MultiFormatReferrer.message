@@ -1,0 +1,7 @@
+<Message>
+   <Parts>
+      <Message name="xml" ref="XMLTestSuiteResult"/>
+      <Message name="none" ref="TransformTestMsg"/>
+      <Message name="csv" ref="CSVTestSuiteResult"/>
+   </Parts>
+</Message>

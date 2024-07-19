@@ -1,0 +1,122 @@
+<Class description="A virtual-persisted class that will generate run-time errors when various mappings are read.&#13;&#10;">
+   <Attributes>
+      <Attribute description="Activates the missing OID test." name="a" type="integer"/>
+      <Attribute description="Used to test what happens when an OID is missing from the result returned by a read mapping." name="a1" type="string"/>
+      <Attribute name="b" type="integer"/>
+      <Attribute name="b1" type="TestVirtualClass"/>
+      <Attribute name="b2" type="string"/>
+      <Attribute name="b3" type="TestVirtualClass"/>
+      <Attribute description="Activates the missing/extra attribute tests." name="c" type="integer"/>
+      <Attribute name="c1" type="string"/>
+      <Attribute description="Activates the null collection element test." name="d" type="integer"/>
+      <Attribute description="Activates the empty collection test." name="e" type="integer"/>
+      <Attribute name="f" type="integer"/>
+      <Attribute name="f1" type="StringEnum"/>
+      <Attribute initializer="0" name="locking" required="true" type="long"/>
+   </Attributes>
+   <PersistenceMapping dataSource="MemoryVirtualSource" lockingAttribute="locking">
+      <ServiceMapping keyGenerator="KeyGenerator.GUIDGen">
+         <KeyParts>
+            <KeyPart type="binary"/>
+         </KeyParts>
+         <AttributeMappings>
+            <AttributeMapping name="a"/>
+            <AttributeMapping name="a1"/>
+            <AttributeMapping name="b"/>
+            <AttributeMapping name="b1"/>
+            <AttributeMapping name="b2"/>
+            <AttributeMapping name="c"/>
+            <AttributeMapping name="c1"/>
+            <AttributeMapping name="d"/>
+            <AttributeMapping name="e"/>
+            <AttributeMapping name="locking"/>
+            <AttributeMapping name="b3"/>
+            <AttributeMapping name="f"/>
+            <AttributeMapping destinationKey="StringEnum.PK" name="f1"/>
+         </AttributeMappings>
+         <SortKeys/>
+         <ReadMapping>
+            <Case where="(= (@ a) ,key)">
+               <Read>
+                  <Script><![CDATA[(message
+   (: a1 "Test")
+   (: locking 19)
+)
+]]></Script>
+               </Read>
+            </Case>
+            <Case where="(= (@ b) ,key)">
+               <Read>
+                  <Script><![CDATA[(message
+   (: :oid (oid #z0005))
+   (: a1 "Test")
+   (: b1 ())
+   (: locking 17)
+)
+]]></Script>
+               </Read>
+            </Case>
+            <Case where="(= (@ c) ,key)">
+               <Read>
+                  <Script><![CDATA[(message
+   (: :oid (oid #z0023))
+   (: c1 "Requested")
+   (: a1 ())
+   (: b2 "Extra")
+   (: locking 7)
+   (: b3 (oid #z2347))
+)
+]]></Script>
+               </Read>
+            </Case>
+            <Case where="(= (@ d) ,key)">
+               <Read>
+                  <Script><![CDATA[(collection
+   (message
+      (: :oid (oid #z0029))
+      (: a1 "Element1")
+   )
+   ()
+   (message
+      (: :oid (oid #z0031))
+      (: a1 "Element3")
+   )
+)
+]]></Script>
+               </Read>
+            </Case>
+            <Case where="(= (@ e) ,key)">
+               <Read>
+                  <Script><![CDATA[(collection)
+]]></Script>
+               </Read>
+            </Case>
+            <Case where="(= (@ f) ,key)">
+               <Read>
+                  <Script><![CDATA[(message
+   (: :oid (oid #z0031))
+   (: f1 (oid "address" "en" "Cottage"))
+   (: locking 23)
+)]]></Script>
+               </Read>
+            </Case>
+            <Case where="(= (@) ,key)">
+               <Read>
+                  <Script><![CDATA[(error "Instance queries unsupported")]]></Script>
+               </Read>
+            </Case>
+            <Case where="(in? (@) ,@keys)">
+               <Read>
+                  <Script><![CDATA[(error "Instance queries unsupported")]]></Script>
+               </Read>
+            </Case>
+         </ReadMapping>
+         <UpdateMapping>
+            <Case attributes="a1">
+               <Script><![CDATA[; Don't change the locking value --> should trigger an error
+]]></Script>
+            </Case>
+         </UpdateMapping>
+      </ServiceMapping>
+   </PersistenceMapping>
+</Class>

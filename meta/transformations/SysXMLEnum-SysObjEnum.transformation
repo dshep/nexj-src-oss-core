@@ -1,0 +1,311 @@
+<Transformation description="Transform xml enumeration to object enumeration." destination="SysObjEnum" source="SysXMLEnum">
+   <Initializer><![CDATA[(define convertClassification 
+   (lambda (classification)
+      (case classification
+         (("custom") "C")
+         (("sysDisplay") "D")
+         (("sysEdit") "E")
+         (else "S")
+      )
+   )
+)
+(define g_parentTypeCode
+   (if (not (null? (source'parent)))
+      ((((((invocation-context)'metadata)'getMetaclass (source'parent))'persistenceMapping)'typeCodeAttribute)'value)
+      '()
+   )
+)]]></Initializer>
+   <Mappings>
+      <Mapping destination="typeDisplayValue typeCode">
+         <Sources>
+            <Source source="typeCode"/>
+            <Source source="Locales Locale"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="typeDisplayValue locale">
+         <Sources>
+            <Source source="Locales Locale name"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="typeDisplayValue caption">
+         <Sources>
+            <Source source="Locales Locale caption"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="typeDisplayValue description">
+         <Sources>
+            <Source source="Locales Locale description"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code displayValue typeCode">
+         <Sources>
+            <Source source="typeCode"/>
+            <Source source="Values Value Locales Locale"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code displayValue value">
+         <Sources>
+            <Source source="Values Value value"/>
+            <Source source="Values Value Locales Locale"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code displayValue locale">
+         <Sources>
+            <Source source="Values Value Locales Locale name"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code displayValue caption">
+         <Sources>
+            <Source source="Values Value Locales Locale caption"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code displayValue shortCaption">
+         <Sources>
+            <Source source="Values Value Locales Locale shortCaption"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code displayValue parentTypeCode">
+         <Sources>
+            <Source source="Values Value Locales Locale"/>
+         </Sources>
+         <Script><![CDATA[
+   g_parentTypeCode
+         ]]></Script>
+      </Mapping>
+      <Mapping destination="code displayValue parentValueCode">
+         <Sources>
+            <Source source="Values Value parentValue"/>
+            <Source source="Values Value Locales Locale"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code typeCode">
+         <Sources>
+            <Source source="typeCode"/>
+            <Source source="Values Value"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code value">
+         <Sources>
+            <Source source="Values Value value"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code behaveAsValue">
+         <Sources>
+            <Source source="Values Value behaveAsValue"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code hasBehavior">
+         <Sources>
+            <Source source="Values Value hasBehavior"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code displayUpdateable">
+         <Sources>
+            <Source source="Values Value displayUpdateable"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code codeUpdateable">
+         <Sources>
+            <Source source="Values Value codeUpdateable"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code hideable">
+         <Sources>
+            <Source source="Values Value hideable"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code externalValue">
+         <Sources>
+            <Source source="Values Value externalValue"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code name">
+         <Sources>
+            <Source source="Values Value name"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code upgradeUpdateable">
+         <Sources>
+            <Source source="Values Value upgradeUpdateable"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code parentValueCode">
+         <Sources>
+            <Source source="Values Value parentValue"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="code parentTypeCode">
+         <Sources>
+            <Source source="Values Value"/>
+         </Sources>
+         <Script><![CDATA[
+   g_parentTypeCode
+         ]]></Script>
+      </Mapping>
+      <Mapping destination="typeCode">
+         <Sources>
+            <Source source="typeCode"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="description">
+         <Sources>
+            <Source source="description"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="classification">
+         <Sources>
+            <Source default="'()" name="classification" null="true" source="classification"/>
+         </Sources>
+         <Script><![CDATA[
+         (convertClassification classification)
+         ]]></Script>
+      </Mapping>
+      <Mapping destination="userQuickpickEnabled">
+         <Sources>
+            <Source source="userQuickpick"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="allowAddedCodes">
+         <Sources>
+            <Source source="allowNewValues"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="upgradeable">
+         <Sources>
+            <Source source="upgradeable"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="parentTypeCode">
+         <Sources>
+            <Source source="parent"/>
+         </Sources>
+         <Script><![CDATA[
+   g_parentTypeCode
+         ]]></Script>
+      </Mapping>
+   </Mappings>
+   <Finalizer><![CDATA[;find a fallback display value
+(define fallbackDisplayValue 
+   (lambda (captionLookup locale defaultValue)
+      (let ((fallback (nexj.core.util.LocaleUtil'getBase locale '())))
+         (if (null? fallback)
+            defaultValue
+            (let ((existing (captionLookup'get fallback)))
+                (if (null? existing)
+                  (fallbackDisplayValue captionLookup fallback defaultValue)
+                  existing
+                )
+            )
+         )
+      )
+   )
+)
+
+(define defaultDisplayValue 
+   (lambda (captionLookup createDefaultDisplay)
+      (import 'nexj.core.meta.Metadata)
+      (let ((existing (captionLookup'get (nexj.core.meta.Metadata'DEFAULT_LOCALE)))) 
+         (if (null? existing)
+            (begin
+               (set! existing (fallbackDisplayValue captionLookup (nexj.core.meta.Metadata'DEFAULT_LOCALE) '()))
+               (if (null? existing)
+                  (createDefaultDisplay)
+                  existing
+               )
+            )
+            existing
+         )
+      )
+   )
+)
+
+(define (createEnumDisplay code)
+   (message
+      (: locale (nexj.core.meta.Metadata'DEFAULT_LOCALE))
+      (: caption "***missing caption***")
+      (: shortCaption "*missing caption*")
+      (: typeCode (code'typeCode))
+      (: value (code'value))
+      (: parentTypeCode (code'parentTypeCode))
+   )
+)
+
+(define (createEnumTypeDisplay)
+   (message
+      (: locale (nexj.core.meta.Metadata'DEFAULT_LOCALE))
+      (: caption "***missing caption***")
+      (: typeCode (destination'typeCode))
+   )
+)
+
+(define copyTO
+   (lambda (src)
+      (let ((dst (message)))
+         (for-each
+            (lambda (property)
+               (dst property (src':get property))
+            )
+            (src':iterator)
+         )
+         dst
+      )
+   )
+)
+
+(define (createDisplays existingDisplays createDefaultDisplay)
+   (let ((captionLookup (nexj.core.util.HashTab'new))) 
+      ;store existing display values into map   
+      (for-each
+         (lambda (displayValue)
+            (captionLookup'put (displayValue'locale) displayValue)
+         )
+         existingDisplays
+      )
+      (let ((defaultValue (defaultDisplayValue captionLookup createDefaultDisplay)))
+         ;iterate all supported locales
+         (for-each
+            (lambda (locale)
+               (let ((existing (captionLookup'get (locale'toString)))) 
+                  (if (null? existing)
+                     (let ((defValue (fallbackDisplayValue captionLookup (locale'toString) defaultValue)))
+                        (let ((newValue (copyTO defValue)))
+                           ;add new display value
+                           (newValue'locale (locale'toString))
+                           (existingDisplays'add newValue)
+                           ;store display value for lookup
+                           (captionLookup'put (locale'toString) existing)
+                        )
+                     )
+                  )
+               )
+            )
+            (((invocation-context)'metadata)'localeIterator)
+         )
+      )
+   )
+)
+
+(if (null? (destination'typeDisplayValue))
+   (destination'typeDisplayValue (java.util.ArrayList'new))
+)
+(createDisplays (destination'typeDisplayValue) (lambda () (createEnumTypeDisplay)))
+
+(let ((nOrder 0))
+   ;iterate enum codes
+   (for-each 
+      (lambda (code)
+         ; all system generated enumeration values should be classified as System Defined (Design time defined) (S)
+         (code'classification "S")
+         (code'displayOrder nOrder)
+         (set! nOrder (+ nOrder 1))
+         (if (null? (code'displayValue))
+            (code'displayValue (java.util.ArrayList'new))
+         )
+         (createDisplays (code'displayValue) (lambda () (createEnumDisplay code)))
+      )
+      (destination'code)
+   )
+)
+
+   ]]></Finalizer>
+</Transformation>

@@ -1,0 +1,27 @@
+<Message format="Zip">
+   <ZipMapping comment="Test Zip file." compression="9"/>
+   <Parts>
+      <Message maxCount="0" name="files">
+         <Parts>
+            <Value name="fileSize" type="long">
+               <ZipMapping value="size"/>
+            </Value>
+            <Value name="fileTime" type="long">
+               <ZipMapping value="time"/>
+            </Value>
+            <Value name="comments" type="string">
+               <ZipMapping value="comment"/>
+            </Value>
+            <Value name="data" type="binary">
+               <ZipMapping value="contents"/>
+            </Value>
+            <Value name="extra" type="binary">
+               <ZipMapping value="extra"/>
+            </Value>
+            <Value name="isDirectory" type="boolean">
+               <ZipMapping value="directory"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

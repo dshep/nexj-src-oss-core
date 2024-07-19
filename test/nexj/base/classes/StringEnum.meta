@@ -1,0 +1,33 @@
+<Class description="Base for string enumerations" where="(= locale (locale-name '()))">
+   <Attributes>
+      <Attribute name="name" required="true" type="string"/>
+      <Attribute name="value" required="true" type="string"/>
+      <Attribute name="locale" required="true" type="string"/>
+      <Attribute name="caption" required="true" type="string"/>
+      <Attribute name="displayOrder" type="integer"/>
+   </Attributes>
+   <Events>
+      <Event args="value" name="get" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(when (symbol? value)
+   (set! value (this value))
+)
+
+(let ((attributes '(value caption locale name)))
+   (read-instance this attributes `(= (@ value) ,value) #f)
+)
+]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping classCodeAttribute="name" classCodeForced="true" dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="test.StringEnum">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name" table="test.StringEnum"/>
+            <AttributeMapping column="value" name="value" table="test.StringEnum"/>
+            <AttributeMapping column="locale" name="locale" table="test.StringEnum"/>
+            <AttributeMapping column="caption" name="caption" table="test.StringEnum"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

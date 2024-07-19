@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+<web-app id="web-app" version="2.4"
+   xmlns="http://java.sun.com/xml/ns/j2ee"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+   <display-name>NexJ Push</display-name>
+   <servlet>
+      <display-name>PushRedirectorServlet</display-name>
+      <servlet-name>PushRedirectorServlet</servlet-name>
+      <servlet-class>nexj.core.rpc.http.PushRedirectorHTTPServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+   <servlet-mapping>
+      <servlet-name>PushRedirectorServlet</servlet-name>
+      <url-pattern>/*</url-pattern>
+   </servlet-mapping>
+</web-app>

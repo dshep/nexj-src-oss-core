@@ -1,0 +1,15 @@
+<Message format="Fixed">
+   <FixedMapping/>
+   <Parts>
+      <Message maxCount="0" name="records">
+         <Parts>
+            <Value minCount="1" name="field_1" type="string">
+               <FixedMapping width="10"/>
+            </Value>
+            <Value minCount="1" name="field_2" type="string">
+               <FixedMapping padding="-" width="10"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

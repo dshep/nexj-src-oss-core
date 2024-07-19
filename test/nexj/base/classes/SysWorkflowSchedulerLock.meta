@@ -1,0 +1,5 @@
+<Class description="Provides global concurrency control for SysWorkflowSchedulerBatchJob." visibility="protected">
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="WFSchedulerLock"/>
+   </PersistenceMapping>
+</Class>

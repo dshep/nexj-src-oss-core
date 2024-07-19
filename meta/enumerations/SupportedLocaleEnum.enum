@@ -1,0 +1,20 @@
+<Enumeration description="Enumeration of supported locales" typeCode="SSUPPORTEDLOCALE">
+   <Locales>
+      <Locale caption="Enumeration of supported locales" name="en"/>
+      <Locale caption="Énumeration des paramètres régionaux pris en charge" name="fr"/>
+   </Locales>
+   <Values>
+      <Value hasBehavior="true" name="en" value="en">
+         <Locales>
+            <Locale caption="English" name="en" shortCaption="en"/>
+            <Locale caption="anglais" name="fr" shortCaption="en"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="fr" value="fr">
+         <Locales>
+            <Locale caption="French" name="en" shortCaption="fr"/>
+            <Locale caption="français" name="fr" shortCaption="fr"/>
+         </Locales>
+      </Value>
+   </Values>
+</Enumeration>

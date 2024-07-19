@@ -1,0 +1,11 @@
+<Message format="HL7">
+   <HL7Mapping name="D" seq="3"/>
+   <Parts>
+      <Value name="s" type="string">
+         <HL7Mapping seq="2"/>
+      </Value>
+      <Message name="e" ref="HL7_E">
+         <HL7Mapping seq="3"/>
+      </Message>
+   </Parts>
+</Message>

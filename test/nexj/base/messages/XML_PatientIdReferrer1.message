@@ -1,0 +1,11 @@
+<Message format="XML">
+   <XMLMapping namespace="a" node="PatientIdReferrer1" schema="http://www.nexjsystems.com/nexj/integration.xsd" uri="urn:com.nexjsystems:ns:test:a"/>
+   <Parts>
+      <Message maxCount="0" name="id1" ref="XML_PatientId">
+         <XMLMapping node="id1"/>
+      </Message>
+      <Message maxCount="0" name="id2" ref="XML_PatientId">
+         <XMLMapping node="id2"/>
+      </Message>
+   </Parts>
+</Message>

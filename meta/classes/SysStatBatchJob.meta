@@ -1,0 +1,16 @@
+<Class base="SysBatchJob" description="Saves and persists statistics.">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;STBJ&quot;"/>
+      <Attribute name="name" required="true" type="string" value="&quot;Statistics Manager&quot;"/>
+      <Attribute initializer="(* 60 1000)" name="period" type="long"/>
+   </Attributes>
+   <Events>
+      <Event name="run" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(logger'dump "Current period is" (@ period) "milliseconds")
+(SysStat'save)
+]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

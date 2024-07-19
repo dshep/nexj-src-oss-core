@@ -1,0 +1,5 @@
+<HTTP contentType="application/xml; charset=UTF-8" get="true" post="true" receive="true" send="false">
+   <ServiceBindings>
+      <ServiceBinding output="RSSServer" service="RSSServer"/>
+   </ServiceBindings>
+</HTTP>

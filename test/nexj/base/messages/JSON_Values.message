@@ -1,0 +1,9 @@
+<Message format="JSON">
+   <JSONMapping key="key1:values"/>
+   <Parts>
+      <Value minCount="1" name="key1" type="string"/>
+      <Value name="key2" type="string"/>
+      <Value maxCount="5" minCount="2" name="key3" type="string"/>
+      <Message maxCount="3" minCount="2" name="array" ref="JSON_SubType_Array"/>
+   </Parts>
+</Message>

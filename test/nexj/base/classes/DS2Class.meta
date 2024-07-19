@@ -1,0 +1,12 @@
+<Class base="DSAbstractClass">
+   <Attributes>
+      <Attribute name="z" required="true" type="integer"/>
+   </Attributes>
+   <PersistenceMapping dataSource="ExternalRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="DS2Table">
+         <AttributeMappings>
+            <AttributeMapping column="z" name="z"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

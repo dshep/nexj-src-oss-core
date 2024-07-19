@@ -1,0 +1,333 @@
+
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<nv:Envelope xmlns:nv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <nv:Body xmlns:ns="http://www.nexjsystems.com/xml-soap" nv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <ns:Array>
+         <items nc:arrayType="xs:anyType[5]">
+            <Item href="#a"/>
+            <Item href="#b"/>
+            <Item href="#c"/>
+            <Item href="#d"/>
+            <Item href="#e"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="a">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABA==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[5]">
+            <Item>lastName</Item>
+            <Item>addresses</Item>
+            <Item>firstName</Item>
+            <Item>user</Item>
+            <Item>businessAddress2</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[5]">
+            <Item xi:type="xs:string">Julius</Item>
+            <Item href="#f"/>
+            <Item xi:type="xs:string">Gaius</Item>
+            <Item xi:nil="true"/>
+            <Item href="#g"/>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="b">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[5]">
+            <Item>lastName</Item>
+            <Item>addresses</Item>
+            <Item>firstName</Item>
+            <Item>user</Item>
+            <Item>businessAddress2</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[5]">
+            <Item xi:nil="true"/>
+            <Item href="#h"/>
+            <Item xi:type="xs:string">Gnaeus</Item>
+            <Item xi:nil="true"/>
+            <Item xi:nil="true"/>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="c">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[5]">
+            <Item>lastName</Item>
+            <Item>addresses</Item>
+            <Item>firstName</Item>
+            <Item>user</Item>
+            <Item>businessAddress2</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[5]">
+            <Item xi:type="xs:string">Test</Item>
+            <Item href="#i"/>
+            <Item xi:type="xs:string">Joe</Item>
+            <Item href="#j"/>
+            <Item href="#k"/>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="d">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAw==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[5]">
+            <Item>lastName</Item>
+            <Item>addresses</Item>
+            <Item>firstName</Item>
+            <Item>user</Item>
+            <Item>businessAddress2</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[5]">
+            <Item xi:type="xs:string">Smith</Item>
+            <Item href="#l"/>
+            <Item xi:type="xs:string">John</Item>
+            <Item href="#m"/>
+            <Item xi:nil="true"/>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="e">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAg==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[5]">
+            <Item>lastName</Item>
+            <Item>addresses</Item>
+            <Item>firstName</Item>
+            <Item>user</Item>
+            <Item>businessAddress2</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[5]">
+            <Item xi:type="xs:string">Test</Item>
+            <Item href="#n"/>
+            <Item xi:type="xs:string">Zoe</Item>
+            <Item xi:nil="true"/>
+            <Item xi:nil="true"/>
+         </values>
+      </ns:TransferObject>
+      <ns:Array id="f">
+         <items nc:arrayType="xs:anyType[2]">
+            <Item href="#g"/>
+            <Item href="#o"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="g">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABg==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[4]">
+            <Item>street</Item>
+            <Item>country</Item>
+            <Item>city</Item>
+            <Item>code</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[4]">
+            <Item xi:type="xs:string">III Forum Publicum</Item>
+            <Item xi:type="xs:string">Italy</Item>
+            <Item xi:type="xs:string">Roma</Item>
+            <Item xi:type="xs:string">DLXV.I</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:Array id="h">
+         <items nc:arrayType="xs:anyType[0]"/>
+      </ns:Array>
+      <ns:Array id="i">
+         <items nc:arrayType="xs:anyType[2]">
+            <Item href="#k"/>
+            <Item href="#p"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="j">
+         <class>User</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>name</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:string">jtest</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="k">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[4]">
+            <Item>street</Item>
+            <Item>country</Item>
+            <Item>city</Item>
+            <Item>code</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[4]">
+            <Item xi:type="xs:string">100 Front St E</Item>
+            <Item xi:type="xs:string">Canada</Item>
+            <Item xi:type="xs:string">Toronto</Item>
+            <Item xi:type="xs:string">M5A 1E1</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:Array id="l">
+         <items nc:arrayType="xs:anyType[2]">
+            <Item href="#q"/>
+            <Item href="#r"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="m">
+         <class>User</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAg==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>name</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:string">jsmith</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:Array id="n">
+         <items nc:arrayType="xs:anyType[1]">
+            <Item href="#s"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="o">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABw==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[4]">
+            <Item>street</Item>
+            <Item>country</Item>
+            <Item>city</Item>
+            <Item>code</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[4]">
+            <Item xi:type="xs:string">Via Ampla</Item>
+            <Item xi:type="xs:string">Italy</Item>
+            <Item xi:type="xs:string">Pompeii</Item>
+            <Item xi:type="xs:string">XVCC.V</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="p">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAg==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[4]">
+            <Item>street</Item>
+            <Item>country</Item>
+            <Item>city</Item>
+            <Item>code</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[4]">
+            <Item xi:type="xs:string">27 Major Mackenzie Dr E</Item>
+            <Item xi:type="xs:string">Canada</Item>
+            <Item xi:type="xs:string">Richmond Hill</Item>
+            <Item xi:type="xs:string">L4C 1G6</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="q">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABA==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[4]">
+            <Item>street</Item>
+            <Item>country</Item>
+            <Item>city</Item>
+            <Item>code</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[4]">
+            <Item xi:type="xs:string">2240 3rd Rd</Item>
+            <Item xi:type="xs:string">USA</Item>
+            <Item xi:type="xs:string">Wakefield</Item>
+            <Item xi:type="xs:string">67487-9261</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="r">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[4]">
+            <Item>street</Item>
+            <Item>country</Item>
+            <Item>city</Item>
+            <Item>code</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[4]">
+            <Item xi:type="xs:string">1234 4th Rd</Item>
+            <Item xi:type="xs:string">USA</Item>
+            <Item xi:type="xs:string">Sutphen</Item>
+            <Item xi:type="xs:string">67480-1234</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="s">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAw==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[4]">
+            <Item>street</Item>
+            <Item>country</Item>
+            <Item>city</Item>
+            <Item>code</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[4]">
+            <Item xi:type="xs:string">27 Major Mackenzie Dr E</Item>
+            <Item xi:type="xs:string">Canada</Item>
+            <Item xi:type="xs:string">Richmond Hill</Item>
+            <Item xi:type="xs:string">L4C 1G6</Item>
+         </values>
+      </ns:TransferObject>
+   </nv:Body>
+</nv:Envelope>

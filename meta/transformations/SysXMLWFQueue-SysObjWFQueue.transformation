@@ -1,0 +1,67 @@
+<Transformation destination="SysObjWFQueue" source="SysXMLWFQueue">
+   <Mappings>
+      <Mapping destination="name">
+         <Sources>
+            <Source source="name"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="class">
+         <Sources>
+            <Source source="class"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="caption">
+         <Sources>
+            <Source source="description"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="customized" name="NULL">
+         <Sources>
+            <Source source="name"/>
+         </Sources>
+         <Script><![CDATA[()]]></Script>
+      </Mapping>
+      <Mapping destination="priority">
+         <Sources>
+            <Source source="priority"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="concurrency">
+         <Sources>
+            <Source source="concurrency"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="throttleCounter rate">
+         <Sources>
+            <Source source="rate"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="throttleCounter batchJob oid" name="Throttle Batch Job">
+         <Sources>
+            <Source source="rate"/>
+         </Sources>
+         <Script><![CDATA[((SysQueueThrottleCounterBatchJob'instance)':oid)]]></Script>
+      </Mapping>
+      <Mapping destination="throttleCounter count" name="Default Count">
+         <Sources>
+            <Source source="rate"/>
+         </Sources>
+         <Script><![CDATA[(max (source'rate) 1)]]></Script>
+      </Mapping>
+      <Mapping destination="system" layout="y:18;x:0.49535602" name="TRUE">
+         <Sources>
+            <Source source="name"/>
+         </Sources>
+         <Script><![CDATA[#t]]></Script>
+      </Mapping>
+      <Mapping description="Evaluates the scheme expression to get the scheduler instance to use for this Queue." destination="scheduler oid" name="Scheduler">
+         <Sources>
+            <Source source="scheduler"/>
+         </Sources>
+         <Script><![CDATA[(if (string-empty? (source'scheduler))
+   '()
+   ((read-instance SysWorkflowSchedulerBatchJob '() `(= (@ name) ,(source'scheduler)) #f)':oid)
+)]]></Script>
+      </Mapping>
+   </Mappings>
+</Transformation>

@@ -1,0 +1,132 @@
+<SOADefinition name="nexj:example:performance" version="1.0">
+   <Service>
+      <Interfaces>
+         <Interface default="true" ref="Viewer"/>
+         <Interface ref="Registration"/>
+      </Interfaces>
+   </Service>
+   <Interfaces>
+      <Interface name="Viewer">
+         <Method name="getCounters">
+            <Arguments>
+               <Argument collection="false" name="service" type="string"/>
+            </Arguments>
+            <Result collection="true" type="Counter"/>
+         </Method>
+         <Method name="getHistory">
+            <Arguments>
+               <Argument collection="false" name="counter" type="Counter"/>
+            </Arguments>
+            <Result collection="true" type="Sample"/>
+            <Faults>
+               <Fault type="NoSuchCounterException"/>
+            </Faults>
+         </Method>
+         <Method name="next1" state="integer">
+            <Result type="any"/>
+         </Method>
+         <Method name="next2" state="StateHolder">
+            <Result type="any"/>
+         </Method>
+         <Method name="error">
+            <Arguments>
+               <Argument name="type" type="string"/>
+               <Argument name="arg" type="string"/>
+            </Arguments>
+            <Result type="integer"/>
+            <Faults>
+               <Fault type="UserError1"/>
+            </Faults>
+         </Method>
+         <Method name="voidReturnType"/>
+      </Interface>
+      <Interface name="Monitored">
+         <Method name="getCount">
+            <Arguments>
+               <Argument collection="false" name="counterName" type="string"/>
+            </Arguments>
+            <Result type="Sample"/>
+            <Faults>
+               <Fault type="NoSuchCounterException"/>
+            </Faults>
+         </Method>
+      </Interface>
+      <Interface name="Registration">
+         <Method name="addCounter">
+            <Arguments>
+               <Argument collection="false" name="counter" type="Counter"/>
+            </Arguments>
+         </Method>
+         <Method name="removeCounter">
+            <Arguments>
+               <Argument collection="false" name="counter" type="Counter"/>
+            </Arguments>
+            <Faults>
+               <Fault type="NoSuchCounterException"/>
+            </Faults>
+         </Method>
+      </Interface>
+   </Interfaces>
+   <Enumerations>
+      <Enumeration name="Temperature">
+         <Item name="freezing"/>
+         <Item name="cold"/>
+         <Item name="chilly"/>
+         <Item name="temperate"/>
+         <Item name="warm"/>
+         <Item name="hot"/>
+         <Item name="owitburns"/>
+      </Enumeration>
+   </Enumerations>
+   <Types>
+      <Type description="" name="Counter">
+         <Attributes>
+            <Attribute collection="false" name="counterName" required="true" type="string"/>
+            <Attribute collection="false" name="service" required="true" type="string"/>
+         </Attributes>
+      </Type>
+      <Type description="" name="Sample">
+         <Attributes>
+            <Attribute collection="false" name="value" required="true" type="decimal"/>
+            <Attribute collection="false" name="units" required="true" type="string"/>
+            <Attribute collection="false" name="temperature" required="false" type=":enum:Temperature"/>
+         </Attributes>
+      </Type>
+      <Type name="StateHolder">
+         <Attributes>
+            <Attribute name="cnt" type="integer"/>
+         </Attributes>
+      </Type>
+   </Types>
+   <Faults>
+      <Fault description="" name="NoSuchCounterException">
+         <Attributes>
+            <Attribute collection="false" name="counter" required="true" type="Counter"/>
+         </Attributes>
+      </Fault>
+      <Fault name="UserError1">
+         <Attributes>
+            <Attribute name="data" type="string"/>
+         </Attributes>
+      </Fault>
+   </Faults>
+   <Diagrams>
+      <Diagram>
+         <Types>
+            <Type ref="Counter" x="745" y="300"/>
+            <Type ref="Sample" x="166" y="148"/>
+            <Type ref="NoSuchCounterException" x="444" y="383"/>
+         </Types>
+      </Diagram>
+   </Diagrams>
+   <Bindings>
+      <Binding protocol="trpc"/>
+      <Binding protocol="soap11"/>
+   </Bindings>
+   <Libraries>
+      <Library name="PerfLib"><![CDATA[(define nexj:example:performance:1.0:implementation:env:service-counters (make-hashtable))
+
+(define nexj:example:performance:1.0:marshaller:test-reference nexj:example:performance:1.0:type:Counter)
+]]></Library>
+   </Libraries>
+</SOADefinition>

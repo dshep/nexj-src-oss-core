@@ -1,0 +1,5 @@
+<Class description="A hint for aggregators telling them which hours they can skip.">
+   <Attributes>
+      <Attribute name="hour" required="true" type="integer"/>
+   </Attributes>
+</Class>

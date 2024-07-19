@@ -1,0 +1,15 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+   <xsd:element name="sequencechoiceexample" type="exampletype"/>
+   <xsd:complexType name="exampletype" mixed="true">
+      <xsd:sequence>
+         <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element name="delimiter" type="xsd:integer"/>
+            <xsd:element name="family" type="xsd:integer"/>
+            <xsd:element name="given" type="xsd:integer"/>
+            <xsd:element name="prefix" type="xsd:integer"/>
+            <xsd:element name="suffix" type="xsd:integer"/>
+         </xsd:choice>
+         <xsd:element name="validTime" minOccurs="0" maxOccurs="1" type="xsd:integer"/>
+      </xsd:sequence>
+   </xsd:complexType>
+</xsd:schema>

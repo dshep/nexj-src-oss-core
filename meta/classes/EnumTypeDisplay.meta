@@ -1,0 +1,25 @@
+<Class aspects="LOCKING" description="Localized display values for EnumTypeDisplay">
+   <Attributes>
+      <Attribute name="type" required="true" reverse="typeDisplayValues" type="EnumType"/>
+      <Attribute description="DENORMALIZED PK" name="typeCode" required="true" type="string"/>
+      <Attribute name="locale" required="true" type="string"/>
+      <Attribute description="Localized Caption" name="caption" required="true" type="string"/>
+      <Attribute caption="idsc.EnumTypeDisplay.description" description="Localized Description" name="description" type="string"/>
+   </Attributes>
+   <Events>
+      <Event name="create" privilege="EnumManage" visibility="public"/>
+      <Event name="update" privilege="EnumManage" visibility="public"/>
+      <Event name="delete" privilege="EnumManage" visibility="public"/>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping primaryTable="EnumTypeDisplay">
+         <AttributeMappings>
+            <AttributeMapping column="typeCode" name="typeCode"/>
+            <AttributeMapping column="locale" name="locale"/>
+            <AttributeMapping column="displayCaption" name="caption"/>
+            <AttributeMapping column="displayDescription" name="description"/>
+            <AttributeMapping destinationKey="EnumType.PK" name="type" sourceKey="EnumtypeDisplay.FK_Type"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

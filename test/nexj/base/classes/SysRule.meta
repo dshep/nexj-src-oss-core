@@ -1,0 +1,82 @@
+<Class description="Rules engine rule">
+   <Attributes>
+      <Attribute name="name" required="true" type="string"/>
+      <Attribute name="description" type="string"/>
+      <Attribute initializer="1" name="ordinal" required="true" type="double"/>
+      <Attribute name="ruleSetVersion" required="true" reverse="rules" type="SysRuleSetVersion"/>
+      <Attribute description="True if the rule is enabled" initializer="#t" name="enabled" required="true" type="boolean"/>
+      <Attribute description="True if the rule has been customized at run time" initializer="#t" name="customized" required="true" type="boolean"/>
+      <Attribute name="condition" type="string"/>
+      <Attribute name="action" type="string"/>
+      <Attribute initializer="0" name="locking" required="true" type="integer"/>
+   </Attributes>
+   <Events>
+      <Event description="Generates the rule expression from its definition" name="generate">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(try
+   `(rule ,(@ name)
+      (when
+         ,(let*
+            (
+               (istream (open-input-string (ifnull (@ condition) "")))
+               (condition (read istream))
+            )
+            (if (eof-object? condition)
+               #t
+               (if (eof-object? (read istream))
+                  condition
+                  (error "err.rules.condition" (@ condition) (@ name) (@ ruleSetVersion ruleSet name))
+               )
+            )
+         )
+         ,@(reverse!
+            (let ((istream (open-input-string (ifnull (@ action) ""))))
+               (do
+                  (
+                     (action (read istream) (read istream))
+                     (actions '() (cons action actions))
+                  )
+                  ((eof-object? action) actions)
+               )
+            )
+         )
+      )
+   )
+   (lambda (e)
+      (if (and (instance? e nexj.core.util.ErrorCode) ((e'errorCode)'startsWith "err.rules."))
+         (throw e)
+         (error "err.rules.loading" (@ name) (@ ruleSetVersion ruleSet name) e)
+      )
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event name="create" privilege="RuleSetManage" visibility="public">
+         <Actions/>
+      </Event>
+      <Event name="update" privilege="RuleSetManage" visibility="public">
+         <Actions>
+            <Action condition="(not (this'updated 'customized))" name="customize" type="before"><![CDATA[(this'customized #t)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event name="delete" privilege="RuleSetManage" visibility="public"/>
+      <Event args="attributes where orderBy count offset xlock" name="read" privilege="RuleSetManage" static="true" visibility="public"/>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="RuleDef">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name"/>
+            <AttributeMapping column="description" name="description"/>
+            <AttributeMapping column="locking" name="locking"/>
+            <AttributeMapping column="condition" name="condition"/>
+            <AttributeMapping column="action" name="action"/>
+            <AttributeMapping column="ordinal" name="ordinal"/>
+            <AttributeMapping name="ruleSetVersion" sourceKey="RuleDef.FK1"/>
+            <AttributeMapping column="enabled" name="enabled"/>
+            <AttributeMapping column="customized" name="customized"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

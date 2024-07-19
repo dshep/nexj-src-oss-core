@@ -1,0 +1,14 @@
+<Class>
+   <Attributes>
+      <Attribute collection="false" name="name" required="true" type="string"/>
+      <Attribute collection="true" name="cities" required="false" reverse="country" type="City"/>
+   </Attributes>
+   <PersistenceMapping caching="class" dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.Country">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name" table="test.Country"/>
+            <AttributeMapping destinationKey="City.FK" name="cities" sourceKey="Country.PK"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

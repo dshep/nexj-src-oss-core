@@ -1,0 +1,23 @@
+<ObjectQueue class="ObjectQueue" errorCount="3" errorQueue="ObjectErrorQueue" priority="10">
+   <ReceiverProperties>
+      <Collection name="server">
+         <Item>
+            <Component activation="singleton" type="nexj.core.rpc.queueing.ObjectRequestServer">
+               <Properties>
+                  <Property name="server">Server.Generic</Property>
+               </Properties>
+            </Component>
+         </Item>
+         <Item>
+            <Component activation="singleton" type="nexj.core.rpc.queueing.ObjectCommandServer">
+               <Properties>
+                  <Collection name="commandClass">
+                     <Item>nexj.core.monitoring.jmx.UpdateStatsCommand</Item>
+                     <Item>nexj.core.monitoring.jmx.StatMBeanCommand</Item>
+                  </Collection>
+               </Properties>
+            </Component>
+         </Item>
+      </Collection>
+   </ReceiverProperties>
+</ObjectQueue>

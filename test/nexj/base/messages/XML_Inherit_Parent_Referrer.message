@@ -1,0 +1,9 @@
+<Message format="XML">
+   <XMLMapping node="referrer" xsdtype="ParentReferrerType"/>
+   <Parts>
+      <Value name="name" type="string"/>
+      <Message aggregation="single" minCount="1" name="ref" ref="XML_Inherit_Parent">
+         <XMLMapping node="reference"/>
+      </Message>
+   </Parts>
+</Message>

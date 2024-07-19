@@ -1,0 +1,3 @@
+<Component type="nexj.core.persistence.sql.MaxPlus1Generator"
+	activation="singleton"
+	description="MaxRows+1 key generator"/>

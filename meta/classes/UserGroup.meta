@@ -1,0 +1,35 @@
+<Class base="Principal" caption="idsc.UserGroup.caption" description="Arbitrary Group of Users.  May also be used for assigning privileges.">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;G&quot;"/>
+      <Attribute cascade="delete" collection="true" description="Users that are a member of this group" name="users" reverse="userGroup" type="UserGroupLink"/>
+      <Attribute collection="true" description="Privileges associated with this group" name="privileges" reverse="userGroup" type="UserGroupPrivilegeLink"/>
+      <Attribute description="UserGroups are not fully groupSecruable (i.e. it depends on the context), so only respect read only." name="readable" type="boolean" value="(@ readableDeleteRO)"/>
+      <Attribute description="clause for assignment pickers" name="assignable" type="boolean" value="(and (@ isUserList) (@ readableGroupSecurable))"/>
+      <Attribute name="fullName" type="string" value="(@ displayName caption)"/>
+   </Attributes>
+   <Events>
+      <Event name="create" privilege="UserGroupCreate" visibility="public">
+         <Actions>
+            <Action condition="(null? (@ name))" name="initialize" relative="main" type="before"><![CDATA[(this'name "New UserGroup")]]></Action>
+         </Actions>
+      </Event>
+      <Event args="attributes where orderBy count offset xlock" name="read" static="true" visibility="public"/>
+      <Event name="delete" privilege="UserGroupDelete" visibility="public"/>
+      <Event description="Invalidates all the users in this group's caches to force them to be reloaded." name="invalidateCaches">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(for-each (lambda (ugl)
+      ((ugl'user)'invalidateCache)
+   )
+   (@ users)
+)   ]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="Principal">
+         <AttributeMappings>
+            <AttributeMapping destinationKey="UserGroupPrivLink.FK_UG" name="privileges" sourceKey="Principal.PK"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

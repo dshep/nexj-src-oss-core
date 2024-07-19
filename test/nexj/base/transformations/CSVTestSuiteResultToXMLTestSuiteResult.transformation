@@ -1,0 +1,19 @@
+<Transformation destination="XMLTestSuiteResult" source="CSVTestSuiteResult">
+   <Mappings>
+      <Mapping destination="tests date">
+         <Sources>
+            <Source source="rows date"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="tests status">
+         <Sources>
+            <Source source="rows status"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="tests data">
+         <Sources>
+            <Source source="rows result"/>
+         </Sources>
+      </Mapping>
+   </Mappings>
+</Transformation>

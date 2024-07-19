@@ -1,0 +1,8 @@
+<Message format="XML">
+   <XMLMapping envelope="soap" namespace="no" node="goodOne" uri="http://www.nexj.com/no"/>
+   <Parts>
+      <Message name="thing_d" ref="XML_Namespace_Derived_Referent">
+         <XMLMapping namespace="ho" uri="http://www.nexj.com/ho"/>
+      </Message>
+   </Parts>
+</Message>

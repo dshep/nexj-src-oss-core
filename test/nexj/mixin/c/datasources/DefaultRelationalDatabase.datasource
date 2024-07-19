@@ -1,0 +1,103 @@
+<RelationalDatabase description="RDBMS schema shared by all platforms">
+   <Tables>
+      <Table name="Contact" primaryKey="Contact_PK">
+         <Columns>
+            <Column name="id" type="binary" precision="16"/>
+            <Column name="primaryAddressId" type="binary" precision="16"/>
+            <Column name="readPrincipalId" type="binary" precision="16"/>
+            <Column name="title" type="string" precision="15"/>
+            <Column name="first_name" type="string" precision="20"/>
+            <Column name="last_name" type="string" precision="30"/>
+         </Columns>
+         <Indexes>
+            <Index name="Contact_PK" type="btree" unique="true">
+               <IndexColumn name="id" ascending="true"/>
+            </Index>
+            <Index name="Contact_AK1" type="btree" unique="true">
+               <IndexColumn name="last_name" ascending="true"/>
+               <IndexColumn name="first_name" ascending="true"/>
+               <IndexColumn name="id" ascending="true"/>
+            </Index>
+            <Index name="Contact_OI1" type="btree" unique="false">
+               <IndexColumn name="first_name" ascending="true"/>
+               <IndexColumn name="last_name" ascending="false"/>
+            </Index>
+            <Index name="Contact_FK1" type="btree" unique="false"
+                   relatedTable="Address">
+               <IndexColumn name="primaryAddressId" ascending="true"/>
+            </Index>
+            <Index name="Contact_FK2" type="btree" unique="false"
+                   relatedTable="User">
+               <IndexColumn name="readPrincipalId" ascending="true"/>
+            </Index>
+         </Indexes>
+      </Table>
+
+      <Table name="Address" primaryKey="Address_PK">
+         <Columns>
+            <Column name="id" type="binary" precision="16"/>
+            <Column name="contactId" type="binary" precision="16"/>
+            <Column name="country" type="string" precision="30"/>
+            <Column name="state" type="string" precision="20"/>
+            <Column name="city" type="string" precision="30"/>
+            <Column name="street" type="string" precision="50"/>
+            <Column name="code" type="string" precision="20"/>
+         </Columns>
+         <Indexes>
+            <Index name="Address_PK" type="btree" unique="true">
+               <IndexColumn name="id" ascending="true"/>
+            </Index>
+            <Index name="Address_FK1" type="btree" unique="false"
+                   relatedTable="Contact">
+               <IndexColumn name="contactId" ascending="true"/>
+            </Index>
+            <Index name="Address_OI1" type="btree" unique="false">
+               <IndexColumn name="contactId" ascending="true"/>
+               <IndexColumn name="country" ascending="true"/>
+            </Index>
+         </Indexes>
+      </Table>
+
+      <Table name="User" primaryKey="User_PK">
+         <Columns>
+            <Column name="id" type="binary" precision="16"/>
+            <Column name="contactId" type="binary" precision="16"/>
+            <Column name="tc" type="string" precision="1"/>
+            <Column name="name" type="string" precision="30"/>
+            <Column name="pwd" type="string" precision="12"/>
+            <Column name="updateCount" type="integer"/>
+         </Columns>
+         <Indexes>
+            <Index name="User_PK" type="btree" unique="true">
+               <IndexColumn name="id" ascending="true"/>
+            </Index>
+            <Index name="User_FK1" type="btree" unique="false"
+                   relatedTable="Contact">
+               <IndexColumn name="contactId" ascending="true"/>
+            </Index>
+         </Indexes>
+      </Table>
+      
+      <Table name="UGAssoc" primaryKey="UGAssoc_PK">
+         <Columns>
+            <Column name="id" type="binary" precision="16"/>
+            <Column name="userId" type="binary" precision="16"/>
+            <Column name="groupId" type="binary" precision="16"/>
+         </Columns>
+         <Indexes>
+            <Index name="UGAssoc_PK" type="btree" unique="true">
+               <IndexColumn name="id" ascending="true"/>
+            </Index>
+            <Index name="UGAssoc_FK1" type="btree" unique="false"
+                   relatedTable="User">
+               <IndexColumn name="userId" ascending="true"/>
+            </Index>
+            <Index name="UGAssoc_FK2" type="btree" unique="false"
+                   relatedTable="User">
+               <IndexColumn name="groupId" ascending="true"/>
+            </Index>
+         </Indexes>
+      </Table>
+   </Tables>
+</RelationalDatabase>
+

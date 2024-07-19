@@ -1,0 +1,93 @@
+<Class base="SysQueue">
+   <Attributes>
+      <Attribute name="type" required="true" type="string" value="&quot;WFQueue&quot;"/>
+      <Attribute description="Statistic's path." name="statPath" required="true" type="string" value="(string-append &quot;Workflow Queue/&quot; (@ name))" visibility="protected"/>
+      <Attribute cascade="cancel" collection="true" name="assignments" readPrivilege="WorkflowManage" reverse="queue" type="SysWorkflowAssignment"/>
+      <Attribute description="The Workflow Scheduler instance responsible for scheduling jobs on this queue." name="scheduler" reverse="queues" type="SysWorkflowSchedulerBatchJob"/>
+   </Attributes>
+   <Events>
+      <Event args="user" description="Gets next item for manual processing" name="getNextItem" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define col (SysWorkflowAssignment'read '(owner) `(and (= queue ,this) (or (null? owner) (= owner ,user))) '((priority . #t)) 1 0 #t))
+(if (col'empty)
+   '()
+   (let ((assignment (col'get 0)))
+      (if (null? (assignment'owner))
+         (assignment'owner user)
+      )
+      assignment
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="user" name="getNextItemGlobal" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define col (SysWorkflowAssignment'read '(owner) `(or (null? owner) (= owner ,user)) '((priority . #t)) 1 0 #t))
+(if (col'empty)
+   '()
+   (let ((assignment (col'get 0)))
+      (if (null? (assignment'owner))
+         (assignment'owner user)
+      )
+      assignment
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="assignment" name="remove" visibility="public">
+         <Actions>
+            <Action name="schedule" type="before"><![CDATA[(unless (null? (this'scheduler))
+   ((this'scheduler)'remove assignment)
+)
+]]></Action>
+            <Action name="main" type="main"><![CDATA[(assignment'delete)
+]]></Action>
+            <Action name="jmxQueueCounter" type="after"><![CDATA[(SysStat'incrCounter (@ statPath) "Dequeued Count" 1)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="assignment" name="add" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(assignment'priority 4)]]></Action>
+            <Action name="schedule" type="after"><![CDATA[(unless (null? (this'scheduler))
+   ((this'scheduler)'add assignment)
+)
+]]></Action>
+            <Action name="jmxQueueCounter" type="after"><![CDATA[(SysStat'incrCounter (@ statPath) "Enqueued Count" 1)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="assignment" name="assign" visibility="public"/>
+      <Event description="Overrides the privileges" name="create" privilege="WorkflowManage" visibility="public"/>
+      <Event description="Overrides the privileges; sets customized attribute." name="update" privilege="WorkflowManage" visibility="public"/>
+      <Event access="deletable" description="Privilege override, prevents deletion of system queues, and destroys throttle counter." name="delete" privilege="WorkflowManage" visibility="public"/>
+      <Event description="Reschedules the scheduler if queue changed." name="commit">
+         <Actions>
+            <Action condition="(not (null? (@ scheduler)))" name="reschedule" type="before"><![CDATA[(when (or (this'updated 'priority) (this'updated 'concurrency))
+   ((@ scheduler)'reschedule)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Initialize statistics." name="initializeStatistics">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let
+   (
+      (path (@ statPath))
+   )
+   (SysStat'define path "Enqueued Count" 'counter #t "SysQueueStat")
+   (SysStat'define path "Dequeued Count" 'counter #t "SysQueueStat")
+   (SysStat'define path "Average Execution Time (ms)" 'mean #t "SysQueueStat")
+)
+]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="Queue">
+         <AttributeMappings>
+            <AttributeMapping name="scheduler" sourceKey="WFQueue.FK1"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

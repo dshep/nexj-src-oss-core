@@ -1,0 +1,3 @@
+<Message format="XML" ref="SOAP_PatientDemographics">
+   <XMLMapping envelope="soap12" namespace="a" node="Patient"/>
+</Message>

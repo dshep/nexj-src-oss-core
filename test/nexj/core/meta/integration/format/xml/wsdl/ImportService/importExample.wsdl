@@ -1,0 +1,113 @@
+<wsdl:definitions
+   name="ImportExample"
+   targetNamespace="http://nexj.example.com/ns0/"
+   xmlns="http://whatever"
+   xmlns:tns="http://nexj.example.com/ns0/"
+   xmlns:elec="http://nexj.example.com/electronic/"
+   xmlns:home="http://nexj.example.com/home/"
+   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+   xmlns:xs1="http://www.w3.org/2001/XMLSchema"
+   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+   <wsdl:types>
+
+      <schema
+         targetNamespace="http://nexj.example.com/home/"
+         xmlns="http://www.w3.org/2001/XMLSchema"
+         xmlns:tns="http://nexj.example.com/home/">
+         <annotation>
+            <documentation>Example of a second schema contributing to the first</documentation>
+         </annotation>
+         <import namespace="http://nexj.example.com/electronic/" schemaLocation="electronic.xsd"/>
+         <element name="livingRoom">
+            <complexType>
+               <complexContent>
+                  <extension base="tns:room">
+                     <sequence>
+                        <element ref="elec:computer"/>
+                     </sequence>
+                  </extension>
+               </complexContent>
+            </complexType>
+         </element>
+      </schema>
+
+      <xs1:schema
+         targetNamespace="http://nexj.example.com/home/"
+         xmlns:tns="http://nexj.example.com/home/"
+         xmlns:elec="http://nexj.example.com/electronic/"
+         xmlns:xs2="http://www.w3.org/2001/XMLSchema"
+         xmlns="http://www.w3.org/2001/XMLSchema">
+         <annotation>
+            <documentation>Example of a schema relying on others to complete the namespace</documentation>
+         </annotation>
+
+         <import namespace="http://nexj.example.com/electronic/" schemaLocation="electronic.xsd"/>
+
+         <xs2:element name="Process">
+            <xs2:complexType>
+               <xs2:sequence>
+                  <xs2:element ref="tns:kitchen"/>
+                  <xs2:element ref="tns:livingRoom">
+                     <xs2:annotation>
+                        <xs2:documentation>livingRoom is defined in the next schema</xs2:documentation>
+                     </xs2:annotation>
+                  </xs2:element>
+               </xs2:sequence>
+            </xs2:complexType>
+         </xs2:element>
+
+         <xs2:element name="ProcessResponse"/>
+
+         <xs2:complexType name="room" abstract="true">
+            <xs2:attribute name="sqft" type="xs2:int"/>
+         </xs2:complexType>
+
+         <xs2:element name="kitchen">
+            <complexType>
+               <complexContent>
+                  <extension base="tns:room">
+                     <sequence>
+                        <element ref="elec:dishwasher"/>
+                     </sequence>
+                  </extension>
+               </complexContent>
+            </complexType>
+         </xs2:element>
+      </xs1:schema>
+
+   </wsdl:types>
+
+   <wsdl:message name="processRequest">
+      <wsdl:part name="parameters" element="home:Process"/>
+   </wsdl:message>
+   <wsdl:message name="processResponse">
+      <wsdl:part name="parameters" element="home:ProcessResponse"/>
+   </wsdl:message>
+
+   <wsdl:portType name="abstract">
+      <wsdl:operation name="process">
+         <wsdl:input message="tns:processRequest"/>
+         <wsdl:output message="tns:processResponse"/>
+      </wsdl:operation>
+   </wsdl:portType>
+
+   <wsdl:binding name="concrete" type="tns:abstract">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="process">
+         <soap:operation soapAction=""/>
+         <wsdl:input>
+            <soap:body use="literal" parts="parameters"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal" parts="parameters"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+
+   <wsdl:service name="ImportExample">
+      <wsdl:port name="endpoint" binding="tns:concrete">
+         <soap:address location="http://nexj.example.com"/>
+      </wsdl:port>
+   </wsdl:service>
+
+</wsdl:definitions>

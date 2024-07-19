@@ -1,0 +1,9 @@
+REGEDIT4
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
+"KeepAliveTime"=dword:000493E0
+"Tcp1323Opts"=dword:00000002
+"TcpTimedWaitDelay"=dword:0000001e
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\InetInfo\Parameters]
+"ListenBackLog"=dword:000000c8

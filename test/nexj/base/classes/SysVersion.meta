@@ -1,0 +1,32 @@
+<Class description="System upgrade version information" visibility="protected">
+   <Attributes>
+      <Attribute description="Metadata namespace" name="namespace" readOnly="true" required="true" type="string" visibility="protected"/>
+      <Attribute description="Metadata version" name="version" readOnly="true" required="true" type="string" visibility="protected"/>
+      <Attribute description="Metadata upgrade step within the version, -1 if the version is up to date" name="step" readOnly="true" required="true" type="integer" visibility="protected"/>
+      <Attribute description="True if the schema may be upgraded automatically" name="upgradable" readOnly="true" required="true" type="boolean" visibility="protected"/>
+      <Attribute description="True if the schema contains test data, which can be recreated automatically" name="test" readOnly="true" required="true" type="boolean" visibility="protected"/>
+      <Attribute description="True if the initial (seed) data has been loaded" name="loaded" required="true" type="boolean" visibility="protected"/>
+   </Attributes>
+   <Events>
+      <Event name="unload" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(for-each
+   (lambda (v) (v'loaded #f))
+   (this 'read () () () () () ())
+)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="Version">
+         <AttributeMappings>
+            <AttributeMapping column="namespace" name="namespace"/>
+            <AttributeMapping column="version" name="version"/>
+            <AttributeMapping column="step" name="step"/>
+            <AttributeMapping column="upgradable" name="upgradable"/>
+            <AttributeMapping column="test" name="test"/>
+            <AttributeMapping column="loaded" name="loaded"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

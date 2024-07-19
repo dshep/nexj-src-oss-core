@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+<portlet-app id="portlet-app" version="1.0"
+   xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+	${ifenterprise:
+	  ${if:wsrp.enabled:
+	     ${portlets}
+	   }
+	}
+</portlet-app>

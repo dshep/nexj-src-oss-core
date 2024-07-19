@@ -1,0 +1,29 @@
+<Service layout="startSrcAssocAnchorPos:1024,14;startX:285;endY:450;startY:22;endX:301" variables="exception">
+   <TryCatch caption="Outer Try" layout="w:483;h:316;y:93;x:145" name="outerTry" variable="exception">
+      <Try>
+         <Script caption="Before Semaphore" layout="y:15;x:102" name="scrBeforeSemaphore"><![CDATA[(this'trace (string-append (this'trace) "BEFORE;"))
+this]]></Script>
+         <Semaphore caption="Semaphore" layout="w:225;h:172;srcAssocAnchorPos:1024,119;y:63;x:37" name="semaphore" queue="Semaphore">
+            <Script caption="Throw Exceptions" layout="y:45;x:52" name="throwBlock"><![CDATA[(import 'java.lang.IllegalStateException)
+(import 'java.lang.NumberFormatException)
+
+(this'trace (string-append (this'trace) "EXECUTE_SEMAPHORE;"))
+
+(cond
+   ((this'throwOuterEx) (throw (java.lang.NumberFormatException'new "Outer Ex")) )
+   ((this'throwUncaughtEx) (error "Uncaught Ex") )
+)
+this
+]]></Script>
+            <Script caption="Done Semaphore" layout="y:92;x:53" name="scrDoneSemaphore"><![CDATA[(this'trace (string-append (this'trace) "END_SEMAPHORE;"))
+this]]></Script>
+         </Semaphore>
+         <Script caption="After Semaphore" layout="y:249;x:117" name="scrAfterSemaphore"><![CDATA[(this'trace (string-append (this'trace) "AFTER;"))
+this]]></Script>
+      </Try>
+      <Catch exception="java.lang.NumberFormatException" name="catchOuter">
+         <Script caption="Catch Outer" layout="y:242;x:737" name="scrCatchOuter"><![CDATA[(this'trace (string-append (this'trace) "CAUGHT_OUTER;"))
+this]]></Script>
+      </Catch>
+   </TryCatch>
+</Service>

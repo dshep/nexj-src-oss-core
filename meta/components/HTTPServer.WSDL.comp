@@ -1,0 +1,15 @@
+<Component type="nexj.core.rpc.http.TemplateHTTPServer" activation="context"
+   description="The WSDL HTTP server">
+   <Properties>
+      <Property name="type">WSDL</Property>
+      <Property name="bufferSize">8192</Property>
+      <Property name="address" override="httpURL"/>
+      <Property name="protocol" override="httpRPCProtocol">soap</Property>
+      <Property name="MIMEType">text/xml</Property>
+      <Property name="template">application.wsdl</Property>
+      <Property name="RPCEnabled" override="authRPC">true</Property>
+      <Property name="trustedCertificate" override="trust"/>
+      <Property name="RPCServer">true</Property>
+      <Property name="anonEnabled" override="anonRPC"/>
+   </Properties>
+</Component>

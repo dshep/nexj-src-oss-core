@@ -1,0 +1,13 @@
+<Class base="Contact">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;CWI&quot;"/>
+      <Attribute initializer="(Address'new (: country &quot;Canada&quot;) (: code &quot;init&quot;))" name="initAddress" required="true" reverse="contact" type="Address" where="(= code &quot;init&quot;)"/>
+   </Attributes>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="test.Contact">
+         <AttributeMappings>
+            <AttributeMapping destinationKey="Address.FK1" name="initAddress"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

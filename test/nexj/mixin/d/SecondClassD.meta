@@ -1,0 +1,6 @@
+<Class>
+   <Attributes>
+      <Attribute name="code" type="string"/>
+      <Attribute name="first" type="string"/>
+   </Attributes>
+</Class>

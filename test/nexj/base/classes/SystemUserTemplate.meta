@@ -1,0 +1,33 @@
+<Class base="UserTemplate" description="NOT DONE - Singleton - System User Template">
+   <Attributes>
+      <Attribute name="typeCode" required="true" type="string" value="&quot;Y&quot;"/>
+   </Attributes>
+   <Events>
+      <Event name="getInstance" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let*
+   (
+      (key `(SystemUserTemplate name System))
+      (principal (SysCache'get key))
+   )
+   (when (null? principal)
+      (suspend-transaction
+         (let ((p (SystemUserTemplate'read '(typeCode name description updateCount icon) '(= name "SystemUser") '() 1 0 #f)))
+            (unless (p'empty)
+               (set! principal (p'get 0))
+               (SysCache'putInstance key principal '(typeCode name description updateCount icon))
+            )
+         )
+      )
+   )
+   principal
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="instance" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(this'getInstance)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

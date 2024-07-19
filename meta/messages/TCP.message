@@ -1,0 +1,8 @@
+<Message aggregation="random" base="Raw" description="Raw TCP message." lax="true">
+   <Parts>
+      <Value description="The remote host IP address the message is sent to or received from." name="host" type="string"/>
+      <Value description="The remote port the message is sent to or received from." name="port" type="integer"/>
+      <Value description="The local host IP address the message is sent or received on." name="localHost" type="string"/>
+      <Value description="The local port the message is sent or received on." name="localPort" type="integer"/>
+   </Parts>
+</Message>

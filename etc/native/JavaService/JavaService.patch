@@ -1,0 +1,982 @@
+diff -durN src.orig\CommandInterface.h src\CommandInterface.h
+--- src.orig\CommandInterface.h	Sun Dec 12 13:56:17 2004
++++ src\CommandInterface.h	Thu Oct 25 12:48:10 2007
+@@ -40,7 +40,7 @@
+ #define COMMAND_SUCCESS 0
+ // failure indicated with a non-zero exit status,
+ // set greater than zero for ERRORLEVEL tests in batch files
+-#define COMMAND_FAILURE 666
++#define COMMAND_FAILURE 1
+ 
+ 
+ /*
+diff -durN src.orig\EventLogger.cpp src\EventLogger.cpp
+--- src.orig\EventLogger.cpp	Fri Sep 23 15:30:44 2005
++++ src\EventLogger.cpp	Thu Sep 20 17:01:53 2007
+@@ -80,9 +80,9 @@
+ void logError(HANDLE hEventSource, const char* errText, const char* extraText)
+ {
+ 
+-	const int errTextLen = strlen(errText) + 1;
+-	const int extraTextLen = (extraText != NULL) ? strlen(extraText) : 0;
+-	const int totalTextLen = errTextLen + extraTextLen;
++	const size_t errTextLen = strlen(errText) + 1;
++	const size_t extraTextLen = (extraText != NULL) ? strlen(extraText) : 0;
++	const size_t totalTextLen = errTextLen + extraTextLen;
+ 
+ 	char* fullText = (char*)malloc(totalTextLen);
+ 	memset(fullText, 0, totalTextLen);
+diff -durN src.orig\HelpCommand.cpp src\HelpCommand.cpp
+--- src.orig\HelpCommand.cpp	Tue Jan 17 05:04:44 2006
++++ src\HelpCommand.cpp	Thu Oct 25 12:47:37 2007
+@@ -66,7 +66,7 @@
+ 		printCommandDetails(helpTopic);
+ 	}
+ 
+-	return COMMAND_SUCCESS;
++	return COMMAND_FAILURE;
+ }
+ 
+ 
+diff -durN src.orig\JavaInterface.cpp src\JavaInterface.cpp
+--- src.orig\JavaInterface.cpp	Tue Jan 17 05:04:44 2006
++++ src\JavaInterface.cpp	Thu Sep 20 17:01:53 2007
+@@ -613,11 +613,11 @@
+ 	ServiceLogger::write(className);
+ 	ServiceLogger::write("'\n");
+ 
+-	int nameLen = strlen(className);
++	size_t nameLen = strlen(className);
+ 
+ 	char* classPath = new char[nameLen + 1];
+ 	memset(classPath, 0, nameLen + 1);
+-	for (int i = 0; i <= nameLen; i++)
++	for (unsigned int i = 0; i <= nameLen; i++)
+ 	{
+ 		const char chr = className[i];
+ 
+diff -durN src.orig\JavaService.dep src\JavaService.dep
+--- src.orig\JavaService.dep	Mon Aug 01 18:20:24 2005
++++ src\JavaService.dep	Wed Dec 31 19:00:00 1969
+@@ -1,154 +0,0 @@
+-# Microsoft Developer Studio Generated Dependency File, included by JavaService.mak
+-
+-.\CommandFactory.cpp : \
+-	".\CommandFactory.h"\
+-	".\CommandInterface.h"\
+-	".\DaemonCommand.h"\
+-	".\HelpCommand.h"\
+-	".\InstallCommand.h"\
+-	".\LicenceCommand.h"\
+-	".\QueryCommand.h"\
+-	".\ServiceCommand.h"\
+-	".\StatusCommand.h"\
+-	".\UninstallCommand.h"\
+-	".\VersionCommand.h"\
+-	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+-	
+-
+-.\DaemonCommand.cpp : \
+-	".\CommandInterface.h"\
+-	".\DaemonCommand.h"\
+-	".\ServiceHandler.h"\
+-	
+-
+-.\EventLogger.cpp : \
+-	".\EventLogger.h"\
+-	".\Messages.h"\
+-	".\ServiceLogger.h"\
+-	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+-	
+-
+-.\HelpCommand.cpp : \
+-	".\CommandInterface.h"\
+-	".\HelpCommand.h"\
+-	
+-
+-.\InstallCommand.cpp : \
+-	".\CommandInterface.h"\
+-	".\InstallCommand.h"\
+-	".\RegistryHandler.h"\
+-	".\ServiceCommand.h"\
+-	".\ServiceParameters.h"\
+-	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+-	
+-
+-.\JavaInterface.cpp : \
+-	"..\..\j2sdk\include\jni.h"\
+-	"..\..\j2sdk\include\win32\jni_md.h"\
+-	".\EventLogger.h"\
+-	".\JavaInterface.h"\
+-	".\Messages.h"\
+-	".\ServiceHandler.h"\
+-	".\ServiceLogger.h"\
+-	".\ServiceParameters.h"\
+-	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+-	
+-
+-.\JavaService.cpp : \
+-	".\CommandFactory.h"\
+-	".\CommandInterface.h"\
+-	".\ServiceHandler.h"\
+-	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+-	
+-
+-.\JavaService.rc : \
+-	".\JavaService.rc2"\
+-	".\Messages.rc"\
+-	".\MSG00001.bin"\
+-	".\VersionNo.h"\
+-	
+-
+-.\LicenceCommand.cpp : \
+-	".\CommandInterface.h"\
+-	".\LicenceCommand.h"\
+-	
+-
+-.\ProcessGlobals.cpp : \
+-	".\EventLogger.h"\
+-	".\ProcessGlobals.h"\
+-	".\ServiceParameters.h"\
+-	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+-	
+-
+-.\QueryCommand.cpp : \
+-	".\CommandInterface.h"\
+-	".\QueryCommand.h"\
+-	".\ServiceCommand.h"\
+-	".\ServiceParameters.h"\
+-	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+-	
+-
+-.\RegistryHandler.cpp : \
+-	".\RegistryHandler.h"\
+-	".\ServiceParameters.h"\
+-	".\VersionNo.h"\
+-	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+-	
+-
+-.\ServiceCommand.cpp : \
+-	".\CommandInterface.h"\
+-	".\ServiceCommand.h"\
+-	".\ServiceParameters.h"\
+-	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+-	
+-
+-.\ServiceHandler.cpp : \
+-	".\EventLogger.h"\
+-	".\JavaInterface.h"\
+-	".\Messages.h"\
+-	".\ProcessGlobals.h"\
+-	".\ServiceHandler.h"\
+-	".\ServiceLogger.h"\
+-	".\ServiceParameters.h"\
+-	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+-	
+-
+-.\ServiceLogger.cpp : \
+-	".\ServiceLogger.h"\
+-	
+-
+-.\ServiceParameters.cpp : \
+-	".\RegistryHandler.h"\
+-	".\ServiceParameters.h"\
+-	".\VersionNo.h"\
+-	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+-	
+-
+-.\StatusCommand.cpp : \
+-	".\CommandInterface.h"\
+-	".\ServiceCommand.h"\
+-	".\ServiceParameters.h"\
+-	".\StatusCommand.h"\
+-	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+-	
+-
+-.\UninstallCommand.cpp : \
+-	".\CommandInterface.h"\
+-	".\RegistryHandler.h"\
+-	".\ServiceCommand.h"\
+-	".\UninstallCommand.h"\
+-	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+-	
+-
+-.\VersionCommand.cpp : \
+-	".\CommandInterface.h"\
+-	".\VersionCommand.h"\
+-	".\VersionNo.h"\
+-	
+-
+-!IF  "$(CFG)" == "JavaService - Win32 Release"
+-
+-!ELSEIF  "$(CFG)" == "JavaService - Win32 Debug"
+-
+-!ENDIF 
+-
+diff -durN src.orig\JavaService.mak src\JavaService.mak
+--- src.orig\JavaService.mak	Mon Aug 01 18:20:24 2005
++++ src\JavaService.mak	Wed Dec 31 19:00:00 1969
+@@ -1,466 +0,0 @@
+-# Microsoft Developer Studio Generated NMAKE File, Based on JavaService.dsp
+-!IF "$(CFG)" == ""
+-CFG=JavaService - Win32 Debug
+-!MESSAGE No configuration specified. Defaulting to JavaService - Win32 Debug.
+-!ENDIF 
+-
+-!IF "$(CFG)" != "JavaService - Win32 Release" && "$(CFG)" != "JavaService - Win32 Debug"
+-!MESSAGE Invalid configuration "$(CFG)" specified.
+-!MESSAGE You can specify a configuration when running NMAKE
+-!MESSAGE by defining the macro CFG on the command line. For example:
+-!MESSAGE 
+-!MESSAGE NMAKE /f "JavaService.mak" CFG="JavaService - Win32 Debug"
+-!MESSAGE 
+-!MESSAGE Possible choices for configuration are:
+-!MESSAGE 
+-!MESSAGE "JavaService - Win32 Release" (based on "Win32 (x86) Console Application")
+-!MESSAGE "JavaService - Win32 Debug" (based on "Win32 (x86) Console Application")
+-!MESSAGE 
+-!ERROR An invalid configuration is specified.
+-!ENDIF 
+-
+-!IF "$(OS)" == "Windows_NT"
+-NULL=
+-!ELSE 
+-NULL=nul
+-!ENDIF 
+-
+-!IF  "$(CFG)" == "JavaService - Win32 Release"
+-
+-OUTDIR=.\Release
+-INTDIR=.\Release
+-# Begin Custom Macros
+-OutDir=.\Release
+-# End Custom Macros
+-
+-ALL : ".\MSG00001.bin" ".\Messages.rc" ".\Messages.h" "$(OUTDIR)\JavaService.exe" "$(OUTDIR)\JavaService.bsc"
+-
+-
+-CLEAN :
+-	-@erase "$(INTDIR)\CommandFactory.obj"
+-	-@erase "$(INTDIR)\CommandFactory.sbr"
+-	-@erase "$(INTDIR)\DaemonCommand.obj"
+-	-@erase "$(INTDIR)\DaemonCommand.sbr"
+-	-@erase "$(INTDIR)\EventLogger.obj"
+-	-@erase "$(INTDIR)\EventLogger.sbr"
+-	-@erase "$(INTDIR)\HelpCommand.obj"
+-	-@erase "$(INTDIR)\HelpCommand.sbr"
+-	-@erase "$(INTDIR)\InstallCommand.obj"
+-	-@erase "$(INTDIR)\InstallCommand.sbr"
+-	-@erase "$(INTDIR)\JavaInterface.obj"
+-	-@erase "$(INTDIR)\JavaInterface.sbr"
+-	-@erase "$(INTDIR)\JavaService.obj"
+-	-@erase "$(INTDIR)\JavaService.res"
+-	-@erase "$(INTDIR)\JavaService.sbr"
+-	-@erase "$(INTDIR)\LicenceCommand.obj"
+-	-@erase "$(INTDIR)\LicenceCommand.sbr"
+-	-@erase "$(INTDIR)\ProcessGlobals.obj"
+-	-@erase "$(INTDIR)\ProcessGlobals.sbr"
+-	-@erase "$(INTDIR)\QueryCommand.obj"
+-	-@erase "$(INTDIR)\QueryCommand.sbr"
+-	-@erase "$(INTDIR)\RegistryHandler.obj"
+-	-@erase "$(INTDIR)\RegistryHandler.sbr"
+-	-@erase "$(INTDIR)\ServiceCommand.obj"
+-	-@erase "$(INTDIR)\ServiceCommand.sbr"
+-	-@erase "$(INTDIR)\ServiceHandler.obj"
+-	-@erase "$(INTDIR)\ServiceHandler.sbr"
+-	-@erase "$(INTDIR)\ServiceLogger.obj"
+-	-@erase "$(INTDIR)\ServiceLogger.sbr"
+-	-@erase "$(INTDIR)\ServiceParameters.obj"
+-	-@erase "$(INTDIR)\ServiceParameters.sbr"
+-	-@erase "$(INTDIR)\StatusCommand.obj"
+-	-@erase "$(INTDIR)\StatusCommand.sbr"
+-	-@erase "$(INTDIR)\UninstallCommand.obj"
+-	-@erase "$(INTDIR)\UninstallCommand.sbr"
+-	-@erase "$(INTDIR)\vc60.idb"
+-	-@erase "$(INTDIR)\VersionCommand.obj"
+-	-@erase "$(INTDIR)\VersionCommand.sbr"
+-	-@erase "$(OUTDIR)\JavaService.bsc"
+-	-@erase "$(OUTDIR)\JavaService.exe"
+-	-@erase ".\Messages.h"
+-	-@erase ".\Messages.rc"
+-	-@erase ".\MSG00001.bin"
+-
+-"$(OUTDIR)" :
+-    if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
+-
+-CPP=cl.exe
+-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\..\j2sdk\include" /I "..\..\j2sdk\include\win32" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\JavaService.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+-
+-.c{$(INTDIR)}.obj::
+-   $(CPP) @<<
+-   $(CPP_PROJ) $< 
+-<<
+-
+-.cpp{$(INTDIR)}.obj::
+-   $(CPP) @<<
+-   $(CPP_PROJ) $< 
+-<<
+-
+-.cxx{$(INTDIR)}.obj::
+-   $(CPP) @<<
+-   $(CPP_PROJ) $< 
+-<<
+-
+-.c{$(INTDIR)}.sbr::
+-   $(CPP) @<<
+-   $(CPP_PROJ) $< 
+-<<
+-
+-.cpp{$(INTDIR)}.sbr::
+-   $(CPP) @<<
+-   $(CPP_PROJ) $< 
+-<<
+-
+-.cxx{$(INTDIR)}.sbr::
+-   $(CPP) @<<
+-   $(CPP_PROJ) $< 
+-<<
+-
+-RSC=rc.exe
+-RSC_PROJ=/l 0x809 /fo"$(INTDIR)\JavaService.res" /d "NDEBUG" 
+-BSC32=bscmake.exe
+-BSC32_FLAGS=/nologo /o"$(OUTDIR)\JavaService.bsc" 
+-BSC32_SBRS= \
+-	"$(INTDIR)\CommandFactory.sbr" \
+-	"$(INTDIR)\DaemonCommand.sbr" \
+-	"$(INTDIR)\EventLogger.sbr" \
+-	"$(INTDIR)\HelpCommand.sbr" \
+-	"$(INTDIR)\InstallCommand.sbr" \
+-	"$(INTDIR)\JavaInterface.sbr" \
+-	"$(INTDIR)\JavaService.sbr" \
+-	"$(INTDIR)\LicenceCommand.sbr" \
+-	"$(INTDIR)\ProcessGlobals.sbr" \
+-	"$(INTDIR)\QueryCommand.sbr" \
+-	"$(INTDIR)\RegistryHandler.sbr" \
+-	"$(INTDIR)\ServiceCommand.sbr" \
+-	"$(INTDIR)\ServiceHandler.sbr" \
+-	"$(INTDIR)\ServiceLogger.sbr" \
+-	"$(INTDIR)\ServiceParameters.sbr" \
+-	"$(INTDIR)\StatusCommand.sbr" \
+-	"$(INTDIR)\UninstallCommand.sbr" \
+-	"$(INTDIR)\VersionCommand.sbr"
+-
+-"$(OUTDIR)\JavaService.bsc" : "$(OUTDIR)" $(BSC32_SBRS)
+-    $(BSC32) @<<
+-  $(BSC32_FLAGS) $(BSC32_SBRS)
+-<<
+-
+-LINK32=link.exe
+-LINK32_FLAGS=advapi32.lib /nologo /subsystem:console /incremental:no /pdb:"$(OUTDIR)\JavaService.pdb" /machine:I386 /out:"$(OUTDIR)\JavaService.exe" 
+-LINK32_OBJS= \
+-	"$(INTDIR)\CommandFactory.obj" \
+-	"$(INTDIR)\DaemonCommand.obj" \
+-	"$(INTDIR)\EventLogger.obj" \
+-	"$(INTDIR)\HelpCommand.obj" \
+-	"$(INTDIR)\InstallCommand.obj" \
+-	"$(INTDIR)\JavaInterface.obj" \
+-	"$(INTDIR)\JavaService.obj" \
+-	"$(INTDIR)\LicenceCommand.obj" \
+-	"$(INTDIR)\ProcessGlobals.obj" \
+-	"$(INTDIR)\QueryCommand.obj" \
+-	"$(INTDIR)\RegistryHandler.obj" \
+-	"$(INTDIR)\ServiceCommand.obj" \
+-	"$(INTDIR)\ServiceHandler.obj" \
+-	"$(INTDIR)\ServiceLogger.obj" \
+-	"$(INTDIR)\ServiceParameters.obj" \
+-	"$(INTDIR)\StatusCommand.obj" \
+-	"$(INTDIR)\UninstallCommand.obj" \
+-	"$(INTDIR)\VersionCommand.obj" \
+-	"$(INTDIR)\JavaService.res"
+-
+-"$(OUTDIR)\JavaService.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+-    $(LINK32) @<<
+-  $(LINK32_FLAGS) $(LINK32_OBJS)
+-<<
+-
+-!ELSEIF  "$(CFG)" == "JavaService - Win32 Debug"
+-
+-OUTDIR=.\Debug
+-INTDIR=.\Debug
+-# Begin Custom Macros
+-OutDir=.\Debug
+-# End Custom Macros
+-
+-ALL : "$(OUTDIR)\JavaServiceDebug.exe" "$(OUTDIR)\JavaService.bsc"
+-
+-
+-CLEAN :
+-	-@erase "$(INTDIR)\CommandFactory.obj"
+-	-@erase "$(INTDIR)\CommandFactory.sbr"
+-	-@erase "$(INTDIR)\DaemonCommand.obj"
+-	-@erase "$(INTDIR)\DaemonCommand.sbr"
+-	-@erase "$(INTDIR)\EventLogger.obj"
+-	-@erase "$(INTDIR)\EventLogger.sbr"
+-	-@erase "$(INTDIR)\HelpCommand.obj"
+-	-@erase "$(INTDIR)\HelpCommand.sbr"
+-	-@erase "$(INTDIR)\InstallCommand.obj"
+-	-@erase "$(INTDIR)\InstallCommand.sbr"
+-	-@erase "$(INTDIR)\JavaInterface.obj"
+-	-@erase "$(INTDIR)\JavaInterface.sbr"
+-	-@erase "$(INTDIR)\JavaService.obj"
+-	-@erase "$(INTDIR)\JavaService.res"
+-	-@erase "$(INTDIR)\JavaService.sbr"
+-	-@erase "$(INTDIR)\LicenceCommand.obj"
+-	-@erase "$(INTDIR)\LicenceCommand.sbr"
+-	-@erase "$(INTDIR)\ProcessGlobals.obj"
+-	-@erase "$(INTDIR)\ProcessGlobals.sbr"
+-	-@erase "$(INTDIR)\QueryCommand.obj"
+-	-@erase "$(INTDIR)\QueryCommand.sbr"
+-	-@erase "$(INTDIR)\RegistryHandler.obj"
+-	-@erase "$(INTDIR)\RegistryHandler.sbr"
+-	-@erase "$(INTDIR)\ServiceCommand.obj"
+-	-@erase "$(INTDIR)\ServiceCommand.sbr"
+-	-@erase "$(INTDIR)\ServiceHandler.obj"
+-	-@erase "$(INTDIR)\ServiceHandler.sbr"
+-	-@erase "$(INTDIR)\ServiceLogger.obj"
+-	-@erase "$(INTDIR)\ServiceLogger.sbr"
+-	-@erase "$(INTDIR)\ServiceParameters.obj"
+-	-@erase "$(INTDIR)\ServiceParameters.sbr"
+-	-@erase "$(INTDIR)\StatusCommand.obj"
+-	-@erase "$(INTDIR)\StatusCommand.sbr"
+-	-@erase "$(INTDIR)\UninstallCommand.obj"
+-	-@erase "$(INTDIR)\UninstallCommand.sbr"
+-	-@erase "$(INTDIR)\vc60.idb"
+-	-@erase "$(INTDIR)\vc60.pdb"
+-	-@erase "$(INTDIR)\VersionCommand.obj"
+-	-@erase "$(INTDIR)\VersionCommand.sbr"
+-	-@erase "$(OUTDIR)\JavaService.bsc"
+-	-@erase "$(OUTDIR)\JavaServiceDebug.exe"
+-	-@erase "$(OUTDIR)\JavaServiceDebug.pdb"
+-
+-"$(OUTDIR)" :
+-    if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
+-
+-CPP=cl.exe
+-CPP_PROJ=/nologo /MLd /W3 /Gm /GX /Zi /Od /I "..\..\j2sdk\include" /I "..\..\j2sdk\include\win32" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\JavaService.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
+-
+-.c{$(INTDIR)}.obj::
+-   $(CPP) @<<
+-   $(CPP_PROJ) $< 
+-<<
+-
+-.cpp{$(INTDIR)}.obj::
+-   $(CPP) @<<
+-   $(CPP_PROJ) $< 
+-<<
+-
+-.cxx{$(INTDIR)}.obj::
+-   $(CPP) @<<
+-   $(CPP_PROJ) $< 
+-<<
+-
+-.c{$(INTDIR)}.sbr::
+-   $(CPP) @<<
+-   $(CPP_PROJ) $< 
+-<<
+-
+-.cpp{$(INTDIR)}.sbr::
+-   $(CPP) @<<
+-   $(CPP_PROJ) $< 
+-<<
+-
+-.cxx{$(INTDIR)}.sbr::
+-   $(CPP) @<<
+-   $(CPP_PROJ) $< 
+-<<
+-
+-RSC=rc.exe
+-RSC_PROJ=/l 0x809 /fo"$(INTDIR)\JavaService.res" /d "_DEBUG" 
+-BSC32=bscmake.exe
+-BSC32_FLAGS=/nologo /o"$(OUTDIR)\JavaService.bsc" 
+-BSC32_SBRS= \
+-	"$(INTDIR)\CommandFactory.sbr" \
+-	"$(INTDIR)\DaemonCommand.sbr" \
+-	"$(INTDIR)\EventLogger.sbr" \
+-	"$(INTDIR)\HelpCommand.sbr" \
+-	"$(INTDIR)\InstallCommand.sbr" \
+-	"$(INTDIR)\JavaInterface.sbr" \
+-	"$(INTDIR)\JavaService.sbr" \
+-	"$(INTDIR)\LicenceCommand.sbr" \
+-	"$(INTDIR)\ProcessGlobals.sbr" \
+-	"$(INTDIR)\QueryCommand.sbr" \
+-	"$(INTDIR)\RegistryHandler.sbr" \
+-	"$(INTDIR)\ServiceCommand.sbr" \
+-	"$(INTDIR)\ServiceHandler.sbr" \
+-	"$(INTDIR)\ServiceLogger.sbr" \
+-	"$(INTDIR)\ServiceParameters.sbr" \
+-	"$(INTDIR)\StatusCommand.sbr" \
+-	"$(INTDIR)\UninstallCommand.sbr" \
+-	"$(INTDIR)\VersionCommand.sbr"
+-
+-"$(OUTDIR)\JavaService.bsc" : "$(OUTDIR)" $(BSC32_SBRS)
+-    $(BSC32) @<<
+-  $(BSC32_FLAGS) $(BSC32_SBRS)
+-<<
+-
+-LINK32=link.exe
+-LINK32_FLAGS=advapi32.lib /nologo /subsystem:console /incremental:no /pdb:"$(OUTDIR)\JavaServiceDebug.pdb" /debug /machine:I386 /out:"$(OUTDIR)\JavaServiceDebug.exe" /pdbtype:sept 
+-LINK32_OBJS= \
+-	"$(INTDIR)\CommandFactory.obj" \
+-	"$(INTDIR)\DaemonCommand.obj" \
+-	"$(INTDIR)\EventLogger.obj" \
+-	"$(INTDIR)\HelpCommand.obj" \
+-	"$(INTDIR)\InstallCommand.obj" \
+-	"$(INTDIR)\JavaInterface.obj" \
+-	"$(INTDIR)\JavaService.obj" \
+-	"$(INTDIR)\LicenceCommand.obj" \
+-	"$(INTDIR)\ProcessGlobals.obj" \
+-	"$(INTDIR)\QueryCommand.obj" \
+-	"$(INTDIR)\RegistryHandler.obj" \
+-	"$(INTDIR)\ServiceCommand.obj" \
+-	"$(INTDIR)\ServiceHandler.obj" \
+-	"$(INTDIR)\ServiceLogger.obj" \
+-	"$(INTDIR)\ServiceParameters.obj" \
+-	"$(INTDIR)\StatusCommand.obj" \
+-	"$(INTDIR)\UninstallCommand.obj" \
+-	"$(INTDIR)\VersionCommand.obj" \
+-	"$(INTDIR)\JavaService.res"
+-
+-"$(OUTDIR)\JavaServiceDebug.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+-    $(LINK32) @<<
+-  $(LINK32_FLAGS) $(LINK32_OBJS)
+-<<
+-
+-!ENDIF 
+-
+-
+-!IF "$(NO_EXTERNAL_DEPS)" != "1"
+-!IF EXISTS("JavaService.dep")
+-!INCLUDE "JavaService.dep"
+-!ELSE 
+-!MESSAGE Warning: cannot find "JavaService.dep"
+-!ENDIF 
+-!ENDIF 
+-
+-
+-!IF "$(CFG)" == "JavaService - Win32 Release" || "$(CFG)" == "JavaService - Win32 Debug"
+-SOURCE=.\CommandFactory.cpp
+-
+-"$(INTDIR)\CommandFactory.obj"	"$(INTDIR)\CommandFactory.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\DaemonCommand.cpp
+-
+-"$(INTDIR)\DaemonCommand.obj"	"$(INTDIR)\DaemonCommand.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\EventLogger.cpp
+-
+-"$(INTDIR)\EventLogger.obj"	"$(INTDIR)\EventLogger.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\HelpCommand.cpp
+-
+-"$(INTDIR)\HelpCommand.obj"	"$(INTDIR)\HelpCommand.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\InstallCommand.cpp
+-
+-"$(INTDIR)\InstallCommand.obj"	"$(INTDIR)\InstallCommand.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\JavaInterface.cpp
+-
+-"$(INTDIR)\JavaInterface.obj"	"$(INTDIR)\JavaInterface.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\JavaService.cpp
+-
+-"$(INTDIR)\JavaService.obj"	"$(INTDIR)\JavaService.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\JavaService.rc
+-
+-"$(INTDIR)\JavaService.res" : $(SOURCE) "$(INTDIR)"
+-	$(RSC) $(RSC_PROJ) $(SOURCE)
+-
+-
+-SOURCE=.\LicenceCommand.cpp
+-
+-"$(INTDIR)\LicenceCommand.obj"	"$(INTDIR)\LicenceCommand.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\ProcessGlobals.cpp
+-
+-"$(INTDIR)\ProcessGlobals.obj"	"$(INTDIR)\ProcessGlobals.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\QueryCommand.cpp
+-
+-"$(INTDIR)\QueryCommand.obj"	"$(INTDIR)\QueryCommand.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\RegistryHandler.cpp
+-
+-"$(INTDIR)\RegistryHandler.obj"	"$(INTDIR)\RegistryHandler.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\ServiceCommand.cpp
+-
+-"$(INTDIR)\ServiceCommand.obj"	"$(INTDIR)\ServiceCommand.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\ServiceHandler.cpp
+-
+-"$(INTDIR)\ServiceHandler.obj"	"$(INTDIR)\ServiceHandler.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\ServiceLogger.cpp
+-
+-"$(INTDIR)\ServiceLogger.obj"	"$(INTDIR)\ServiceLogger.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\ServiceParameters.cpp
+-
+-"$(INTDIR)\ServiceParameters.obj"	"$(INTDIR)\ServiceParameters.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\StatusCommand.cpp
+-
+-"$(INTDIR)\StatusCommand.obj"	"$(INTDIR)\StatusCommand.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\UninstallCommand.cpp
+-
+-"$(INTDIR)\UninstallCommand.obj"	"$(INTDIR)\UninstallCommand.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\VersionCommand.cpp
+-
+-"$(INTDIR)\VersionCommand.obj"	"$(INTDIR)\VersionCommand.sbr" : $(SOURCE) "$(INTDIR)"
+-
+-
+-SOURCE=.\Messages.mc
+-
+-!IF  "$(CFG)" == "JavaService - Win32 Release"
+-
+-InputDir=.
+-InputPath=.\Messages.mc
+-InputName=Messages
+-
+-".\Messages.h"	".\MSG00001.bin"	".\Messages.rc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+-	<<tempfile.bat 
+-	@echo off 
+-	mc.exe "$(InputDir)\$(InputName).mc" -r "$(InputDir)" -h "$(InputDir)"
+-<< 
+-	
+-
+-!ELSEIF  "$(CFG)" == "JavaService - Win32 Debug"
+-
+-InputDir=.
+-InputPath=.\Messages.mc
+-InputName=Messages
+-
+-".\Messages.h"	".\MSG00001.bin"	".\Messages.rc" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+-	<<tempfile.bat 
+-	@echo off 
+-	mc.exe "$(InputDir)\$(InputName).mc" -r "$(InputDir)" -h "$(InputDir)"
+-<< 
+-	
+-
+-!ENDIF 
+-
+-
+-!ENDIF 
+-
+diff -durN src.orig\JavaService.rc2 src\JavaService.rc2
+--- src.orig\JavaService.rc2	Wed Jan 04 05:04:41 2006
++++ src\JavaService.rc2	Thu Sep 20 17:01:52 2007
+@@ -21,9 +21,9 @@
+  PRODUCTVERSION PRODUCTVER
+  FILEFLAGSMASK 0x3fL
+ #ifdef _DEBUG
+- FILEFLAGS 0x1L
++ FILEFLAGS VS_FF_DEBUG | VS_FF_SPECIALBUILD
+ #else
+- FILEFLAGS 0x0L
++ FILEFLAGS VS_FF_SPECIALBUILD
+ #endif
+  FILEOS 0x40004L
+  FILETYPE 0x1L
+@@ -41,10 +41,9 @@
+             VALUE "LegalCopyright", "(c) 2006 Multiplan Consultants Limited\0"
+             VALUE "LegalTrademarks", "\0"
+             VALUE "OriginalFilename", "JavaService.exe\0"
+-            VALUE "PrivateBuild", "http://forge.objectweb.org/projects/javaservice/\0"
+             VALUE "ProductName", "ObjectWeb JavaService\0"
+             VALUE "ProductVersion", STRPRODUCTVER
+-            VALUE "SpecialBuild", "http://javaservice.objectweb.org\0"
++            VALUE "SpecialBuild", "http://javaservice.objectweb.org, modified by NexJ Systems Inc.\0"
+         END
+     END
+     BLOCK "VarFileInfo"
+diff -durN src.orig\Makefile src\Makefile
+--- src.orig\Makefile	Wed Dec 31 19:00:00 1969
++++ src\Makefile	Thu Oct 25 13:26:13 2007
+@@ -0,0 +1,79 @@
++CXX=cl.exe
++CXXFLAGS=/nologo /W3 /O2
++RSC=rc.exe
++MC=mc.exe
++LINKFLAGS=/nologo /subsystem:console /incremental:no 
++OUT=.\win32
++
++all: $(OUT)\JavaService.exe
++
++clean:
++	del /q /f Messages.rc
++	del /q /f Messages.h
++	del /q /f MSG00001.bin 
++	del /q /f *.idb
++	rmdir /q /s $(OUT)
++
++.PHONY: all clean
++
++HEADERS= $(JAVA_HOME)\include\jni.h \
++	$(JAVA_HOME)\include\win32\jni_md.h \
++	CommandFactory.h \
++	CommandInterface.h \
++	DaemonCommand.h \
++	EventLogger.h \
++	InstallCommand.h \
++	JavaInterface.h \
++	LicenceCommand.h \
++	ProcessGlobals.h \
++	QueryCommand.h \
++	RegistryHandler.h \
++	ServiceCommand.h \
++	ServiceLogger.h \
++	ServiceParameters.h \
++	ServiceState.h \
++	StatusCommand.h \
++	UninstallCommand.h \
++	VersionCommand.h \
++	VersionNo.h \
++
++
++SOURCE= CommandFactory.cpp \
++	DaemonCommand.cpp \
++	EventLogger.cpp \
++	HelpCommand.cpp \
++	InstallCommand.cpp \
++	JavaInterface.cpp \
++	JavaService.cpp \
++	LicenceCommand.cpp \
++	ProcessGlobals.cpp \
++	QueryCommand.cpp \
++	RegistryHandler.cpp \
++	ServiceCommand.cpp \
++	ServiceHandler.cpp \
++	ServiceLogger.cpp \
++	ServiceParameters.cpp \
++	ServiceParametersFactory.cpp \
++	ServiceState.cpp \
++	StatusCommand.cpp \
++	UninstallCommand.cpp \
++	VersionCommand.cpp \
++
++
++$(OUT):
++	if not exist $(OUT) mkdir $(OUT)
++
++Messages.rc : Messages.mc $(OUT)
++	$(MC) Messages.mc 
++
++$(OUT)\JavaService.res: JavaService.rc JavaService.rc2 Messages.rc \
++	VersionNo.h $(OUT) 
++	$(RSC) /l 0x809 /fo"$(OUT)\JavaService.res" /d "NDEBUG" JavaService.rc
++
++$(OUT)\JavaService.exe: $(HEADERS) $(SOURCE) $(OUT)\JavaService.res Messages.rc
++	$(CXX) $(CXXFLAGS) /MT /EHsc \
++		/I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32" \
++		/D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /FD \
++		$(SOURCE) $(OUT)\JavaService.res \
++		/Fe$(OUT)\JavaService.exe /Fo$(OUT)\ \
++		/link $(LINKFLAGS) advapi32.lib bufferoverflowu.lib
+diff -durN src.orig\README.txt src\README.txt
+--- src.orig\README.txt	Wed Dec 31 19:00:00 1969
++++ src\README.txt	Thu Oct 25 13:06:53 2007
+@@ -0,0 +1,4 @@
++This project contains the code for ObjectWeb's JavaService 2.0.10.0, modified
++slightly to compile for the amd64 architecture without warnings.
++
++Build with Platform SDK for Windows Server 2003 R2 (win32 version uses the Visual Studio 6.0 C++ compiler).
+diff -durN src.orig\RegistryHandler.cpp src\RegistryHandler.cpp
+--- src.orig\RegistryHandler.cpp	Thu Dec 15 10:39:43 2005
++++ src\RegistryHandler.cpp	Thu Sep 20 17:01:52 2007
+@@ -106,7 +106,7 @@
+ 
+ void RegistryHandler::createServiceKeyName()
+ {
+-	int keyNameLen = strlen(SERVICE_REG_KEY_PREFIX)
++	size_t keyNameLen = strlen(SERVICE_REG_KEY_PREFIX)
+ 				   + strlen(serviceName)
+ 				   + strlen(SERVICE_REG_KEY_SUFFIX)
+ 				   + 1; // null terminator
+@@ -124,7 +124,7 @@
+ void RegistryHandler::createLoggingKeyName()
+ {
+ 
+-	int keyNameLen = strlen(SERV_LOGGING_REG_KEY_PREFIX)
++	size_t keyNameLen = strlen(SERV_LOGGING_REG_KEY_PREFIX)
+ 				   + strlen(serviceName)
+ 				   + 1; // null terminator
+ 
+@@ -612,7 +612,7 @@
+ 		if (getRegValueString(javaRegKey, JAVA_VERSION_REG_KEY, &jvmVersion))
+ 		{
+ 			// read the JVM library location
+-             int jvmLibraryLen = strlen(JAVA_REG_KEY)
++             size_t jvmLibraryLen = strlen(JAVA_REG_KEY)
+ 							   + strlen(jvmVersion)
+ 							   + 2; // null terminator and one '\'
+ 
+@@ -671,7 +671,7 @@
+ 
+ 
+ 
+-bool RegistryHandler::storeRegValue(HKEY hRegKey, const char* entryKey, int valueType, BYTE* entryValue, int valueLen)
++bool RegistryHandler::storeRegValue(HKEY hRegKey, const char* entryKey, int valueType, BYTE* entryValue, size_t valueLen)
+ {
+ 	bool ok = false;
+ 
+@@ -685,7 +685,7 @@
+ 	}
+ 	else
+ 	{
+-		LONG entryStatus = RegSetValueEx(hRegKey, entryKey, 0, valueType,  entryValue, valueLen);
++		LONG entryStatus = RegSetValueEx(hRegKey, entryKey, 0, valueType,  entryValue, (DWORD)valueLen);
+ 		
+ 		ok = (entryStatus == ERROR_SUCCESS);
+ 	}
+@@ -703,7 +703,7 @@
+ 	}
+ 	else
+ 	{
+-		int valueLen = strlen(entryValue) + 1; // length to include null terminator
++		size_t valueLen = strlen(entryValue) + 1; // length to include null terminator
+ 
+ 		return storeRegValue(hRegKey, entryKey, REG_SZ, (BYTE*)entryValue, valueLen);
+ 	}
+@@ -719,7 +719,7 @@
+ 	}
+ 	else
+ 	{
+-		int valueLen = strlen(entryValue) + 1; // length to include null terminator
++		size_t valueLen = strlen(entryValue) + 1; // length to include null terminator
+ 
+ 		return storeRegValue(hRegKey, entryKey, REG_EXPAND_SZ, (BYTE*)entryValue, valueLen);
+ 	}
+diff -durN src.orig\RegistryHandler.h src\RegistryHandler.h
+--- src.orig\RegistryHandler.h	Thu Dec 15 10:39:43 2005
++++ src\RegistryHandler.h	Thu Sep 20 17:01:52 2007
+@@ -61,7 +61,7 @@
+ 
+ 	bool deleteRegKey(const char* regKeyName);
+ 
+-	bool storeRegValue(HKEY hRegKey, const char* entryKey, int valueType, BYTE* entryValue, int valueLen);
++	bool storeRegValue(HKEY hRegKey, const char* entryKey, int valueType, BYTE* entryValue, size_t valueLen);
+ 
+ 	bool storeRegValueString(HKEY hRegKey, const char* entryKey, const char* entryValue);
+ 
+diff -durN src.orig\ServiceCommand.cpp src\ServiceCommand.cpp
+--- src.orig\ServiceCommand.cpp	Tue Jan 17 05:04:44 2006
++++ src\ServiceCommand.cpp	Thu Sep 20 17:01:52 2007
+@@ -287,14 +287,14 @@
+ 	if (dependsOn != NULL)
+ 	{
+ 		// set up dependency parameter with double (triple) null-terminator
+-		int dependencyLen = strlen(dependsOn) + 3;
++		size_t dependencyLen = strlen(dependsOn) + 3;
+ 		dependency = new char[dependencyLen];
+ 		memset(dependency, 0, dependencyLen);
+ 		strcpy(dependency, dependsOn);
+ 
+ 		// comma delimiters can be used for multiple dependencies, so convert
+ 		// any found in the string to be single null delimiters to form a list
+-		for (int i = 0; i < dependencyLen; i++)
++		for (unsigned int i = 0; i < dependencyLen; i++)
+ 		{
+ 			if (dependency[i] == ',')
+ 			{
+diff -durN src.orig\ServiceHandler.cpp src\ServiceHandler.cpp
+--- src.orig\ServiceHandler.cpp	Fri Jan 20 04:58:28 2006
++++ src\ServiceHandler.cpp	Thu Sep 20 17:01:53 2007
+@@ -404,7 +404,7 @@
+ 	const DWORD currentPathLength = GetEnvironmentVariable("PATH", NULL, 0);
+ 
+ 	//Allocate a buffer big enough for the current path and the new path.
+-	const int pathBufferLen = currentPathLength + strlen(pathExt) + 2;
++	const size_t pathBufferLen = currentPathLength + strlen(pathExt) + 2;
+ 	char *currentPath = (char *)malloc(pathBufferLen);
+ 
+ 	if (currentPath == NULL)
+diff -durN src.orig\ServiceParameters.cpp src\ServiceParameters.cpp
+--- src.orig\ServiceParameters.cpp	Tue Jan 17 05:04:44 2006
++++ src\ServiceParameters.cpp	Thu Sep 20 17:01:52 2007
+@@ -49,7 +49,7 @@
+ 
+ // Option to be used when specifying Java class path for JVM invocation
+ static const char *DEF_CLASS_PATH = "-Djava.class.path=";
+-static const int DEF_CLASS_PATH_LEN = strlen(DEF_CLASS_PATH);
++static const size_t DEF_CLASS_PATH_LEN = strlen(DEF_CLASS_PATH);
+ 
+ 
+ //
+@@ -191,7 +191,7 @@
+ 			if (equalsPos != NULL)
+ 			{
+ 				const char* originalValue = equalsPos + 1;
+-				const int newOptionLen = DEF_CLASS_PATH_LEN + strlen(originalValue) + 1;
++				const size_t newOptionLen = DEF_CLASS_PATH_LEN + strlen(originalValue) + 1;
+ 
+ 		        char *newOption = (char *)malloc(newOptionLen);
+ 		        strcpy(newOption, DEF_CLASS_PATH);
+@@ -220,7 +220,7 @@
+ 
+ 			// add -Djava.class.path=envDefinition to list of jvm options
+ 
+-			const int newOptionLen = DEF_CLASS_PATH_LEN + strlen(classPathEnvVar) + 1;
++			const size_t newOptionLen = DEF_CLASS_PATH_LEN + strlen(classPathEnvVar) + 1;
+ 
+ 	        char *newOption = (char *)malloc(newOptionLen);
+ 	        strcpy(newOption, DEF_CLASS_PATH);
+@@ -309,7 +309,7 @@
+ 
+ 	if (newString != NULL)
+ 	{
+-		int stringLen = strlen(newString);
++		size_t stringLen = strlen(newString);
+ 		char* allocated = new char[stringLen + 1];
+ 		strcpy(allocated, newString);
+ 		allocated[stringLen] = '\0';
+diff -durN src.orig\ServiceParametersFactory.cpp src\ServiceParametersFactory.cpp
+--- src.orig\ServiceParametersFactory.cpp	Tue Jan 17 05:04:44 2006
++++ src\ServiceParametersFactory.cpp	Thu Sep 20 17:01:52 2007
+@@ -508,7 +508,7 @@
+ 
+ 	for (int i = 0; i < optionCount; i++)
+ 	{
+-		int arglen = strlen(args[i]);
++		size_t arglen = strlen(args[i]);
+ 		char* arg = new char[arglen + 1];
+ 		strcpy(arg, args[i]);
+ 		arg[arglen] = '\0';
+diff -durN src.orig\VersionNo.h src\VersionNo.h
+--- src.orig\VersionNo.h	Mon May 01 05:09:24 2006
++++ src\VersionNo.h	Thu Sep 20 17:01:53 2007
+@@ -7,10 +7,10 @@
+ #ifndef __VERSION_NO_H__
+ #define __VERSION_NO_H__
+ 
+-#define FILEVER         2,0,10,0
+-#define PRODUCTVER      2,1,10,0
+-#define STRFILEVER     "2,0,10,0\0"
+-#define STRPRODUCTVER  "2,0,10,0\0"
++#define FILEVER         2,0,10,1
++#define PRODUCTVER      2,1,10,1
++#define STRFILEVER     "2,0,10,1\0"
++#define STRPRODUCTVER  "2,0,10,1\0"
+ 
+ #endif // __VERSION_NO_H__
+ 

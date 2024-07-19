@@ -1,0 +1,11 @@
+<Component type="nexj.core.monitoring.jmx.StatManager" activation="singleton"
+      description="The statistics manager">
+   <Properties>
+      <Collection name="initializer">
+         <Item>
+            <Component type="nexj.core.meta.integration.ChannelStatInitializer" activation="singleton"/>
+         </Item>
+      </Collection>
+      <Property name="contextComponent">System.InvocationContext</Property>
+   </Properties>
+</Component>

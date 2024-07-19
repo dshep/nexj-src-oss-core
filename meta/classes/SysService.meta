@@ -1,0 +1,83 @@
+<Class base="SysWorkflow" description="Service instance">
+   <Attributes>
+      <Attribute description="Service type code" name="type" readOnly="true" required="true" type="string" value="&quot;S&quot;"/>
+   </Attributes>
+   <Events>
+      <Event args="name message output args" description="Invokes the service with a given message, output channel and arguments" name="invoke" static="true" vararg="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysService.invoke" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="name version" description="Finds a service by name and version" name="findFlow" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysService.findFlow" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event description="Completes the service execution" name="complete">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysService.complete" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="attributes" description="Loads the object and state attributes" name="load" vararg="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysService.load" name="load" type="before"/>
+         </Actions>
+      </Event>
+      <Event description="Cleans up the service instance resources" name="delete" privilege="WorkflowManage" visibility="public">
+         <Actions>
+            <Action description="Clean up the workflow instance resources" method="nexj.core.runtime.sys.SysService.delete" name="cleanupCase" type="before"/>
+            <Action description="Cleans up the resources of the steps referenced by the state" name="cleanupResources" type="before"><![CDATA[(define state (@ state))
+(unless (or (null? state) (state'final))
+   (state'removeConcurrent '())
+   (this'cleanup (state'cleanupStepCollection))
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="step" description="Returns the activity token for a given step" name="getToken">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[((@ state)'getToken (step'activity))]]></Action>
+         </Actions>
+      </Event>
+      <Event args="step token" description="Sets the activity token for a given step" name="setToken">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[((@ state)'setToken ((step'next)'activity) token)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Returns the service execution result" name="result">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(if (@ done)
+   (this'getToken '())
+   (error "err.integration.service.inProgress" (@ name) (@ version))
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="state sEntry sService nVersion parallelArgs" description="Used for parallel execution of Fork/Join branches." name="invokeParallel" static="true">
+         <Arguments>
+            <Argument name="state" required="true" type="any"/>
+            <Argument name="sEntry" required="true" type="string"/>
+            <Argument name="sService" required="true" type="string"/>
+            <Argument name="nVersion" required="true" type="integer"/>
+            <Argument name="parallelArgs" required="true" type="list"/>
+         </Arguments>
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysService.invokeParallel" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="semaphore instance sEntry nIndex sService nVersion arg" description="Used for parallel execution of Fork/Join branches." name="startParallel" static="true">
+         <Arguments>
+            <Argument name="semaphore" required="true" type="any"/>
+            <Argument name="instance" required="true" type="any"/>
+            <Argument name="sEntry" required="true" type="string"/>
+            <Argument name="nIndex" required="true" type="integer"/>
+            <Argument name="sService" required="true" type="string"/>
+            <Argument name="nVersion" required="true" type="integer"/>
+            <Argument name="arg" required="true" type="any"/>
+         </Arguments>
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysService.startParallel" name="main" type="main"/>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

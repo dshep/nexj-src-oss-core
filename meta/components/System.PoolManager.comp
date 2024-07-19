@@ -1,0 +1,8 @@
+<Component activation="singleton" description="The resource and consumer pool manager" type="nexj.core.rpc.pool.PoolManager">
+   <Properties>
+      <Property name="statManager">System.StatManager</Property>
+      <Collection name="poolProvider">
+         <Item>System.Timer</Item>
+      </Collection>
+   </Properties>
+</Component>

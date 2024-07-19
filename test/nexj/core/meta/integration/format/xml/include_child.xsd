@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+      targetNamespace="http://namespaceTwo"
+      xmlns:jxb="http://java.sun.com/xml/ns/jaxb" 
+      xmlns:tns="http://namespaceTwo"
+        elementFormDefault="qualified"
+        attributeFormDefault="qualified" jxb:version="2.0">
+
+   
+   <element name="element1">
+      <complexType>
+         <attribute name="attribute1" type="string" use="required" fixed="CVS" />
+      </complexType>  
+   </element>
+
+   <element name="element2">  
+      <complexType>
+         <attribute name="attribute2" type="string" use="required" fixed="crproductservice" />
+      </complexType>
+   </element>     
+
+</schema>

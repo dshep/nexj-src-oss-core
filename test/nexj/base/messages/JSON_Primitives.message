@@ -1,0 +1,15 @@
+<Message format="JSON">
+   <JSONMapping key="key1:primitives"/> 
+   <Parts>
+      <Value minCount="1" name="key1" type="string" />
+      <Value name="key2" type="boolean" />
+      <Value name="key3" type="integer" />
+      <Value name="key4" type="float" />
+      <Value name="key5" type="double" />
+      <Value name="key6" type="long" />
+      <Value name="key7" type="timestamp" />
+      <Value name="key8" type="decimal" />
+      <Value name="key9" type="binary" />
+      <Value name="key10" type="any" />
+   </Parts>
+</Message>

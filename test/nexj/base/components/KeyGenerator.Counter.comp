@@ -1,0 +1,3 @@
+<Component type="nexj.core.persistence.CounterGenerator"
+	activation="singleton"
+	description="Persistent counter key generator"/>

@@ -1,0 +1,71 @@
+<SOADefinition name="nexj:soa:Registry" version="1.0">
+   <Service>
+      <Interfaces>
+         <Interface default="true" ref="Registry"/>
+      </Interfaces>
+   </Service>
+   <Interfaces>
+      <Interface name="Registry">
+         <Method name="addDefinition">
+            <Arguments>
+               <Argument description="The source code for the SOA definition." name="definition" type="string"/>
+            </Arguments>
+         </Method>
+         <Method description="Gets an SOA definition file so that a developer can add it to a model." name="getDefinition">
+            <Arguments>
+               <Argument description="The name of the SOA definition to retrieve." name="name" type="string"/>
+               <Argument description="The version of the SOA definition to retrieve; null to get the latest." name="version" type="string"/>
+            </Arguments>
+            <Result description="The source code for the SOA definition." type="string"/>
+         </Method>
+         <Method description="Adds or updates an instance of a service." name="addService">
+            <Arguments>
+               <Argument name="service" type="ServiceInstance"/>
+            </Arguments>
+         </Method>
+         <Method description="Gets the endpoint for the default instance of the service." name="getService">
+            <Arguments>
+               <Argument description="The fully-qualified name of the service (i.e. including the SOA definition name)." name="serviceName" type="string"/>
+            </Arguments>
+            <Result type="ServiceInstance"/>
+         </Method>
+         <Method description="Gets all registered instances of a service." name="getServices">
+            <Arguments>
+               <Argument description="The fully-qualified name of the service." name="serviceName" type="string"/>
+            </Arguments>
+            <Result collection="true" type="ServiceInstance"/>
+         </Method>
+      </Interface>
+   </Interfaces>
+   <Types>
+      <Type name="ServiceInstance">
+         <Attributes>
+            <Attribute description="The unique name of this instance of the service." name="name" type="string"/>
+            <Attribute description="The fully-qualified name of the service." name="service" type="string"/>
+            <Attribute description="The binding to use to access the service." name="binding" type="string"/>
+            <Attribute description="The service address." name="address" type="string"/>
+            <Attribute description="The credentials to access the service." name="credential" type="Credential"/>
+            <Attribute collection="true" name="properties" type="Property"/>
+         </Attributes>
+      </Type>
+      <Type name="Credential">
+         <Attributes/>
+      </Type>
+      <Type bases="Credential" name="BasicCredential">
+         <Attributes>
+            <Attribute description="The user id." name="login" type="string"/>
+            <Attribute description="The password." name="password" type="string"/>
+         </Attributes>
+      </Type>
+      <Type bases="Credential" name="PerimeterCredential"/>
+      <Type name="Property">
+         <Attributes>
+            <Attribute name="name" required="true" type="string"/>
+            <Attribute name="value" type="any"/>
+         </Attributes>
+      </Type>
+   </Types>
+   <Bindings>
+      <Binding protocol="trpc"/>
+   </Bindings>
+</SOADefinition>

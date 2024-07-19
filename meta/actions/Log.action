@@ -1,0 +1,13 @@
+<Action caption="Log" description="Creates log entries." icon="note_edit" service="true" tooltip="Creates log entries." workflow="true">
+   <Arguments>
+      <Argument default="&quot;debug&quot;" description="Log level - one of &quot;warn&quot;, &quot;info&quot;, &quot;debug&quot; (default), &quot;fatal&quot;, &quot;error&quot;, &quot;dump&quot;" name="level" type="any"/>
+      <Argument default="&quot;{0}&quot;" description="Optional string or string id.  If present the args are formatted based on this string.  Otherwise, all args are displayed." name="id" type="any"/>
+      <Argument default="((@))" description="List of arguments to log." name="args" type="list"/>
+   </Arguments>
+   <Script><![CDATA[(if (= id "{0}")
+   `(begin (logger',(string->symbol level) ,@args) this)
+   `(begin (logger',(string->symbol level) (format ,id ,@args)) this)
+)   
+; "fatal", "error", "warn", "info", "debug" or "dump"
+]]></Script>
+</Action>

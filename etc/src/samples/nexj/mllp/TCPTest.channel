@@ -1,0 +1,9 @@
+<TCP defaultUser="nexjsa" encoding="utf-8" localPort="3100" readTimeout="60000" splitter="TCPChannel.MLLPMessageSplitter">
+   <ServiceBindings>
+      <ServiceBinding output="" service="MLLPReceive">
+         <Arguments>
+            <Argument name="receiver" value="&quot;EchoService&quot;"/>
+         </Arguments>
+      </ServiceBinding>
+   </ServiceBindings>
+</TCP>

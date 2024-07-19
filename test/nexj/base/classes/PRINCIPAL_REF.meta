@@ -1,0 +1,24 @@
+<Aspect aspects="PRINCIPAL_REF_2" pointcuts="TestPointcut" validation="(@ readable)" where="(if ((invocation-context)'partitioned) (= (@ principal) (user)) #t)">
+   <Attributes>
+      <Attribute initializer="(user)" name="principal" required="true" type="Principal"/>
+      <Attribute name="principal2" type="Principal"/>
+      <Attribute description="For testing event access attribute inheritance" name="readable" readOnly="true" type="boolean" value="(not (null? (@ principal)))"/>
+      <Attribute name="AOP2" static="true" type="integer" value="2" visibility="protected"/>
+      <Attribute name="AOP1" static="true" type="string" value="&quot;PRINCIPAL_REF&quot;" visibility="protected"/>
+      <Attribute caption="aspectDerivedAttrCaption" name="aspectDerivedAttr" type="string"/>
+   </Attributes>
+   <Events>
+      <Event access="readable" args="attributes where orderBy count offset xlock" description="This is the framework read event. The main action is implemented by the framework." name="read" privilege="readContact" static="true" visibility="public"/>
+      <Event name="testAccess"/>
+   </Events>
+   <PersistenceMappings>
+      <PersistenceMapping dataSource="DefaultRelationalDatabase">
+         <RelationalMapping>
+            <AttributeMappings>
+               <AttributeMapping name="principal" sourceKey="PRINCIPAL_REF.FK_Usr"/>
+               <AttributeMapping name="principal2"/>
+            </AttributeMappings>
+         </RelationalMapping>
+      </PersistenceMapping>
+   </PersistenceMappings>
+</Aspect>

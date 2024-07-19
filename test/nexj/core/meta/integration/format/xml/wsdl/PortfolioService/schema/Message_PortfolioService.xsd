@@ -1,0 +1,51 @@
+<schema attributeFormDefault="qualified" elementFormDefault="qualified"
+	targetNamespace="http://service.amfam.com/portfolioservice/message"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:automation="http://service.amfam.com/portfolioservice/automation"
+	xmlns:tns="http://service.amfam.com/portfolioservice/message">
+	<import
+		namespace="http://service.amfam.com/portfolioservice/automation"
+		schemaLocation="Automation_PortfolioRetrieve.xsd" />
+
+	<element name="retrieveData">
+		<complexType>
+			<sequence>
+				<element name="RetrieveCriteria"
+					type="automation:RetrieveCriteriaType" />
+			</sequence>
+			<attribute fixed="HARVEST" name="automationSchemaSourceTool"
+				type="string" use="required" />
+			<attribute fixed="portfolioservice"
+				name="automationSchemaProject" type="string" use="required" />
+			<attribute fixed="1.0" name="automationSchemaVersion"
+				type="string" use="required" />
+			<attribute fixed="harvest" name="serviceSourceTool"
+				type="string" use="required" />
+			<attribute fixed="portfolioservice" name="serviceProject"
+				type="string" use="required" />
+			<attribute fixed="1.0" name="serviceVersion" type="string"
+				use="required" />
+		</complexType>
+	</element>
+
+	<element name="retrieveDataResponse">
+		<complexType>
+			<sequence>
+				<element name="ResponseData"
+					type="automation:ResponseDataType" />
+			</sequence>
+			<attribute fixed="HARVEST" name="automationSchemaSourceTool"
+				type="string" use="required" />
+			<attribute fixed="portfolioservice"
+				name="automationSchemaProject" type="string" use="required" />
+			<attribute fixed="1.0" name="automationSchemaVersion"
+				type="string" use="required" />
+			<attribute fixed="harvest" name="serviceSourceTool"
+				type="string" use="required" />
+			<attribute fixed="portfolioservice" name="serviceProject"
+				type="string" use="required" />
+			<attribute fixed="1.0" name="serviceVersion" type="string"
+				use="required" />
+		</complexType>
+	</element>
+</schema>

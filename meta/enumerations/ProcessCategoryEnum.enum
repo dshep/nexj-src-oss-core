@@ -1,0 +1,22 @@
+<Enumeration description="Process Category Enumeration - used to identify the category of a SysProcess for filtering." typeCode="PROCESSCATENUM">
+   <Values>
+      <Value displayUpdateable="false" hasBehavior="true" name="BATCH" value="B">
+         <Locales>
+            <Locale caption="Batch Process" name="en" shortCaption="Batch Process"/>
+            <Locale caption="Traitement par lot" name="fr" shortCaption="Traitement par lot"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="QUEUED" value="Q">
+         <Locales>
+            <Locale caption="Queued Process" name="en" shortCaption="Queued Process"/>
+            <Locale caption="Processus mis en file d'attente" name="fr" shortCaption="Process. mis en file"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="SYNC" value="S">
+         <Locales>
+            <Locale caption="Sync Process" name="en" shortCaption="Sync Process"/>
+            <Locale caption="Processus de synchronisation" name="fr" shortCaption="Process. synchronis."/>
+         </Locales>
+      </Value>
+   </Values>
+</Enumeration>

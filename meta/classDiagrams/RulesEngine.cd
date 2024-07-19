@@ -1,0 +1,34 @@
+<ClassModelCollection>
+   <ClassModel class="SysRule" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/SysRule.meta" visibleAttributes="enabled ordinal description action name ruleSetVersion condition locking customized" visibleEvents="generate:0" x="465" y="294">
+      <Association name="ruleSetVersion" srcAnchorAlignment="default" srcAnchorOffset="-1"/>
+   </ClassModel>
+   <ClassModel class="SysRuleSet" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/SysRuleSet.meta" visibleAttributes="locking name description current versions" visibleEvents="create:0 generate:0 update:0" x="185" y="87">
+      <Association name="current" srcAnchorAlignment="bottom" srcAnchorOffset="85"/>
+      <Association name="versions" srcAnchorAlignment="bottom" srcAnchorOffset="16"/>
+   </ClassModel>
+   <ClassModel class="SysRuleSetVersion" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/SysRuleSetVersion.meta" visibleAttributes="version locking rules ruleSet" visibleEvents="generate:0" x="180" y="318"/>
+   <Notes>
+      <Note h="-1" w="150" x="22" y="15">
+         <Text><![CDATA[Rules Engine Model
+]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="417" y="78">
+         <Attachments>
+            <Attachment ref="SysRuleSet"/>
+         </Attachments>
+         <Text><![CDATA[Named set of rules for the rules engine]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="155" y="457">
+         <Attachments>
+            <Attachment ref="SysRuleSetVersion"/>
+         </Attachments>
+         <Text><![CDATA[Version controlled rule set attribute container]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="446" y="211">
+         <Attachments>
+            <Attachment ref="SysRule"/>
+         </Attachments>
+         <Text><![CDATA[Rules engine rule]]></Text>
+      </Note>
+   </Notes>
+</ClassModelCollection>

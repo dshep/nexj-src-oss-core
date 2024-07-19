@@ -1,0 +1,10 @@
+<Message format="HL7">
+   <HL7Mapping name="H"/>
+   <Parts>
+      <Message maxCount="0" name="q">
+         <Parts>
+            <Message minCount="1" name="I" ref="HL7_I"/>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

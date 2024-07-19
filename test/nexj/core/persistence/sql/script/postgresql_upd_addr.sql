@@ -1,0 +1,2 @@
+update test.Address set addr_type='Bus' where id=decode('00000000000000000000000000000001','hex');
+update test.Address set contactId=decode('00000000000000000000000000000001','hex') where id=decode('00000000000000000000000000000003','hex');

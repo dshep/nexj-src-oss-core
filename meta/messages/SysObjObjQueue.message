@@ -1,0 +1,9 @@
+<Message base="SysObjQueue" description="Object mapping for SysWorkflowQueue" format="Object">
+   <ObjectMapping class="SysObjectQueue"/>
+   <Parts>
+      <Value name="timeout" type="long"/>
+      <Value name="errorCount" type="integer"/>
+      <Value name="sendEnabled" type="boolean"/>
+      <Value name="receiveEnabled" type="boolean"/>
+   </Parts>
+</Message>

@@ -1,0 +1,12 @@
+<SOADefinition name="nexj:test:UndefinedLocalTypeReference" version="1.0">
+   <Service/>
+   <Interfaces>
+      <Interface name="main">
+         <Method name="method">
+            <Arguments>
+               <Argument name="arg" type="Undefined"/>
+            </Arguments>
+         </Method>
+      </Interface>
+   </Interfaces>
+</SOADefinition>

@@ -1,0 +1,13 @@
+<Class base="SysWorkflowQueue">
+   <Attributes>
+      <Attribute name="type" required="true" type="string" value="&quot;WFFIFOQueue&quot;"/>
+   </Attributes>
+   <Events>
+      <Event args="assignment" name="add" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(assignment'priority (+ 4 (/ (cast double (now)) 1E14)))
+]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

@@ -1,0 +1,5 @@
+<ObjectQueue>
+   <ServiceBindings>
+      <ServiceBinding service="SignalTestFailure"/>
+   </ServiceBindings>
+</ObjectQueue>

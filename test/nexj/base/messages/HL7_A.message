@@ -1,0 +1,3 @@
+<Message base="HL7_A_B" format="HL7">
+   <HL7Mapping name="A"/>
+</Message>

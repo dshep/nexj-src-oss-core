@@ -1,0 +1,166 @@
+<Class base="Principal" description="User, a role that allows the contact to login to the system." nameAttribute="fullName">
+   <Attributes>
+      <Attribute collection="false" name="loginName" required="true" type="string" value="(@ name)"/>
+      <Attribute collection="false" name="password" required="true" reverse="user" type="UserPassword"/>
+      <Attribute name="person" type="Contact" value="(@ contact)"/>
+      <Attribute collection="true" name="addresses" reverse="user" type="Address" value="(@ person addresses)"/>
+      <Attribute collection="false" name="typeCode" required="true" type="string" value="&quot;U&quot;"/>
+      <Attribute collection="false" name="contact" required="true" reverse="user" type="Contact"/>
+      <Attribute collection="true" name="ugassocs" required="false" reverse="user" type="UserGroupAssoc"/>
+      <Attribute cascade="delete" collection="true" name="privileges" reverse="user" type="Privilege"/>
+      <Attribute name="privilegeSet" required="false" type="any"/>
+      <Attribute dependency="(ugassocs group)" description="A set of all the user groups and the user" name="principalSet" type="any" value="(let ((c (nexj.core.persistence.OIDSet'new (+ (@ ugassocs size) 1)))) (c'add this) (for-each (lambda (ug) (c'add (ug'group))) (@ ugassocs)) c)"/>
+      <Attribute name="manager" type="User"/>
+      <Attribute name="isQAManager" type="boolean" value="(any (= (@ manager ugassocs group name) &quot;QA&quot;))"/>
+      <Attribute name="fullName" type="string" value="(@ person fullName)"/>
+      <Attribute name="parentTemplate" type="UserTemplate"/>
+      <Attribute description="Calculated attribute to be used for retrieving custom user locale, or default locale. When the attribute value is null a default Application locale will be used." name="locale" type="string" value="; TODO read locale name from the UserOptions class (which is not implemented yet)&#13;&#10;(locale-name)"/>
+      <Attribute collection="true" name="names" type="string" value="(collection (@ name))"/>
+      <Attribute cached="false" initializer="'INITIALIZED" name="regionUncached" type="any" value="'CALCULATED"/>
+      <Attribute cached="true" initializer="'INITIALIZED" name="regionCached" type="any" value="'CALCULATED"/>
+      <Attribute name="businessContact" reverse="user" type="Contact" where="(any (= (@ addresses type) &quot;Business&quot;))"/>
+   </Attributes>
+   <Events>
+      <Event args="x y" name="test" vararg="true">
+         <Actions>
+            <Action condition="(and (= x -10) (= (@ name) &quot;testuser&quot;))" name="d" relative="a" type="after"><![CDATA[;(this'password (UserPassword'new '(passwordHash . "abcd")))
+((@ password)'passwordHash "abcd")
+;Hash for "password"
+;(this'password (UserPassword'new '(passwordHash . "XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=")))
+((@ password)'passwordHash "XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=")]]></Action>
+            <Action condition="(and (even? x) (&gt; x 10))" name="c" type="before"><![CDATA[(set! var1 #f)
+(set! var3 'pass)
+(set! x (+ x 2))
+]]></Action>
+            <Action condition="(= x -1)" name="b" type="around"><![CDATA[(* 2 (call-next))
+
+]]></Action>
+         </Actions>
+      </Event>
+      <Event name="create" visibility="public">
+         <Actions>
+            <Action condition="(!= (@ password passwordHash) &quot;K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=&quot;)" description="Sets the password to &quot;secret&quot;" name="initPassword" relative="main" type="after"><![CDATA[(this'password (UserPassword'new '(passwordHash . "abc")))
+;Hash for "secret"
+;(this'password (UserPassword'new '(passwordHash . "K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=")))
+((@ password)'passwordHash "K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=")
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="name" description="Retrieves and caches a user object with a given name." name="getUser" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let*
+   (
+      (key `(User name ,name))
+      (user (SysCache'get key))
+   )
+   (when (null? user)
+      (let ((users (User'read '(name (privileges name) principalSet) `(= name ,name) '() 1 0 #f)))
+         (unless (users'empty)
+            (set! user (users'get 0))
+            ((user'privilegeSet)'add (((invocation-context)'metadata)'findPrivilege "Debug"))
+            ((user'privilegeSet)'add (((invocation-context)'metadata)'findPrivilege "DebugEval"))
+            ((user'privilegeSet)'add (((invocation-context)'metadata)'findPrivilege "DebugAnyone"))
+            (SysCache'putInstance key user '(name privilegeSet principalSet))
+         )
+      )
+   )
+   user
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="attributes" name="load" vararg="true">
+         <Actions>
+            <Action condition="(memq 'privilegeSet attributes)" description="Loads the privilegeSet attribute" name="loadPrivilegeSet" type="before"><![CDATA[(let*
+   (
+      (metadata ((invocation-context)'metadata))
+      (privilegeSet (metadata'createPrivilegeSet))
+   )
+   (for-each
+      (lambda (privilege)
+         (let ((p (metadata'findPrivilege (privilege'name))))
+            (unless (null? p)
+               (p'addTo privilegeSet)
+            )
+         )
+      )
+      (@ privileges)
+   )
+
+   (this'privilegeSet privilegeSet)
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="n" name="testActionGroups" static="true" variables="(r '?)">
+         <Actions>
+            <Action condition="(&lt; n 0)" name="abs" type="before"><![CDATA[(set! n (- n))]]></Action>
+            <Action condition="(&lt; n 1)" name="g:a" type="before"><![CDATA[(set! r 'a)]]></Action>
+            <Action condition="(&lt; n 2)" name="g:b" type="before"><![CDATA[(set! r 'b)]]></Action>
+            <Action condition="(&lt; n 3)" name="g:c" type="before"><![CDATA[(set! r 'c)]]></Action>
+            <Action name="main" type="main"><![CDATA[r]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Welcomes the user (test event)." name="welcome" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(logger'info (@ contact fullName) "welcome to the framework")
+;(SysMail'send '("viordanov@nexjsystems.com" . "Vassiliy Iordanov")
+;   `("mailtest@nexjsystems.com" . ,(@ contact fullName))
+;   "Welcome"
+;   (string-append "<HTML><BODY><B>" (@ contact fullName) "</B> says hi")
+;   '()
+;)
+;(SysMail'send "viordanov@nexjsystems.com"
+;   '("mailtest@nexjsystems.com" . "Mail Test")
+;   "Hello"
+;   `((
+;      "<html><head><meta http-equiv=\"Content-type\" content=\"text/html; charset=UTF-8\"></head><body>Hello, this is a <b>test</b><p>\u0437\u0434\u0440\u0430\u0441\u0442\u0438!</body></html>"
+;      (,(java.io.FileInputStream'new "c:/work/nexj/graphics/HolidayRequest.png") (Content-Type . "image/png") (Content-Disposition . "inline; filename=picture.png"))
+;    ))
+;   '()
+;)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Welcomes all the users (test event)." name="testWelcome" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(for-each
+   (lambda (u)
+      (SysQueue'invoke u'welcome)
+   )
+   (User'read '(name) '() '() -1 0 #f)
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="user localeName" name="changeLocale" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(import '(nexj.core.util.LocaleUtil))
+
+; TODO update UserOptions class -- store the user's locale name.
+
+((invocation-context)'locale (nexj.core.util.LocaleUtil'parse localeName))
+
+; return current locale name, as it may not be the same
+(locale-name)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="update" visibility="public"/>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.Usr">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name" table="test.Usr"/>
+            <AttributeMapping destinationKey="UserPassword.FK_User" name="password" sourceKey="Usr.PK"/>
+            <AttributeMapping column="tc" name="typeCode" table="test.Usr"/>
+            <AttributeMapping name="contact" sourceKey="Usr.FK1"/>
+            <AttributeMapping destinationKey="UGAssoc.FK1" name="ugassocs"/>
+            <AttributeMapping column="update_count" name="updateCount" table="test.Usr"/>
+            <AttributeMapping destinationKey="UsrPriv.FK1" name="privileges"/>
+            <AttributeMapping name="manager" sourceKey="Usr.FK2"/>
+            <AttributeMapping name="parentTemplate" sourceKey="Usr.FK3"/>
+            <AttributeMapping name="businessContact" sourceKey="Usr.FK1"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

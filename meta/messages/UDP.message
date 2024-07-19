@@ -1,0 +1,10 @@
+<Message aggregation="random" base="Raw" description="Raw UDP Message&#13;&#10;" lax="true">
+   <Parts>
+      <Value name="host" type="string"/>
+      <Value name="port" type="integer"/>
+      <Value name="localhost" type="string"/>
+      <Value name="localport" type="integer"/>
+      <Value description="Time to live" name="ttl" type="integer"/>
+      <Value description="Service level" name="tos" type="integer"/>
+   </Parts>
+</Message>

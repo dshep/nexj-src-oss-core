@@ -1,0 +1,9 @@
+<Class description="Allows processes to register with a cloud to be notified of updates to the channel, implementing a lightweight publish-subscribe protocol for RSS feeds.">
+   <Attributes>
+      <Attribute name="domain" required="true" type="string"/>
+      <Attribute name="port" required="true" type="integer"/>
+      <Attribute name="path" required="true" type="string"/>
+      <Attribute name="registerProcedure" required="true" type="string"/>
+      <Attribute description="enum: soap, xml-rpc, http-post" name="protocol" required="true" type="string"/>
+   </Attributes>
+</Class>

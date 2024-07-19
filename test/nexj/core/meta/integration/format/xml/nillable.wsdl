@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="ProductPortfolioService"
+   xmlns="http://www.w3.org/2001/XMLSchema"
+   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+   targetNamespace="http://namespaceOne">
+
+   <wsdl:types>
+      <schema targetNamespace="http://namespaceTwo" xmlns:tns="http://namespaceTwo">
+        <element name="nillable_example">
+          <complexType>
+            <sequence>
+              <element name="nillable_complex" nillable="true" minOccurs="1" type="tns:complexType1" />
+              <element name="nillable_built_in" nillable="true" minOccurs="1" type="string" />
+            </sequence>
+          </complexType>
+        </element>
+
+        <complexType name="complexType1">
+          <sequence>
+            <element name="element1" type="string" />
+          </sequence>
+        </complexType>
+      </schema>
+   </wsdl:types>
+</wsdl:definitions>
+   

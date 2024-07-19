@@ -1,0 +1,8 @@
+<Class>
+   <Attributes>
+      <Attribute name="name" type="string"/>
+      <Attribute name="first" type="string"/>
+      <Attribute name="extended" type="string"/>
+      <Attribute name="additional" type="string"/>
+   </Attributes>
+</Class>

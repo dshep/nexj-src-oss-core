@@ -1,0 +1,351 @@
+<Class description="Workflow instance, possibly associated with a specific primary object">
+   <Attributes>
+      <Attribute description="Workflow type code" name="type" readOnly="true" required="true" type="string" value="&quot;W&quot;"/>
+      <Attribute description="Workflow name" name="name" required="true" type="string"/>
+      <Attribute description="Workflow version" name="version" required="true" type="integer"/>
+      <Attribute description="Serialized OID of the primary object" name="oid" required="true" type="binary" visibility="protected"/>
+      <Attribute description="Primary object class name" name="class" type="string" visibility="protected"/>
+      <Attribute description="Local namespace value for ensuring constraint uniqueness" name="local" required="true" type="binary" visibility="protected"/>
+      <Attribute description="Object, with which the workflow is associated (calculated)" name="object" type="Object"/>
+      <Attribute description="Serialized workflow state" initializer="'()" name="serializedState" type="string" visibility="protected"/>
+      <Attribute description="Serialized workflow variables" initializer="'()" name="serializedVariables" type="string" visibility="protected"/>
+      <Attribute description="Current workflow state (calculated)" name="state" type="any" visibility="protected"/>
+      <Attribute description="Parent workflow instance" name="parent" reverse="children" type="SysWorkflow"/>
+      <Attribute collection="true" description="Child workflow instances, spawned by this one" name="children" reverse="parent" type="SysWorkflow"/>
+      <Attribute description="Parent step ordinal number" initializer="0" name="ordinal" required="true" type="integer" visibility="protected"/>
+      <Attribute cascade="none" collection="true" description="Collection of workflow timers" name="timers" reverse="workflow" type="SysTimer" visibility="protected"/>
+      <Attribute cascade="none" collection="true" description="Collection of workflow assignments" name="assignments" reverse="workflow" type="SysWorkflowAssignment"/>
+      <Attribute description="Optimistic locking attribute" initializer="0" name="locking" required="true" type="integer"/>
+   </Attributes>
+   <Events>
+      <Event args="name version" description="Finds a flow by name and version" name="findFlow" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysWorkflow.findFlow" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="object" description="Retrieves the workflow instances associated with a given primary object" name="forInstance" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysWorkflow.forInstance" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="object name global" description="Starts a named workflow for a given primary object" name="start" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysWorkflow.start" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event description="Runs the workflow instance from the current state" name="run">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define state (@ state))
+(this'cleanup state)
+(try
+   (begin
+      (let loop ((fun (state'run)))
+         (unless (null? fun)
+            (this'setToken (state'lastStep) (fun (this'getToken (state'lastStep))))
+            (this'cleanup state)
+            (loop (state'run))
+         )
+      )
+      (this'cleanup state)
+      (if (state'final)
+         (this'complete)
+         (begin-privileged (sys:set-dirty! this))
+      )
+   )
+   (lambda (e)
+      (this'handleException e (state'lastStep) state)
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Completes the workflow execution" name="complete">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(begin-privileged (this'delete))]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Returns true if the workflow has reached its final state" name="done">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(@ state final)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="attributes" description="Loads the object and state attributes" name="load" vararg="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysWorkflow.load" name="load" type="before"/>
+         </Actions>
+      </Event>
+      <Event description="Cleans up the workflow instance resources" name="delete" privilege="WorkflowManage" visibility="public">
+         <Actions>
+            <Action description="Clean up the workflow instance resources" method="nexj.core.runtime.sys.SysWorkflow.delete" name="cleanupCase" type="before"/>
+            <Action description="Cleans up the resources of the steps referenced by the state" name="cleanupResources" type="before"><![CDATA[(define state (@ state))
+(unless (or (null? state) (state'final))
+   (state'removeConcurrent '())
+   (this'cleanup state)
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="object" description="Deletes all the workflow instances of a given primary object" name="delete" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(begin-privileged
+   (for-each
+      (lambda (workflow) (workflow'delete))
+      (this'forInstance object)
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="primary object assoc event args" description="Handles an event that triggers a state change" name="trigger" static="true" vararg="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(if (not (null? primary))
+   (for-each
+      (lambda (workflow)
+         (for-each
+            (lambda (fun)
+               (apply ((workflow'state)'bind fun) object args)
+            )
+            ((this'findFlow (workflow'name) (workflow'version))'getFunctions assoc event)
+         )
+      )
+      (this'forInstance primary)
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="ordinal wait" description="Adds to the workflow instance a timer with a given ordinal number and wait time in ms" name="addTimer">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define timeout (cast timestamp (+ (cast long (now)) wait)))
+(SysTimer'new
+   (: start timeout)
+   (: period 0)
+   (: next timeout)
+   (: principal (principal-name))
+   (: object (SysWorkflowTimeoutCommand'new (: workflow this) (: ordinal ordinal)))
+   (: event 'timeout)
+   (: ordinal ordinal)
+   (: workflow this)
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Executes the workflow instance after its creation" name="create" privilege="WorkflowManage" visibility="public"/>
+      <Event description="Serializes the state" name="commit">
+         <Actions>
+            <Action condition="(@ state dirty)" name="serialize" type="before"><![CDATA[(this'serializedState (@ state toString))
+((@ state)'dirty #f)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="ordinal" description="Handles the workflow timeout" name="timeout">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define wait ((this'getStep ordinal)'next))
+(define state (@ state))
+
+(when (wait'isActive state)
+   (wait'step state)
+   (this'run)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="assignment" description="Resumes workflow execution from Semaphore blocking state." name="wakeSemaphore">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define semaphore '())
+(define state (@ state))
+(define stateSize (state'size))
+(define step '())
+
+(do ((i 0 (+ i 1))) ((= i stateSize))
+   (set! step (state'get i))
+   (if (instance? step nexj.core.meta.workflow.Semaphore)
+      (if (equal? ((step'assignment)'ordinal) (assignment'ordinal))
+         (set! semaphore step)
+      )
+   )
+)
+
+(if (null? semaphore)
+   (error "fail.workflow.wakeSemaphore" assignment)
+)
+
+(when (semaphore'isActive state)
+   (this'setToken
+      (state'lastStep)
+      ((state'bind (semaphore'step state)) (this'getToken (state'lastStep)))
+   )
+   (this'run)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="from to" description="Handles a manual state transition" name="jump">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define step ((this'getStep from)'manualCompletion))
+(define state (@ state))
+
+(when (step'isActive state)
+   (step'jump state to)
+   (this'run)
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="state" description="Cleans up the steps and activites on the state" name="cleanup">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(begin-privileged
+   (for-each
+      (lambda (step)
+         (define ordinal (step'cleanupOrdinal))
+         (for-each
+            (lambda (association)
+               (for-each
+                  (lambda (item)
+                     (if (= (item'ordinal) ordinal)
+                        (if (and (instance? item SysWorkflowAssignment) (item'semaphore))
+                           (unless (= (item'status) (SysWorkflowAssignment'RUNNING))
+                              (((item'queue)'scheduler)'lock)
+                              (item'delete)
+                           )
+                           (begin
+                              (item'delete)
+                           )
+                        )
+                     )
+                  )
+                  (this association)
+               )
+            )
+            (step'cleanupAssocIterator)
+         )
+      )
+      (state'cleanupStepCollection)
+   )
+)
+(for-each
+   (lambda (item)
+      (define cleanupFunction (item'cleanup state))
+      (unless (null? cleanupFunction)
+         (this'setToken (state'lastStep) ((state'bind cleanupFunction) (this'getToken (state'lastStep))))
+      )
+   )
+   (state'cleanupActivityCollection)
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="ordinal" description="Retrieves a step with a given ordinal number" name="getStep">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[((@ state flow)'getFlowStep ordinal)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="step" description="Returns the activity token for a given step" name="getToken">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(@ object)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="step token" description="Sets the activity token for a given step" name="setToken">
+         <Actions>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event description="Returns a list of active step names" name="stepNames">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(@ state stepNames)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="name" description="Checks if a named step is active" name="stepActive">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(((@ state flow)'getFlowStep name)'isActive (@ state))]]></Action>
+         </Actions>
+      </Event>
+      <Event args="attributes where orderBy count offset xlock" description="Overrides the privileges" name="read" privilege="WorkflowManage" static="true" visibility="public"/>
+      <Event args="workflowName className whereClause bGlobal" description="creates a new workflow case" name="startWorkflow" privilege="WorkflowManage" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[;read the instance and store it in a variable
+(define classObj (((invocation-context)'metadata)'getMetaclass className))
+(define obj '())
+
+(if (string? whereClause)
+   (set! whereClause (read (open-input-string whereClause)))
+)
+
+(if ((invocation-context)'protected)
+   (classObj'checkExpressionAccess whereClause ((invocation-context)'privilegeSet))
+)
+
+(set! obj (read-instance classObj '() whereClause #f))
+(if (null? obj)
+   (error "err.workflow.instanceNotFound" classObj whereClause)
+   ;start a new workflow case
+   (begin
+      (logger'debug "Starting workflow" workflowName "for" className)
+      (let ((wfCase (SysWorkflow'start obj workflowName bGlobal)))
+         (if (null? wfCase)
+            ;if no case created then raise exception
+            (error "err.workflow.notStarted")
+            ;return the oid of new workflow case
+            (wfCase':oid)
+         )
+      )
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="exception step state" description="Handles an exception thrown by a flow step.&#13;&#10;&#13;&#10;If the exception was thrown by a step in a flow try block, then execute the appropriate catch block. Otherwise, clean up the flow state and rethrow the exception.&#13;&#10;&#13;&#10;@arg exception any The exception to handle.&#13;&#10;@arg step any The step that threw the exception&#13;&#10;@arg state any The flow state.&#13;&#10;" name="handleException">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define token (this'getToken step))
+(let except
+   (
+      (activity (step'activity))
+   )
+   (define handler (activity'tryCatch))
+   (cond
+      ; No try block, rethrow exception
+      ((null? handler)
+         (state'removeConcurrent '())
+         (state'computeCleanupActivityCollection)
+         (this'cleanup state)
+         (throw exception)
+      )
+      ; Execute a matching catch, if any
+      (((state'bind (handler'function)) exception token)
+         (this'setToken step token)
+         (state'computeCleanupActivityCollection)
+         (this'run)
+      )
+      ; No matching catch, look again in next outermost try block
+      (else
+         (except (handler'activity))
+      )
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping classCodeAttribute="type" dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="Workflow">
+         <AttributeMappings>
+            <AttributeMapping column="type" name="type"/>
+            <AttributeMapping column="name" name="name"/>
+            <AttributeMapping column="version" name="version"/>
+            <AttributeMapping column="oid" name="oid"/>
+            <AttributeMapping column="class" name="class"/>
+            <AttributeMapping column="local" name="local"/>
+            <AttributeMapping column="locking" name="locking"/>
+            <AttributeMapping column="state" name="serializedState"/>
+            <AttributeMapping column="variables" name="serializedVariables"/>
+            <AttributeMapping column="ordinal" name="ordinal"/>
+            <AttributeMapping name="parent" sourceKey="Workflow.FK1"/>
+         </AttributeMappings>
+         <Hook activation="singleton" type="nexj.core.persistence.sql.SQLStateSerializer">
+            <Properties>
+               <Property name="metaclass">SysWorkflow</Property>
+               <Property name="objectAttribute">object</Property>
+               <Property name="OIDAttribute">oid</Property>
+               <Property name="variablesAttribute">state</Property>
+               <Property name="serializedVariablesAttribute">serializedVariables</Property>
+            </Properties>
+         </Hook>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

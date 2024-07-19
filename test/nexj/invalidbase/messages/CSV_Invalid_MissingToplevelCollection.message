@@ -1,0 +1,10 @@
+<Message format="CSV">
+   <CSVMapping quote="'" header="true"/>
+   <Parts>
+      <Value description="First Column" name="firstName" type="string"/>
+      <Value description="Second Column" name="lastName" type="string">
+         <CSVMapping quoted="true"/>
+      </Value>
+      <Value name="age" type="integer"/>
+   </Parts>
+</Message>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+<connector xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd" version="1.5">
+   <display-name>NexJ JMS Resource Adapter</display-name>
+   <vendor-name>NexJ Systems, Inc.</vendor-name>
+   <eis-type>Integration</eis-type>
+   <resourceadapter-version>1.0</resourceadapter-version>
+   <resourceadapter>
+      <resourceadapter-class>nexj.core.rpc.jms.ra.JMSResourceAdapter</resourceadapter-class>
+      
+      <outbound-resourceadapter>
+         <connection-definition>
+            <managedconnectionfactory-class>nexj.core.rpc.jms.ra.JMSManagedConnectionFactory</managedconnectionfactory-class>
+            <config-property>
+               <config-property-name>JMSConnectionFactoryName</config-property-name>
+               <config-property-type>java.lang.String</config-property-type>
+            </config-property>
+            <config-property>
+               <config-property-name>JMSConnectionFactoryProperties</config-property-name>
+               <config-property-type>java.lang.String</config-property-type>
+            </config-property>
+            <config-property>
+               <config-property-name>transacted</config-property-name>
+               <config-property-type>java.lang.Boolean</config-property-type>
+            </config-property>
+            <connectionfactory-interface>javax.jms.ConnectionFactory</connectionfactory-interface>
+            <connectionfactory-impl-class>nexj.core.rpc.jms.ra.JMSConnectionFactory</connectionfactory-impl-class>
+            <connection-interface>javax.jms.Connection</connection-interface>
+            <connection-impl-class>nexj.core.rpc.jms.ra.JMSConnection</connection-impl-class>
+         </connection-definition>
+         <transaction-support>XATransaction</transaction-support>
+         <reauthentication-support>false</reauthentication-support>
+      </outbound-resourceadapter>
+      
+      <inbound-resourceadapter>
+         <messageadapter>
+            <messagelistener>
+               <messagelistener-type>nexj.core.rpc.jms.JMSListener</messagelistener-type>
+               <activationspec>
+                  <activationspec-class>nexj.core.rpc.jms.ra.JMSConsumerConfig</activationspec-class>
+                  <required-config-property>
+                     <config-property-name>destination</config-property-name>
+                  </required-config-property>
+                  <required-config-property>
+                     <config-property-name>connectionFactory</config-property-name>
+                  </required-config-property>
+               </activationspec>
+            </messagelistener>
+         </messageadapter>
+      </inbound-resourceadapter>
+      
+      <adminobject>
+         <adminobject-interface>javax.jms.Destination</adminobject-interface>
+         <adminobject-class>nexj.core.rpc.jms.ra.JMSDestination</adminobject-class>
+         <config-property>
+            <config-property-name>JMSDestinationName</config-property-name>
+            <config-property-type>java.lang.String</config-property-type>
+         </config-property>
+         <config-property>
+            <config-property-name>JMSDestinationProperties</config-property-name>
+            <config-property-type>java.lang.String</config-property-type>
+         </config-property>
+      </adminobject>
+
+   </resourceadapter>
+</connector>

@@ -1,0 +1,112 @@
+<Message description="A message containing almost all XML message features to provide good coverage for XSD export." format="XML" response="XML_XSDExportComprehensive">
+   <XMLMapping action="http://www.nexj.com/soap/action/ComprehensiveAction" namespace="test" node="comp" operation="ComprehensiveOp" uri="http://www.nexj.com/schema/test/one"/>
+   <Parts>
+      <Message description="Self-reference." name="self" ref="XML_XSDExportComprehensive">
+         <XMLMapping node="self"/>
+      </Message>
+      <Value description="The o1 string." minCount="1" name="o1" type="string">
+         <XMLMapping namespace="test" node="a"/>
+      </Value>
+      <Value name="o2" type="long">
+         <XMLMapping namespace="test" nillable="true" node="b"/>
+      </Value>
+      <Value maxCount="0" name="o3" type="integer">
+         <XMLMapping namespace="test" node="c"/>
+      </Value>
+      <Message maxCount="0" minCount="1" name="o4">
+         <XMLMapping namespace="test" node="d"/>
+         <Parts>
+            <Value name="o4_1" type="boolean">
+               <XMLMapping namespace="test" node="d1"/>
+            </Value>
+            <Value name="o4_2" type="decimal">
+               <XMLMapping node="d2"/>
+            </Value>
+            <Value name="o4_3" type="float">
+               <XMLMapping node="d3"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message aggregation="single" maxCount="0" name="o5">
+         <XMLMapping node="e"/>
+         <Parts>
+            <Value name="o5_1" type="double">
+               <XMLMapping namespace="test" node="e1"/>
+            </Value>
+            <Value name="o5_2" type="timestamp">
+               <XMLMapping node="e2"/>
+            </Value>
+            <Value name="o5_3" type="binary">
+               <XMLMapping node="e3"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message aggregation="random" minCount="1" name="o6">
+         <XMLMapping node="f"/>
+         <Parts>
+            <Value name="o6_1" type="binary">
+               <XMLMapping node="f1" subtype="base64"/>
+            </Value>
+            <Value name="o6_2" type="binary">
+               <XMLMapping node="f2" subtype="hex"/>
+            </Value>
+            <Value name="o6_3" type="timestamp">
+               <XMLMapping node="f3" subtype="dateTime"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message description="The g anonymous type." maxCount="0" minCount="1" name="o7">
+         <XMLMapping node="g"/>
+         <Parts>
+            <Value description="The g1 attribute." name="o7_1" type="timestamp">
+               <XMLMapping node="g1" subtype="date" type="attribute"/>
+            </Value>
+            <Value minCount="1" name="o7_2" type="timestamp">
+               <XMLMapping node="g2" subtype="time" type="attribute"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Value name="o8" type="string">
+         <XMLMapping type="value"/>
+      </Value>
+      <Value name="o9" type="string">
+         <XMLMapping node="h"/>
+         <Enumerations>
+            <Enumeration value="one"/>
+            <Enumeration value="two"/>
+            <Enumeration value="three"/>
+            <Enumeration value="four"/>
+            <Enumeration value="five"/>
+         </Enumerations>
+      </Value>
+      <Value name="o10" type="integer">
+         <XMLMapping namespace="test" node="i"/>
+         <Enumerations>
+            <Enumeration value="2"/>
+            <Enumeration value="3"/>
+            <Enumeration value="5"/>
+            <Enumeration value="7"/>
+            <Enumeration value="11"/>
+            <Enumeration value="13"/>
+            <Enumeration value="17"/>
+         </Enumerations>
+      </Value>
+      <Value name="o11" type="any">
+         <XMLMapping node="k"/>
+      </Value>
+      <Message name="o12">
+         <XMLMapping node="m"/>
+         <Parts>
+            <Value name="o13" type="any">
+               <XMLMapping type="value"/>
+            </Value>
+            <Value name="o14" type="string">
+               <XMLMapping node="n" type="attribute"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Value name="o13" type="any">
+         <XMLMapping interface="AnyTypeTest" node="p"/>
+      </Value>
+   </Parts>
+</Message>

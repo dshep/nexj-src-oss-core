@@ -1,0 +1,22 @@
+<Message base="SOAP_PatientDemographics" format="XML">
+   <XMLMapping action="Patient#add" envelope="soap" namespace="a" node="Patient" operation="AddPatient" uri="urn:com.nexjsystems:ns:test:a"/>
+   <Parts>
+      <Message name="headers">
+         <XMLMapping namespace="soap" node="Header"/>
+         <Parts>
+            <Message name="reservation">
+               <XMLMapping namespace="m" node="reservation" uri="http://travelcompany.example.org/reservation"/>
+               <Parts>
+                  <Value name="mustUnderstand" type="boolean">
+                     <XMLMapping namespace="soap" node="mustUnderstand" type="attribute"/>
+                  </Value>
+                  <Value name="reference" type="string">
+                     <XMLMapping namespace="m" node="reference"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message name="context" ref="SOAP_WsCoor_Header"/>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

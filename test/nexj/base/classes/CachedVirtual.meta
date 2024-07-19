@@ -1,0 +1,71 @@
+<Class aspects="LOCKING" description="Used by VirtualAdapterTest to test instance caching.">
+   <Attributes>
+      <Attribute name="x" type="string"/>
+      <Attribute name="assoc" type="CachedVirtual"/>
+      <Attribute initializer="0" name="readCount" required="true" static="true" type="integer"/>
+   </Attributes>
+   <Events/>
+   <PersistenceMapping caching="instance" dataSource="MemoryVirtualSource">
+      <ServiceMapping keyGenerator="KeyGenerator.GUIDGen">
+         <KeyParts>
+            <KeyPart type="integer"/>
+         </KeyParts>
+         <AttributeMappings>
+            <AttributeMapping name="assoc"/>
+            <AttributeMapping name="x"/>
+         </AttributeMappings>
+         <SortKeys/>
+         <ReadMapping>
+            <Case where="(= (@) ,key)">
+               <Read>
+                  <Script><![CDATA[(CachedVirtual'readCount (+ 1 (CachedVirtual'readCount)))
+
+(logger'debug "Reading CachedVirtual with" where)
+
+(cond
+   ((equal? key (oid 1))
+      (message
+         (: :class "CachedVirtual")
+         (: :oid key)
+         (: x "101")
+         (: assoc ())
+      )
+   )
+   ((equal? key (oid 2))
+      (message
+         (: :class "CachedVirtual")
+         (: :oid key)
+         (: x "202")
+         (: assoc (oid 3))
+      )
+   )
+   ((equal? key (oid 3))
+      (message
+         (: :class "CachedVirtual")
+         (: :oid key)
+         (: x "303")
+         (: assoc ())
+      )
+   )
+   ((equal? key (oid 4))
+      (message
+         (: :class "CachedVirtual")
+         (: :oid key)
+         (: x "404")
+         (: assoc (oid 3))
+      )
+   )
+)]]></Script>
+               </Read>
+            </Case>
+         </ReadMapping>
+         <CreateMapping>
+            <Script><![CDATA[(error "Create not supported")]]></Script>
+         </CreateMapping>
+         <UpdateMapping/>
+         <DeleteMapping>
+            <Script><![CDATA[(error "Delete not supported")]]></Script>
+         </DeleteMapping>
+      </ServiceMapping>
+   </PersistenceMapping>
+</Class>

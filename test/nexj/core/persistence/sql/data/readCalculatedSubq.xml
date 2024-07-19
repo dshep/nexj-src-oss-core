@@ -1,0 +1,118 @@
+<nv:Envelope xmlns:nv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <nv:Body xmlns:ns="http://www.nexjsystems.com/xml-soap" nv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <ns:Array>
+         <items nc:arrayType="xs:anyType[5]">
+            <Item href="#a"/>
+            <Item href="#b"/>
+            <Item href="#c"/>
+            <Item href="#d"/>
+            <Item href="#e"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="a">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>businessAddress3</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item href="#f"/>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="b">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAg==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>businessAddress3</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:nil="true"/>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="c">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAw==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>businessAddress3</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:nil="true"/>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="d">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABA==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>businessAddress3</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item href="#g"/>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="e">
+         <class>Contact</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>businessAddress3</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:nil="true"/>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="f">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>deletable</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:boolean">true</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="g">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABg==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>deletable</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:boolean">true</Item>
+         </values>
+      </ns:TransferObject>
+   </nv:Body>
+</nv:Envelope>

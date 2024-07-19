@@ -1,0 +1,8 @@
+<Message format="XML" base="XML_ValuePart">
+   <XMLMapping node="outer"/>
+   <Parts>
+      <Value minCount="1" name="data" type="string">
+         <XMLMapping type="value"/>
+      </Value>
+   </Parts>
+</Message>

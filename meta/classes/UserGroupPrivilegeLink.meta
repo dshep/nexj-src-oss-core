@@ -1,0 +1,31 @@
+<Class aspects="LOCKING" description="This is the link class between UserGroups and Privileges -- used by Privilege Groups (specialized User Groups).&#13;&#10;By convention should simply be called UserGroupPrivilege, but this name reduces confusion with UserGroups and GroupPrivileges.">
+   <Attributes>
+      <Attribute description="User Group Parent, part of multi-part PK" name="userGroup" required="true" reverse="privileges" type="UserGroup"/>
+      <Attribute description="Privilege, Part of multi-part PK" name="privilege" required="true" type="string"/>
+      <Attribute description="Flag that indicates if privilege is granted or revoked -- true means granted, false means disallowed" initializer="#t" name="granted" required="true" type="boolean"/>
+   </Attributes>
+   <Events>
+      <Event name="create" privilege="UserGroupPrivilegeLinkManage" visibility="public">
+         <Actions>
+            <Action condition="(isCommit)" name="invalidateCaches" type="before"><![CDATA[(@ userGroup invalidateCaches)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event name="update" privilege="UserGroupPrivilegeLinkManage" visibility="public"/>
+      <Event name="delete" privilege="UserGroupPrivilegeLinkManage" visibility="public">
+         <Actions>
+            <Action condition="(isCommit)" name="invalidateCaches" type="before"><![CDATA[(@ userGroup invalidateCaches)
+]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="UserGroupPrivilegeLink">
+         <AttributeMappings>
+            <AttributeMapping destinationKey="Principal.PK" name="userGroup" sourceKey="UserGroupPrivLink.FK_UG"/>
+            <AttributeMapping column="privilege" name="privilege"/>
+            <AttributeMapping column="grantFlag" name="granted"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

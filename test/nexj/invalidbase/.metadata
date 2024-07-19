@@ -1,0 +1,26 @@
+<Metadata name="Core Test-Invalid" revision="1.0" namespace="http://www.nexjsystems.com/ns/core-test-invalid" version="0">
+   <Resources>
+      <ResourceRef resource="messages/CircularInheritance_A.message" directive="if" condition="inherit.test02"/>
+      <ResourceRef resource="messages/CircularInheritance_B.message" directive="if" condition="inherit.test02"/>
+      <ResourceRef resource="messages/CircularInheritance_C.message" directive="if" condition="inherit.test02"/>
+      <ResourceRef resource="messages/CircularInheritance_D.message" directive="if" condition="inherit.test02"/>
+      <ResourceRef resource="messages/CrossFormat_Object.message" directive="if" condition="inherit.test01"/>
+      <ResourceRef resource="messages/CrossFormat_XML.message" directive="if" condition="inherit.test01"/>
+      <ResourceRef resource="messages/CSV_Invalid_DuplicateFieldNames.message" directive="if" condition="csv.test08"/>
+      <ResourceRef resource="messages/CSV_Invalid_SameQuoteAndDelimiter.message" directive="if" condition="csv.test02"/>
+      <ResourceRef resource="messages/CSV_Invalid_MissingQuote.message" directive="if" condition="csv.test03"/>
+      <ResourceRef resource="messages/CSV_Invalid_MissingToplevelCollection.message" directive="if" condition="csv.test04"/>
+      <ResourceRef resource="messages/CSV_Invalid_NestedCollection.message" directive="if" condition="csv.test05"/>
+      <ResourceRef resource="messages/CSV_Invalid_SameOrdinals.message" directive="if" condition="csv.test06"/>
+      <ResourceRef resource="messages/CSV_Invalid_RequiredAfterOptional.message" directive="if" condition="csv.test07"/>
+      <ResourceRef resource="messages/Zip_Invalid_MissingNamePart.message" directive="if" condition="zip.test01"/>
+      <ResourceRef resource="messages/XML_Invalid_NillableAttribute.message" directive="if" condition="xml.test01"/>
+      <ResourceRef resource="messages/XML_Invalid_NillableValue.message" directive="if" condition="xml.test02"/>
+      <ResourceRef resource="soadefs/UndefinedGlobalTypeReference.soadef" directive="if" condition="soa.test01"/>
+      <ResourceRef resource="soadefs/UndefinedLocalTypeReference.soadef" directive="if" condition="soa.test02"/>
+      <ResourceRef resource="soadefs/FaultReferenceToType.soadef" directive="if" condition="soa.test03"/>
+      <ResourceRef resource="soadefs/FaultWithTypeBase.soadef" directive="if" condition="soa.test04"/>
+      <ResourceRef resource="soadefs/TypeWithFaultBase.soadef" directive="if" condition="soa.test05"/>
+      <ResourceRef resource="soadefs/Registry2.soadef" directive="if" condition="soa.test06"/>
+   </Resources>
+</Metadata>

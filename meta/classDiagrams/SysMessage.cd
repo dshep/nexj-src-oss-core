@@ -1,0 +1,39 @@
+<ClassModelCollection>
+   <ClassModel class="SysMessage" hideAttributes="false" hideDerivations="false" hideDescription="true" hideEvents="false" iFilePath="meta/classes/SysMessage.meta" visibleAttributes="classCode deliveryTime state body errorCount name resource user delay values serializedValues committed resent sent resourceHeld" visibleDerivations="" visibleEvents="create:0 update:0 read:6 cancel:0 resend:1 delete:0 getSemaphores:0 receive:0 onSend:0 onDelivery:0 onCompletion:0 onFailure:0 load:1 fail:1 onCancel:0" x="993" y="54">
+      <Association name="preceding" srcAnchorAlignment="default" srcAnchorOffset="-1">
+         <Bendpoint x="1271" y="672"/>
+         <Bendpoint x="1216" y="670"/>
+      </Association>
+      <Association name="following" srcAnchorAlignment="default" srcAnchorOffset="-1">
+         <Bendpoint x="1038" y="648"/>
+         <Bendpoint x="1106" y="646"/>
+      </Association>
+      <Association name="queue" srcAnchorAlignment="default" srcAnchorOffset="-1"/>
+      <Association name="originalQueue" srcAnchorAlignment="left" srcAnchorOffset="466"/>
+      <Association name="resendQueue" srcAnchorAlignment="left" srcAnchorOffset="515"/>
+   </ClassModel>
+   <ClassModel class="SysWorkflowQueue" hideAttributes="false" hideDerivations="false" hideDescription="true" hideEvents="false" iFilePath="meta/classes/SysWorkflowQueue.meta" visibleAttributes="type assignments scheduler" visibleDerivations="SysQueue" visibleEvents="getNextItem:1 getNextItemGlobal:1 remove:1 add:1 assign:1 create:0 update:0 delete:0 commit:0" x="126" y="629">
+      <InheritanceAssociation/>
+   </ClassModel>
+   <ClassModel class="SysQueueThrottleCounter" hideAttributes="false" hideDerivations="false" hideDescription="true" hideEvents="false" iFilePath="meta/classes/SysQueueThrottleCounter.meta" visibleAttributes="count rate queue batchJob locking" visibleDerivations="" visibleEvents="periodicReset:0 startJob:0 read:6 create:0 update:0 delete:0" x="601" y="57">
+      <Association name="batchJob" srcAnchorAlignment="default" srcAnchorOffset="-1"/>
+   </ClassModel>
+   <ClassModel class="SysQueueThrottleCounterBatchJob" hideAttributes="false" hideDerivations="false" hideDescription="true" hideEvents="false" iFilePath="meta/classes/SysQueueThrottleCounterBatchJob.meta" visibleAttributes="classCode PERIOD throttleCounters instance" visibleDerivations="SysBatchJob" visibleEvents="create:0 run:0" x="629" y="284">
+      <Association name="instance" srcAnchorAlignment="default" srcAnchorOffset="-1">
+         <Bendpoint x="828" y="425"/>
+         <Bendpoint x="878" y="425"/>
+         <Bendpoint x="878" y="375"/>
+      </Association>
+   </ClassModel>
+   <ClassModel class="SysObjectQueue" hideAttributes="false" hideDerivations="false" hideDescription="true" hideEvents="false" iFilePath="meta/classes/SysObjectQueue.meta" visibleAttributes="type timeout sendEnabled receiveEnabled errorCount priority" visibleDerivations="" visibleEvents="commit:0 send:1 clear:0 cancel:2 cancel:1 resend:2 getSemaphores:1 sendBodies:1 resend:1" x="567" y="469">
+      <InheritanceAssociation/>
+      <Association name="errorQueue" srcAnchorAlignment="bottom" srcAnchorOffset="194">
+         <Bendpoint x="745" y="788"/>
+         <Bendpoint x="796" y="788"/>
+         <Bendpoint x="795" y="702"/>
+      </Association>
+   </ClassModel>
+   <ClassModel class="SysQueue" hideAttributes="false" hideDerivations="false" hideDescription="true" hideEvents="false" iFilePath="meta/classes/SysQueue.meta" visibleAttributes="name type caption description locking priority concurrency customized system throttleCounter deletable" visibleDerivations="" visibleEvents="getQueue:1 create:0 update:0 delete:0 getWindowStartTime:1 hardDelete:0 invoke:2 invoke:3 invoke:4 invoke:5 invoke:6 invoke:7 invoke:8 broadcast:3 broadcast:4 broadcast:5 broadcast:6 broadcast:7 broadcast:8 send:3 send:6 read:6" x="34" y="41">
+      <Association name="throttleCounter" srcAnchorAlignment="default" srcAnchorOffset="-1"/>
+   </ClassModel>
+</ClassModelCollection>

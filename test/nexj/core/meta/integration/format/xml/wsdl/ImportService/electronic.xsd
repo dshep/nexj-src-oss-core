@@ -1,0 +1,21 @@
+<schema
+   targetNamespace="http://nexj.example.com/electronic/"
+   xmlns:tns="http://nexj.example.com/electronic/"
+   xmlns:comp="http://nexj.example.com/computer/"
+   xmlns="http://www.w3.org/2001/XMLSchema">
+
+   <import
+      namespace="http://nexj.example.com/computer/"
+      schemaLocation="computer.xsd"/>
+
+   <element name="battery" type="string"/>
+   <element name="dishwasher" type="string"/>
+   <element name="computer">
+      <complexType>
+         <all>
+            <element ref="comp:gpu"/>
+            <element ref="comp:motherboard"/>
+         </all>
+      </complexType>
+   </element>
+</schema>

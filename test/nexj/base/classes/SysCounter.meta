@@ -1,0 +1,30 @@
+<Class description="Implements a persisted and distributed named counter.&#13;&#10;@details&#13;&#10;This may be used in the initializer of a class attribute to provide a counter field.&#13;&#10;@example&#13;&#10;The number field on the Requirements class has an initializer of (SysCounter'next &quot;RMS_Requirement.requirementNumber&quot;)&#13;&#10;For this to work, a counter with a name of &quot;RMS_Requirement.requirementNumber&quot; must exist." visibility="protected">
+   <Attributes>
+      <Attribute description="Counter name.  Must be unique across all counters.  e.g. process.counter" name="name" required="true" type="string" visibility="protected"/>
+      <Attribute description="Current counter value." initializer="0" name="value" required="true" type="long" visibility="protected"/>
+      <Attribute description="The value by which to increment the counter when 'next' is called." initializer="1" name="increment" required="true" type="long" visibility="protected"/>
+      <Attribute description="Number of counter values to cache on each node prior to handing them out." initializer="1" name="cache" required="true" type="integer" visibility="protected"/>
+   </Attributes>
+   <Events>
+      <Event args="name" description="Increments a named counter and returns the old value" name="next" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCounter.next" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event name="commit">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCounter.commit" name="before" type="before"/>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="Counter">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name"/>
+            <AttributeMapping column="value" name="value"/>
+            <AttributeMapping column="increment" name="increment"/>
+            <AttributeMapping column="cache" name="cache"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

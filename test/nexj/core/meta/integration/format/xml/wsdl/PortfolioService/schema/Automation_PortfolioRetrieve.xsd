@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema attributeFormDefault="qualified" elementFormDefault="qualified"
+	targetNamespace="http://service.amfam.com/portfolioservice/automation"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://service.amfam.com/portfolioservice/automation">
+
+	<complexType name="RetrieveCriteriaType">
+		<sequence>
+			<element name="PersonData" type="tns:PersonDataType" />
+			<element name="DataExtractionLevel"
+				type="tns:DataExtractLevelType" />
+		</sequence>
+	</complexType>
+
+	<complexType name="PersonDataType">
+		<annotation>
+			<documentation xml:lang="en">
+				This type identifies the search criteria. Currently only
+				partyNumber (p2cid / customer id) and inquiryDate are
+				defined.
+			</documentation>
+		</annotation>
+		<sequence>
+			<element name="clientId" minOccurs="1" maxOccurs="1" type="string"/>
+			<element name="clientFirstName" type="string" minOccurs="0" />
+			<element name="clientLastName" type="string" minOccurs="0" />
+		</sequence>
+	</complexType>
+
+	<complexType name="DataExtractLevelType">
+		<annotation>
+			<documentation xml:lang="en">
+				This type describes the data extraction options. (added
+				in case we want to go this way)
+			</documentation>
+		</annotation>
+
+		<sequence>
+			<element name="searchClaims" type="boolean" minOccurs="0" />
+			<element name="searchPolicies" type="boolean" minOccurs="0" />
+			<element name="searchBillingAccounts" type="boolean"
+				minOccurs="0" />
+			<element name="searchQuotes" type="boolean" minOccurs="0" />
+			<!-- 
+				<element name="portfolioDataExtractLevels"
+				type="tns:PortfolioExtractLevelEnum" minOccurs="0"
+				maxOccurs="unbounded" />
+			-->
+		</sequence>
+	</complexType>
+
+	<!-- 
+		<simpleType name="PortfolioExtractLevelEnum">
+		<restriction base="string">
+		<enumeration value="POLICIES" />
+		<enumeration value="QUOTES" />
+		<enumeration value="CLAIMS" />
+		<enumeration value="BILLINGACCOUNTS" />
+		</restriction>
+		</simpleType>
+	-->
+
+	<complexType name="ResponseDataType">
+		<sequence>
+			<element name="requestParameters"
+				type="tns:RetrieveCriteriaType" />
+			<element name="serviceMessage" minOccurs="0" 
+				type="tns:MessageInfoType" />
+			<element minOccurs="0" name="ClaimResults"
+				type="tns:ClaimResultsType" />
+			<element minOccurs="0" name="PolicyResults"
+				type="tns:PolicyResultsType" />
+			<element minOccurs="0" name="BillingAccountResults"
+				type="tns:BillingAccountResultsType" />
+			<element minOccurs="0" name="QuoteResults"
+				type="tns:QuoteResultsType" />
+		</sequence>
+	</complexType>
+
+	<complexType name="MessageInfoType">
+		<annotation>
+			<documentation xml:lang="en">
+				This is for returning any message from the service back
+				to the consumer
+			</documentation>
+		</annotation>
+		<sequence>
+			<element name="source" type="string" />
+			<element name="messageType">
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="ERROR" />
+						<enumeration value="INFO" />
+						<enumeration value="WARN" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="message" type="string" />
+			<element name="code" type="string" minOccurs="0" />
+			<element name="optionalData" type="string" minOccurs="0"
+				maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<complexType name="ClaimResultsType">
+		<sequence>
+			<element name="serviceMessage"  minOccurs="0" 
+				type="tns:MessageInfoType" />
+			<element name="claims" maxOccurs="unbounded" minOccurs="0"
+				type="tns:ClaimType" />
+		</sequence>
+	</complexType>
+
+	<complexType name="ClaimType">
+		<sequence>
+			<element name="claimStatus" minOccurs="1" type="string" />
+			<element name="claimNumber" minOccurs="1" type="string" />
+			<element name="dateOfLoss" minOccurs="1" type="date" />
+			<element name="claimCause" minOccurs="1" type="string" />
+			<element name="source" minOccurs="1" type="string" />
+			<element name="cat" minOccurs="0" type="string" />
+			<element name="adjusterUserId" minOccurs="1" type="string" />
+			<element name="policyType" minOccurs="1" type="string" />
+			<element name="openedDate" minOccurs="1" type="date" />
+			<element name="closedDate" minOccurs="0" type="date" />
+		</sequence>
+	</complexType>
+
+	<complexType name="PolicyResultsType">
+		<sequence>
+			<element name="serviceMessage"  minOccurs="0" 
+				type="tns:MessageInfoType" />
+			<element name="policies" maxOccurs="unbounded" minOccurs="0"
+				type="tns:PolicyType" />
+		</sequence>
+	</complexType>
+
+	<complexType name="PolicyType">
+		<sequence>
+			<element name="policyNumber" minOccurs="1" type="string" />
+			<element name="policyType" minOccurs="1" type="string" />
+			<element name="description" minOccurs="1" type="string" />
+			<element name="billingAccount" minOccurs="1" type="string" />
+			<element name="policyClass" minOccurs="0" type="string" />
+			<element name="effectiveDate" minOccurs="1" type="date" />
+			<element name="expirationDate" minOccurs="1" type="date" />
+			<element name="status" minOccurs="1" type="string" />
+			<element name="premium" minOccurs="1"
+				type="tns:PremiumAmount" />
+			<element name="producerId" minOccurs="1" type="string" />
+		</sequence>
+	</complexType>
+
+	<complexType name="BillingAccountResultsType">
+		<sequence>
+			<element name="serviceMessage"  minOccurs="0" 
+				type="tns:MessageInfoType" />
+			<element name="billingAccounts" maxOccurs="unbounded"
+				minOccurs="0" type="tns:BillingAccountType" />
+		</sequence>
+	</complexType>
+
+	<complexType name="BillingAccountType">
+		<sequence>
+			<element name="status" minOccurs="1" type="string" />
+			<element name="accountNumber" minOccurs="1" type="string" />
+			<element name="type" minOccurs="1" type="string" />
+			<element name="producerId" minOccurs="1" type="string" />
+			<element name="policyNumber" minOccurs="1"
+				maxOccurs="unbounded" type="string" />
+			<element name="role" minOccurs="1" maxOccurs="unbounded"
+				type="string" />
+		</sequence>
+	</complexType>
+
+	<complexType name="QuoteResultsType">
+		<sequence>
+			<element name="serviceMessage"  minOccurs="0" 
+				type="tns:MessageInfoType" />
+			<element name="quotes" maxOccurs="unbounded" minOccurs="0"
+				type="tns:QuoteType" />
+		</sequence>
+	</complexType>
+
+	<complexType name="QuoteType">
+		<sequence>
+			<element name="status" minOccurs="1" type="string" />
+			<element name="policyType" minOccurs="1" type="string" />
+			<element name="riskDescription" minOccurs="1" type="string" />
+			<element name="rateClass" minOccurs="1" type="string" />
+			<element name="premium" minOccurs="1"
+				type="tns:PremiumAmount" />
+			<element name="effectiveDate" minOccurs="1" type="date" />
+			<element name="expirationDate" minOccurs="1" type="date" />
+			<element name="lastChangedDate" minOccurs="1"
+				type="dateTime" />
+			<element name="lastChangedByUserId" minOccurs="1"
+				type="string" />
+			<element name="policyNumber" minOccurs="0" type="string" />
+			<element name="producerId" minOccurs="0" type="string" />
+			<element name="systemId" minOccurs="0" type="string" />
+			<element name="channel" minOccurs="0" type="string" />
+		</sequence>
+	</complexType>
+
+	<simpleType name="PremiumAmount">
+		<restriction base="decimal">
+			<fractionDigits value="2" />
+		</restriction>
+	</simpleType>
+
+</schema>

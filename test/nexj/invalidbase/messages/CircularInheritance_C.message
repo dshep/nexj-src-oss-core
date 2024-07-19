@@ -1,0 +1,5 @@
+<Message base="CircularInheritance_A">
+   <Parts>
+      <Value name="c" type="string"/>
+   </Parts>
+</Message>

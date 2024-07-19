@@ -1,0 +1,40 @@
+<nv:Envelope xmlns:nv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <nv:Body xmlns:ns="http://www.nexjsystems.com/xml-soap" nv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <ns:Array>
+         <items nc:arrayType="xs:anyType[2]">
+            <Item href="#a"/>
+            <Item href="#b"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="a">
+         <class>Country</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:string">Canada</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>l</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:int">6</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="b">
+         <class>Country</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:string">USA</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>l</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:int">3</Item>
+         </values>
+      </ns:TransferObject>
+   </nv:Body>
+</nv:Envelope>

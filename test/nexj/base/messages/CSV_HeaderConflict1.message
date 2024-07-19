@@ -1,0 +1,15 @@
+<Message format="CSV">
+   <CSVMapping quote="none" delimiter="," escape="\" header="true"/>
+   <Parts>
+      <Message maxCount="0" name="Data">
+         <Parts>
+            <Value description="First Column" name="first" type="string">
+               <CSVMapping field="ab|cd"/>
+            </Value>
+            <Value description="Second Column" name="second" type="string">
+               <CSVMapping field="ef|gh"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

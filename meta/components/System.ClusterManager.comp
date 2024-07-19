@@ -1,0 +1,3 @@
+<Component type="nexj.core.rpc.cluster.NodeManager" activation="singleton"
+   description="The node manager">
+</Component>

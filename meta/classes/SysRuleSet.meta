@@ -1,0 +1,68 @@
+<Class caption="idsc.SysRuleSet.caption" description="Named set of rules for the rules engine">
+   <Attributes>
+      <Attribute caption="idsc.SysRuleSet.name" name="name" required="true" type="string"/>
+      <Attribute name="description" type="string"/>
+      <Attribute name="current" required="true" reverse="ruleSet" type="SysRuleSetVersion"/>
+      <Attribute cascade="delete" collection="true" name="versions" required="true" reverse="ruleSet" type="SysRuleSetVersion"/>
+      <Attribute initializer="0" name="locking" required="true" type="integer"/>
+   </Attributes>
+   <Events>
+      <Event description="Generates the rule set expression" name="generate" visibility="protected">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(@ current generate)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Clear cache." name="clearCache">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(SysRulesEngine'clearCache (@ name))]]></Action>
+         </Actions>
+      </Event>
+      <Event args="name" description="Generates the rule set with a given name" name="generate" static="true" visibility="protected">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let
+   (
+      (sets
+         (SysRuleSet'read
+            '(name (current (rules ordinal name enabled condition action)))
+            `(= name ,name) '() 1 0 #f
+         )
+      )
+   )
+   (if (sets'empty)
+      (error "err.rules.unknownSet" name)
+      ((sets'get 0)'generate)
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event name="update" privilege="RuleSetManage" visibility="public">
+         <Actions>
+            <Action condition="(and (or (this'updated 'current) (this'updated 'name)) (not (null? (@ name))))" description="Clears the cache when the current version or the name is changed" name="clearCache" type="after"><![CDATA[(this'clearCache)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="create" privilege="RuleSetManage" visibility="public">
+         <Actions>
+            <Action condition="(null? (@ current))" description="Ensures that at least one version is available" name="createVersion" type="before"><![CDATA[(if (@ versions empty)
+   ((@ versions)'add (SysRuleSetVersion'new))
+)
+(this'current ((@ versions)'get 0))
+]]></Action>
+         </Actions>
+      </Event>
+      <Event name="delete" privilege="RuleSetManage" visibility="public"/>
+      <Event args="attributes where orderBy count offset xlock" name="read" privilege="RuleSetManage" static="true" visibility="public"/>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="RuleSet">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name"/>
+            <AttributeMapping column="description" name="description"/>
+            <AttributeMapping name="current" sourceKey="RuleSet.FK1"/>
+            <AttributeMapping destinationKey="RuleSetVersion.FK1" name="versions"/>
+            <AttributeMapping column="locking" name="locking"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

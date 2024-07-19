@@ -1,0 +1,6 @@
+<Message format="XML">
+   <XMLMapping node="Base" xsdtype="BaseType"/>
+   <Parts>
+      <Value name="x" type="string"/>
+   </Parts>
+</Message>

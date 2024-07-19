@@ -1,0 +1,7 @@
+<Message base="XML_Inherit_Schema1" format="XML">
+   <XMLMapping namespace="is1" node="schema4" xsdtype="Schema4Type"/>
+   <Parts>
+      <Value name="a" type="integer"/>
+      <Value minCount="1" name="extra" type="string"/>
+   </Parts>
+</Message>

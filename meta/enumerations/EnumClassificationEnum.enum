@@ -1,0 +1,32 @@
+<Enumeration description="Contact Address Type enumeration" typeCode="SENUMCLASSIFICATION">
+   <Locales>
+      <Locale caption="Enum Classification" name="en"/>
+      <Locale caption="Classification d'énum." name="fr"/>
+   </Locales>
+   <Values>
+      <Value hasBehavior="true" name="SYSTEM" value="S">
+         <Locales>
+            <Locale caption="System Only" name="en" shortCaption="System"/>
+            <Locale caption="Système uniquement" name="fr" shortCaption="Système"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SYSTEM_DISPLAY" value="D">
+         <Locales>
+            <Locale caption="System, Run Time Display" name="en" shortCaption="System Display"/>
+            <Locale caption="Système, Affiché en temps d’exécution" name="fr" shortCaption="Affichage système"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SYSTEM_EDIT" value="E">
+         <Locales>
+            <Locale caption="System, Run Time Editable" name="en" shortCaption="System Edit"/>
+            <Locale caption="Système, Modifiable en temps d’exécution" name="fr" shortCaption="Modification système"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="CUSTOM" value="C">
+         <Locales>
+            <Locale caption="Custom Field Picklists" name="en" shortCaption="Custom Field"/>
+            <Locale caption="Liste de sélection de champs personnalisés" name="fr" shortCaption="Champ personnalisé"/>
+         </Locales>
+      </Value>
+   </Values>
+</Enumeration>

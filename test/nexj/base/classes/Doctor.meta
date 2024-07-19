@@ -1,0 +1,18 @@
+<Class base="Contact">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;DOC&quot;"/>
+      <Attribute name="primaryAddress" type="Address"/>
+      <Attribute name="overriddenSecurity" type="string" updatePrivilege="updateContact"/>
+      <Attribute name="licenseNumber" type="string"/>
+      <Attribute name="firstName" type="string"/>
+      <Attribute collection="true" name="patients" reverse="doctor" type="Patient"/>
+   </Attributes>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="test.Contact">
+         <AttributeMappings>
+            <AttributeMapping column="licenseNumber" name="licenseNumber"/>
+            <AttributeMapping destinationKey="Contact.FK6" name="patients"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

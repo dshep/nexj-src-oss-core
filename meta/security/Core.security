@@ -1,0 +1,85 @@
+<SecurityDescriptor>
+   <Privileges>
+      <Privilege description="Allows the user to create, update and delete workflow objects" name="WorkflowManage"/>
+      <Privilege description="Allows the user to create, update and delete rules" name="RuleSetManage"/>
+      <Privilege description="Allows the user to create, update and delete RSS Feeds" name="RSSFeedManage"/>
+      <Privilege description="Allows the user to create, update and delete synchronization objects" name="SyncManage"/>
+      <Privilege description="Allows the user to create, update and delete batch jobs" name="BatchJobManage"/>
+      <Privilege description="Allows the user to run batch jobs" name="BatchJobRun"/>
+      <Privilege description="Allows the user to create and update audit log entries" name="AuditLogManage"/>
+      <Privilege description="Allows the user to view audit log entries" name="AuditLogView"/>
+      <Privilege description="Allows the user to delete audit log entries" name="AuditLogDelete"/>
+      <Privilege description="Allows the user to create, read, update partitions.  Only the system admin should have this privilege." name="PartitionManage"/>
+      <Privilege description="Allows the user to create, update and delete enums." name="EnumManage"/>
+      <Privilege description="Allows the user to modify the system audit fields directly." name="SystemAuditManage"/>
+      <Privilege description="Allows the user to modify the user audit fields." name="UserAuditManage"/>
+      <Privilege description="Allows the user to create users." name="UserCreate"/>
+      <Privilege description="Allows the user to update users." name="UserUpdate"/>
+      <Privilege description="Allows the user to disable users." name="UserDisable"/>
+      <Privilege description="Allow the user to delete users." name="UserDelete"/>
+      <Privilege description="Allows the user to create user groups." name="UserGroupCreate"/>
+      <Privilege description="Allows the user to update user groups." name="UserGroupUpdate"/>
+      <Privilege description="Allows the user to delete user groups." name="UserGroupDelete"/>
+      <Privilege description="Allows the user to add or remove users from groups." name="UserGroupLinkManage"/>
+      <Privilege description="Allows the user to add or remove permissions from user/user group pairs." name="UserGroupPermissionManage"/>
+      <Privilege description="Allows the user to add or remove privilges from user groups." name="UserGroupPrivilegeLinkManage"/>
+      <Privilege description="Allows the user to create, update, and delete user group types." name="UserGroupTypeManage"/>
+      <Privilege description="Allows the user to  create, update, and delete user templates." name="UserTemplateManage"/>
+      <Privilege description="Allows the user to update the system user template. Should not be given to anyone." name="SystemUserTemplateManage"/>
+      <Privilege description="Allows the user to manage the public principal. Should not be given to anyone." name="PublicPrincipalManage"/>
+      <Privilege description="Allows the user to set breakpoints in Scheme code in sessions owned by this user" name="Debug"/>
+      <Privilege description="Allows the user to create, update and delete enumdisplays" name="EnumDisplayManage"/>
+      <Privilege description="Allows the user to evaluate any expression while debugging" name="DebugEval"/>
+      <Privilege description="Allows the user to set breakpoints that are triggered by other users" name="DebugAnyone"/>
+      <Privilege description="Allows the user to adjust application logger attributes" name="LogManage"/>
+      <Privilege description="Ability to edit EnumDisplay" name="AdminEnumDisplayManage"/>
+      <Privilege description="Ability to administer SysQueues" name="QueueManage"/>
+      <Privilege description="Ability to view SysQueues" name="QueueView"/>
+      <Privilege description="Ability to perform reserved SysObjectQueueDispatcher operations. No user should have this privilege." name="SysObjectQueueDispatch"/>
+      <Privilege description="Ability to view messages.  Only high-level administrators should have this privilege." name="SysMessageView"/>
+      <Privilege description="Ability to cancel and resubmit messages.  Only high-level administrators should have this privilege." name="SysMessageManage"/>
+   </Privileges>
+   <PrivilegeGroups>
+      <PrivilegeGroup description="Privileges that should be given to the default seeded nexjsa user." name="gCoreAdmin">
+         <Privileges>
+            <Privilege name="WorkflowManage"/>
+            <Privilege name="RuleSetManage"/>
+            <Privilege name="RSSFeedManage"/>
+            <Privilege name="SyncManage"/>
+            <Privilege name="BatchJobManage"/>
+            <Privilege name="BatchJobRun"/>
+            <Privilege name="AuditLogManage"/>
+            <Privilege name="AuditLogView"/>
+            <Privilege name="AuditLogDelete"/>
+            <Privilege name="SystemAuditManage"/>
+            <Privilege name="EnumManage"/>
+            <Privilege name="EnumDisplayManage"/>
+            <Privilege name="SystemUserTemplateManage"/>
+            <Privilege name="UserCreate"/>
+            <Privilege name="UserUpdate"/>
+            <Privilege name="UserDisable"/>
+            <Privilege name="UserDelete"/>
+            <Privilege name="UserGroupCreate"/>
+            <Privilege name="UserGroupUpdate"/>
+            <Privilege name="UserGroupDelete"/>
+            <Privilege name="UserGroupLinkManage"/>
+            <Privilege name="UserGroupPermissionManage"/>
+            <Privilege name="UserGroupPrivilegeLinkManage"/>
+            <Privilege name="UserGroupTypeManage"/>
+            <Privilege name="UserTemplateManage"/>
+            <Privilege name="LogManage"/>
+            <Privilege name="AdminEnumDisplayManage"/>
+            <Privilege name="gMessageDispatch"/>
+         </Privileges>
+      </PrivilegeGroup>
+      <PrivilegeGroup description="Privileges that should be given to the message dispatch user." name="gMessageDispatch">
+         <Privileges>
+            <Privilege name="SysObjectQueueDispatch"/>
+            <Privilege name="SysMessageManage"/>
+            <Privilege name="SysMessageView"/>
+            <Privilege name="QueueManage"/>
+            <Privilege name="QueueView"/>
+         </Privileges>
+      </PrivilegeGroup>
+   </PrivilegeGroups>
+</SecurityDescriptor>

@@ -1,0 +1,14 @@
+<Component type="nexj.core.rpc.xml.XMLHTTPServer" activation="context"
+   description="The XML HTTP server">
+   <Properties>
+      <Property name="type">XML</Property>
+      <Property name="bufferSize">8192</Property>
+      <Property name="maxRequestSize" override="httpMaxSize">0</Property>
+      <Property name="RPCEnabled" override="authRPC">true</Property>
+      <Property name="trustedCertificate" override="trust"/>
+      <Property name="RPCServer">true</Property>
+      <Property name="server">Server.Generic</Property>
+      <Property name="wrapped">false</Property>
+      <Property name="anonEnabled" override="anonRPC"/>
+   </Properties>
+</Component>

@@ -1,0 +1,1 @@
+<Aspect description="Deprecated empty class for partitioning compatibility.  Allows mix-ins based on core to disable partitioning so they can also work in enterprise.  &#13;&#10;"/>

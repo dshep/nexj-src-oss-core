@@ -1,0 +1,6 @@
+<Component type="nexj.core.rpc.pool.PoolManager" activation="singleton"
+   description="The resource and consumer pool manager">
+   <Properties>
+      <Property name="metadata"/>
+   </Properties>
+</Component>

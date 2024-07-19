@@ -1,0 +1,15 @@
+Index: src/main/java/org/jboss/deployers/plugins/deployers/DeployersImpl.java
+===================================================================
+--- src/main/java/org/jboss/deployers/plugins/deployers/DeployersImpl.java	(revision 106720)
++++ src/main/java/org/jboss/deployers/plugins/deployers/DeployersImpl.java	(working copy)
+@@ -658,9 +658,8 @@
+       // There is something to undeploy
+       if (undeploy != null && undeploy.isEmpty() == false)
+       {
+-         // Build a list in reverse order
+          List<DeploymentControllerContext> toUndeploy = new ArrayList<DeploymentControllerContext>();
+-         for (int i = undeploy.size() - 1; i >= 0; --i)
++         for (int i = 0; i < undeploy.size(); ++i)
+          {
+             DeploymentContext context = undeploy.get(i);
+             if (DeploymentState.ERROR.equals(context.getState()) == false)

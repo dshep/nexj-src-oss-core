@@ -1,0 +1,33 @@
+<Class base="SysWorkflowAssignment" description="A test subclass of SysWorkflowAssignment">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;T&quot;"/>
+      <Attribute initializer="0" name="count" type="integer"/>
+   </Attributes>
+   <Events>
+      <Event name="create" visibility="public">
+         <Actions>
+            <Action condition="(null? (@ priority))" name="logCreate" relative="enqueue" type="before"><![CDATA[((@ object)'traceAppend "ASSIGNMENT_CREATE;")]]></Action>
+         </Actions>
+      </Event>
+      <Event name="delete" visibility="public">
+         <Actions>
+            <Action name="before" type="before"><![CDATA[((@ object)'traceAppend "ASSIGNMENT_DELETE;")]]></Action>
+         </Actions>
+      </Event>
+      <Event args="arg1 argList" name="createWithArg" static="true" vararg="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(unless (= arg1 "Hello, World!")
+   (error "Argument not passed correctly")
+)
+(apply AssignmentSubclass'new argList)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping classCodeAttribute="classCode" dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="WFAssignment">
+         <AttributeMappings>
+            <AttributeMapping column="classCode" name="classCode"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

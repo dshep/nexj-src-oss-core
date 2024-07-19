@@ -1,0 +1,10 @@
+<Connections description="PostgreSQL Server JUnit test environment">
+   <DataSourceConnections>
+      <RelationalDatabaseConnection adapter="PostgreSQL" dataSource="DefaultRelationalDatabase" database="test" host="sv-bld-postgre-01" password="test" port="5432" unicode="true" user="test"/>
+      <RelationalDatabaseConnection adapter="PostgreSQL" dataSource="ExternalRelationalDatabase" database="test" host="sv-bld-postgre-01" password="test" port="5432" unicode="true" user="test"/>
+   </DataSourceConnections>
+   <ChannelConnections>
+      <MessageQueueConnection channel="ErrorQueue" password="mqpass" user="mq"/>
+      <MailConnection channel="Mail" from="mailtest@nexjsystems.com" inEncryption="TLS" inHost="192.168.25.1" inProtocol="pop3" outHost="192.168.25.1" outProtocol="smtp" password="mail123pass" user="mailtest"/>
+   </ChannelConnections>
+</Connections>

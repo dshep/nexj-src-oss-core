@@ -1,0 +1,5 @@
+<Interface>
+   <Responses>
+   	<Response message="RSS2_0"/>
+   </Responses>	
+</Interface>

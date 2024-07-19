@@ -1,0 +1,32 @@
+<Class>
+   <Attributes>
+      <Attribute name="s" type="string"/>
+      <Attribute name="bin" type="binary"/>
+      <Attribute name="n" type="integer"/>
+      <Attribute name="n1" type="integer"/>
+      <Attribute name="n2" type="integer"/>
+      <Attribute name="l" type="long"/>
+      <Attribute name="dec" type="decimal"/>
+      <Attribute name="f" type="float"/>
+      <Attribute name="d" type="double"/>
+      <Attribute name="tm" type="timestamp"/>
+      <Attribute name="b" type="boolean"/>
+   </Attributes>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="identity" primaryTable="test.RangeTest">
+         <AttributeMappings>
+            <AttributeMapping column="s" name="s"/>
+            <AttributeMapping column="bin" name="bin"/>
+            <AttributeMapping column="n" name="n"/>
+            <AttributeMapping column="n1" name="n1"/>
+            <AttributeMapping column="n2" name="n2"/>
+            <AttributeMapping column="l" name="l"/>
+            <AttributeMapping column="dec" name="dec"/>
+            <AttributeMapping column="f" name="f"/>
+            <AttributeMapping column="d" name="d"/>
+            <AttributeMapping column="tm" name="tm"/>
+            <AttributeMapping column="b" name="b"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

@@ -1,0 +1,22 @@
+<Component type="nexj.core.rpc.timer.PersistentTimer" activation="singleton"
+   description="The persistent system timer implementation.">
+   <Properties>
+      <Property name="distributed" override="distributed">false</Property>
+      <Property name="queueClient">ObjectSender.ObjectSystemQueue</Property>
+      <Property name="contextComponent">System.InvocationContext</Property>
+      <Property name="thisComponent">System.Timer</Property>
+      <Property name="defaultUser"></Property>
+      <Property name="interval">60000</Property>
+      <Property name="batchCount">8</Property>
+      <Collection name="timeout">
+         <Item>
+            <Component type="nexj.core.meta.integration.channel.timer.Timeout" activation="new">
+               <Properties>
+                  <Property name="period">10000</Property>
+                  <Property name="receiver">System.PoolManager</Property>
+               </Properties>
+            </Component>
+         </Item>
+      </Collection>
+   </Properties>
+</Component>

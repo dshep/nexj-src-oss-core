@@ -1,0 +1,16 @@
+<Transformation destination="class:Animal" source="Animal">
+   <Mappings>
+      <Mapping destination="commonName">
+         <Sources>
+            <Source source="commonName"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="pen animals commonName">
+         <Sources>
+            <Source name="friendName" source="pen animals commonName"/>
+            <Source name="penName" source="pen name"/>
+         </Sources>
+         <Script><![CDATA[(string-append "Friend " friendName " from " penName)]]></Script>
+      </Mapping>
+   </Mappings>
+</Transformation>

@@ -1,0 +1,11 @@
+<project name="plugin" basedir=".">
+   <condition property="build.properties.file" value="build.properties" else="../build.properties">
+      <available file="build.properties"/>
+   </condition>
+   <property file="${build.properties.file}"/>
+
+   <property name="plugin.build" value="true"/>
+   <property name="build.dir" location="${plugin.dir}"/>
+      
+   <import file="${build.dir}/core/build/build.xml"/>
+</project>

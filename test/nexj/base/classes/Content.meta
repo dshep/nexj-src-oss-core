@@ -1,0 +1,15 @@
+<Class>
+   <Attributes>
+      <Attribute name="name" type="string"/>
+      <Attribute initializer="(@ :class name)" name="typeCode" type="string"/>
+      <Attribute name="description" type="string"/>
+      <Attribute name="lockedVersion" reverse="content" type="ContentVersion"/>
+      <Attribute name="currentVersion" required="true" reverse="content" type="ContentVersion"/>
+      <Attribute collection="true" name="versions" reverse="content" type="ContentVersion"/>
+      <Attribute initializer="0" name="locking" required="true" type="integer"/>
+   </Attributes>
+   <Events>
+      <Event name="checkout" visibility="public"/>
+      <Event name="checkin" visibility="public"/>
+   </Events>
+</Class>

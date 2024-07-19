@@ -1,0 +1,9 @@
+<Class description="The abstract security Principal for applying authorization rules." nameAttribute="name">
+   <Attributes>
+      <Attribute collection="false" name="name" required="true" type="string"/>
+      <Attribute collection="false" name="typeCode" required="true" type="string"/>
+      <Attribute initializer="0" name="updateCount" required="true" type="integer"/>
+      <Attribute name="description" type="string"/>
+   </Attributes>
+   <Events/>
+</Class>

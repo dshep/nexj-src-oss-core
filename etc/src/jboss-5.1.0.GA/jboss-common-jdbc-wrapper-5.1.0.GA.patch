@@ -1,0 +1,11 @@
+--- WrappedConnection.java	Fri May 22 09:16:31 2009
++++ WrappedConnection.java	Wed Apr 13 08:45:30 2011
+@@ -859,7 +859,7 @@
+     */
+    protected SQLException checkException(Throwable t) throws SQLException
+    {
+-      Throwable result = null;
++      Throwable result = t;
+ 
+       if (mc != null)
+          result = mc.connectionError(t);

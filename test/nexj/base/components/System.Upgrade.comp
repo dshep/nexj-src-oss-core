@@ -1,0 +1,7 @@
+<Component type="nexj.core.runtime.Upgrade" activation="singleton"
+   description="Checks the versions of the software components and persistent storages and upgrades them if necessary.">
+   <Properties>
+      <Property name="contextComponent">System.InvocationContext</Property>
+      <Property name="user">nexjsa</Property>
+   </Properties>
+</Component>

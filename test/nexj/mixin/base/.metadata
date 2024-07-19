@@ -1,0 +1,5 @@
+<Metadata name="NexJ Core Test Base" namespace="http://www.nexjsystems.com/ns/mixin-test-base" revision="1.0" version="5" coreVersion="6.2.0.20+">
+   <Mixins>
+      <Mixin namespace="http://www.nexjsystems.com/ns/mixin-test-c" version="1" checksum="b0925885" override="true"/>
+   </Mixins>
+</Metadata>

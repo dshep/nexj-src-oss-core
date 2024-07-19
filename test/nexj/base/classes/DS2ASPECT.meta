@@ -1,0 +1,14 @@
+<Aspect pointcuts="DSAbstractClass">
+   <Attributes>
+      <Attribute initializer="64" name="y" type="integer"/>
+   </Attributes>
+   <PersistenceMappings>
+      <PersistenceMapping dataSource="ExternalRelationalDatabase">
+         <RelationalMapping primaryTable="DS2ASPECT">
+            <AttributeMappings>
+               <AttributeMapping column="y" name="y"/>
+            </AttributeMappings>
+         </RelationalMapping>
+      </PersistenceMapping>
+   </PersistenceMappings>
+</Aspect>

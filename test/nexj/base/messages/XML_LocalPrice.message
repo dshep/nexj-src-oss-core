@@ -1,0 +1,8 @@
+<Message format="XML">
+   <XMLMapping node="localPrice"/>
+   <Parts>
+      <Value minCount="1" name="price" type="decimal">
+         <XMLMapping type="value"/>
+      </Value>
+   </Parts>
+</Message>

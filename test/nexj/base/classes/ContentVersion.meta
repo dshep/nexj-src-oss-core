@@ -1,0 +1,15 @@
+<Class>
+   <Attributes>
+      <Attribute name="content" required="true" reverse="versions" type="Content"/>
+      <Attribute initializer="(@ :class name)" name="typeCode" type="string"/>
+      <Attribute initializer="1" name="version" required="true" type="integer"/>
+      <Attribute name="author" required="true" type="User"/>
+      <Attribute name="updatedOn" required="true" type="timestamp"/>
+      <Attribute name="startDate" type="string"/>
+      <Attribute name="endDate" type="string"/>
+      <Attribute initializer="0" name="locking" required="true" type="integer"/>
+   </Attributes>
+   <Events>
+      <Event name="copy" visibility="public"/>
+   </Events>
+</Class>

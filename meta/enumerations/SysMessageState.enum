@@ -1,0 +1,44 @@
+<Enumeration description="SysMessage state enumeration" typeCode="SMSGSTATEENUM">
+   <Locales>
+      <Locale caption="SysMessage state enum" description="Enumeration of SysMessage states" name="en"/>
+      <Locale caption="Énumération de stades SysMessage" name="fr"/>
+   </Locales>
+   <Values>
+      <Value displayUpdateable="false" hasBehavior="true" name="NEW" value="N">
+         <Locales>
+            <Locale caption="New" name="en" shortCaption="New"/>
+            <Locale caption="Nouveau" name="fr" shortCaption="Nouveau"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="DISPATCHING" value="D">
+         <Locales>
+            <Locale caption="Dispatching" name="en" shortCaption="Dispatch"/>
+            <Locale caption="Acheminement" name="fr" shortCaption="Acheminer"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="WAITING" value="W">
+         <Locales>
+            <Locale caption="Waiting" name="en" shortCaption="Wait"/>
+            <Locale caption="Attente" name="fr" shortCaption="Attendre"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="PROCESSING" value="P">
+         <Locales>
+            <Locale caption="Processing" name="en" shortCaption="Process"/>
+            <Locale caption="Traitement" name="fr" shortCaption="Traiter"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="ERROR" value="E">
+         <Locales>
+            <Locale caption="Errored" name="en" shortCaption="Error"/>
+            <Locale caption="Erronés" name="fr" shortCaption="Erreur"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="BLOCKED" value="B">
+         <Locales>
+            <Locale caption="Blocked" name="en" shortCaption="Block"/>
+            <Locale caption="Bloqué" name="fr" shortCaption="Bloc"/>
+         </Locales>
+      </Value>
+   </Values>
+</Enumeration>

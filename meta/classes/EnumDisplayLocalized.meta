@@ -1,0 +1,4 @@
+<Class base="EnumDisplay" where="(= (@ locale) (locale-name '()))">
+   <Attributes/>
+   <Events/>
+</Class>

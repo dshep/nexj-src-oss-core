@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="PortfolioService"
+	targetNamespace="http://service.amfam.com/portfolioservice"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:msg="http://service.amfam.com/portfolioservice/message"
+	xmlns:ping="http://service.amfam.com/ping"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://service.amfam.com/portfolioservice"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+	<wsdl:types>
+		<schema
+			targetNamespace="http://service.amfam.com/portfolioservice">
+		 	<import namespace="http://service.amfam.com/ping" 
+				schemaLocation="schema/Message_Ping.xsd" />
+			<import
+				namespace="http://service.amfam.com/portfolioservice/message"
+				schemaLocation="schema/Message_PortfolioService.xsd" />
+		</schema>
+	</wsdl:types>
+	<wsdl:message name="pingRequest">
+		<wsdl:part element="ping:ping" name="ping" />
+	</wsdl:message>
+	<wsdl:message name="pingResponse">
+		<wsdl:part element="ping:pingResponse" name="pingResponse" />
+	</wsdl:message>
+	<wsdl:message name="retrieveDataRequest">
+		<wsdl:part element="msg:retrieveData" name="retrieveData" />
+	</wsdl:message>
+	<wsdl:message name="retrieveDataResponse">
+		<wsdl:part element="msg:retrieveDataResponse"
+			name="retrieveDataResponse" />
+	</wsdl:message>
+	<wsdl:portType name="PortfolioService">
+		<wsdl:operation name="ping">
+			<wsdl:input message="tns:pingRequest" />
+			<wsdl:output message="tns:pingResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="retrieveData">
+			<wsdl:input message="tns:retrieveDataRequest" />
+			<wsdl:output message="tns:retrieveDataResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="PortfolioServiceSOAP"
+		type="tns:PortfolioService">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="ping">
+			<soap:operation
+				soapAction="http://service.amfam.com/portfolioservice/ping" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="retrieveData">
+			<soap:operation
+				soapAction="http://service.amfam.com/portfolioservice/retrieveData" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="PortfolioService">
+		<wsdl:port binding="tns:PortfolioServiceSOAP"
+			name="PortfolioServiceSOAP">
+			<soap:address
+				location="http://devesb/ccx/cc-router/PortfolioService/v1" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

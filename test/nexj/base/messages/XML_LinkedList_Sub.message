@@ -1,0 +1,7 @@
+<Message base="XML_LinkedList" format="XML">
+   <Parts>
+      <Value name="count" type="integer"/>
+      <Value name="dataCopy_ReferenceParentMapping" type="string"/>
+      <Value maxCount="0" name="dataCopy" type="string"/>
+   </Parts>
+</Message>

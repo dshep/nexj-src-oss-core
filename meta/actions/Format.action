@@ -1,0 +1,7 @@
+<Action caption="Format" description="Serializes an internal message to raw based on it's message format." icon="document_out" service="true" tooltip="Serialize a message to it's external raw format.">
+   <Arguments>
+      <Argument default="(@)" description="An expression that evaluates to the internal message that will be formatted." name="message" type="any"/>
+   </Arguments>
+   <Script><![CDATA[`(format-message ,message)
+]]></Script>
+</Action>

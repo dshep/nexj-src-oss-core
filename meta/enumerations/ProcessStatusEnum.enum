@@ -1,0 +1,50 @@
+<Enumeration description="Process Status Enumeration.  Running, Paused, Waiting, Done" typeCode="SPROCESSSTATUSENUM">
+   <Locales>
+      <Locale caption="Process Status Enum" description="Enumeration of process status'" name="en"/>
+      <Locale caption="Énum. des statuts de procédure" name="fr"/>
+   </Locales>
+   <Values>
+      <Value displayUpdateable="false" hasBehavior="true" name="RUNNING" value="R">
+         <Locales>
+            <Locale caption="Running" name="en" shortCaption="Run"/>
+            <Locale caption="En cours d'exécution" name="fr" shortCaption="Exécuter"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="PAUSED" value="P">
+         <Locales>
+            <Locale caption="Paused" name="en" shortCaption="Paused"/>
+            <Locale caption="Fait une pause" name="fr" shortCaption="Fait une pause"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="WAITING" value="W">
+         <Locales>
+            <Locale caption="Waiting" name="en" shortCaption="Wait"/>
+            <Locale caption="En attente" name="fr" shortCaption="Attendre"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="COMPLETED" value="D">
+         <Locales>
+            <Locale caption="Completed" name="en" shortCaption="Completed"/>
+            <Locale caption="Terminée" name="fr" shortCaption="Terminée"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="CANCELLED" value="C">
+         <Locales>
+            <Locale caption="Cancelled" name="en" shortCaption="Cancelled"/>
+            <Locale caption="Annulé" name="fr" shortCaption="Annulé"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="FAILED" value="F">
+         <Locales>
+            <Locale caption="Failed" name="en" shortCaption="Failed"/>
+            <Locale caption="Échec" name="fr" shortCaption="Échec"/>
+         </Locales>
+      </Value>
+      <Value displayUpdateable="false" hasBehavior="true" name="ERRORS" value="E">
+         <Locales>
+            <Locale caption="Completed with Errors" name="en" shortCaption="Errors"/>
+            <Locale caption="Terminé avec erreurs" name="fr" shortCaption="Erreurs"/>
+         </Locales>
+      </Value>
+   </Values>
+</Enumeration>

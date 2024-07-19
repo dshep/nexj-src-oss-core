@@ -1,0 +1,11 @@
+<Class base="UserBase" caption="idsc.UserTemplate.caption" description="User Templates - provides templated functionality for users.  Currenlty mostly used for personalization.">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;T&quot;"/>
+      <Attribute caption="idsc.UserTemplate.members" cascade="cancel" collection="true" name="members" reverse="parentTemplate" type="UserBase"/>
+   </Attributes>
+   <Events>
+      <Event name="create" visibility="public"/>
+      <Event name="update" visibility="public"/>
+      <Event name="delete" visibility="public"/>
+   </Events>
+</Class>

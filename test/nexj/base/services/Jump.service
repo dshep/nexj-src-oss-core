@@ -1,0 +1,12 @@
+<Service layout="startX:214;endY:226;startY:25;endX:212">
+   <Dispatch layout="y:62;mergeX:207;mergeY:212;x:207" name="dispatch">
+      <Case name="case">
+         <Script layout="y:124;x:210" name="1">(string-append "yo! " this)</Script>
+         <Goto/>
+      </Case>
+      <Case layout="assoc0:130,81" name="case">
+         <Script layout="y:165;x:113" name="2">(error "oops2")</Script>
+      </Case>
+   </Dispatch>
+   <Script layout="y:226;x:113" name="3">(error "oops3")</Script>
+</Service>

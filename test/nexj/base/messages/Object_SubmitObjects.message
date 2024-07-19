@@ -1,0 +1,93 @@
+<Message>
+   <ObjectMapping class="Act" create="true"/>
+   <Parts>
+      <Value name="classCode" type="string"/>
+      <Value name="title" type="string"/>
+      <Value name="startTime" type="timestamp"/>
+      <Value name="statusCode" type="string"/>
+      <Value name="text" type="string"/>
+      <Value name="interpretation" type="string"/>
+      <Value name="attachmentClass" type="string"/>
+      <Value name="attachmentId" type="string"/>
+      <Message name="subject">
+         <ObjectMapping class="Person" create="false" local="false"/>
+         <Parts>
+            <Message maxCount="0" name="ids">
+               <ObjectMapping key="true"/>
+               <Parts>
+                  <Value minCount="1" name="type" type="string">
+                     <ObjectMapping key="true"/>
+                  </Value>
+                  <Value minCount="1" name="id" type="string">
+                     <ObjectMapping key="true"/>
+                  </Value>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+      <Message name="performer">
+         <ObjectMapping class="Person" create="false" local="false"/>
+         <Parts>
+            <Message maxCount="0" name="ids">
+               <ObjectMapping key="true"/>
+               <Parts>
+                  <Value minCount="1" name="type" type="string">
+                     <ObjectMapping key="true"/>
+                  </Value>
+                  <Value minCount="1" name="id" type="string">
+                     <ObjectMapping key="true"/>
+                  </Value>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+      <Message name="author">
+         <ObjectMapping class="Person" create="false" local="false"/>
+         <Parts>
+            <Message maxCount="0" name="ids">
+               <ObjectMapping key="true"/>
+               <Parts>
+                  <Value minCount="1" name="type" type="string">
+                     <ObjectMapping key="true"/>
+                  </Value>
+                  <Value minCount="1" name="id" type="string">
+                     <ObjectMapping key="true"/>
+                  </Value>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+      <Message name="location">
+         <ObjectMapping class="Facility" create="false" local="false"/>
+         <Parts>
+            <Value name="lastName" type="string">
+               <ObjectMapping key="true"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message name="encounter">
+         <ObjectMapping class="Encounter" create="false" local="false"/>
+         <Parts>
+            <Value name="title" type="string">
+               <ObjectMapping key="true"/>
+            </Value>
+            <Message name="subject">
+               <ObjectMapping class="Person" create="false" key="true" local="false"/>
+               <Parts>
+                  <Message maxCount="0" name="ids">
+                     <ObjectMapping key="true"/>
+                     <Parts>
+                        <Value minCount="1" name="type" type="string">
+                           <ObjectMapping key="true"/>
+                        </Value>
+                        <Value minCount="1" name="id" type="string">
+                           <ObjectMapping key="true"/>
+                        </Value>
+                     </Parts>
+                  </Message>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

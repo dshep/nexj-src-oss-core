@@ -1,0 +1,63 @@
+<Message format="HL7">
+   <HL7Mapping name="MSO^SOUP"/>
+   <Parts>
+      <Message name="PID">
+         <HL7Mapping name="PID" seq="3"/>
+         <Parts>
+            <Value name="value" type="string">
+               <HL7Mapping seq="8"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message maxCount="0" name="GWHStructure">
+         <Parts>
+            <Message name="GWH">
+               <HL7Mapping name="GWH"/>
+               <Parts>
+                  <Value name="value1" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+                  <Value name="value2" type="string">
+                     <HL7Mapping seq="2"/>
+                  </Value>
+                  <Value name="valuen" type="string">
+                     <HL7Mapping seq="8"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message maxCount="0" name="PODS">
+               <Parts>
+                  <Message name="POD">
+                     <HL7Mapping name="POD"/>
+                     <Parts>
+                        <Value name="value3" type="string">
+                           <HL7Mapping seq="1"/>
+                        </Value>
+                        <Value name="value4" type="string">
+                           <HL7Mapping seq="5"/>
+                        </Value>
+                     </Parts>
+                  </Message>
+                  <Message name="message"/>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+      <Message maxCount="0" name="SRD">
+         <HL7Mapping name="SRD"/>
+         <Parts>
+            <Value maxCount="0" name="srdval3" type="string">
+               <HL7Mapping seq="3"/>
+            </Value>
+            <Message maxCount="0" name="srdval5">
+               <HL7Mapping seq="5"/>
+               <Parts>
+                  <Value name="value5" type="string">
+                     <HL7Mapping seq="5"/>
+                  </Value>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

@@ -1,0 +1,14 @@
+<Component type="nexj.core.runtime.LifecycleManager" activation="singleton"
+   description="The system component life cycle management component">
+   <Properties>
+      <Collection name="component">
+         <Item>
+            <Component type="nexj.core.runtime.sys.SysCounter" activation="singleton"/>
+         </Item>
+         <Item>System.Upgrade</Item>
+         <Item>System.Timer</Item>
+         <Item>System.PoolManager</Item>
+         <Item>System.ObjectQueueDispatcher</Item>
+      </Collection>
+   </Properties>
+</Component>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://service.amfam.com/ping"
+	xmlns:ping="http://schema.amfam.com/ping"
+	xmlns:tns="http://service.amfam.com/ping"
+	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+	attributeFormDefault="qualified">
+
+	<annotation>
+		<documentation xml:lang="en">
+			This schema defines the structure of Ping message types
+		</documentation>
+	</annotation>
+
+	<import namespace="http://schema.amfam.com/ping" schemaLocation="./Automation_Ping.xsd" />
+
+	<element name="ping">
+		<complexType>
+			<sequence>
+				<element name="PingInput" type="ping:PingInputType" />
+			</sequence>
+
+		<attribute name="automationSchemaSourceTool" type="string" default="CVS"/>
+		<attribute name="automationSchemaProject" type="string" default="svcartfct"/>
+		<attribute name="automationSchemaVersion" type="string" default="Ping01312009"/>
+		<attribute name="serviceSourceTool" type="string" default="HARVEST"/>
+		<attribute name="serviceProject" type="string" default="smplsvc"/>
+		<attribute name="serviceVersion" type="string" default="1.0"/>
+		</complexType>
+	</element>
+	<element name="pingResponse">
+		<complexType>
+			<sequence>
+				<element name="PingResult" type="ping:PingResultType" />
+			</sequence>
+		<attribute name="automationSchemaSourceTool" type="string" default="CVS"/>
+		<attribute name="automationSchemaProject" type="string" default="svcartfct"/>
+		<attribute name="automationSchemaVersion" type="string" default="Ping01312009"/>
+		<attribute name="serviceSourceTool" type="string" default="HARVEST"/>
+		<attribute name="serviceProject" type="string" default="smplsvc"/>
+		<attribute name="serviceVersion" type="string" default="1.0"/>
+
+		</complexType>
+	</element>
+</schema>

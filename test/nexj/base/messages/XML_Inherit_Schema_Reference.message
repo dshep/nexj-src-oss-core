@@ -1,0 +1,9 @@
+<Message format="XML">
+   <XMLMapping namespace="is1" node="references" resource="(http://www.nexjsystems.com/ns/test/inherit/schema3.xsd xsds/inherit_schema3.xsd)"/>
+   <Parts>
+      <Message name="s1" ref="XML_Inherit_Schema1"/>
+      <Message name="s2" ref="XML_Inherit_Schema2"/>
+      <Message name="s3" ref="XML_Inherit_Schema3"/>
+      <Message name="s4" ref="XML_Inherit_Schema4"/>
+   </Parts>
+</Message>

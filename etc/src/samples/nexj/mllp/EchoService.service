@@ -1,0 +1,4 @@
+<Service args="empty" interface="HL7_23_CML_ORU" layout="startX:169;endY:201;startY:198;endX:637">
+   <Script caption="Echo" layout="y:199;x:387" name="script"><![CDATA[(logger'debug "Started Echo Service!" this)
+this]]></Script>
+</Service>

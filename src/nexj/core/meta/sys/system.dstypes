@@ -1,0 +1,27 @@
+<DataSourceTypes>
+   <DataSourceType name="RelationalDatabase" element="RelationalDatabase"
+      loader="nexj.core.meta.persistence.sql.XMLRelationalMetadataLoader"
+      exporter="nexj.core.meta.persistence.sql.XMLRelationalMetadataExporter"
+      description="Relational database supporting SQL">
+      <Adapters>
+         <Adapter name="MySQL" class="nexj.core.persistence.sql.MySQLAdapter"/>
+         <Adapter name="PostgreSQL" class="nexj.core.persistence.sql.PostgreSQLAdapter"/>
+      </Adapters>
+   </DataSourceType>
+   <DataSourceType name="FileStorage" element="FileStorage"
+      loader="nexj.core.meta.persistence.file.XMLFileDataSourceMetadataLoader"
+      exporter="nexj.core.meta.persistence.file.XMLFileDataSourceMetadataExporter"
+      description="Flat file storage">
+      <Adapters>
+         <Adapter name="Generic" class="nexj.core.persistence.file.FileAdapter"/>
+      </Adapters>
+   </DataSourceType>
+   <DataSourceType name="Service" element="ServiceDataSource"
+      loader="nexj.core.meta.persistence.virtual.XMLVirtualDataSourceMetadataLoader"
+      exporter="nexj.core.meta.persistence.virtual.XMLVirtualDataSourceMetadataExporter"
+      description="Service Persistence Adapter">
+      <Adapters>
+         <Adapter name="Generic" class="nexj.core.persistence.virtual.VirtualAdapter"/>
+      </Adapters>
+   </DataSourceType>
+</DataSourceTypes>

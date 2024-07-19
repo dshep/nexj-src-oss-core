@@ -1,0 +1,24 @@
+<Aspect description="Aspect for applying locking attribute to classes.">
+   <Attributes>
+      <Attribute initializer="0" name="locking" required="true" type="integer"/>
+   </Attributes>
+   <PersistenceMappings>
+      <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+         <RelationalMapping primaryTable="LOCKING">
+            <AttributeMappings>
+               <AttributeMapping column="locking" name="locking"/>
+            </AttributeMappings>
+         </RelationalMapping>
+      </PersistenceMapping>
+      <PersistenceMapping dataSource="TestFilePersistenceDataSource" lockingAttribute="locking">
+         <FileStorageMapping/>
+      </PersistenceMapping>
+      <PersistenceMapping dataSource="MemoryVirtualSource" lockingAttribute="locking">
+         <ServiceMapping>
+            <AttributeMappings>
+               <AttributeMapping name="locking"/>
+            </AttributeMappings>
+         </ServiceMapping>
+      </PersistenceMapping>
+   </PersistenceMappings>
+</Aspect>

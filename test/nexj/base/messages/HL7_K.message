@@ -1,0 +1,10 @@
+<Message format="HL7">
+   <Parts>
+      <Value description="A" name="A" type="string">
+         <HL7Mapping seq="1"/>
+      </Value>
+      <Value description="B" name="B" type="string">
+         <HL7Mapping seq="2"/>
+      </Value>
+   </Parts>
+</Message>

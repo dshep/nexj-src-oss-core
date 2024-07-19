@@ -1,0 +1,26 @@
+<Message aggregation="random" base="Raw" description="Raw Mail Message&#13;&#10;Inherits from Raw.message and MailPart.message">
+   <Parts>
+      <Message aggregation="random" description="Mail connection configuration property overrides&#13;&#10;TransferObject of key-&gt;value" lax="true" name="server"/>
+      <Value description="Mail server username override" name="user" type="string"/>
+      <Value description="Mail server password override" name="password" type="string"/>
+      <Message aggregation="random" description="Mail custom headers&#13;&#10;TransferObject of key-&gt;value" lax="true" name="headers">
+         <Parts>
+            <Value name="content-id" type="string"/>
+            <Value name="content-md5" type="string"/>
+            <Value name="content-description" type="string"/>
+            <Value name="content-disposition" type="string"/>
+            <Value name="content-transfer-encoding" type="string"/>
+            <Value name="content-type" type="string"/>
+         </Parts>
+      </Message>
+      <Value description="Mail part filename" name="filename" type="string"/>
+      <Value description="Mail reception date" name="receivedDate" type="timestamp"/>
+      <Value description="Mail sent date" name="sentDate" type="timestamp"/>
+      <Message aggregation="random" description="Mail origination address" minCount="1" name="from" ref="MailAddress"/>
+      <Message aggregation="random" description="Mail destination addresses" maxCount="0" name="to" ref="MailAddress"/>
+      <Message aggregation="random" description="Mail carbon-copy addresses" maxCount="0" name="cc" ref="MailAddress"/>
+      <Message aggregation="random" description="Mail blind-carbon-copy addresses" maxCount="0" name="bcc" ref="MailAddress"/>
+      <Message aggregation="random" description="Mail Reply-To addresses" maxCount="0" name="replyTo" ref="MailAddress"/>
+      <Value description="Mail subject" name="subject" type="string"/>
+   </Parts>
+</Message>

@@ -1,0 +1,15 @@
+<Aspect pointcuts="ContactType AccountTypeEnum">
+   <Attributes>
+      <Attribute initializer="0" name="version" required="true" type="integer"/>
+      <Attribute name="AOP1" static="true" type="string" value="&quot;VERSIONED&quot;" visibility="protected"/>
+   </Attributes>
+   <PersistenceMappings>
+      <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="version">
+         <RelationalMapping>
+            <AttributeMappings>
+               <AttributeMapping column="version" name="version" table="VERSIONED"/>
+            </AttributeMappings>
+         </RelationalMapping>
+      </PersistenceMapping>
+   </PersistenceMappings>
+</Aspect>

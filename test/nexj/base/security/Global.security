@@ -1,0 +1,49 @@
+<SecurityDescriptor>
+   <Privileges>
+      <Privilege name="updateDoctor"/>
+      <Privilege description="Allows the user to create a new Contact class instance" name="createContact"/>
+      <Privilege name="readContact"/>
+      <Privilege name="updateContact"/>
+      <Privilege name="deleteContact"/>
+      <Privilege name="updateContactSecurity"/>
+      <Privilege description="Allows the user to create, update and delete workflow objects" name="WorkflowManage"/>
+      <Privilege name="dummyRead"/>
+      <Privilege name="dummyUpdate"/>
+      <Privilege name="readAddress"/>
+      <Privilege name="addressContactRead"/>
+      <Privilege name="readSpecial"/>
+      <Privilege description="Allow the user to create, update and delete rules" name="RuleSetManage"/>
+      <Privilege description="Allows the user to create, update and delete batch jobs" name="BatchJobManage"/>
+      <Privilege description="Allows the user to run batch jobs" name="BatchJobRun"/>
+      <Privilege name="deletePatient"/>
+      <Privilege name="updatePatient"/>
+      <Privilege description="Allow the user to update patient's children collection" name="childrenUpdate"/>
+      <Privilege description="Allows the user to create, update and delete synchronization objects" name="SyncManage"/>
+      <Privilege name="EnumManage"/>
+      <Privilege name="EnumDisplayManage"/>
+      <Privilege description="Ability to administer SysQueues" name="QueueManage"/>
+      <Privilege description="Ability to view SysQueues" name="QueueView"/>
+      <Privilege description="Ability to perform reserved SysMessageDispatcher operations. Only the system user should have this privilege." name="SysObjectQueueDispatch"/>
+      <Privilege description="Ability to view messages.  Only high-level administrators should have this privilege." name="SysMessageView"/>
+      <Privilege description="Ability to cancel and resubmit messages.  Only high-level administrators should have this privilege." name="SysMessageManage"/>
+      <Privilege name="Debug"/>
+      <Privilege name="DebugEval"/>
+      <Privilege name="DebugAnyone"/>
+   </Privileges>
+   <PrivilegeGroups>
+      <PrivilegeGroup name="contactEntry">
+         <Privileges>
+            <Privilege name="createContact"/>
+            <Privilege name="readContact"/>
+            <Privilege name="updateContact"/>
+         </Privileges>
+      </PrivilegeGroup>
+      <PrivilegeGroup name="contactManagement">
+         <Privileges>
+            <Privilege name="contactEntry"/>
+            <Privilege name="deleteContact"/>
+            <Privilege name="updateContactSecurity"/>
+         </Privileges>
+      </PrivilegeGroup>
+   </PrivilegeGroups>
+</SecurityDescriptor>

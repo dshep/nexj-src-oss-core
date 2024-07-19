@@ -1,0 +1,3 @@
+<Service args="link" layout="startX:31;endY:66;startY:71;endX:188">
+   <Sync layout="y:64;x:93" link="link" name="sync" onError="commit"/>
+</Service>

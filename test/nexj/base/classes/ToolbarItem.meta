@@ -1,0 +1,10 @@
+<Class description="Individual tooblar item personalization.">
+   <Attributes>
+      <Attribute name="name" required="true" type="string"/>
+      <Attribute initializer="0" name="locking" required="true" type="integer"/>
+      <Attribute initializer="0" name="ordinal" required="true" type="integer"/>
+      <Attribute name="personalizeable" required="true" reverse="toolbarItems" type="Personalizeable"/>
+      <Attribute initializer="#t" name="used" required="true" type="boolean"/>
+      <Attribute name="icon" type="string"/>
+   </Attributes>
+</Class>

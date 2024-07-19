@@ -1,0 +1,41 @@
+<Transformation destination="MsgCol" source="MsgCol">
+   <Mappings>
+      <Mapping destination="a s">
+         <Sources>
+            <Source source="a s" default="()"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="a n">
+         <Sources>
+            <Source source="a n" default="(ifnull (@ missing) 1)"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="b s">
+         <Sources>
+            <Source source="b s" default="()"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="b n">
+         <Sources>
+            <Source source="b n" default="2"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="c s">
+         <Sources>
+            <Source source="a s" null="true"/>
+         </Sources>
+      </Mapping>
+      <Mapping name="bq">
+         <Sources>
+            <Source source="b" default="(message (: s &quot;q&quot;))"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="c s">
+         <Sources>
+            <Source name="b" mapping="bq"/>
+         </Sources>
+         <Script>(b's)
+         </Script>
+      </Mapping>
+   </Mappings>
+</Transformation>

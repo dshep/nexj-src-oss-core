@@ -1,0 +1,11 @@
+<UnitTest dump="UnitTest" mode="dirty">
+   <TestCase description="Tests if the user validation works correctly" name="testUserValidation"><![CDATA[(define x (User'new (: loginName "testUser1") (: firstName "Test") (: lastName "User1")))
+(commit)
+(x'loginName "TestUser1")
+(commit)
+]]></TestCase>
+   <TestCase description="Ensures that the current user cannot delete themself" name="testUserDeletion"><![CDATA[(assert-error-code "err.runtime.access"
+   ((user)'delete)
+)
+(rollback)]]></TestCase>
+</UnitTest>

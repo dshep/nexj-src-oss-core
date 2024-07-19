@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+   <classpathentry excluding="**/build/**/PresentationLayerDoclet.java" kind="src" path="src"/>
+   <classpathentry kind="src" path="test"/>
+   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/xerces-2_11_0/xercesImpl.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/xerces-2_11_0/xml-apis.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/xalan-j_2_7_1/xalan.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/xalan-j_2_7_1/serializer.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/logging-log4j-1.2.14/dist/lib/log4j-1.2.14.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/junit3.8.1/junit.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/apache-ant-1.8.2/lib/ant.jar"/>
+   <classpathentry exported="true" kind="var" path="ECLIPSE_HOME/plugins/com.jcraft.jsch_0.1.41.v201101211617.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/apache-tomcat-6.0.33-1/lib/servlet-api.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/jca-1.5/connector-api.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/jta-1_1/jta-1_1-classes.zip"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/ejb-2.1-api/ejb-2_1-api.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/jms1.1/lib/jms.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/javamail-1.2/mail.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/jaf-1.0.2/activation.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/jboss-5.1.0.GA/common/lib/jbosssx.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/jboss-5.1.0.GA/common/lib/jbossjts.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/jboss-5.1.0.GA/common/lib/jbossjts-integration.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/jboss-5.1.0.GA/lib/jboss-j2se.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/mysql-connector-java-5.1.7/mysql-connector-java-5.1.7-bin.jar"/>
+   <classpathentry exported="true" kind="var" path="THIRD_PARTY/postgresql-jdbc/postgresql-9.1-901.jdbc3.jar"/>
+   <classpathentry kind="output" path="bin"/>
+</classpath>

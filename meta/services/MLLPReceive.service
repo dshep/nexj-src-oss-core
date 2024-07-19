@@ -1,0 +1,103 @@
+<Service args="receiver" description="Receives a raw message, parses it, and passes it to the specified service.  If the custom service returns non-null, the result is formatted then sent back on the same channel.&#13;&#10;&#13;&#10;This service is meant to be used by a TCP channel.&#13;&#10;&#13;&#10;If an interface is specified on the receiver service, the raw message body will be parsed according to that interface.  If not, the raw message body itself will be used.&#13;&#10;&#13;&#10;If the receiver service terminates with a null result then this service will terminate.&#13;&#10;&#13;&#10;Otherwise, the receiver's result will be formatted, if possible.  If not, the result itself will be used.&#13;&#10;&#13;&#10;The result is then wrapped in a message and sent on the same channel (and remote host/port) that it arrived on.&#13;&#10;&#13;&#10;If MLLP version 2 is specified, the receiver service will be executed in a new transaction. If the transaction is successful, an &quot;ACK&quot; message will be sent before the response. If the receiver service throws an exception, the transaction will be rolled back, a &quot;NAK&quot; message will be sent, and the service will terminate.&#13;&#10;@arg receiver string The name of the service that the received (and parsed) message will be delivered to.&#13;&#10;@ret any Returns null.&#13;&#10;" layout="startSrcAssocAnchorPos:131072,8;startX:-8;endY:97;startY:85;endX:977" variables="original splitter oldUOW ackBody nakBody e send parse">
+   <Script caption="Start" layout="y:89;x:40" name="scrStart"><![CDATA[(let*
+   (
+      (context (invocation-context))
+      (channel ((context'metadata)'getChannel (this'channel)))
+   )
+   (set! original this)
+   (set! send
+      (lambda (body)
+         (let*
+            (
+               (msg (message (: :class "TCP") (: host (original'host)) (: port (original'port))
+                  (: localHost (original'localHost)) (: localPort (original'localPort)) 
+                  (: channel (original'channel)) (: body body))
+               )
+               (sender ((channel'sender)'getInstance context))
+            )
+            (sender'send msg)
+         )
+      )
+   )
+   (set! parse
+      (lambda (msg)
+         (let*
+            (
+               (interface (((context'metadata)'getService receiver)'interface))
+               (result
+                  (if (null? interface)
+                     msg
+                     ; else
+                     (parse-message msg (interface'requestTable))
+                  )
+               )
+            )
+            (logger'dump "Parsed MLLP request" result)
+            result
+         )
+      )
+   )
+   (set! splitter (channel'getMessageStreamFactory context))
+   (logger'dump "Received MLLP version" (splitter'version) "request" this)
+   (this'body)
+)
+]]></Script>
+   <Dispatch layout="y:80;mergeX:1271;mergeY:66;x:132" name="dispatch1">
+      <Case caption="Version 1?" condition="(= (splitter'version) 1)" layout="connectedToMerge:false;labelD:-2187.3823;labelR:0.09228216;seg:1" name="caseVersion1">
+         <Script caption="Parse" layout="y:19;x:265" name="scrParse"><![CDATA[(parse this)
+]]></Script>
+         <InvokeService args="()" caption="Invoke Service" layout="y:20;x:469" message="this" name="invokeService" service="receiver"/>
+         <Goto next="dispatch"/>
+         <Script caption="Send Response" layout="y:18;x:929" name="scrResponse"><![CDATA[(logger'dump "Sending response:" this)
+
+(send this)
+]]></Script>
+         <Goto/>
+      </Case>
+      <Case caption="Version 2?" condition="(= (splitter'version) 2)" layout="connectedToMerge:false;labelD:4556.5703;labelR:-0.09100257;seg:1" name="caseVersion2">
+         <TryCatch caption="Try Invoking Receiver Service" layout="w:445;h:87;y:146;x:177" name="tryInvokeService" variable="e">
+            <Try>
+               <Script caption="Begin Trans. &amp; Parse" layout="y:12;x:20" name="scrBeginTransactionAndParse"><![CDATA[(set! oldUOW ((invocation-context)'beginTransaction))
+
+(parse this)
+]]></Script>
+               <InvokeService args="()" caption="Invoke Service" layout="y:10;x:185" message="this" name="invokeService2" service="receiver"/>
+               <Script caption="End Trans." layout="y:10;x:314" name="scrEndTransaction"><![CDATA[((invocation-context)'commitAndResume oldUOW)
+this
+]]></Script>
+            </Try>
+            <Catch caption="Catch All" layout="w:150;h:83;y:147;x:637" name="catchAll">
+               <Script caption="Roll Back" layout="y:9;x:20" name="scrRollBack"><![CDATA[((invocation-context)'rollbackAndResume oldUOW)
+(logger'debug "Caught exception while invoking receiver service" this e)
+]]></Script>
+               <Goto next="scrSendNAK"/>
+            </Catch>
+         </TryCatch>
+         <Script caption="Send ACK" layout="y:80;x:615" name="scrSendACK"><![CDATA[(logger'dump "Sending ACK")
+
+(send (nexj.core.util.Binary'new (bytevector (splitter'ackByte))))
+this
+]]></Script>
+         <Dispatch layout="y:26;mergeX:1259;mergeY:23;x:725" name="dispatch">
+            <Case caption="null?" condition="(null? this)" layout="connectedToMerge:false;assocAnchorPos:131072,31;labelD:-9.0;labelR:0.22222222;assoc0:757,110;seg:1" name="caseNull">
+               <Goto/>
+            </Case>
+            <Case caption="else" layout="connectedToMerge:false;labelD:-375.65186;labelR:0.11891118;seg:1" name="caseElse">
+               <Script caption="Format" layout="y:18;x:832" name="scrFormat"><![CDATA[(logger'dump "Formatting response:" this)
+
+(if (or (not (message? this)) (string-empty? (this':class)))
+   this
+   ; else
+   (format-message this)
+)
+]]></Script>
+               <Goto next="scrResponse"/>
+            </Case>
+         </Dispatch>
+      </Case>
+   </Dispatch>
+   <Script caption="Send NAK" layout="y:166;srcAssocAnchorPos:128,84;x:850" name="scrSendNAK"><![CDATA[(logger'dump "Sending NAK")
+
+(send (nexj.core.util.Binary'new (bytevector (splitter'nakByte))))
+]]></Script>
+</Service>

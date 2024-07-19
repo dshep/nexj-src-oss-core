@@ -1,0 +1,6 @@
+<Message aggregation="random" base="Raw" description="Raw File Message" lax="true">
+   <Parts>
+      <Value description="The string or binary body of the message to send.&#13;&#10;&#13;&#10;This part is required for file messages. To write an empty file to disk, set body to the empty string or a zero-length binary." minCount="1" name="body" type="any"/>
+      <Value description="The incoming filename (when receiving) and filename override (when sending)." name="file" type="string"/>
+   </Parts>
+</Message>

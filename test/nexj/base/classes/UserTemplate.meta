@@ -1,0 +1,6 @@
+<Class base="Principal" description="Helps to segment the users for the purpose of personalizing the UI. May also be used for creating user templates.">
+   <Attributes>
+      <Attribute name="typeCode" required="true" type="string" value="&quot;T&quot;"/>
+      <Attribute name="icon" type="string" value="&quot;16/users1&quot;"/>
+   </Attributes>
+</Class>

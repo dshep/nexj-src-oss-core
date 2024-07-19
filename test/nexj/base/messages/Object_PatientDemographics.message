@@ -1,0 +1,81 @@
+<Message>
+   <ObjectMapping class="HL7_Patient"/>
+   <Parts>
+      <Message name="player">
+         <ObjectMapping class="Person" key="true"/>
+         <Parts>
+            <Value name="firstName" type="string"/>
+            <Value name="lastName" type="string"/>
+            <Value name="fullName" type="string"/>
+            <Value name="initials" type="string"/>
+            <Value name="title" type="string"/>
+            <Value name="affix" type="string"/>
+            <Value name="birthTime" type="timestamp"/>
+            <Message name="genderCode">
+               <ObjectMapping create="false" local="false"/>
+               <Parts>
+                  <Value minCount="1" name="value" type="string">
+                     <ObjectMapping key="true"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message maxCount="0" name="ids">
+               <ObjectMapping key="true"/>
+               <Parts>
+                  <Value minCount="1" name="type" type="string">
+                     <ObjectMapping key="true"/>
+                  </Value>
+                  <Value minCount="1" name="id" type="string">
+                     <ObjectMapping key="true"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message maxCount="0" name="addrs">
+               <Parts>
+                  <Message name="type">
+                     <ObjectMapping create="false" key="true"/>
+                     <Parts>
+                        <Value name="name" type="string">
+                           <ObjectMapping key="true"/>
+                        </Value>
+                        <Message name="useCodes">
+                           <ObjectMapping create="false" key="false"/>
+                           <Parts>
+                              <Value name="code" type="string">
+                                 <ObjectMapping key="false"/>
+                              </Value>
+                           </Parts>
+                        </Message>
+                     </Parts>
+                  </Message>
+                  <Value name="city" type="string"/>
+                  <Value name="address1" type="string"/>
+                  <Value name="address2" type="string"/>
+                  <Value name="address3" type="string"/>
+                  <Value name="state" type="string"/>
+                  <Value name="country" type="string"/>
+                  <Value name="zip" type="string"/>
+               </Parts>
+            </Message>
+            <Message maxCount="0" name="telcoms">
+               <Parts>
+                  <Message name="type">
+                     <ObjectMapping create="false" key="true"/>
+                     <Parts>
+                        <Message maxCount="0" name="useCodes">
+                           <ObjectMapping create="false" key="true"/>
+                           <Parts>
+                              <Value name="code" type="string">
+                                 <ObjectMapping key="true"/>
+                              </Value>
+                           </Parts>
+                        </Message>
+                     </Parts>
+                  </Message>
+                  <Value name="address" type="string"/>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

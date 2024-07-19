@@ -1,0 +1,42 @@
+<Transformation destination="TransformTestMsg" source="TransformTestMsg">
+   <Mappings>
+      <Mapping destination="message message">
+         <Sources>
+            <Source name="value" source="message messageCollection"/>
+         </Sources>
+         <Script><![CDATA[value]]></Script>
+      </Mapping>
+      <Mapping destination="message messageCollection">
+         <Sources>
+            <Source name="value" source="message messageCollection$"/>
+         </Sources>
+         <Script><![CDATA[value]]></Script>
+      </Mapping>
+      <Mapping destination="message messageCollection">
+         <Sources>
+            <Source name="value" source="message messageCollection"/>
+         </Sources>
+         <Script><![CDATA[value]]></Script>
+      </Mapping>
+      
+      <Mapping destination="messageCollection message">
+         <Sources>
+            <Source name="value" source="messageCollection messageCollection$"/>
+         </Sources>
+         <Script><![CDATA[value]]></Script>
+      </Mapping>
+      <Mapping destination="messageCollection messageCollection">
+         <Sources>
+            <Source name="value" source="messageCollection message"/>
+         </Sources>
+         <Script><![CDATA[value]]></Script>
+      </Mapping>
+      <Mapping destination="messageCollection messageCollection">
+         <Sources>
+            <Source name="value" source="messageCollection messageCollection"/>
+         </Sources>
+         <Script><![CDATA[value]]></Script>
+      </Mapping>
+      
+   </Mappings>
+</Transformation>

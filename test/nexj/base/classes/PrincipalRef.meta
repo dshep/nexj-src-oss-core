@@ -1,0 +1,18 @@
+<Class aspects="PRINCIPAL_REF VERSIONED" description="AOP test class" validation="(or (null? (@ count)) (&gt; (@ count) 0))">
+   <Attributes>
+      <Attribute name="name" required="true" type="string"/>
+      <Attribute name="count" type="integer"/>
+      <Attribute name="classBaseAttr" caption="classBaseAttrCaption" type="string"/>
+   </Attributes>
+   <Events>
+      <Event name="ref2" transaction="required"/>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="PrincipalRef">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name"/>
+            <AttributeMapping column="cnt" name="count" table="PrincipalExt"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

@@ -1,0 +1,11 @@
+<Message format="XML">
+   <Parts>
+      <Value name="data" type="string"/>
+      <Value name="dataCopy_InheritMapping" type="string"/>
+      <Value name="dataCopy_ReplaceMapping" type="string"/>
+      <Value maxCount="0" name="dataCopy_Collection" type="string"/>
+      <Value name="dataCopy" type="string"/>
+      <Value name="dataCopy_Polymorphic" type="string"/>
+      <Message name="next" ref="XML_LinkedList"/>
+   </Parts>
+</Message>

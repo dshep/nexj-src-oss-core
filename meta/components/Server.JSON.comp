@@ -1,0 +1,6 @@
+<Component type="nexj.core.rpc.json.JSONServer" activation="context"
+   description="The JSON request server">
+   <Properties>
+      <Property name="server">Server.Generic</Property>
+   </Properties>
+</Component>

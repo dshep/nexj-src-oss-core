@@ -1,0 +1,19 @@
+<Message format="CSV" base="CSV_SimpleTable_Base">
+   <CSVMapping comment=";#" escape="\" header="true" pageSize="1" quote="none"/>
+   <Parts>
+      <Message maxCount="0" name="Row">
+         <Parts>
+            <Message name="Phone1">
+               <Parts>
+                  <Value name="location" type="string">
+                     <CSVMapping field="Phone1_location"/>
+                     <Enumerations>
+                        <Enumeration value="cell"/>
+                     </Enumerations>
+                  </Value>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

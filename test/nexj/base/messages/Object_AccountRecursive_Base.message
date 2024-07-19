@@ -1,0 +1,22 @@
+<Message format="Object">
+   <ObjectMapping class="Account"/>
+   <Parts>
+      <Message name="type">
+         <ObjectMapping class="AccountTypeEnum" local="false"/>
+         <Parts>
+            <Value name="value" type="string">
+               <ObjectMapping key="true"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message name="contact">
+         <ObjectMapping class="Contact"/>
+         <Parts>
+            <Value name="lastName" type="string"/>
+            <Message name="accounts" ref="Object_AccountRecursive_Base">
+               <ObjectMapping class="Account"/>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

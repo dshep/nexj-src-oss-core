@@ -1,0 +1,24 @@
+<Transformation destination="XML_XSDExportCircular1" source="class:Animal">
+   <Mappings>
+      <Mapping destination="a">
+         <Sources>
+            <Source source="commonName"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="other b">
+         <Sources>
+            <Source source="pen name"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="other other a">
+         <Sources>
+            <Source source="scientificName"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination=":oid">
+         <Sources>
+            <Source source=":oid"/>
+         </Sources>
+      </Mapping>
+   </Mappings>
+</Transformation>

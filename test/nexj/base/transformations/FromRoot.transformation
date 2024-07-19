@@ -1,0 +1,9 @@
+<Transformation destination="MultiFormatReferrer" source="XMLTestSuiteResult">
+   <Mappings>
+      <Mapping destination="xml">
+         <Sources>
+            <Source/>
+         </Sources>
+      </Mapping>
+   </Mappings>
+</Transformation>

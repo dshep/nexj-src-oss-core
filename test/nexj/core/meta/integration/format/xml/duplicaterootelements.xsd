@@ -1,0 +1,15 @@
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:element name = "Address" type = "PostalAddressType"/>
+	<xsd:complexType name = "PostalAddressType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang = "en">
+Mapping of the same named interface in ebRIM.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence minOccurs = "0" maxOccurs = "unbounded">
+			<xsd:element name="addr" type="PostalAddressType" minOccurs="1" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name = "PostalAddress" type = "PostalAddressType"/>
+</xsd:schema>

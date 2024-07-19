@@ -1,0 +1,6 @@
+<Message base="PolymorphicCollectionBase" format="XML">
+   <XMLMapping node="Child" xsdtype="ChildType"/>
+   <Parts>
+      <Value name="y" type="string"/>
+   </Parts>
+</Message>

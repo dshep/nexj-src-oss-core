@@ -1,0 +1,12 @@
+<Message format="HL7">
+   <HL7Mapping name="C"/>
+   <Parts>
+      <Value maxCount="0" name="n" type="string">
+         <Enumerations>
+            <Enumeration value="C"/>
+            <Enumeration value="2"/>
+            <Enumeration value="3"/>
+         </Enumerations>
+      </Value>
+   </Parts>
+</Message>

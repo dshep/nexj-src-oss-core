@@ -1,0 +1,16 @@
+<Transformation destination="MsgPrimitiveCol" source="MsgCol">
+   <Mappings>
+      <Mapping destination="c s">
+         <Sources>
+            <Source name="msg" source="a"/>
+         </Sources>
+         <Script><![CDATA[(msg's)]]></Script>
+      </Mapping>
+      <Mapping destination="c s">
+         <Sources>
+            <Source name="msg" source="b"/>
+         </Sources>
+         <Script><![CDATA[(msg's)]]></Script>
+      </Mapping>
+   </Mappings>
+</Transformation>

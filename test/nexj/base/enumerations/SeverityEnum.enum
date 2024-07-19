@@ -1,0 +1,38 @@
+<Enumeration base="StringEnum" description="Log level enumeration for audit records - info, warning or error" typeCode="SSEVERITYENUM">
+   <Locales>
+      <Locale caption="Log Level Enum" description="Enumeration of log levels for auditing" name="en"/>
+      <Locale caption="Énum. des niveaux de journal" name="fr"/>
+   </Locales>
+   <Values>
+      <Value displayUpdateable="false" hasBehavior="true" name="INFO" value="I">
+         <Locales>
+            <Locale caption="Information" name="en" shortCaption="Info"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="WARNING" value="W">
+         <Locales>
+            <Locale caption="Warning" name="en" shortCaption="Warn"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ERROR" value="E">
+         <Locales>
+            <Locale caption="Error" name="en" shortCaption="Err"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="FATAL" value="F">
+         <Locales>
+            <Locale caption="Fatal" name="en" shortCaption="Fatal"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="DEBUG" value="D">
+         <Locales>
+            <Locale caption="Debug" name="en" shortCaption="Debug"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="DUMP" value="U">
+         <Locales>
+            <Locale caption="Dump" name="en" shortCaption="Dump"/>
+         </Locales>
+      </Value>
+   </Values>
+</Enumeration>

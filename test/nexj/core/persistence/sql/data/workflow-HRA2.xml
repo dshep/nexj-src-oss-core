@@ -1,0 +1,132 @@
+
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<nv:Envelope xmlns:nv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <nv:Body xmlns:ns="http://www.nexjsystems.com/xml-soap" nv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <ns:Array>
+         <items nc:arrayType="xs:anyType[1]">
+            <Item href="#a"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="a">
+         <class>SysWorkflow</class>
+         <version>0</version>
+         <keys nc:arrayType="xs:string[7]">
+            <Item>serializedVariables</Item>
+            <Item>assignments</Item>
+            <Item>version</Item>
+            <Item>class</Item>
+            <Item>name</Item>
+            <Item>serializedState</Item>
+            <Item>timers</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[7]">
+            <Item xi:nil="true"/>
+            <Item href="#b"/>
+            <Item xi:type="xs:int">0</Item>
+            <Item xi:type="xs:string">HRRequest</Item>
+            <Item xi:type="xs:string">HolidayRequest_A</Item>
+            <Item xi:type="xs:string">3 5 9</Item>
+            <Item href="#c"/>
+         </values>
+      </ns:TransferObject>
+      <ns:Array id="b">
+         <items nc:arrayType="xs:anyType[2]">
+            <Item href="#d"/>
+            <Item href="#e"/>
+         </items>
+      </ns:Array>
+      <ns:Array id="c">
+         <items nc:arrayType="xs:anyType[1]">
+            <Item href="#f"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="d">
+         <class>SysWorkflowAssignment</class>
+         <version>0</version>
+         <keys nc:arrayType="xs:string[5]">
+            <Item>ordinal</Item>
+            <Item>nextStates</Item>
+            <Item>caption</Item>
+            <Item>manual</Item>
+            <Item>assignee</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[5]">
+            <Item xi:type="xs:int">2</Item>
+            <Item href="#g"/>
+            <Item xi:type="xs:string">Review an approved holiday request</Item>
+            <Item xi:type="xs:boolean">true</Item>
+            <Item href="#h"/>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="e">
+         <class>SysWorkflowAssignment</class>
+         <version>0</version>
+         <keys nc:arrayType="xs:string[5]">
+            <Item>ordinal</Item>
+            <Item>nextStates</Item>
+            <Item>caption</Item>
+            <Item>manual</Item>
+            <Item>assignee</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[5]">
+            <Item xi:type="xs:int">4</Item>
+            <Item href="#i"/>
+            <Item xi:type="xs:string">Your holiday request has been approved</Item>
+            <Item xi:type="xs:boolean">true</Item>
+            <Item href="#j"/>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="f">
+         <class>SysTimer</class>
+         <version>0</version>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>ordinal</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:int">8</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:Array id="g">
+         <items nc:arrayType="xs:anyType[1]">
+            <Item href="#k"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="h">
+         <class>User</class>
+         <version>0</version>
+      </ns:TransferObject>
+      <ns:Array id="i">
+         <items nc:arrayType="xs:anyType[1]">
+            <Item href="#l"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="j">
+         <class>User</class>
+         <version>0</version>
+      </ns:TransferObject>
+      <ns:TransferObject id="k">
+         <class>SysWorkflowState</class>
+         <version>0</version>
+         <keys nc:arrayType="xs:string[2]">
+            <Item>ordinal</Item>
+            <Item>caption</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[2]">
+            <Item xi:type="xs:int">7</Item>
+            <Item xi:type="xs:string">ids.flow.done</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="l">
+         <class>SysWorkflowState</class>
+         <version>0</version>
+         <keys nc:arrayType="xs:string[2]">
+            <Item>ordinal</Item>
+            <Item>caption</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[2]">
+            <Item xi:type="xs:int">7</Item>
+            <Item xi:type="xs:string">ids.flow.done</Item>
+         </values>
+      </ns:TransferObject>
+   </nv:Body>
+</nv:Envelope>

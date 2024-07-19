@@ -1,0 +1,33 @@
+<Message format="CSV">
+   <CSVMapping comment=";#" escape="none" header="true" pageSize="1" quote="none"/>
+   <Parts>
+      <Message maxCount="0" name="Row">
+         <Parts>
+            <Value description="First Column" name="firstName" type="string">
+               <CSVMapping/>
+            </Value>
+            <Value description="Second Column" name="lastName" type="string">
+               <CSVMapping field="familyName"/>
+            </Value>
+            <Value name="age" type="integer"/>
+            <Message name="Phone1">
+               <Parts>
+                  <Value name="location" type="string">
+                     <CSVMapping field="Phone1_location"/>
+                  </Value>
+                  <Value name="number" type="string">
+                     <CSVMapping field="Phone1_number"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message name="Phone2">
+               <Parts>
+                  <Value name="location" type="string"/>
+                  <Value name="number" type="string"/>
+               </Parts>
+            </Message>
+            <Value name="balance" type="decimal"/>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

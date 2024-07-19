@@ -1,0 +1,10 @@
+err.SysQueue.deleteSystem=Ne peut supprimer une file d'attente de syst\u00E8me "{0}".
+err.SysQueue.renameSystem=Ne peut renommer une file d'attente de syst\u00E8me (de "{0}" \u00E0 "{1}").
+err.rpc.queueing.disabled=L'envoi d'op\u00E9ration via SysObjectQueue "{0}" est d\u00E9sactiv\u00E9.
+err.rpc.queueing.invalidState=SysMessage "state" n'est pas valide.
+err.rpc.queueing.privilege=Cette op\u00E9ration requiert le privil\u00E8ge "{0}".
+fail.SysUpgrade.queueExists=Ne peut classer la file d'attente de syst\u00E8me "{0}" lorsqu'il y a d\u00E9j\u00E0 une file d'attente d'utilisateur portant le m\u00EAme nom.
+fail.integration.send-receive.invalidChannel=Argument de voie invalide (nom de voie ou objet voie attendu).
+fail.integration.send-receive.invalidInterface=Argument d\u2019interface invalide (objet interface, liste de messages ou couple de listes interfaces/message attendu)
+fail.integration.send-receive.invalidMessage=Message invalide \u00AB\u00A0{0}\u00A0\u00BB (nom de message ou objet message attendu).
+fail.workflow.wakeSemaphore=Incapable de trouver le s\u00E9maphore \u00E0 r\u00E9veiller pour l'attribution "{0}".

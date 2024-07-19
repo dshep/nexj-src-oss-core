@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="BasicExample"
+	targetNamespace="http://nexj.example.org/basicexample"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://nexj.example.org/basicexample"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+	<wsdl:message name="opInput">
+		<wsdl:part name="partOne" />
+	</wsdl:message>
+	
+	<wsdl:portType name="PortTypeOne">
+		<wsdl:operation name="OperationOne">
+			<wsdl:input message="tns:opInput" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="BindingOne" type="tns:PortTypeOne">
+	</wsdl:binding>
+	<wsdl:service name="Service">
+		<wsdl:port binding="tns:BindingOne" name="PortOne">
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

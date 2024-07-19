@@ -1,0 +1,24 @@
+<MessageQueue acknowledgement="transacted" alias="NEXJ_SYNC" broadcast="false"
+    errorCount="3" errorQueue="ErrorQueue" persistent="true" priority="4" trusted="true" ttl="0">
+   <ReceiverProperties>
+      <Collection name="server">
+         <Item>
+            <Component activation="singleton" type="nexj.core.rpc.jms.JMSRequestServer">
+               <Properties>
+                  <Property name="server">Server.Generic</Property>
+               </Properties>
+            </Component>
+         </Item>
+         <Item>
+            <Component activation="singleton" type="nexj.core.rpc.jms.JMSCommandServer">
+               <Properties>
+                  <Collection name="commandClass">
+                     <Item>nexj.core.integration.sync.SynchronizationCommand</Item>
+                     <Item>nexj.core.integration.sync.DependencySynchronizationCommand</Item>
+                  </Collection>
+               </Properties>
+            </Component>
+         </Item>
+      </Collection>
+   </ReceiverProperties>
+</MessageQueue>

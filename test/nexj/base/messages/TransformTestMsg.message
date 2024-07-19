@@ -1,0 +1,43 @@
+<Message>
+   <Parts>
+      <Value name="primitive" type="integer"/>
+      <Value maxCount="0" name="primitiveCollection" type="integer"/>
+      <Message name="message">
+         <Parts>
+            <Value name="primitive" type="integer"/>
+            <Value maxCount="0" name="primitiveCollection" type="integer"/>
+            <Message name="message">
+               <Parts>
+                  <Value name="primitive" type="integer"/>
+                  <Value maxCount="0" name="primitiveCollection" type="integer"/>
+               </Parts>
+            </Message>
+            <Message maxCount="0" name="messageCollection">
+               <Parts>
+                  <Value name="primitive" type="integer"/>
+                  <Value maxCount="0" name="primitiveCollection" type="integer"/>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+      <Message maxCount="0" name="messageCollection">
+         <Parts>
+            <Value name="primitive" type="integer"/>
+            <Value name="primitive2" type="integer"/>
+            <Value maxCount="0" name="primitiveCollection" type="integer"/>
+            <Message name="message">
+               <Parts>
+                  <Value name="primitive" type="integer"/>
+                  <Value maxCount="0" name="primitiveCollection" type="integer"/>
+               </Parts>
+            </Message>
+            <Message maxCount="0" name="messageCollection">
+               <Parts>
+                  <Value name="primitive" type="integer"/>
+                  <Value maxCount="0" name="primitiveCollection" type="integer"/>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

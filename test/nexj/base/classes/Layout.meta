@@ -1,0 +1,8 @@
+<Class description="Represents personalized layout.">
+   <Attributes>
+      <Attribute name="name" required="true" type="string"/>
+      <Attribute cascade="delete" collection="true" name="elements" reverse="layout" type="LayoutElement"/>
+      <Attribute name="personalizeableLayout" required="true" reverse="layouts" type="PersonalizeableLayout"/>
+      <Attribute initializer="0" name="locking" required="true" type="integer"/>
+   </Attributes>
+</Class>

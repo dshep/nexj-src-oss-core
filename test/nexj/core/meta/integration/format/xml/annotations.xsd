@@ -1,0 +1,158 @@
+
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" xmlns:mif="urn:hl7-org:v3/mif">
+   <xsd:element name="PRPA_IN101103CA">
+      <xsd:complexType>
+         <xsd:complexContent>
+            <xsd:extension base="PRPA_IN101103CA.MCCI_MT002100CA.Message">
+               <xsd:attribute name="ITSVersion" type="xsd:string" use="required" fixed="XML_1.0"/>
+            </xsd:extension>
+         </xsd:complexContent>
+      </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="PRPA_IN101103CA.MCCI_MT002100CA.Message">
+      <xsd:annotation>
+         <xsd:appinfo>
+            <mif:annotations>
+               <mif:definition>
+                  <mif:text>
+                     <mif:p>
+                        <mif:p>The root class of all messages.</mif:p>
+                     </mif:p>
+                  </mif:text>
+               </mif:definition>
+               <mif:rationale>
+                  <mif:text>
+                     <mif:p>
+                        <mif:p>Conveys information about the interaction and how it is to be processed</mif:p>
+                     </mif:p>
+                  </mif:text>
+               </mif:rationale>
+            </mif:annotations>
+         </xsd:appinfo>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="id" type="II" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:appinfo>
+                  <mif:attribute name="id" sortKey="1" minimumMultiplicity="1" maximumMultiplicity="1"
+                                 conformance="R"
+                                 isMandatory="true"
+                                 isStructural="false">
+                     <mif:businessName name="A:Message Identifier"/>
+                     <mif:annotations>
+                        <mif:definition>
+                           <mif:text>
+                              <mif:p>
+                                 <mif:p>A unique identifier for the message.</mif:p>
+                              </mif:p>
+                           </mif:text>
+                        </mif:definition>
+                        <mif:rationale>
+                           <mif:text>
+                              <mif:p>
+                                 <mif:p>Allows detection of duplicate messages, and allows tying acknowledgments to the message they are acknowledging. The attribute is therefore mandatory.</mif:p>
+                              </mif:p>
+                           </mif:text>
+                        </mif:rationale>
+                        <mif:mapping sourceName="SOAP">
+                           <mif:text>
+                              <mif:p>
+                                 <mif:p>soap:Header\wsa:MessageID</mif:p>
+                              </mif:p>
+                           </mif:text>
+                        </mif:mapping>
+                     </mif:annotations>
+                     <mif:derivationSupplier staticModelDerivationId="1" className="Message" attributeName="id"/>
+                     <mif:type name="II.TOKEN"/>
+                  </mif:attribute>
+               </xsd:appinfo>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+   <xsd:complexType name="II">
+      <xsd:annotation>
+         <xsd:documentation>
+
+An identifier that uniquely identifies a thing or object. Examples
+are object identifier for HL7 RIM objects, medical record number,
+order id, service catalog item id, Vehicle Identification Number
+(VIN), etc. Instance identifiers are defined based on ISO object
+identifiers.
+</xsd:documentation>
+         <xsd:appinfo>
+            <sch:pattern xmlns:sch="http://www.ascc.net/xml/schematron" name="validate II">
+               <sch:rule abstract="true" id="rule-II">
+                  <sch:report test="(@root or @nullFlavor) and not(@root and @nullFlavor)">
+A root component is required or else the II value is NULL.
+</sch:report>
+               </sch:rule>
+            </sch:pattern>
+         </xsd:appinfo>
+
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="ANY-nonmixed">
+            <!-- Start: Pre-adopted from Datatypes R2 --><xsd:attribute name="use" use="optional">
+               <xsd:annotation>
+                  <xsd:documentation>
+One or more codes advising a system or user which identifier
+in a set of like identifiers to select for a given
+identification need.
+</xsd:documentation>
+                  <xsd:appinfo/>
+
+               </xsd:annotation>
+               <xsd:simpleType>
+                  <xsd:list>
+                     <xsd:simpleType>
+                        <xsd:restriction base="xsd:NMTOKEN">
+                           <xsd:enumeration value="BUS"/>
+                           <xsd:enumeration value="VER"/>
+                        </xsd:restriction>
+                     </xsd:simpleType>
+
+                  </xsd:list>
+               </xsd:simpleType>
+            </xsd:attribute>
+            <!-- End: Pre-adopted from Datatypes R2  --></xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+ <xsd:complexType name="ANY" abstract="true">
+      <xsd:annotation>
+         <xsd:documentation>
+Defines the basic properties of every data value. This is an abstract
+type, meaning that no value can be just a data value without belonging
+to any concrete type. Every concrete type is a specialization of this
+general abstract DataValue type.
+  </xsd:documentation>
+         <xsd:appinfo/>
+      </xsd:annotation>
+      <xsd:attribute name="nullFlavor" type="xsd:string" use="optional">
+         <xsd:annotation>
+
+            <xsd:documentation>
+An exceptional value expressing missing information and possibly the
+reason why the information is missing.
+  </xsd:documentation>
+            <xsd:appinfo/>
+         </xsd:annotation>
+      </xsd:attribute>
+   </xsd:complexType>
+ <xsd:complexType name="ANY-nonmixed" abstract="true">
+      <xsd:annotation>
+         <xsd:documentation>
+
+Defines the basic properties of every data value. This is an abstract
+type, meaning that no value can be just a data value without belonging
+to any concrete type. Every concrete type is a specialization of this
+general abstract DataValue type.
+  </xsd:documentation>
+         <xsd:appinfo/>
+      </xsd:annotation>
+      <xsd:complexContent>
+         <xsd:extension base="ANY"/>
+      </xsd:complexContent>
+   </xsd:complexType>
+ </xsd:schema>

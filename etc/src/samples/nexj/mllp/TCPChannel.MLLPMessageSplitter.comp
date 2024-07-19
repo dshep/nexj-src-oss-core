@@ -1,0 +1,9 @@
+<Component type="nexj.core.rpc.tcp.MLLPMessageStreamFactory" activation="singleton"
+   description="A splitter for MLLP messages.">
+   <Properties>
+      <Property name="startBlock">11</Property>
+      <Property name="endBlock">28</Property>
+      <Property name="messageSeparator">13</Property>
+      <Property name="minByte">31</Property>
+   </Properties>
+</Component>

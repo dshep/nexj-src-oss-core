@@ -1,0 +1,144 @@
+<Class aspects="RUNTIME_INITIALIZER">
+   <Attributes>
+      <Attribute name="updatable" readOnly="true" type="boolean" value="#f"/>
+      <Attribute name="readable" readOnly="true" type="boolean" value="#f"/>
+   </Attributes>
+   <Events>
+      <Event args="service interface state operation args" name="respond" static="true" visibility="public">
+         <Arguments>
+            <Argument name="service" type="symbol"/>
+            <Argument name="interface" type="symbol"/>
+            <Argument name="state" type="any"/>
+            <Argument name="operation" type="symbol"/>
+            <Argument name="args" type="list"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define implementation-class (soa:get-implementation-class service interface))
+(define argCount (length args))
+(define methodKey (cons operation argCount))
+(define interface-class (implementation-class':base 0))
+(define stateType (hashtable-ref (interface-class':stateful-method-map) methodKey))
+(define stateful? (not (null? stateType)))
+(define stat-path (soa:get-stat-path (symbol->string service) (interface-class':name) (symbol->string operation) argCount))
+
+; Determines if an exception (or one of its base classes) is in the list of Faults declared for the method
+; being invoked.
+; 
+; @arg ex any The exception to check.
+; @ret boolean True if the exception is in the list of declared Faults; false otherwise.
+(define (declared-fault? ex)
+   (some
+      (lambda (declared) (instance? ex declared))
+      (hashtable-ref (interface-class':method-fault-map) methodKey)
+   )
+)
+
+; Squelches an exception, replacing it with a SystemFault.
+;
+; @arg ex any The exception to squelch.
+; @ret any The exception to replace it.
+(define (squelch ex)
+   (define sysEx (soa:SystemFault'new ex))
+   (logger'error (format "err.soa.errorRef" (sysEx'id)) ex)
+   (sysEx'system #f) ; Prepare for RPC propagation
+   sysEx
+)
+
+(define result
+   (try
+      (begin
+         (when stateful?
+            (unless (or (null? state) (instance? state stateType))
+               (error "fail.soa.stateTypeMismatch" stateType (nexj.core.meta.GenericType'typeOf state))
+            )
+            (implementation-class':state state)
+         )
+
+         (SysStat'incrCounter stat-path soa:stat-invocations 1)
+
+         (let
+            (
+               (operationResult
+                  (SysStat'time stat-path soa:stat-exec-time
+                     (lambda () (apply implementation-class operation args))
+                  )
+               )
+               (interface-method (interface-class':find-class-method operation argCount))
+            )
+            ((invocation-context)'complete #t)
+            (unless (null? (interface-method':type)) operationResult)
+         )
+      )
+      ; catch:
+      (lambda (ex)
+         (try
+            (SysStat'incrCounter stat-path soa:stat-faults 1)
+            (lambda (ex) (logger'error "Failed to update fault count" ex))
+         )
+         (if (declared-fault? ex)
+            (begin
+               (logger'debug "Error processing the SOA request" ex)
+               (ex'system #f) ; Prepare for RPC propagation
+               (throw ex)
+            )
+            ; else:
+            (throw (squelch ex))
+         )
+      )
+   )
+)
+
+; return:
+(if stateful?
+   (begin
+      (unless (or (null? state) (instance? (implementation-class':state) stateType))
+         (error "fail.soa.stateTypeMismatch" stateType (nexj.core.meta.GenericType'typeOf (implementation-class':state)))
+      )
+      (cons result (implementation-class':state))
+   )
+   result
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event access="updatable" name="create" visibility="public"/>
+      <Event access="updatable" name="delete" visibility="public"/>
+      <Event access="readable" args="attributes where orderBy count offset xlock" name="read" static="true" visibility="public"/>
+      <Event access="updatable" name="update" visibility="public"/>
+      <Event name="initializeRuntime" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define (defineCounters impl operation)
+   (define path (soa:get-stat-path ((impl':service)':name) (impl':name) (operation':name) (operation':arg-count)))
+   (define aveStat (nexj.core.monitoring.Average 'new 0.9 20))
+   (define execStat (nexj.core.monitoring.jmx.AverageMeanStatValue 'new aveStat))
+   (define ninetiethStat (nexj.core.monitoring.jmx.AveragePercentileStatValue 'new aveStat))
+   (define savedExecStat (nexj.core.monitoring.jmx.SavedStatValue 'new execStat))
+   (define savedNinetiethStat (nexj.core.monitoring.jmx.SavedStatValue 'new ninetiethStat))
+
+   (SysStat'addStat path soa:stat-exec-time savedExecStat #t)
+   (SysStat'addStat path soa:stat-ninetieth-time savedNinetiethStat  #t)
+
+   (SysStat'define path soa:stat-invocations 'counter #t)
+   (SysStat'define path soa:stat-faults 'counter #t)
+)
+
+(import
+   'nexj.core.monitoring.jmx.AverageMeanStatValue
+   'nexj.core.monitoring.jmx.AveragePercentileStatValue
+   'nexj.core.monitoring.jmx.SavedStatValue
+)
+
+(soa:ImplementationObject':for-each-derived
+   (lambda (impl)
+      (impl':for-each-class-method
+         (lambda (method)
+            (defineCounters impl method)
+         )
+      )
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

@@ -1,0 +1,12 @@
+<Class description="Not persisted.">
+   <Attributes>
+      <Attribute collection="false" name="title" required="true" type="string"/>
+   </Attributes>
+   <Events>
+      <Event args="datatitle" name="createFactory" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(instance Data (oid (nexj.core.util.GUIDUtil'generateGUID)) (: title datatitle))]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

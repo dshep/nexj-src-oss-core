@@ -1,0 +1,38 @@
+<Class aspects="LOCKING" caption="idsc.EnumType.caption" nameAttribute="typeCode">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;E&quot;"/>
+      <Attribute access="isNewInstance" caption="idsc.EnumType.typeCode" name="typeCode" required="true" type="string"/>
+      <Attribute access="isRuntimeEditable" caption="idsc.EnumType.description" description="Non Localized Description" name="description" required="true" type="string"/>
+      <Attribute access="isNewInstance" caption="idsc.EnumType.classification" constrained="true" description="This is used to differentiate between different kinds of enums such as those defined for custom fields.  I.e. System Defined, vs Custom Field Type" enumeration="EnumClassificationEnum" initializer="(EnumClassificationEnum'CUSTOM)" name="classification" required="true" type="string"/>
+      <Attribute caption="idsc.EnumType.userQuickpickEnabled" description="Allow users to add values to this type" initializer="#f" name="userQuickpickEnabled" required="true" type="boolean"/>
+      <Attribute description="Specifies whether or not you can add new entires to the Enum at Run Time.  Important: This field is not used in enumeration logic; its usefulness needs to be discuss the next time the enumeration model is evaluated." initializer="#f" name="allowAddedCodes" required="true" type="boolean"/>
+      <Attribute description="Determines whether or not the whole type will get upgraded in subsequent deployments.  Important: This field is not used in enumeration logic; its usefulness needs to be discuss the next time the enumeration model is evaluated." initializer="#t" name="upgradeable" required="true" type="boolean"/>
+      <Attribute description="True if enum type is a new instance." name="isNewInstance" type="boolean" value="(this'isNew)"/>
+      <Attribute description="True if classification is custom field picklist." name="isCustomFieldPicklist" type="boolean" value="(= (@ classification) (EnumClassificationEnum'CUSTOM))"/>
+      <Attribute description="True if enum type is runtime editable (i.e., classification is system design time editable or custom field picklist)." name="isRuntimeEditable" type="boolean" value="(or (= (@ classification) (EnumClassificationEnum'SYSTEM_EDIT)) (= (@ classification) (EnumClassificationEnum'CUSTOM)))"/>
+      <Attribute description="True if captions are runtime editable (i.e., classification is system design time display, system design time editable or custom field picklist)." name="hasRuntimeEditableCaptions" type="boolean" value="(or &#13;&#10;   (= (@ classification) (EnumClassificationEnum'SYSTEM_DISPLAY))&#13;&#10;   (= (@ classification) (EnumClassificationEnum'SYSTEM_EDIT))&#13;&#10;   (= (@ classification) (EnumClassificationEnum'CUSTOM))&#13;&#10;)"/>
+      <Attribute access="isRuntimeEditable" cascade="delete" collection="true" name="codes" reverse="type" type="EnumCode"/>
+      <Attribute cascade="delete" collection="true" name="typeDisplayValues" reverse="type" type="EnumTypeDisplay"/>
+      <Attribute description="The type of its parent if it has a parent." name="parentTypeCode" type="string"/>
+   </Attributes>
+   <Events>
+      <Event name="create" privilege="EnumManage" visibility="public"/>
+      <Event name="update" privilege="EnumManage" visibility="public"/>
+      <Event access="isCustomFieldPicklist" name="delete" privilege="EnumManage" visibility="public"/>
+   </Events>
+   <PersistenceMapping classCodeAttribute="classCode" dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping primaryTable="EnumType">
+         <AttributeMappings>
+            <AttributeMapping column="typeCode" name="typeCode"/>
+            <AttributeMapping column="classCode" name="classCode"/>
+            <AttributeMapping column="description" name="description"/>
+            <AttributeMapping column="classification" name="classification"/>
+            <AttributeMapping column="quickpickEnableFlag" name="userQuickpickEnabled"/>
+            <AttributeMapping column="allowAddedCodesFlag" name="allowAddedCodes"/>
+            <AttributeMapping column="allowUpgradeFlag" name="upgradeable"/>
+            <AttributeMapping destinationKey="EnumtypeDisplay.FK_Type" name="typeDisplayValues" sourceKey="EnumType.PK"/>
+            <AttributeMapping column="parentTypeCode" name="parentTypeCode"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

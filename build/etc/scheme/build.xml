@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+
+<project name="nexj-scheme" default="nexj-scheme.jar">
+   <description>
+       NexJ Scripting Engine
+       http://nexj.com
+   </description>
+
+   <target name="nexj-scheme.jar">
+      <mkdir dir="./bin" />
+      <javac srcdir="./src" destdir="./bin" debug="true" optimize="true" source="1.4" target="1.5" />
+      <jar destfile="nexj-scheme.jar">
+         <fileset dir="./bin" includes="**/**" />
+         <fileset dir="./src" includes="**/*.scm" />
+         <manifest>
+            <attribute name="Implementation-Vendor" value="NexJ Systems Inc." />
+            <attribute name="Implementation-Title" value="NexJ Scripting Engine" />
+            <attribute name="Implementation-Version" value="0.1" />
+            <attribute name="Main-Class" value="nexj.core.tools.MinimalREPL" />
+         </manifest>
+      </jar>
+   </target>
+
+   <target name="doc">
+      <mkdir dir="./doc"/>
+
+      <javadoc additionalparam="-quiet" destdir="./doc">
+         <packageset dir="./src">
+            <include name="**/**"/>
+         </packageset>
+      </javadoc>
+   </target>
+
+   <target name="clean">
+      <delete dir="./bin" />
+      <delete dir="./doc" />
+      <delete file="./nexj-scheme.jar" />
+   </target>
+</project>

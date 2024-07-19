@@ -1,0 +1,29 @@
+<Class description="The global data cache" visibility="protected">
+<Events>
+      <Event args="key" description="Gets a cached item by key" name="get" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.get" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="key ref" description="Caches a reference to an immutable object" name="putReference" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.putReference" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="key obj" description="Caches a serialized copy of an object" name="putCopy" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.putCopy" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="key instance attributes" description="Caches an instance or an instance collection" name="putInstance" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.putInstance" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="key" description="Removes an item coresponding to a given key" name="remove" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysCache.remove" name="main" type="main"/>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

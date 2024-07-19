@@ -1,0 +1,366 @@
+<Upgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase">
+      <CreateTable name="UserGroup" primaryKey="UserGroup.PK">
+         <Columns>
+            <Column allocation="fixed" caseInsensitive="false" name="id" nullable="false" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="UserGroup.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <CreateColumn allocation="varying" caseInsensitive="false" name="rssDescription" precision="2048" table="RSSFeed" type="string"/>
+      <CreateTable name="WFQueue" primaryKey="WFQueue.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column allocation="varying" caseInsensitive="false" name="type" nullable="false" precision="64" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="name" nullable="false" precision="64" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="caption" precision="64" type="string"/>
+            <Column name="priority" type="integer"/>
+            <Column name="concurrency" type="integer"/>
+            <Column name="customized" nullable="false" type="boolean"/>
+            <Column allocation="fixed" name="throttleCounterId" precision="16" type="binary"/>
+            <Column allocation="fixed" name="schedulerId" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="WFQueue.PK" type="cluster" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="WFQueue.AK1" unique="true">
+               <IndexColumn name="name"/>
+            </Index>
+            <Index name="WFQueue.FK1">
+               <IndexColumn name="schedulerId"/>
+            </Index>
+            <Index name="WFQueue.FK2">
+               <IndexColumn name="throttleCounterId"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+   </RelationalDatabaseUpgrade>
+   <Label description="Initial version" version="oc1"/>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Adding system column to workflow queues." version="oc2">
+      <CreateColumn description="True if queue was created by seeding done by SysUpgrade." name="system" nullable="false" table="WFQueue" type="boolean">
+         <SQL><![CDATA[update ${table:WFQueue} set system=1-customized]]></SQL>
+      </CreateColumn>
+      <Exec>
+         <SQL><![CDATA[update ${table:Version} set loaded=0]]></SQL>
+      </Exec>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Removing unused UserGroup table" version="oc3">
+      <DropTable description="The UserGroup table is a now defunct (in Open Core) extension table to Prinicipal" name="UserGroup"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Change rssDescription column to locator." version="oc4">
+      <AlterColumn allocation="locator" caseInsensitive="false" name="rssDescription" precision="2048" table="RSSFeed" type="string"/>
+   </RelationalDatabaseUpgrade>
+   <Label description="Added HTTPServer components for anonymous and form-based HTTP access." version="oc5"/>
+   <Label description="Added child sync object support." version="oc6"/>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Bug #38666: Workflow Semaphore executes under arbitrary user" version="oc7">
+      <CreateColumn allocation="fixed" description="The user that created this assignment." name="creatorId" precision="16" table="WFAssignment" type="binary"/>
+      <CreateIndex name="WFAssignment.FK5" table="WFAssignment">
+         <IndexColumn name="creatorId"/>
+      </CreateIndex>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Reload SeverityEnum" version="oc8">
+      <Exec>
+         <SQL><![CDATA[update ${table:Version} set loaded=0]]></SQL>
+      </Exec>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Forces an import/export of dump file to result in change of enum object model.  Also denormalizes externalValue to EnumDisplay table to avoid join to help caching." version="oc9">
+      <CreateColumn allocation="varying" caseInsensitive="false" description="DENORMALIZED" name="externalCode" precision="50" table="EnumDisplay" type="string">
+         <SQL><![CDATA[update ${table}
+set externalCode = 
+	(select externalCode from ${table:EnumCode} 
+	where ${table:EnumCode}.typeCode = ${table}.typeCode
+	and  ${table:EnumCode}.valueCode = ${table}.valueCode
+	)]]></SQL>
+      </CreateColumn>
+      <Exec>
+         <SQL><![CDATA[update ${table:Version} set loaded=0]]></SQL>
+      </Exec>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Reseeding database due to changes to CurrencyEnum" version="oc10">
+      <Exec>
+         <SQL><![CDATA[update ${table:Version} set loaded=0]]></SQL>
+      </Exec>
+   </RelationalDatabaseUpgrade>
+   <Label description="New .metadata format" version="11"/>
+   <Label description="76399: Timer is not re-created when start time is modified on SysBatchJob" version="12"/>
+   <Label description="76103: Merge ExchangeSyncOut and ExchangeSyncOutNew services" version="13"/>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Added SysMessage support." version="14">
+      <DropIndex name="WFQueue.FK1"/>
+      <RenameTable name="WFQueue" to="Queue"/>
+      <RenameIndex name="WFQueue.PK" to="Queue.PK"/>
+      <RenameIndex name="WFQueue.AK1" to="Queue.AK1"/>
+      <RenameIndex name="WFQueue.FK2" to="Queue.FK2"/>
+      <CreateTable aspects="!LOCKING" name="WFQueue" primaryKey="WFQueue.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column allocation="fixed" name="schedulerId" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="WFQueue.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="WFQueue.FK1">
+               <IndexColumn name="schedulerId"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <Exec description="Populate WFQueue&#13;&#10;">
+         <SQL><![CDATA[insert into ${table:WFQueue} select id as id, schedulerId as schedulerId from ${table:Queue}]]></SQL>
+      </Exec>
+      <DropColumn name="schedulerId" table="Queue"/>
+      <CreateTable aspects="!LOCKING" name="MsgQueue" primaryKey="MsgQueue.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column name="timeout" nullable="false" type="long"/>
+            <Column name="sendEnabled" nullable="false" type="boolean"/>
+            <Column name="receiveEnabled" nullable="false" type="boolean"/>
+            <Column name="failureRetries" nullable="false" type="integer"/>
+            <Column allocation="fixed" name="errorQueueId" precision="16" type="binary"/>
+            <Column allocation="fixed" name="counterId" nullable="false" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="MsgQueue.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="MsgQueue.FK_errorQueue">
+               <IndexColumn name="errorQueueId"/>
+            </Index>
+            <Index name="MsgQueue.FK_counter" type="virtual">
+               <IndexColumn name="counterId"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <CreateTable aspects="!LOCKING" name="MessageCounter" primaryKey="MessageCounter.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column name="sent" nullable="false" type="long"/>
+            <Column name="received" nullable="false" type="long"/>
+         </Columns>
+         <Indexes>
+            <Index name="MessageCounter.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <RenameTable name="WFThrottleCounter" to="ThrottleCounter"/>
+      <RenameIndex name="WFThrottleCounter.PK" to="ThrottleCounter.PK"/>
+      <RenameIndex name="WFThrottleCounter.FK1" to="ThrottleCounter.FK1"/>
+      <CreateTable aspects="!LOCKING" name="Message" primaryKey="Message.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column allocation="varying" caseInsensitive="false" name="classCode" nullable="false" precision="64" type="string"/>
+            <Column allocation="fixed" name="queueId" precision="16" type="binary"/>
+            <Column name="priority" nullable="false" type="integer"/>
+            <Column name="deliveryTime" type="timestamp"/>
+            <Column allocation="fixed" caseInsensitive="false" name="stateCode" nullable="false" precision="2" type="string"/>
+            <Column allocation="fixed" name="followingId" precision="16" type="binary"/>
+            <Column allocation="fixed" name="precedingId" precision="16" type="binary"/>
+            <Column allocation="fixed" name="originalQueueId" precision="16" type="binary"/>
+            <Column allocation="varying" caseInsensitive="false" name="name" precision="255" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="usr" precision="255" type="string"/>
+            <Column allocation="varying" name="rsrc" precision="255" type="binary"/>
+            <Column name="sent" nullable="false" type="boolean"/>
+            <Column name="resourceHeld" nullable="false" type="boolean"/>
+            <Column name="errorCount" nullable="false" type="integer"/>
+            <Column allocation="varying" caseInsensitive="false" name="serializedValues" precision="1073741823" type="string"/>
+            <Column name="committed" type="boolean"/>
+            <Column name="resent" type="boolean"/>
+            <Column name="delay" type="integer"/>
+            <Column allocation="fixed" name="resendQueueId" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="Message.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="Message.SK1">
+               <IndexColumn name="priority"/>
+               <IndexColumn name="deliveryTime"/>
+            </Index>
+            <Index name="Message.SK2">
+               <IndexColumn name="deliveryTime"/>
+            </Index>
+            <Index name="Message.FK_queue" type="virtual">
+               <IndexColumn name="queueId"/>
+            </Index>
+            <Index name="Message.FK_originalQueue" type="virtual">
+               <IndexColumn name="originalQueueId"/>
+            </Index>
+            <Index name="Message.FK_resendQueue" type="virtual">
+               <IndexColumn name="resendQueueId"/>
+            </Index>
+            <Index name="Message.FK_state" type="virtual">
+               <IndexColumn name="stateCode"/>
+            </Index>
+            <Index name="Message.FK_preceding" type="virtual">
+               <IndexColumn name="precedingId"/>
+            </Index>
+            <Index name="Message.FK_following">
+               <IndexColumn name="followingId"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <CreateTable aspects="!LOCKING" name="MsgDispatcher" primaryKey="MsgDispatcher.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column allocation="fixed" name="queueId" nullable="false" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="MsgDispatcher.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="MsgDispatcher.FK_queue" type="virtual">
+               <IndexColumn name="queueId"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <Exec description="Populate MsgDispatcher">
+         <SQL><![CDATA[insert into ${table:Queue} (id, type, name, caption, priority, customized, system, locking) 
+values (0x652A5D1359F44A17B42DCBEBB3EFA81F, 'MSGQueue', 'DispatcherQueue', 'idsc.rpc.msg.dispatcherQueue', 0, 0, 1, 0)]]></SQL>
+         <SQL><![CDATA[insert into ${table:MessageCounter} (id, sent, received) 
+values(0x24C6A158FA74491B95AB24879CF56702, 0, 0)]]></SQL>
+         <SQL><![CDATA[insert into ${table:MsgQueue} (id, timeout, sendEnabled, receiveEnabled, failureRetries, counterId) 
+values (0x652A5D1359F44A17B42DCBEBB3EFA81F, 6000, 1, 1, 1, 0x24C6A158FA74491B95AB24879CF56702)]]></SQL>
+         <SQL><![CDATA[insert into ${table:MsgDispatcher} (id, queueId) 
+values (0x652A5D1359F44A17B42DCBEBB3EFA81F, 0x652A5D1359F44A17B42DCBEBB3EFA81F)]]></SQL>
+      </Exec>
+      <Exec description="Signal update required">
+         <SQL><![CDATA[delete from ${table:Timer} where id in (select timerId from ${table:BatchJob} where name = 'Workflow Queue Throttle Manager')]]></SQL>
+         <SQL><![CDATA[delete from ${table:BatchJob} where name = 'Workflow Queue Throttle Manager']]></SQL>
+         <SQL><![CDATA[update ${table:Version} set loaded=0]]></SQL>
+      </Exec>
+   </RelationalDatabaseUpgrade>
+   <Label description="Added Custom read event" version="15"/>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Renamed SysMessage queues to SysObjectQueues." version="16">
+      <DropIndex name="Message.SK2"/>
+      <DropIndex name="Message.SK1"/>
+      <AlterColumn name="delay" table="Message" type="long"/>
+      <AlterColumn name="deliveryTime" table="Message" type="long"/>
+      <CreateColumn name="locking" nullable="false" table="Message" type="integer"/>
+      <CreateIndex name="Message.SK1" table="Message">
+         <IndexColumn name="stateCode"/>
+         <IndexColumn name="priority"/>
+         <IndexColumn name="deliveryTime"/>
+      </CreateIndex>
+      <RenameColumn name="failureRetries" table="MsgQueue" to="errorCount"/>
+      <RenameTable name="MsgQueue" to="ObjectQueue"/>
+      <RenameIndex name="MsgQueue.PK" to="ObjectQueue.PK"/>
+      <RenameIndex name="MsgQueue.FK_counter" to="ObjectQueue.FK_counter"/>
+      <RenameIndex name="MsgQueue.FK_errorQueue" to="ObjectQueue.FK_errorQueue"/>
+      <RenameTable name="MsgDispatcher" to="ObjectQueueDispatcher"/>
+      <DropIndex name="MsgDispatcher.FK_queue"/>
+      <DropColumn name="queueId" table="ObjectQueueDispatcher"/>
+      <RenameIndex name="MsgDispatcher.PK" to="ObjectQueueDispatcher.PK"/>
+      <RenameTable name="MessageCounter" to="ObjectQueueCounter"/>
+      <RenameIndex name="MessageCounter.PK" to="ObjectQueueCounter.PK"/>
+      <Exec description="ObjectQueue updates">
+         <SQL><![CDATA[update ${table:Queue} set type='ObjQueue' where type='MsgQueue']]></SQL>
+         <SQL><![CDATA[update ${table:Queue} set name='ObjectDispatcherQueue', caption='idsc.rpc.queueing.dispatcherQueue' where name='DispatcherQueue']]></SQL>
+      </Exec>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="SysMessage optimizations." version="17">
+      <DropIndex name="Message.SK1"/>
+      <DropIndex name="ObjectQueue.PK"/>
+      <DropIndex name="ObjectQueueCounter.PK"/>
+      <DropIndex name="ObjectQueue.FK_errorQueue"/>
+      <AlterColumn name="locking" table="Message" type="integer"/>
+      <AlterColumn literal="true" name="priority" table="Message" type="integer"/>
+      <AlterColumn allocation="fixed" literal="true" name="stateCode" precision="1" table="Message" type="string"/>
+      <CreateColumn name="ordinal" table="Message" type="integer"/>
+      <AlterColumn name="serializedValues" nullable="true" precision="1073741823" table="Message" type="binary"/>
+      <CreateIndex name="ObjectQueue.PK" table="ObjectQueue" type="cluster" unique="true">
+         <IndexColumn name="id"/>
+      </CreateIndex>
+      <CreateIndex name="ObjectQueueCounter.PK" table="ObjectQueueCounter" type="cluster" unique="true">
+         <IndexColumn name="id"/>
+      </CreateIndex>
+      <CreateIndex name="ObjectQueue.FK_errorQueue" table="ObjectQueue" type="virtual">
+         <IndexColumn name="errorQueueId"/>
+      </CreateIndex>
+      <CreateIndex name="Message.SK1" table="Message">
+         <IndexColumn name="stateCode"/>
+         <IndexColumn name="priority"/>
+         <IndexColumn name="deliveryTime"/>
+         <IndexColumn name="ordinal"/>
+         <IndexColumn name="queueId"/>
+         <IndexColumn name="rsrc"/>
+      </CreateIndex>
+      <Exec description="Signal update required">
+         <SQL><![CDATA[update ${table:Version} set loaded=0]]></SQL>
+      </Exec>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Renamed column from 'type' to classCode, force non-null and case-sensitive." version="18">
+      <RenameColumn name="type" table="Queue" to="classCode"/>
+      <AlterColumn allocation="varying" caseInsensitive="false" literal="false" name="classCode" nullable="false" precision="64" table="Queue" type="string"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="ObjectQueue seeding of system queues." version="19">
+      <Exec>
+         <SQL><![CDATA[update ${table:Version} set loaded=0]]></SQL>
+      </Exec>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Reseeding database for EnumClassificationEnum" version="20">
+      <Exec>
+         <SQL><![CDATA[update ${table:Version} set loaded=0]]></SQL>
+      </Exec>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Removed SysObjectQueue counters." version="21">
+      <DropTable name="ObjectQueueCounter"/>
+      <DropColumn name="counterId" table="ObjectQueue"/>
+      <DropIndex name="ObjectQueue.FK_counter"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="ObjectQueue optimization. Fix for step 17." version="22">
+      <RenameTable name="ObjectQueue" to="ObjectQueue2"/>
+      <CreateTable aspects="!LOCKING" name="ObjectQueue" primaryKey="ObjectQueue.PK1">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column name="timeout" nullable="false" type="long"/>
+            <Column name="sendEnabled" nullable="false" type="boolean"/>
+            <Column name="receiveEnabled" nullable="false" type="boolean"/>
+            <Column name="errorCount" nullable="false" type="integer"/>
+            <Column allocation="fixed" name="errorQueueId" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="ObjectQueue.PK1" type="virtual" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <Exec>
+         <SQL><![CDATA[insert into NJObjectQueue (id, timeout, sendEnabled, receiveEnabled, errorCount, errorQueueId) select id, timeout, sendEnabled, receiveEnabled, errorCount, errorQueueId from NJObjectQueue2]]></SQL>
+      </Exec>
+      <DropTable name="ObjectQueue2"/>
+      <CreateIndex name="ObjectQueue.PK" table="ObjectQueue" type="cluster" unique="true">
+         <IndexColumn name="id"/>
+      </CreateIndex>
+      <CreateIndex name="ObjectQueue.FK_errorQueue" table="ObjectQueue" type="virtual">
+         <IndexColumn name="errorQueueId"/>
+      </CreateIndex>
+      <AlterTable name="ObjectQueue" primaryKey="ObjectQueue.PK" type="managed"/>
+      <DropIndex name="ObjectQueue.PK1"/>
+   </RelationalDatabaseUpgrade>
+   <Load description="Reseed database (for SysAsyncIO channel)." version="23"/>
+   <Load description="Reseed database (Removed SystemQueue and SystemTopic)" version="24"/>
+   <Load description="Reseed database (for SysAsyncActivity channel)." version="25"/>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Recreate ObjectSystemQueue." version="26">
+      <Exec description="Delete ObjectSystemQueue's ObjectQueue">
+         <SQL><![CDATA[delete from ${table:ObjectQueue} where id in (select id from ${table:Queue} where name='ObjectSystemQueue')
+]]></SQL>
+      </Exec>
+      <Exec description="Delete ObjectSystemQueue's Queue">
+         <SQL><![CDATA[delete from ${table:Queue} where name='ObjectSystemQueue'
+]]></SQL>
+      </Exec>
+      <Exec description="Insert ObjectSystemQueue's Queue">
+         <SQL><![CDATA[insert into ${table:Queue} (id, classCode, name, priority, customized, system, locking) values (${binary:826AC16B24AA480FAB5D79D0172193DC}, 'ObjQueue', 'ObjectSystemQueue', 10, 0, 1, 0)
+]]></SQL>
+      </Exec>
+      <Exec description="Insert ObjectSystemQueue's ObjectQueue">
+         <SQL><![CDATA[insert into ${table:ObjectQueue} (id, timeout, sendEnabled, receiveEnabled, errorCount) values (${binary:826AC16B24AA480FAB5D79D0172193DC}, 0, 1, 1, 3)
+]]></SQL>
+      </Exec>
+   </RelationalDatabaseUpgrade>
+   <Load description="Reseed database (ObjectSystemQueue)." version="27"/>
+</Upgrade>

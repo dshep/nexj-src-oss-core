@@ -1,0 +1,18 @@
+<Class description="Contact Phone">
+   <Attributes>
+      <Attribute name="type" type="string" required="true" collection="false"/>
+      <Attribute name="number" type="string" required="false" collection="false"/>
+      <Attribute name="contact" type="Contact" required="true" collection="false" reverse="phones"/>
+      <Attribute name="isDoctorPhone" readOnly="true" type="boolean" value="(instance? (@ contact) Doctor)"/>
+   </Attributes>
+
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="identity" primaryTable="test.Phone">
+         <AttributeMappings>
+            <AttributeMapping name="type" table="test.Phone" column="phone_type"/>
+            <AttributeMapping name="number" table="test.Phone" column="phone_number"/>
+            <AttributeMapping name="contact" sourceKey="Phone.FK1"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

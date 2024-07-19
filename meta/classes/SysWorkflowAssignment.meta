@@ -1,0 +1,139 @@
+<Class description="Tracks the assignment of process steps to users. Represents the flow queues.">
+   <Attributes>
+      <Attribute name="workflow" required="true" reverse="assignments" type="SysWorkflow" updatePrivilege="WorkflowManage"/>
+      <Attribute name="classCode" required="true" type="string" value="&quot;A&quot;"/>
+      <Attribute description="Ready to run in Semaphore status constant." name="READY" readOnly="true" static="true" type="integer" value="0"/>
+      <Attribute description="Running in Semaphore status constant." name="RUNNING" readOnly="true" static="true" type="integer" value="1"/>
+      <Attribute description="Finished Semaphore status constant." name="COMPLETE" readOnly="true" static="true" type="integer" value="2"/>
+      <Attribute description="The user or group, who can take ownership of the task" initializer="(@ owner)" name="assignee" type="Principal" updatePrivilege="WorkflowManage"/>
+      <Attribute description="The user owning of the task. Typically, once the task is owned, it only appears in the queue of the owner." initializer="'()" name="owner" type="User"/>
+      <Attribute description="The priority, lower numbers are higher priority." initializer="'()" name="priority" required="true" type="double" updatePrivilege="WorkflowManage"/>
+      <Attribute description="The assignment ordinal number for tracking by the engine." name="ordinal" required="true" type="integer" updatePrivilege="WorkflowManage"/>
+      <Attribute description="String ID of the work item" initializer="&quot;Work item&quot;" name="caption" required="true" type="string" updatePrivilege="WorkflowManage"/>
+      <Attribute description="Human-readable description of the task" name="description" type="string" updatePrivilege="WorkflowManage" value="(format (@ caption))"/>
+      <Attribute initializer="#f" name="manual" required="true" type="boolean" updatePrivilege="WorkflowManage" value="(not (null? (@ step manualCompletion)))"/>
+      <Attribute description="The last submitted manual workflow state" name="nextState" reverse="assignment" type="SysWorkflowState" value="'()"/>
+      <Attribute cascade="none" collection="true" description="The collection of manual workflow states, if any" name="nextStates" reverse="assignment" type="SysWorkflowState" updatePrivilege="WorkflowManage"/>
+      <Attribute description="The optional target association defining the instance to which to navigate" initializer="'()" name="target" type="string" updatePrivilege="WorkflowManage"/>
+      <Attribute description="The optional form path to which to navigate" initializer="'()" name="form" type="string" updatePrivilege="WorkflowManage"/>
+      <Attribute name="uimode" type="integer" updatePrivilege="WorkflowManage"/>
+      <Attribute description="Persistence locking" initializer="0" name="locking" required="true" type="integer"/>
+      <Attribute name="uipriority" type="integer" updatePrivilege="WorkflowManage" value="(inexact-&gt;exact (floor (@ priority)))"/>
+      <Attribute description="The user that created this assignment." name="creator" type="User" updatePrivilege="WorkflowManage"/>
+      <Attribute initializer="(now)" name="createdOn" required="true" type="timestamp" updatePrivilege="WorkflowManage"/>
+      <Attribute access="requeueable" initializer="'()" name="queue" reverse="assignments" type="SysWorkflowQueue" updatePrivilege="WorkflowManage"/>
+      <Attribute description="Access attribute used to control update of queue attribute." name="requeueable" readOnly="true" type="boolean" value="(or (not (@ semaphore)) (and (@ semaphore) (= (@ status) (SysWorkflowAssignment'READY))))"/>
+      <Attribute name="readable" type="boolean" updatePrivilege="WorkflowManage" value="#t"/>
+      <Attribute name="updatable" type="boolean" updatePrivilege="WorkflowManage" value="(or (= (@ owner) (user)) (and (null? (@ owner)) (@ readable)))"/>
+      <Attribute name="owned" type="boolean" value="(not (null? (@ owner)))"/>
+      <Attribute description="True if this assignment was created for a Semaphore and should be scheduled for execution." initializer="#f" name="semaphore" type="boolean" updatePrivilege="WorkflowManage"/>
+      <Attribute name="step" type="any" updatePrivilege="WorkflowManage" value="((@ workflow)'getStep (@ ordinal))" visibility="protected"/>
+      <Attribute name="varTarget" type="boolean" updatePrivilege="WorkflowManage" value="(@ step varTarget)"/>
+      <Attribute name="object" type="Object" updatePrivilege="WorkflowManage" value="(@ workflow object)"/>
+      <Attribute description="Semaphore execution status." initializer="0" name="status" type="integer" updatePrivilege="WorkflowManage"/>
+   </Attributes>
+   <Events>
+      <Event description="Adds actions to the framework event" name="create" privilege="WorkflowManage" visibility="public">
+         <Actions>
+            <Action condition="(and (@ manual) (@ nextStates empty))" description="Creates the manual states for this work item" name="createStates" type="before"><![CDATA[(for-each
+   (lambda (data)
+      (SysWorkflowState'new (: assignment this) (: ordinal (car data)) (: caption (cdr data)))
+   )
+   (@ step manualCompletion states)
+)
+]]></Action>
+            <Action condition="(null? (@ priority))" name="enqueue" type="before"><![CDATA[(if (null? (@ queue))
+   (this'priority (+ 4 (/ (cast double (now)) 1E14)))
+   ((@ queue)'add this)
+)]]></Action>
+            <Action condition="(and (@ semaphore) (null? (@ creator)))" description="Sets the user that the scheduler will use to execute the assignment when it pulls it automatically from the queue." name="creator" type="before"><![CDATA[(this'creator (user))]]></Action>
+         </Actions>
+      </Event>
+      <Event access="updatable" description="Adds actions to the framework event" name="update" visibility="public">
+         <Actions>
+            <Action condition="(@ semaphore)" description="Locks the scheduler" name="lockScheduler" type="before"><![CDATA[((@ queue scheduler)'lock)]]></Action>
+            <Action condition="(and (this'updated 'nextState) (not (null? (@ nextState))))" description="Handles the manual state transition" name="updateState" type="before"><![CDATA[(define to (@ nextState ordinal))
+(this'nextState '())
+((@ workflow)'jump (@ ordinal) to)
+]]></Action>
+            <Action condition="(this'updated 'owned)" name="updateOwned" type="before"><![CDATA[(this'owner (if (@ owned) (user) '()))
+]]></Action>
+            <Action condition="(this'updated 'semaphore)" description="Sets the user that the scheduler will use to execute the assignment when it pulls it automatically from the queue." name="updateCreator" type="before"><![CDATA[(this'creator (when (@ semaphore) (user)))]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Adds actions to the framework event" name="delete" privilege="WorkflowManage" visibility="public">
+         <Actions>
+            <Action condition="(@ manual)" name="deleteStates" type="before"><![CDATA[(for-each
+   (lambda (state) (state'delete))
+   (@ nextStates)
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event access="readable" args="attributes where orderBy count offset xlock" description="Overrides the access attribute" name="read" static="true" visibility="public"/>
+      <Event args="attributes" description="Adds actions to the framework event" name="load" vararg="true">
+         <Actions>
+            <Action condition="(or (memq 'target attributes) (memq 'form attributes) (memq 'uimode attributes))" name="loadTarget" type="before"><![CDATA[(define fun (@ step targetFunction))
+(unless (null? fun)
+   (((@ workflow state)'bind fun) this ((@ workflow)'getToken (@ step)))
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Continues the associated workflow. Called by scheduler." name="schedulerRun">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(SysStat'time (@ queue statPath) "Average Execution Time (ms)"
+   (lambda () ((@ workflow)'wakeSemaphore this))
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="flow ordinal" description="Cleans up the assignments on flow for step with ordinal number ordinal." name="cleanup" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(for-each
+   (lambda (item)
+      (if (= (item'ordinal) ordinal)
+         (begin-privileged
+            ((item'queue)'remove item)
+         )
+      )
+   )
+   (flow'assignments)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="flow ordinal" description="Marks as RUNNING the assignments on flow for step with ordinal number ordinal." name="startup" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(for-each
+   (lambda (item)
+      (if (= (item'ordinal) ordinal)
+         (begin-privileged
+            (item'status (SysWorkflowAssignment'RUNNING))
+         )
+      )
+   )
+   (flow'assignments)
+)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping classCodeAttribute="classCode" dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="WFAssignment">
+         <AttributeMappings>
+            <AttributeMapping name="workflow" sourceKey="WFAssignment.FK1"/>
+            <AttributeMapping name="assignee" sourceKey="WFAssignment.FK2"/>
+            <AttributeMapping name="owner" sourceKey="WFAssignment.FK3"/>
+            <AttributeMapping name="queue" sourceKey="WFAssignment.FK4"/>
+            <AttributeMapping column="ordinal" name="ordinal"/>
+            <AttributeMapping column="caption" name="caption"/>
+            <AttributeMapping column="priority" name="priority"/>
+            <AttributeMapping column="locking" name="locking"/>
+            <AttributeMapping column="createdOn" name="createdOn"/>
+            <AttributeMapping column="status" name="status"/>
+            <AttributeMapping column="semaphore" name="semaphore"/>
+            <AttributeMapping column="classCode" name="classCode"/>
+            <AttributeMapping name="creator" sourceKey="WFAssignment.FK5"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

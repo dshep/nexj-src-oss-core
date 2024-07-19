@@ -1,0 +1,668 @@
+<RelationalDatabase alias="NEXJ_DATABASE" prefix="NJ" versionTable="Version">
+   <Tables>
+      <Table name="EnumType" primaryKey="EnumType.PK">
+         <Columns>
+            <Column allocation="fixed" caseInsensitive="false" name="classCode" nullable="false" precision="1" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" description="Primary key for enumerator types" name="typeCode" nullable="false" precision="20" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" description="Enumerator type description" name="description" precision="255" type="string"/>
+            <Column allocation="fixed" caseInsensitive="false" description="Classification of Enum" name="classification" nullable="false" precision="1" type="string"/>
+            <Column description="Set to 1 to allow Add to Quickpick" name="quickpickEnableFlag" nullable="false" type="boolean"/>
+            <Column description="Set to 1 to allow codes to be added at run time" name="allowAddedCodesFlag" nullable="false" type="boolean"/>
+            <Column description="Set to 1 to disable the upgrade of this whole type" name="allowUpgradeFlag" nullable="false" type="boolean"/>
+            <Column allocation="varying" caseInsensitive="false" description="TypeCode of its parent" name="parentTypeCode" precision="20" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="EnumType.PK" type="cluster" unique="true">
+               <IndexColumn name="typeCode"/>
+            </Index>
+            <Index description="Source key for partitioning support." name="EnumType.SK1" type="virtual">
+               <IndexColumn name="typeCode"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="EnumCode" primaryKey="EnumCode.PK">
+         <Columns>
+            <Column allocation="fixed" caseInsensitive="false" name="classCode" nullable="false" precision="1" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" description="Mulit-Part PK" name="typeCode" nullable="false" precision="20" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" description="Multi-Part PK" name="valueCode" nullable="false" precision="50" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" description="Used to persist named entries for referencing business logic or rules engine." name="name" precision="50" type="string"/>
+            <Column description="Display Order " name="displayOrder" nullable="false" type="integer"/>
+            <Column allocation="varying" caseInsensitive="false" description="For dependency types" name="parentTypeCode" precision="20" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" description="For simple dependency type" name="parentValueCode" precision="50" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" description="Enumerator Value description" name="description" precision="255" type="string"/>
+            <Column allocation="fixed" caseInsensitive="false" description="ValueCode Classification" name="classification" nullable="false" precision="1" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" description="Drive behaviour as this code -- default is make = valueCode" name="behaveAsValueCode" nullable="false" precision="50" type="string"/>
+            <Column description="Set to 1 if behaviour drives off of this value" name="behaveFlag" nullable="false" type="boolean"/>
+            <Column description="Set to 1 to allow edit of display values" name="editDisplayFlag" nullable="false" type="boolean"/>
+            <Column description="Set to one if Code value can be edited" name="editCodeFlag" nullable="false" type="boolean"/>
+            <Column description="Set to 1 if code can be hidden" name="allowHideFlag" nullable="false" type="boolean"/>
+            <Column description="Set to 1 if code can be deleted" name="allowDeleteFlag" nullable="false" type="boolean"/>
+            <Column description="Set to 1 if code should not be updated during upgrade" name="allowUpgradeUpdateFlag" nullable="false" type="boolean"/>
+            <Column allocation="varying" caseInsensitive="false" description="For external code mapping" name="externalCode" precision="50" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="EnumCode.PK" type="cluster" unique="true">
+               <IndexColumn name="valueCode"/>
+               <IndexColumn name="typeCode"/>
+            </Index>
+            <Index name="EnumCode.FK_Type" relatedTable="EnumType">
+               <IndexColumn name="typeCode"/>
+            </Index>
+            <Index name="EnumCode.FK_Parent">
+               <IndexColumn name="parentValueCode"/>
+               <IndexColumn name="parentTypeCode"/>
+            </Index>
+            <Index description="Source key now that PK contains partitionId" name="EnumCode.SK1" type="virtual">
+               <IndexColumn name="valueCode"/>
+               <IndexColumn name="typeCode"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="EnumDisplay" primaryKey="EnumDisplay.PK">
+         <Columns>
+            <Column allocation="varying" caseInsensitive="false" description="PK Denormalized" name="typeCode" nullable="false" precision="20" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" description="PK Denormalized" name="valueCode" nullable="false" precision="50" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" description="PK" name="locale" nullable="false" precision="8" type="string"/>
+            <Column description="DENORMALIZED" name="displayOrder" nullable="false" type="integer"/>
+            <Column allocation="fixed" caseInsensitive="false" description="DENORMALIZED " name="classification" nullable="false" precision="1" type="string"/>
+            <Column allocation="varying" name="caption" nullable="false" precision="100" type="string"/>
+            <Column allocation="varying" name="shortCaption" precision="20" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="behaveAsCode" nullable="false" precision="50" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="parentTypeCode" precision="20" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="parentValueCode" precision="50" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" description="DENORMALIZED" name="externalCode" precision="50" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="EnumDisplay.PK" type="cluster" unique="true">
+               <IndexColumn name="valueCode"/>
+               <IndexColumn name="locale"/>
+               <IndexColumn name="typeCode"/>
+            </Index>
+            <Index description="Foreign Key to Code table. (virtual as part of PK)" name="EnumDisplay.FK_Code" relatedTable="EnumCode" type="virtual">
+               <IndexColumn name="valueCode"/>
+               <IndexColumn name="typeCode"/>
+            </Index>
+            <Index name="EnumDisplay.FK_Type" relatedTable="EnumType" type="virtual">
+               <IndexColumn name="typeCode"/>
+            </Index>
+            <Index name="EnumDisplay.FK_Parent" relatedTable="EnumDisplay">
+               <IndexColumn name="parentValueCode"/>
+               <IndexColumn name="locale"/>
+               <IndexColumn name="parentTypeCode"/>
+            </Index>
+            <Index description="Ordering Index by TypeCode (primary key goes by value first)." name="EnumDisplay.OK1">
+               <IndexColumn name="typeCode"/>
+               <IndexColumn name="valueCode"/>
+            </Index>
+            <Index description="Use this Key to join to any Enumerator Display Text" name="EnumDisplay.SK1" type="virtual">
+               <IndexColumn name="valueCode"/>
+            </Index>
+            <Index description="Use this key to join to any enumerator display text" name="EnumerationDisplayKey" type="virtual">
+               <IndexColumn name="valueCode"/>
+            </Index>
+            <Index description="Source key with all but the partion." name="EnumDisplay.SK2" type="virtual">
+               <IndexColumn name="typeCode"/>
+               <IndexColumn name="valueCode"/>
+               <IndexColumn name="locale"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="Workflow" primaryKey="Workflow.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" nullable="false" precision="16" type="binary"/>
+            <Column allocation="varying" name="oid" nullable="false" precision="80" type="binary"/>
+            <Column allocation="varying" caseInsensitive="false" name="class" nullable="false" precision="64" type="string"/>
+            <Column allocation="fixed" caseInsensitive="false" name="type" nullable="false" precision="1" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="name" nullable="false" precision="64" type="string"/>
+            <Column name="version" nullable="false" type="integer"/>
+            <Column allocation="varying" name="local" nullable="false" precision="16" type="binary"/>
+            <Column allocation="varying" name="parentId" precision="16" type="binary"/>
+            <Column name="ordinal" nullable="false" type="integer"/>
+            <Column allocation="varying" caseInsensitive="false" name="state" nullable="false" precision="80" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="variables" precision="1073741823" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="Workflow.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="Workflow.AK1" type="cluster" unique="true">
+               <IndexColumn name="oid"/>
+               <IndexColumn name="class"/>
+               <IndexColumn name="type"/>
+               <IndexColumn name="name"/>
+               <IndexColumn name="version"/>
+               <IndexColumn name="local"/>
+            </Index>
+            <Index name="Workflow.FK1" type="virtual">
+               <IndexColumn name="parentId"/>
+            </Index>
+            <Index name="Workflow.OK1">
+               <IndexColumn name="parentId"/>
+               <IndexColumn name="ordinal"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="WFAssignment" primaryKey="WFAssignment.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column allocation="fixed" caseInsensitive="false" name="classCode" nullable="false" precision="1" type="string"/>
+            <Column allocation="fixed" name="workflowId" precision="16" type="binary"/>
+            <Column allocation="fixed" name="assigneeId" precision="16" type="binary"/>
+            <Column allocation="fixed" name="ownerId" precision="16" type="binary"/>
+            <Column allocation="fixed" name="queueId" precision="16" type="binary"/>
+            <Column name="priority" type="double"/>
+            <Column name="ordinal" type="integer"/>
+            <Column allocation="varying" caseInsensitive="false" name="caption" precision="150" type="string"/>
+            <Column name="createdOn" type="timestamp"/>
+            <Column description="Semaphore execution status." name="status" nullable="false" precision="1" type="integer"/>
+            <Column description="True if created for a Semaphore." name="semaphore" nullable="false" type="boolean"/>
+            <Column allocation="fixed" description="The user that created this assignment." name="creatorId" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="WFAssignment.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="WFAssignment.FK1">
+               <IndexColumn name="workflowId"/>
+            </Index>
+            <Index name="WFAssignment.FK2">
+               <IndexColumn name="assigneeId"/>
+            </Index>
+            <Index name="WFAssignment.FK3">
+               <IndexColumn name="ownerId"/>
+            </Index>
+            <Index name="WFAssignment.FK4">
+               <IndexColumn name="queueId"/>
+            </Index>
+            <Index name="WFAssignment.FK5">
+               <IndexColumn name="creatorId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="WFState" primaryKey="WFState.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column allocation="fixed" name="assignmentId" precision="16" type="binary"/>
+            <Column name="ordinal" type="integer"/>
+            <Column allocation="varying" caseInsensitive="false" name="caption" precision="64" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="WFState.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="WFState.FK1" type="cluster">
+               <IndexColumn name="assignmentId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="Queue" primaryKey="Queue.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column allocation="varying" caseInsensitive="false" name="classCode" nullable="false" precision="64" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="name" precision="64" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="caption" precision="64" type="string"/>
+            <Column description="Relative priority to other queues, lower numbers are higher priority." name="priority" type="integer"/>
+            <Column description="The maximum number of assignments permitted to be in a RUNNING state." name="concurrency" type="integer"/>
+            <Column description="True if queue altered from its initial seeding by SysUpgrade." name="customized" nullable="false" type="boolean"/>
+            <Column description="True if queue was created by seeding done by SysUpgrade." name="system" nullable="false" type="boolean"/>
+            <Column allocation="fixed" description="The counter for task throttling. Null for no throttle limits." name="throttleCounterId" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="Queue.PK" type="cluster" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="Queue.AK1" unique="true">
+               <IndexColumn name="name"/>
+            </Index>
+            <Index name="Queue.FK2">
+               <IndexColumn name="throttleCounterId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table description="Base table for all group security entities" name="Principal" primaryKey="Principal.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" nullable="false" precision="16" type="binary"/>
+            <Column allocation="fixed" caseInsensitive="false" description="class type identifier" name="classCode" nullable="false" precision="1" type="string"/>
+            <Column allocation="varying" description="Unique name of principal.  Matches java security principal name.  For users this is equal to the loginName, for UserGroups it is equal to the system default locale name." name="name" nullable="false" precision="50" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="Principal.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="Principal.AK1" unique="true">
+               <IndexColumn name="name"/>
+               <IndexColumn name="classCode"/>
+            </Index>
+            <Index name="Principal.OK_Type" type="btree" unique="false">
+               <IndexColumn ascending="true" name="classCode"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table aspects="!LOCKING" description="Many to many association table between Principals and Principal Groups" name="UserGroupLink" primaryKey="UserGroupLink.PK">
+         <Columns>
+            <Column allocation="fixed" description="Unique Primary Key" name="id" nullable="false" precision="16" type="binary"/>
+            <Column allocation="fixed" description="ClassCode to allow UserSubPartition." name="classCode" nullable="false" precision="1" type="string"/>
+            <Column allocation="fixed" description="FK to User Table" name="userId" nullable="false" precision="16" type="binary"/>
+            <Column allocation="fixed" description="FK to UserGroup table" name="userGroupId" nullable="false" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="UserGroupLink.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="UserGroupLink.FK_User" type="virtual">
+               <IndexColumn name="userId"/>
+            </Index>
+            <Index name="UserGroupLink.FK_UserGroup" type="virtual">
+               <IndexColumn name="userGroupId"/>
+            </Index>
+            <Index name="UserGroupLink.OK_UUGrp" type="cluster" unique="true">
+               <IndexColumn name="userId"/>
+               <IndexColumn name="userGroupId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="RuleSetVersion" primaryKey="RuleSetVersion.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column allocation="fixed" name="ruleSetId" precision="16" type="binary"/>
+            <Column name="version" type="integer"/>
+         </Columns>
+         <Indexes>
+            <Index name="RuleSetVersion.PK" type="btree" unique="true">
+               <IndexColumn ascending="true" name="id"/>
+            </Index>
+            <Index name="RuleSetVersion.FK1" type="btree" unique="true">
+               <IndexColumn ascending="true" name="ruleSetId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="RuleSet" primaryKey="RuleSet.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column allocation="varying" caseInsensitive="false" name="name" precision="64" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="description" precision="255" type="string"/>
+            <Column allocation="fixed" name="currentVersionId" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="RuleSet.PK" type="btree" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="RuleSet.FK1" type="btree" unique="false">
+               <IndexColumn ascending="true" name="currentVersionId"/>
+            </Index>
+            <Index name="RuleSet.AK1" type="btree" unique="true">
+               <IndexColumn ascending="true" name="name"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="RuleDef" primaryKey="RuleDef.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column allocation="fixed" name="ruleSetVersionId" precision="16" type="binary"/>
+            <Column name="ordinal" type="double"/>
+            <Column allocation="varying" caseInsensitive="false" name="name" precision="64" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="description" precision="255" type="string"/>
+            <Column name="enabled" type="boolean"/>
+            <Column name="customized" type="boolean"/>
+            <Column allocation="locator" caseInsensitive="false" name="cond" precision="1073741823" type="string"/>
+            <Column allocation="locator" caseInsensitive="false" name="action" precision="1073741823" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="RuleDef.PK" type="btree" unique="true">
+               <IndexColumn ascending="true" name="id"/>
+            </Index>
+            <Index name="RuleDef.FK1" type="virtual">
+               <IndexColumn ascending="true" name="ruleSetVersionId"/>
+            </Index>
+            <Index name="RuleDef.AK1" type="btree" unique="true">
+               <IndexColumn ascending="true" name="ruleSetVersionId"/>
+               <IndexColumn ascending="true" name="name"/>
+            </Index>
+            <Index name="RuleDef.OK1">
+               <IndexColumn name="ruleSetVersionId"/>
+               <IndexColumn name="ordinal"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table aspects="!LOCKING" name="Timer" primaryKey="Timer.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column allocation="fixed" name="workflowId" precision="16" type="binary"/>
+            <Column name="ordinal" type="integer"/>
+            <Column name="nextTime" type="long"/>
+            <Column name="startTime" type="long"/>
+            <Column name="period" type="long"/>
+            <Column allocation="varying" caseInsensitive="false" description="Stores Principal.name." name="principal" precision="50" type="string"/>
+            <Column allocation="locator" name="data" precision="2147483647" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="Timer.PK" type="cluster" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="Timer.OI1">
+               <IndexColumn name="nextTime"/>
+            </Index>
+            <Index name="Timer.FK1" type="btree">
+               <IndexColumn name="workflowId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table aspects="!LOCKING" name="Counter" primaryKey="Counter.PK">
+         <Columns>
+            <Column allocation="varying" caseInsensitive="false" name="name" precision="64" type="string"/>
+            <Column name="value" type="long"/>
+            <Column name="inc" type="long"/>
+            <Column name="cache" type="integer"/>
+         </Columns>
+         <Indexes>
+            <Index name="Counter.PK" type="cluster" unique="true">
+               <IndexColumn name="name"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table aspects="!LOCKING" description="User Specific Properties" name="User" primaryKey="User.PK">
+         <Columns>
+            <Column allocation="fixed" description="Also a foreign key to the Principal table" name="id" nullable="false" precision="16" type="binary"/>
+            <Column allocation="varying" description="USERID" name="loginName" nullable="false" precision="50" type="string"/>
+            <Column allocation="varying" description="Last Name" name="lastName" nullable="false" precision="60" type="string"/>
+            <Column allocation="varying" description="First Name" name="firstName" nullable="false" precision="30" type="string"/>
+            <Column allocation="varying" description="User Alias name -- Used for audit fields and columnar display" name="alias" nullable="false" precision="10" type="string"/>
+            <Column description="Status field -- disabled, inactive ETC" name="status" nullable="false" type="integer"/>
+         </Columns>
+         <Indexes>
+            <Index name="User.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="User.OK_LastFirst" type="cluster">
+               <IndexColumn name="lastName"/>
+               <IndexColumn name="firstName"/>
+            </Index>
+            <Index name="User.APK_LoginName" unique="true">
+               <IndexColumn name="loginName"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table description="Table for storing password information" name="UserPassword" primaryKey="UserPassword.PK">
+         <Columns>
+            <Column allocation="fixed" description="PK" name="id" nullable="false" precision="16" type="binary"/>
+            <Column allocation="fixed" description="FK to User table" name="userId" nullable="false" precision="16" type="binary"/>
+            <Column allocation="fixed" caseInsensitive="false" description="Password Hash" name="passwordHash" nullable="false" precision="44" type="string"/>
+            <Column description="Active flag -- only one per user" name="activeFlag" nullable="false" type="boolean"/>
+            <Column description="Date Password was created" name="createdDate" nullable="false" type="timestamp"/>
+            <Column description="Date Password was inactivated" name="inactiveDate" type="timestamp"/>
+         </Columns>
+         <Indexes>
+            <Index name="UserPassword.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="UserPassword.FK_User" type="cluster">
+               <IndexColumn name="userId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table description="Localized Enum type descriptions" name="EnumTypeDisplay" primaryKey="EnumTypeDisplay.PK">
+         <Columns>
+            <Column allocation="varying" caseInsensitive="false" description="Foreign Key" name="typeCode" nullable="false" precision="20" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" description="Multi-Part PK" name="locale" nullable="false" precision="8" type="string"/>
+            <Column allocation="varying" description="Caption" name="displayCaption" nullable="false" precision="100" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" description="Description" name="displayDescription" precision="255" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="EnumTypeDisplay.PK" unique="true">
+               <IndexColumn name="typeCode"/>
+               <IndexColumn name="locale"/>
+            </Index>
+            <Index name="EnumtypeDisplay.FK_Type" type="virtual">
+               <IndexColumn name="typeCode"/>
+            </Index>
+            <Index name="EnumTypeDisplay.SK1" type="virtual">
+               <IndexColumn name="typeCode"/>
+               <IndexColumn name="locale"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table description="1:N Extention table between User Groups " name="UserGroupPrivilegeLink" primaryKey="UserGroupPrivLink.PK">
+         <Columns>
+            <Column allocation="fixed" description="PK" name="id" nullable="false" precision="16" type="binary"/>
+            <Column allocation="fixed" description="FK of 1:N extension table" name="userGroupId" nullable="false" precision="16" type="binary"/>
+            <Column allocation="varying" caseInsensitive="false" description="FK to Privilege" name="privilege" nullable="false" precision="50" type="string"/>
+            <Column description="Grant or Deny Privilege" name="grantFlag" nullable="false" type="boolean"/>
+         </Columns>
+         <Indexes>
+            <Index name="UserGroupPrivLink.PK">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="UserGroupPrivLink.APK" type="cluster" unique="true">
+               <IndexColumn name="userGroupId"/>
+               <IndexColumn name="privilege"/>
+            </Index>
+            <Index name="UserGroupPrivLink.FK_UG" type="virtual">
+               <IndexColumn name="userGroupId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table aspects="!LOCKING" name="UserBase" primaryKey="UserBase.PK">
+         <Columns>
+            <Column allocation="fixed" description="Primary Key" name="id" nullable="false" precision="16" type="binary"/>
+            <Column allocation="fixed" description="Parent Template ID" name="parentTemplateId" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="UserBase.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="UserBase.FK_ParentTemplate">
+               <IndexColumn name="parentTemplateId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table aspects="!LOCKING" name="Version" primaryKey="Version.PK">
+         <Columns>
+            <Column allocation="varying" caseInsensitive="false" description="Metadata namespace" name="namespace" nullable="false" precision="128" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" description="Metadata version" name="version" nullable="false" precision="128" type="string"/>
+            <Column description="Metadata upgrade step within the version, -1 if the version is up to date" name="step" nullable="false" type="integer"/>
+            <Column description="True if the schema may be upgraded automatically" name="upgradable" nullable="false" type="boolean"/>
+            <Column description="True if the schema contains test data, which can be recreated automatically" name="test" nullable="false" type="boolean"/>
+            <Column description="True if the initial (seed) data has been loaded" name="loaded" nullable="false" type="boolean"/>
+         </Columns>
+         <Indexes>
+            <Index name="Version.PK" type="cluster" unique="true">
+               <IndexColumn name="namespace"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="BatchJob" primaryKey="BatchJob.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" nullable="false" precision="16" type="binary"/>
+            <Column allocation="varying" name="name" nullable="false" precision="50" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="classCode" nullable="false" precision="4" type="string"/>
+            <Column name="startTime" type="long"/>
+            <Column name="period" type="long"/>
+            <Column allocation="fixed" name="timerId" precision="16" type="binary"/>
+            <Column allocation="fixed" name="syncTargetId" precision="16" type="binary"/>
+            <Column name="horizon" type="integer"/>
+            <Column description="The maximum number of assignments for this scheduler permitted to be in a RUNNING state. (for SysWorkflowSchedulerBatchJob)" name="concurrency" type="integer"/>
+         </Columns>
+         <Indexes>
+            <Index name="BatchJob.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="BatchJob.FK_timer">
+               <IndexColumn name="timerId"/>
+            </Index>
+            <Index name="BatchJob.UK_name" type="cluster" unique="true">
+               <IndexColumn name="name"/>
+            </Index>
+            <Index name="BatchJob.FK_syncTarget">
+               <IndexColumn name="syncTargetId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="RSSFeed" primaryKey="RSSFeed_PK">
+         <Columns>
+            <Column allocation="fixed" name="id" nullable="false" precision="16" type="binary"/>
+            <Column allocation="varying" name="name" nullable="false" precision="50" type="string"/>
+            <Column allocation="varying" name="title" precision="255" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="description" precision="255" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="portalName" precision="50" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="portalScreen" precision="50" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="portletName" precision="50" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="nexjFormRef" precision="50" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="rssTitle" precision="1024" type="string"/>
+            <Column allocation="locator" caseInsensitive="false" name="rssDescription" precision="2048" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="itrClass" precision="50" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="itrAttributes" precision="255" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="itrWhereClause" precision="255" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="itrSort" precision="100" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="RSSFeed_NAME" type="btree" unique="true">
+               <IndexColumn name="name"/>
+            </Index>
+            <Index name="RSSFeed_PK" type="btree" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table description="Aspect for adding the locking column to all tables that implement optamistic locking." name="LOCKING" pointcuts="*" type="aspect">
+         <Columns>
+            <Column description="Optimistic locking value changed on each update" name="locking" nullable="false" type="integer"/>
+         </Columns>
+      </Table>
+      <Table aspects="!LOCKING" description="Provides global concurrency control for SysWorkflowSchedulerBatchJob." name="WFSchedulerLock" primaryKey="WFSchedulerLock.PK">
+         <Columns>
+            <Column allocation="fixed" description="Same id as the id of the associated scheduler BatchJob." name="id" nullable="false" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="WFSchedulerLock.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="ThrottleCounter" primaryKey="ThrottleCounter.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" nullable="false" precision="16" type="binary"/>
+            <Column description="The current task count for this throttle." name="cnt" nullable="false" type="double"/>
+            <Column description="The maximum number of tasks that may be initiated in a throttle period." name="rate" nullable="false" type="double"/>
+            <Column allocation="fixed" description="The batch job that refreshes this throttle counter every throttle period." name="batchJobId" nullable="false" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="ThrottleCounter.PK" type="cluster" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="ThrottleCounter.FK1">
+               <IndexColumn name="batchJobId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="LOGGER" type="aspect">
+         <Columns>
+            <Column allocation="fixed" caseInsensitive="false" name="logLevelCode" nullable="false" precision="1" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="LOGGER.FK_logLevel">
+               <IndexColumn name="logLevelCode"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table aspects="!LOCKING" name="WFQueue" primaryKey="WFQueue.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column allocation="fixed" description="The Workflow Scheduler instance responsible for scheduling jobs on this queue." name="schedulerId" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="WFQueue.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="WFQueue.FK1">
+               <IndexColumn name="schedulerId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table aspects="!LOCKING" name="ObjectQueue" primaryKey="ObjectQueue.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column name="timeout" nullable="false" type="long"/>
+            <Column name="sendEnabled" nullable="false" type="boolean"/>
+            <Column name="receiveEnabled" nullable="false" type="boolean"/>
+            <Column name="errorCount" nullable="false" type="integer"/>
+            <Column allocation="fixed" name="errorQueueId" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="ObjectQueue.PK" type="cluster" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="ObjectQueue.FK_errorQueue" type="virtual">
+               <IndexColumn name="errorQueueId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table aspects="!LOCKING" name="Message" primaryKey="Message.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column allocation="varying" caseInsensitive="false" name="classCode" nullable="false" precision="64" type="string"/>
+            <Column allocation="fixed" name="queueId" precision="16" type="binary"/>
+            <Column literal="true" name="priority" nullable="false" type="integer"/>
+            <Column name="deliveryTime" type="long"/>
+            <Column name="ordinal" type="integer"/>
+            <Column allocation="fixed" caseInsensitive="false" literal="true" name="stateCode" nullable="false" precision="1" type="string"/>
+            <Column allocation="fixed" name="followingId" precision="16" type="binary"/>
+            <Column allocation="fixed" name="precedingId" precision="16" type="binary"/>
+            <Column allocation="fixed" name="originalQueueId" precision="16" type="binary"/>
+            <Column allocation="varying" caseInsensitive="false" name="name" precision="255" type="string"/>
+            <Column allocation="varying" caseInsensitive="false" name="usr" precision="255" type="string"/>
+            <Column allocation="varying" name="rsrc" precision="255" type="binary"/>
+            <Column name="sent" nullable="false" type="boolean"/>
+            <Column name="resourceHeld" nullable="false" type="boolean"/>
+            <Column name="errorCount" nullable="false" type="integer"/>
+            <Column allocation="varying" caseInsensitive="false" name="serializedValues" precision="1073741823" type="binary"/>
+            <Column name="committed" type="boolean"/>
+            <Column name="resent" type="boolean"/>
+            <Column name="delay" type="long"/>
+            <Column allocation="fixed" name="resendQueueId" precision="16" type="binary"/>
+            <Column name="locking" nullable="false" type="integer"/>
+         </Columns>
+         <Indexes>
+            <Index name="Message.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="Message.SK1">
+               <IndexColumn name="stateCode"/>
+               <IndexColumn name="priority"/>
+               <IndexColumn name="deliveryTime"/>
+               <IndexColumn name="ordinal"/>
+               <IndexColumn name="queueId"/>
+               <IndexColumn name="rsrc"/>
+            </Index>
+            <Index name="Message.FK_queue" type="virtual">
+               <IndexColumn name="queueId"/>
+            </Index>
+            <Index name="Message.FK_originalQueue" type="virtual">
+               <IndexColumn name="originalQueueId"/>
+            </Index>
+            <Index name="Message.FK_resendQueue" type="virtual">
+               <IndexColumn name="resendQueueId"/>
+            </Index>
+            <Index name="Message.FK_state" type="virtual">
+               <IndexColumn name="stateCode"/>
+            </Index>
+            <Index name="Message.FK_preceding" type="virtual">
+               <IndexColumn name="precedingId"/>
+            </Index>
+            <Index name="Message.FK_following">
+               <IndexColumn name="followingId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table aspects="!LOCKING" name="ObjectQueueDispatcher" primaryKey="ObjectQueueDispatcher.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="ObjectQueueDispatcher.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table description="Empty table aspect to allow models based on core to disable partitioning." name="PARTITIONED" type="aspect"/>
+   </Tables>
+</RelationalDatabase>

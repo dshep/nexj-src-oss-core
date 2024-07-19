@@ -1,0 +1,35 @@
+<Service layout="startSrcAssocAnchorPos:1024,14;startX:285;endY:556;startY:22;endX:285" variables="exception">
+   <TryCatch caption="Outer Try" layout="w:483;h:316;y:93;x:145" name="outerTry" variable="exception">
+      <Try>
+         <TryCatch caption="Inner Try" layout="w:225;h:172;y:36;srcAssocAnchorPos:1024,119;x:33" name="innerTry">
+            <Try>
+               <Script caption="Throw Exceptions" layout="y:45;x:52" name="throwBlock"><![CDATA[(import 'java.lang.IllegalStateException)
+(import 'java.lang.NumberFormatException)
+
+(this'trace (string-append (this'trace) "THROWBLOCK;"))
+
+(cond
+   ((this'throwInnerEx) (throw (java.lang.IllegalStateException'new "Inner Ex")) )
+   ((this'throwOuterEx) (throw (java.lang.NumberFormatException'new "Outer Ex")) )
+   ((this'throwUncaughtEx) (error "Uncaught Ex") )
+)
+
+(this'trace (string-append (this'trace) "END_THROWBLOCK;"))
+this]]></Script>
+            </Try>
+            <Catch exception="java.lang.IllegalStateException" layout="assocAnchorPos:131072,105" name="catchInner">
+               <Script caption="Catch Inner" layout="y:128;x:326" name="scrCatchInner"><![CDATA[(this'trace (string-append (this'trace) "CAUGHT_INNER;"))
+this]]></Script>
+            </Catch>
+            <Finally><![CDATA[(this'trace (string-append (this'trace) "F_INNER;"))
+this]]></Finally>
+         </TryCatch>
+      </Try>
+      <Catch exception="java.lang.NumberFormatException" name="catchOuter">
+         <Script caption="Catch Outer" layout="y:242;x:737" name="scrCatchOuter"><![CDATA[(this'trace (string-append (this'trace) "CAUGHT_OUTER;"))
+this]]></Script>
+      </Catch>
+      <Finally><![CDATA[(this'trace (string-append (this'trace) "F_OUTER;"))
+this]]></Finally>
+   </TryCatch>
+</Service>

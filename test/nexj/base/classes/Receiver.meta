@@ -1,0 +1,15 @@
+<Class description="Sample message and mail receiver." visibility="protected">
+   <Events>
+      <Event args="to cc bcc recipients from reply properties sent received subject message" description="Receives an e-mail." name="receiveMail" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(logger'debug "Received an e-mail message from" from "to" to)
+(logger'dump "To:" to "From:" from "CC:" cc "BCC:" bcc
+   "Recipients:" recipients "Reply-To:" reply "Properties:" properties
+   "Sent Date:" sent "Received Date:" received)
+(logger'dump "Subject:" subject)
+(logger'dump message)
+]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

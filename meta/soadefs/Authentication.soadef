@@ -1,0 +1,26 @@
+<SOADefinition description="Provides services related to SSO." name="nexj:soa:Authentication">
+   <Service>
+      <Interfaces>
+         <Interface default="true" ref="Authentication"/>
+      </Interfaces>
+   </Service>
+   <Interfaces>
+      <Interface name="Authentication">
+         <Method description="Generates SSO token for current user." name="generateToken">
+            <Arguments>
+               <Argument description="The user to get the token for." name="user" type="string"/>
+            </Arguments>
+            <Result type="string"/>
+         </Method>
+         <Method name="validateToken">
+            <Arguments>
+               <Argument description="SSO token to validate." name="token" type="string"/>
+            </Arguments>
+            <Result description="True if token is valid, false otherwise." type="boolean"/>
+         </Method>
+      </Interface>
+   </Interfaces>
+   <Bindings>
+      <Binding protocol="trpc"/>
+   </Bindings>
+</SOADefinition>

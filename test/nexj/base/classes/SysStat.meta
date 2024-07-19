@@ -1,0 +1,68 @@
+<Class aspects="PERSISTENCE_INITIALIZER" description="Static methods to define and undefine statistics." visibility="protected">
+   <Events>
+      <Event args="sPath name type bReadOnly" description="Define a statistic.&#13;&#10;@arg sPath Statistic's path.&#13;&#10;@arg name Statistic's name; must be either a string or a symbol.&#13;&#10;@arg type Statistic's type - counter, mean, value or flag; must be either a string or a symbol.&#13;&#10;@arg bReadOnly Whether statistic cannot be modified from a JMX client.&#13;&#10;@ret The new statistic.&#13;&#10;" name="define" static="true">
+         <Arguments/>
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysStat.define" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="sPath name type bReadOnly sPersistClass" description="Define a statistic.&#13;&#10;@arg sPath Statistic's path.&#13;&#10;@arg name Statistic's name; must be either a string or a symbol.&#13;&#10;@arg type Statistic's type - counter, mean, value or flag; must be either a string or a symbol.&#13;&#10;@arg bReadOnly Whether statistic cannot be modified from a JMX client.&#13;&#10;@arg sPersistClass Persistent statistics class name.&#13;&#10;@ret The new statistic.&#13;&#10;" name="define" static="true">
+         <Arguments/>
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysStat.define" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="sPath name statValue bReadOnly" description="Adds a statistic.&#13;&#10;@arg sPath Statistic's path.&#13;&#10;@arg name Statistic's name; must be either a string or a symbol.&#13;&#10;@arg statValue Statistic.&#13;&#10;@arg bReadOnly Whether statistic cannot be modified from a JMX client." name="addStat" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysStat.addStat" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="sPath" description="Check whether statistic is defined.&#13;&#10;@arg sPath Statistics' path.&#13;&#10;@ret Whether defined.&#13;&#10;" name="isDefined" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysStat.isDefined" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="sPath" description="Undefine statistics.&#13;&#10;@arg sPath Statistics' path.&#13;&#10;@ret Whether statistics existed.&#13;&#10;" name="undefine" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysStat.undefine" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="sPath name" description="Find statistic.&#13;&#10;@arg sPath Statistic's path.&#13;&#10;@arg name Statistic's name; must be either a string or a symbol.&#13;&#10;@ret Statistic or null if not found.&#13;&#10;" name="find" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysStat.find" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="sPath name function" description="Time function and update the average statistic.&#13;&#10;@arg sPath Statistic's path.&#13;&#10;@arg name Statistic's name.&#13;&#10;@arg function Function to time.&#13;&#10;" name="time" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define startTime (clock))
+
+(define result (function))
+
+((SysStat'find sPath name)'add (/ (cast double (- (clock) startTime)) 1000000))
+
+result
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="sPath name nIncr" description="Increment counter statistic.&#13;&#10;@arg sPath Statistic's path.&#13;&#10;@arg name Statistic's name.&#13;&#10;@arg nIncr Increment.&#13;&#10;" name="incrCounter" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[((SysStat'find sPath name)'add nIncr)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Add SysStatBatchJob singleton instance." name="initializePersistence" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(when (null? (read-instance SysStatBatchJob '() '() '()))
+   (logger'info "Initializing SysStatBatchJob")
+   (SysStatBatchJob'new)
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Save statistics of the current node." name="save" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysStat.save" name="main" type="main"/>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

@@ -1,0 +1,10 @@
+<Message format="Object">
+   <ObjectMapping class="Phone"/>
+   <Parts>
+      <Value minCount="1" name="type" type="string"/>
+      <Value name="number" type="string"/>
+      <Message minCount="1" name="CONTACT" ref="Object_Inherit_Contact">
+         <ObjectMapping attribute="contact" class="Patient"/>
+      </Message>
+   </Parts>
+</Message>

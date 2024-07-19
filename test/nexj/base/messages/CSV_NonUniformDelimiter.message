@@ -1,0 +1,21 @@
+<Message format="CSV">
+   <CSVMapping delimiter=":" quote="none" escape="\" header="true" line="\n" comment="#"/>
+   <Parts>
+      <Message maxCount="0" name="Data">
+         <Parts>
+            <Value description="Third Column" name="third" type="string" minCount="1">
+               <CSVMapping ordinal="3" delimiter=","/>
+            </Value>
+            <Value description="Fourth Column" name="fourth" type="string" minCount="0">
+               <CSVMapping quote='"' quoted="true"/>
+            </Value>
+            <Value description="First Column" name="first" type="string" minCount="1">
+               <CSVMapping ordinal="1" delimiter=","/>
+            </Value>
+            <Value description="Second Column" name="second" type="string" minCount="1">
+               <CSVMapping quote="'" escape="none"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

@@ -1,0 +1,404 @@
+<Message base="HL7_base" description="An A04 event signals that a patient has arrived or checked in as a one-time or recurring outpatient, and is not assigned a bed." format="HL7">
+   <HL7Mapping name="ADT^A04"/>
+   <Parts>
+      <Message maxCount="1" name="eventType">
+         <HL7Mapping name="EVN" seq="7"/>
+         <Parts>
+            <Value description="For backwards compatability with pre 2.3.1 versions of hl7.  now part of MSH segment" maxCount="1" name="eventTypeCode" type="string">
+               <HL7Mapping seq="1"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message maxCount="1" minCount="1" name="patientIdentification">
+         <HL7Mapping name="PID" seq="39"/>
+         <Parts>
+            <Message maxCount="1" minCount="0" name="patientID">
+               <HL7Mapping seq="2"/>
+               <Parts>
+                  <Value maxCount="1" minCount="1" name="idNumber" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message description="CX" maxCount="0" minCount="1" name="patientIdentifierList">
+               <HL7Mapping seq="3"/>
+               <Parts>
+                  <Value name="idNumber" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+                  <Value name="checkDigit" type="string">
+                     <HL7Mapping seq="2"/>
+                  </Value>
+                  <Value name="checkSchemeCode" type="string">
+                     <HL7Mapping seq="3"/>
+                  </Value>
+                  <Message description="HD" maxCount="1" minCount="0" name="assigningAuthority">
+                     <HL7Mapping seq="4"/>
+                     <Parts>
+                        <Value maxCount="1" minCount="0" name="namespaceId" type="string">
+                           <HL7Mapping seq="1"/>
+                        </Value>
+                        <Value maxCount="1" minCount="0" name="universalId" type="string">
+                           <HL7Mapping seq="2"/>
+                        </Value>
+                        <Value maxCount="1" minCount="0" name="universalIdType" type="string">
+                           <HL7Mapping seq="3"/>
+                        </Value>
+                     </Parts>
+                  </Message>
+                  <Value name="idTypeCode" type="string">
+                     <HL7Mapping seq="5"/>
+                  </Value>
+                  <Message description="HD" maxCount="1" minCount="0" name="assigningFacility">
+                     <HL7Mapping seq="6"/>
+                     <Parts>
+                        <Value maxCount="1" minCount="0" name="namespaceId" type="string">
+                           <HL7Mapping seq="1"/>
+                        </Value>
+                        <Value maxCount="1" minCount="0" name="universalId" type="string">
+                           <HL7Mapping seq="2"/>
+                        </Value>
+                        <Value maxCount="1" minCount="0" name="universalIdType" type="string">
+                           <HL7Mapping seq="3"/>
+                        </Value>
+                     </Parts>
+                  </Message>
+               </Parts>
+            </Message>
+            <Message maxCount="0" minCount="1" name="patientName">
+               <HL7Mapping seq="5"/>
+               <Parts>
+                  <Value maxCount="1" minCount="0" name="givenName" type="string">
+                     <HL7Mapping seq="2"/>
+                  </Value>
+                  <Message maxCount="1" minCount="0" name="familyName">
+                     <HL7Mapping seq="1"/>
+                     <Parts>
+                        <Value maxCount="1" minCount="1" name="surname" type="string">
+                           <HL7Mapping seq="1"/>
+                        </Value>
+                     </Parts>
+                  </Message>
+                  <Value maxCount="1" minCount="0" name="initials" type="string">
+                     <HL7Mapping seq="3"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="suffix" type="string">
+                     <HL7Mapping seq="4"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="prefix" type="string">
+                     <HL7Mapping seq="5"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="degree" type="string">
+                     <HL7Mapping seq="6"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message maxCount="1" minCount="0" name="dateTimeOfBirth">
+               <HL7Mapping seq="7"/>
+               <Parts>
+                  <Value maxCount="1" minCount="1" name="time" type="timestamp">
+                     <HL7Mapping seq="1" subtype="DTM"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Value maxCount="1" minCount="0" name="administrativeSex" type="string">
+               <HL7Mapping seq="8"/>
+               <Enumerations>
+                  <Enumeration value="F"/>
+                  <Enumeration value="M"/>
+                  <Enumeration value="O"/>
+                  <Enumeration value="U"/>
+                  <Enumeration value="A"/>
+                  <Enumeration value="N"/>
+               </Enumerations>
+            </Value>
+            <Message description="CE" maxCount="0" minCount="0" name="race">
+               <HL7Mapping seq="10"/>
+               <Parts>
+                  <Value maxCount="1" minCount="0" name="idNumber" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="text" type="string">
+                     <HL7Mapping seq="2"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="codingSystemName" type="string">
+                     <HL7Mapping seq="3"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="altIdNumber" type="string">
+                     <HL7Mapping seq="4"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="altText" type="string">
+                     <HL7Mapping seq="5"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="altCodingSystemName" type="string">
+                     <HL7Mapping seq="6"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message maxCount="0" minCount="0" name="patientAddress">
+               <HL7Mapping seq="11"/>
+               <Parts>
+                  <Message maxCount="1" minCount="1" name="streetAddress">
+                     <HL7Mapping seq="1"/>
+                     <Parts>
+                        <Value maxCount="1" minCount="1" name="streetAddress" type="string">
+                           <HL7Mapping seq="1"/>
+                        </Value>
+                     </Parts>
+                  </Message>
+                  <Value maxCount="1" minCount="0" name="otherDesignation" type="string">
+                     <HL7Mapping seq="2"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="city" type="string">
+                     <HL7Mapping seq="3"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="state" type="string">
+                     <HL7Mapping seq="4"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="zip" type="string">
+                     <HL7Mapping seq="5"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="country" type="string">
+                     <HL7Mapping seq="6"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="addressType" type="string">
+                     <HL7Mapping seq="7"/>
+                     <Enumerations>
+                        <Enumeration description="Bad address" value="BA"/>
+                        <Enumeration description="Birth (nee) (birth address, not otherwise specified)" value="N"/>
+                        <Enumeration description="Birth delivery location (address where birth occurred)" value="BDL"/>
+                        <Enumeration description="Country Of Origin" value="F"/>
+                        <Enumeration description="Current Or Temporary" value="C"/>
+                        <Enumeration description="Firm/Business" value="B"/>
+                        <Enumeration description="Home" value="H"/>
+                        <Enumeration description="Legal Address" value="L"/>
+                        <Enumeration description="Mailing" value="M"/>
+                        <Enumeration description="Office" value="O"/>
+                        <Enumeration description="Permanent" value="P"/>
+                        <Enumeration description="Registry home" value="RH"/>
+                        <Enumeration description="Residence at birth (home address at time of birth)" value="BR"/>
+                     </Enumerations>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message maxCount="0" minCount="0" name="phoneNumberHome">
+               <HL7Mapping seq="13"/>
+               <Parts>
+                  <Value maxCount="1" minCount="0" name="telephoneNumber" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="emailAddress" type="string">
+                     <HL7Mapping seq="4"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message maxCount="0" minCount="0" name="phoneNumberBusiness">
+               <HL7Mapping seq="14"/>
+               <Parts>
+                  <Value maxCount="1" minCount="0" name="telephoneNumber" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+                  <Value maxCount="1" minCount="0" name="emailAddress" type="string">
+                     <HL7Mapping seq="4"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message description="CX" name="patientAccountNumber">
+               <HL7Mapping seq="18"/>
+               <Parts>
+                  <Value name="idNumber" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+                  <Value name="checkDigit" type="string">
+                     <HL7Mapping seq="2"/>
+                  </Value>
+                  <Value name="checkSchemeCode" type="string">
+                     <HL7Mapping seq="3"/>
+                  </Value>
+                  <Message description="HD" maxCount="1" minCount="0" name="assigningAuthority">
+                     <HL7Mapping seq="4"/>
+                     <Parts>
+                        <Value maxCount="1" minCount="0" name="namespaceId" type="string">
+                           <HL7Mapping seq="1"/>
+                        </Value>
+                        <Value maxCount="1" minCount="0" name="universalId" type="string">
+                           <HL7Mapping seq="2"/>
+                        </Value>
+                        <Value maxCount="1" minCount="0" name="universalIdType" type="string">
+                           <HL7Mapping seq="3"/>
+                        </Value>
+                     </Parts>
+                  </Message>
+                  <Value name="idTypeCode" type="string">
+                     <HL7Mapping seq="5"/>
+                  </Value>
+                  <Message description="HD" maxCount="1" minCount="0" name="assigningFacility">
+                     <HL7Mapping seq="6"/>
+                     <Parts>
+                        <Value maxCount="1" minCount="0" name="namespaceId" type="string">
+                           <HL7Mapping seq="1"/>
+                        </Value>
+                        <Value maxCount="1" minCount="0" name="universalId" type="string">
+                           <HL7Mapping seq="2"/>
+                        </Value>
+                        <Value maxCount="1" minCount="0" name="universalIdType" type="string">
+                           <HL7Mapping seq="3"/>
+                        </Value>
+                     </Parts>
+                  </Message>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+      <Message description="Patient Visit" name="patientVisit">
+         <HL7Mapping name="PV1" seq="52"/>
+         <Parts>
+            <Value name="setID" type="string">
+               <HL7Mapping seq="1"/>
+            </Value>
+            <Value description="Patient Class" minCount="1" name="patientClass" type="string">
+               <HL7Mapping seq="2"/>
+            </Value>
+            <Message name="attendingDoctor">
+               <HL7Mapping seq="7"/>
+               <Parts>
+                  <Value name="idNumber" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+                  <Message maxCount="1" minCount="0" name="familyName">
+                     <HL7Mapping seq="2"/>
+                     <Parts>
+                        <Value maxCount="1" minCount="1" name="surname" type="string">
+                           <HL7Mapping seq="1"/>
+                        </Value>
+                     </Parts>
+                  </Message>
+                  <Value name="givenName" type="string">
+                     <HL7Mapping seq="3"/>
+                  </Value>
+                  <Value name="middleInitial" type="string">
+                     <HL7Mapping seq="4"/>
+                  </Value>
+                  <Value description="(e.g. JR or III)" name="suffix" type="string">
+                     <HL7Mapping seq="5"/>
+                  </Value>
+                  <Value description="e.g. DR)" name="prefix" type="string">
+                     <HL7Mapping seq="6"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message name="referringDoctor">
+               <HL7Mapping seq="8"/>
+               <Parts>
+                  <Value name="idNumber" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+                  <Message maxCount="1" minCount="0" name="familyName">
+                     <HL7Mapping seq="2"/>
+                     <Parts>
+                        <Value maxCount="1" minCount="1" name="surname" type="string">
+                           <HL7Mapping seq="1"/>
+                        </Value>
+                     </Parts>
+                  </Message>
+                  <Value name="givenName" type="string">
+                     <HL7Mapping seq="3"/>
+                  </Value>
+                  <Value name="middleInitial" type="string">
+                     <HL7Mapping seq="4"/>
+                  </Value>
+                  <Value description="(e.g. JR or III)" name="suffix" type="string">
+                     <HL7Mapping seq="5"/>
+                  </Value>
+                  <Value description="e.g. DR)" name="prefix" type="string">
+                     <HL7Mapping seq="6"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message name="consultingDoctor">
+               <HL7Mapping seq="9"/>
+               <Parts>
+                  <Value name="idNumber" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+                  <Message maxCount="1" minCount="0" name="familyName">
+                     <HL7Mapping seq="2"/>
+                     <Parts>
+                        <Value maxCount="1" minCount="1" name="surname" type="string">
+                           <HL7Mapping seq="1"/>
+                        </Value>
+                     </Parts>
+                  </Message>
+                  <Value name="givenName" type="string">
+                     <HL7Mapping seq="3"/>
+                  </Value>
+                  <Value name="middleInitial" type="string">
+                     <HL7Mapping seq="4"/>
+                  </Value>
+                  <Value description="(e.g. JR or III)" name="suffix" type="string">
+                     <HL7Mapping seq="5"/>
+                  </Value>
+                  <Value description="e.g. DR)" name="prefix" type="string">
+                     <HL7Mapping seq="6"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message description="CX" name="visitNumber">
+               <HL7Mapping seq="19"/>
+               <Parts>
+                  <Value name="idNumber" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+                  <Value name="checkDigit" type="string">
+                     <HL7Mapping seq="2"/>
+                  </Value>
+                  <Value name="checkSchemeCode" type="string">
+                     <HL7Mapping seq="3"/>
+                  </Value>
+                  <Message description="HD" maxCount="1" minCount="0" name="assigningAuthority">
+                     <HL7Mapping seq="4"/>
+                     <Parts>
+                        <Value maxCount="1" minCount="0" name="namespaceId" type="string">
+                           <HL7Mapping seq="1"/>
+                        </Value>
+                        <Value maxCount="1" minCount="0" name="universalId" type="string">
+                           <HL7Mapping seq="2"/>
+                        </Value>
+                        <Value maxCount="1" minCount="0" name="universalIdType" type="string">
+                           <HL7Mapping seq="3"/>
+                        </Value>
+                     </Parts>
+                  </Message>
+                  <Value name="idTypeCode" type="string">
+                     <HL7Mapping seq="5"/>
+                  </Value>
+                  <Message description="HD" maxCount="1" minCount="0" name="assigningFacility">
+                     <HL7Mapping seq="6"/>
+                     <Parts>
+                        <Value maxCount="1" minCount="0" name="namespaceId" type="string">
+                           <HL7Mapping seq="1"/>
+                        </Value>
+                        <Value maxCount="1" minCount="0" name="universalId" type="string">
+                           <HL7Mapping seq="2"/>
+                        </Value>
+                        <Value maxCount="1" minCount="0" name="universalIdType" type="string">
+                           <HL7Mapping seq="3"/>
+                        </Value>
+                     </Parts>
+                  </Message>
+               </Parts>
+            </Message>
+            <Value name="admitDateTime" type="timestamp">
+               <HL7Mapping seq="44" subtype="DTM"/>
+            </Value>
+            <Value name="visitIndicator" type="string">
+               <HL7Mapping seq="51"/>
+               <Enumerations>
+                  <Enumeration description="Account Level (default)" value="A"/>
+                  <Enumeration description="Visit Level" value="V"/>
+               </Enumerations>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

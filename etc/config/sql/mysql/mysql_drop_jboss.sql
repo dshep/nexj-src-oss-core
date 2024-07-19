@@ -1,0 +1,7 @@
+-- Drop script for JBoss v4 specific tables.
+
+DROP TABLE nexj.JMS_USERS;
+DROP TABLE nexj.JMS_ROLES;
+DROP TABLE nexj.JMS_SUBSCRIPTIONS;
+DROP TABLE nexj.JMS_MESSAGES;
+DROP TABLE nexj.JMS_TRANSACTIONS;

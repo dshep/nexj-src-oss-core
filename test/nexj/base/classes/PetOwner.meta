@@ -1,0 +1,29 @@
+<Class>
+   <Attributes>
+      <Attribute collection="false" initializer="0" name="version" required="true" type="integer"/>
+      <Attribute collection="false" name="firstName" required="false" static="false" type="string"/>
+      <Attribute collection="false" name="lastName" type="string"/>
+      <Attribute name="relFKToVirtColl" reverse="virtCollFromRelFK" type="Animal"/>
+      <Attribute collection="true" name="relCollFromVirtFK" reverse="virtFKToRelColl" type="Animal"/>
+      <Attribute name="relFKToVirtNone" type="Animal"/>
+      <Attribute name="relFKToVirtAttr" reverse="virtAttrFromRelFK" type="Animal"/>
+      <Attribute name="relAttrFromVirtFK" reverse="virtFKToRelAttr" type="Animal"/>
+      <Attribute name="id2" required="true" type="string"/>
+   </Attributes>
+   <Events/>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="version">
+      <RelationalMapping primaryTable="test.PetOwner">
+         <AttributeMappings>
+            <AttributeMapping column="rec_ver" name="version" table="test.PetOwner"/>
+            <AttributeMapping column="first_name" name="firstName" table="test.PetOwner"/>
+            <AttributeMapping column="last_name" name="lastName" table="test.PetOwner"/>
+            <AttributeMapping name="relFKToVirtColl" sourceKey="PetOwner.FK_ANM1"/>
+            <AttributeMapping destinationKey="virtFKToRelColl" name="relCollFromVirtFK"/>
+            <AttributeMapping name="relFKToVirtNone" sourceKey="PetOwner.FK_ANM2"/>
+            <AttributeMapping name="relFKToVirtAttr" sourceKey="PetOwner.FK_ANM3"/>
+            <AttributeMapping destinationKey="virtFKToRelAttr" name="relAttrFromVirtFK"/>
+            <AttributeMapping column="id2" name="id2"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

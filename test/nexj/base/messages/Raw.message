@@ -1,0 +1,7 @@
+<Message description="Base Raw Message&#13;&#10;">
+   <Parts>
+      <Value description="The channel name on which the message was received or will be sent." name="channel" type="string"/>
+      <Value description="The string or binary body of the message to send." name="body" type="any"/>
+      <Value description="An identifier used to correlate messages. This is currently only used on MessageQueue channels for JMS messages." name="correlationId" type="string"/>
+   </Parts>
+</Message>

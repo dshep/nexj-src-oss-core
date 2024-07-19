@@ -1,0 +1,42 @@
+<Transformation description="Transform from Internal format to RSS Feed" destination="RSS2_0" source="RSSObject">
+   <Initializer/>
+   <Mappings>
+      <Mapping destination="version" name="set version">
+         <Sources>
+            <Source source="title"/>
+         </Sources>
+         <Script>"2.0"</Script>
+      </Mapping>
+      <Mapping destination="channel title">
+         <Sources>
+            <Source source="title"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="channel link">
+         <Sources>
+            <Source source="link"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="channel description">
+         <Sources>
+            <Source source="description"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="channel item title">
+         <Sources>
+            <Source source="items title"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="channel item link">
+         <Sources>
+            <Source source="items link"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="channel item description">
+         <Sources>
+            <Source source="items description"/>
+         </Sources>
+      </Mapping>
+   </Mappings>
+   <Finalizer/>
+</Transformation>

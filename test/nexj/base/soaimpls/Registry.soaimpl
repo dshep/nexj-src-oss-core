@@ -1,0 +1,10 @@
+<SOAImplementation service="nexj:soa:Registry:1.0">
+   <Interface name="Registry">
+      <Method args="service" name="getService">
+         <Script><![CDATA[()]]></Script>
+      </Method>
+      <Method args="service instance" name="getService">
+         <Script><![CDATA[()]]></Script>
+      </Method>
+   </Interface>
+</SOAImplementation>

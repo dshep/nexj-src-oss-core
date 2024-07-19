@@ -1,0 +1,28 @@
+<Connections>
+   <DataSourceConnections>
+      <RelationalDatabaseConnection dataSource="DefaultRelationalDatabase"
+         adapter="MySQL" unicode="true"
+         database="test" 
+         host="tor-sv-mysql" port="3306" 
+         password="test" user="test">
+         <SQLHook activation="context" description="Hook to count the number of reads" type="nexj.core.persistence.sql.ReadCountHook"/>
+      </RelationalDatabaseConnection>
+      <RelationalDatabaseConnection dataSource="ExternalRelationalDatabase" 
+         adapter="MySQL" unicode="true"
+         database="test" 
+         host="tor-sv-mysql" port="3306" 
+         password="test" user="test">
+         <SQLHook activation="context" description="Hook to count the number of reads" type="nexj.core.persistence.sql.ReadCountHook"/>
+      </RelationalDatabaseConnection>
+      <ServiceDataSourceConnection dataSource="MemoryVirtualSource"/>
+   </DataSourceConnections>
+   <ChannelConnections>
+      <MessageQueueConnection channel="ErrorQueue" user="mq" password="mqpass"/>
+      <MessageQueueConnection channel="SyncQueue" user="mq" password="mqpass"/>
+      <MailConnection channel="Mail"
+         user="mailtest" password="mail123pass" from="mailtest@nexjsystems.com"
+         inProtocol="pop3" inHost="192.168.25.1" inEncryption="TLS"
+         outProtocol="smtp" outHost="192.168.25.1"/>
+      <HTTPConnection channel="WSDLExportTestChannel1" secure="false"/>
+   </ChannelConnections>
+</Connections>

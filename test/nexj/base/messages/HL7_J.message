@@ -1,0 +1,14 @@
+<Message format="HL7">
+   <HL7Mapping/>
+   <Parts>
+      <Value description="c" name="c" type="string">
+         <HL7Mapping seq="1"/>
+         <Enumerations>
+            <Enumeration description="C" value="C"/>
+         </Enumerations>
+      </Value>
+      <Message name="k" ref="HL7_K">
+         <HL7Mapping seq="2"/>
+      </Message>
+   </Parts>
+</Message>

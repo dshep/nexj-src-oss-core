@@ -1,0 +1,15 @@
+<Message format="Zip">
+   <ZipMapping comment="Test Zip file." compression="9"/>
+   <Parts>
+      <Message maxCount="0" name="files">
+         <Parts>
+            <Value name="fileName" type="string">
+               <ZipMapping value="name"/>
+            </Value>
+            <Value name="data" type="binary">
+               <ZipMapping value="contents"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

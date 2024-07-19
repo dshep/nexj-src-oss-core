@@ -1,0 +1,28 @@
+<Transformation destination="MsgCol" source="MsgCol">
+   <Mappings>
+      <Mapping destination="a s">
+         <Sources>
+            <Source null="true" source="a s"/>
+         </Sources>
+         <Script><![CDATA["maybe null"]]></Script>
+      </Mapping>
+      <Mapping destination="b s">
+         <Sources>
+            <Source source="a s"/>
+         </Sources>
+         <Script><![CDATA["not null"]]></Script>
+      </Mapping>
+      <Mapping destination="a n">
+         <Sources>
+            <Source null="true" source="a n"/>
+         </Sources>
+         <Script><![CDATA[0]]></Script>
+      </Mapping>
+      <Mapping destination="b n">
+         <Sources>
+            <Source source="a n"/>
+         </Sources>
+         <Script><![CDATA[1]]></Script>
+      </Mapping>
+   </Mappings>
+</Transformation>

@@ -1,0 +1,24 @@
+<Transformation destination="MsgCol" source="MsgCol">
+   <Mappings>
+      <Mapping destination="c s">
+         <Sources>
+            <Source source="a s"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="c n">
+         <Sources>
+            <Source source="a n"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="c s">
+         <Sources>
+            <Source source="b s"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="c n">
+         <Sources>
+            <Source source="b n"/>
+         </Sources>
+      </Mapping>
+   </Mappings>
+</Transformation>

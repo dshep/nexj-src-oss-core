@@ -1,0 +1,7 @@
+<Class base="Privilege" caption="idsc.PrivilegeGroup.caption" description="Group of Privileges and PrivilegeGroups - Not Persisted">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;G&quot;"/>
+      <Attribute name="icon" type="string" value="(icon &quot;role&quot;)"/>
+   </Attributes>
+   <Events/>
+</Class>

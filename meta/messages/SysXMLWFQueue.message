@@ -1,0 +1,30 @@
+<Message aggregation="sequential" format="XML">
+   <XMLMapping node="WorkflowQueue" type="element"/>
+   <Parts>
+      <Value name="name" type="string"/>
+      <Value maxCount="1" minCount="0" name="description" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value maxCount="1" minCount="0" name="class" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value maxCount="1" minCount="0" name="readPrivilege" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value maxCount="1" minCount="0" name="updatePrivilege" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value name="scheduler" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value name="priority" type="integer">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value name="concurrency" type="integer">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value name="rate" type="double">
+         <XMLMapping type="attribute"/>
+      </Value>
+   </Parts>
+</Message>

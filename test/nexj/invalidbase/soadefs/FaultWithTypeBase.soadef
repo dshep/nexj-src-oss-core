@@ -1,0 +1,19 @@
+<SOADefinition name="nexj:test:FaultWithTypeBase">
+   <Types>
+      <Type name="Type1">
+         <Attributes>
+            <Attribute name="data" type="string"/>
+         </Attributes>
+      </Type>
+   </Types>
+   <Faults>
+      <Fault name="Fault1" bases="Type1">
+         <Attributes>
+            <Attribute name="data2" type="integer"/>
+         </Attributes>
+      </Fault>
+   </Faults>
+   <Bindings>
+      <Binding protocol="trpc"/>
+   </Bindings>
+</SOADefinition>

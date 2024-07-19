@@ -1,0 +1,142 @@
+<UnitTest dump="UnitTest" mode="dirty">
+   <TestCase description="Tests simple matching." name="testSimpleMatching"><![CDATA[(assert-equal
+   '((a . 4) (b . 2))
+   (expr-match '(and (= (@ a) 4) (= (@ b) 2))
+      '(and (= (@ a) ,a) (= (@ b) ,b))
+   )
+)
+
+(assert=
+   #f
+   (expr-match '(and (= (@ a) 4) (= (@ b) 2))
+      '(and (= (@ a) ,a) (= (@ c) ,c))
+   )
+)
+
+(assert-equal
+   '((data . (1 2 3 5 8 13 21)))
+   (expr-match '(in? (@ a) 1 2 3 5 8 13 21)
+      '(in? (@ a) ,@data)
+   )
+)
+]]></TestCase>
+   <TestCase description="Test matching edge cases." name="testEdgeCases"><![CDATA[(assert-true
+   (expr-match '() '())
+)
+
+(assert= #f
+   (expr-match '(= (@ a) 4) '())
+)
+
+(assert= #f
+   (expr-match '() '(= (@ a) ,a))
+)
+
+(assert= #f
+   (expr-match '() '(and ,(? (= (@ a) ,a))))
+)
+
+(assert-equal
+   '()
+   (expr-match '() '( ,(?(= (@ a) ,a))))
+)
+
+(assert= #f
+   (expr-match '(1 2) '(2 ,a))
+)
+
+]]></TestCase>
+   <TestCase description="Tests the conditional matching operator." name="testConditionalMatch"><![CDATA[(assert-equal
+   '((a . 4) (b . 2))
+   (expr-match '(and (= (@ a) 4) (= (@ b) 2))
+      '(and ,(? (= (@ a) ,a)) ,(? (= (@ b) ,b)) ,(? (= (@ c) ,c)))
+   )
+)
+
+(assert-equal
+   '((a . 4) (c . 2))
+   (expr-match '(and (= (@ a) 4) (= (@ c) 2))
+      '(and ,(? (= (@ a) ,a)) ,(? (= (@ b) ,b)) ,(? (= (@ c) ,c)))
+   )
+)
+
+(assert= #f
+   (expr-match '(and (= (@ a) 4) (= (@ b) 2))
+      '(and ,(? (= (@ a) ,a)) ,(? (= (@ c) ,c)))
+   )
+)
+]]></TestCase>
+   <TestCase description="Tests that expr-case works correctly with the conditional matching operator, defining the variables even if they were not matched." name="testConditionalsInExprCase"><![CDATA[(expr-case '(and (= (@ a) 4) (= (@ b) 2))
+   ((and (= (@ a) ,a) ,(? (= (@ b) ,b)))
+      (assert= 4 a)
+      (assert= 2 b)
+   )
+   ((and (= (@ a) ,a) (= (@ b) ,b))
+      (assert-true #f)
+   )
+   (else
+      (assert-true #f)
+   )
+)
+
+(expr-case '(and (= (@ a) 4))
+   ((and (= (@ a) ,a) ,(? (= (@ b) ,b)))
+      (assert= 4 a)
+      (assert-eq 'UNDEFINED b)
+   )
+   ((and (= (@ a) ,a))
+      (assert-true #f)
+   )
+   (else
+      (assert-true #f)
+   )
+)
+]]></TestCase>
+   <TestCase description="Tests the or operator" name="testOrOperator"><![CDATA[(assert-equal
+   '((a . (1 . ())))
+   (expr-match
+      '(in? (@) 1)
+      '(,(or in? =) (@) ,@a)
+   )
+)
+
+(assert-equal
+   '((a . (1 . ())))
+   (expr-match
+      '(= (@) 1)
+      '(,(or in? =) (@) ,@a)
+   )
+)
+
+(expr-case
+   '(in? (@) 1)
+   ((,(or in? =) (@) ,@a)
+      (assert-equal '(1) a)
+   )
+   (else
+      (fail "Should match previous case")
+   )
+)
+
+(assert-equal
+   '((a . 3))
+   (expr-match '(1 3) '(1 ,(or 2 ,a)))
+)
+
+(assert-equal
+   '()
+   (expr-match '(1 2) '(1 ,(or 2 ,a)))
+)
+
+(expr-case '((a 1) (b 2) (c 3))
+   (((a 1) (b 3) (c 2))
+      (fail "Should not match first case")
+   )
+   (((a ,a) (b ,(or 2 ,b)) (c ,(or 1 2 3)))
+      (assert-eq 'UNDEFINED b)
+   )
+   (else
+      (fail "Should have matched previous case")
+   )
+)]]></TestCase>
+</UnitTest>

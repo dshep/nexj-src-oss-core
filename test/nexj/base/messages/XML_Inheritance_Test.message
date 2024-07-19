@@ -1,0 +1,11 @@
+<Message aggregation="sequential" format="XML">
+   <XMLMapping envelope="soap12" namespace="ns2" node="T" uri="urn:hl7-org:v3"/>
+   <Parts>
+      <Value name="testValue" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Message minCount="1" name="value" ref="XML_Inheritance_Base">
+         <XMLMapping namespace="ns2"/>
+      </Message>
+   </Parts>
+</Message>

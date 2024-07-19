@@ -1,0 +1,14 @@
+<Class description="A virtual-persisted class that will generate run-time errors when various mappings are read.&#13;&#10;">
+   <Attributes>
+      <Attribute name="virtual" type="NoKGenVirtual"/>
+      <Attribute name="name" type="string"/>
+   </Attributes>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="identity" primaryTable="test.NoKGen">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name"/>
+            <AttributeMapping name="virtual" sourceKey="NoKGen.FK"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

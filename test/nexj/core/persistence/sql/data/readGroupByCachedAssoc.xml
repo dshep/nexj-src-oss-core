@@ -1,0 +1,232 @@
+<nv:Envelope xmlns:nv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <nv:Body xmlns:ns="http://www.nexjsystems.com/xml-soap" nv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <ns:Array>
+         <items nc:arrayType="xs:anyType[14]">
+            <Item href="#a"/>
+            <Item href="#b"/>
+            <Item href="#c"/>
+            <Item href="#d"/>
+            <Item href="#e"/>
+            <Item href="#f"/>
+            <Item href="#g"/>
+            <Item href="#h"/>
+            <Item href="#i"/>
+            <Item href="#j"/>
+            <Item href="#k"/>
+            <Item href="#l"/>
+            <Item href="#m"/>
+            <Item href="#n"/>
+         </items>
+      </ns:Array>
+      <ns:TransferObject id="a">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>m</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:string">Canada</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="b">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAg==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>m</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:string">Canada</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="c">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAAAw==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>m</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:string">Canada</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="d">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABA==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>m</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:string">USA</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="e">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>m</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:string">USA</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="f">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABg==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>m</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:nil="true"/>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="g">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAABw==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>m</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:nil="true"/>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="h">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAACA==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>m</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:string">Canada</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="i">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAACQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>m</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:string">USA</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="j">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAACg==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>m</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:string">USA</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="k">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAACw==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>m</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:string">Canada</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="l">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAADA==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>m</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:string">Canada</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="m">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAADQ==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>m</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:string">Canada</Item>
+         </values>
+      </ns:TransferObject>
+      <ns:TransferObject id="n">
+         <class>Address</class>
+         <version>0</version>
+         <oid>
+            <values nc:arrayType="xs:anyType[1]">
+               <Item xi:type="xs:base64Binary">AAAAAAAAAAAAAAAAAAAADg==</Item>
+            </values>
+         </oid>
+         <keys nc:arrayType="xs:string[1]">
+            <Item>m</Item>
+         </keys>
+         <values nc:arrayType="xs:anyType[1]">
+            <Item xi:type="xs:string">Canada</Item>
+         </values>
+      </ns:TransferObject>
+   </nv:Body>
+</nv:Envelope>

@@ -1,0 +1,44 @@
+<Message description="RSS Object Representation" format="Object">
+   <ObjectMapping class="RSSChannel"/>
+   <Parts>
+      <Value maxCount="1" minCount="1" name="title" type="string">
+         <ObjectMapping/>
+      </Value>
+      <Value name="link" type="string"/>
+      <Value name="description" type="string"/>
+      <Value name="language" type="string"/>
+      <Value name="copyright" type="string"/>
+      <Value name="managingEditor" type="string"/>
+      <Value name="webMaster" type="string"/>
+      <Value name="pubDate" type="string"/>
+      <Value name="lastBuildDate" type="string"/>
+      <Value name="generator" type="string"/>
+      <Value name="docs" type="string"/>
+      <Value name="ttl" type="integer"/>
+      <Value name="textInputTitle" type="string"/>
+      <Value name="textInputDescription" type="string"/>
+      <Value name="textInputName" type="string"/>
+      <Value name="textInputLink" type="string"/>
+      <Value name="skipMonday" type="boolean"/>
+      <Value name="skipTuesday" type="boolean"/>
+      <Value name="skipWednesday" type="boolean"/>
+      <Value name="skipThursday" type="boolean"/>
+      <Value name="skipFriday" type="boolean"/>
+      <Value name="skipSaturday" type="boolean"/>
+      <Value name="skipSunday" type="boolean"/>
+      <Message aggregation="sequential" maxCount="0" minCount="0" name="items">
+         <ObjectMapping class="RSSItem"/>
+         <Parts>
+            <Value maxCount="1" minCount="1" name="title" type="string"/>
+            <Value maxCount="1" minCount="1" name="link" type="string"/>
+            <Value maxCount="1" minCount="1" name="description" type="string"/>
+            <Value maxCount="1" minCount="0" name="author" type="string"/>
+            <Value maxCount="1" minCount="0" name="comments" type="string"/>
+            <Value maxCount="1" minCount="0" name="isPermalink" type="boolean"/>
+            <Value maxCount="1" minCount="1" name="guidValue" type="string"/>
+            <Value maxCount="1" minCount="1" name="pubDate" type="timestamp"/>
+            <Value maxCount="1" minCount="1" name="sourceURL" type="string"/>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

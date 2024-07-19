@@ -1,0 +1,63 @@
+<Class base="Personalizeable" description="Base class for metadata elements with personalizeable layouts.">
+   <Attributes>
+      <Attribute cascade="delete" collection="true" name="layouts" reverse="personalizeableLayout" type="Layout"/>
+   </Attributes>
+   <Events>
+      <Event args="layoutMeta" name="personalizeLayout">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define (createElements meta layout)
+   (let ((i 0) (itr (meta'iterator)))
+      (let loop ()
+         (if (itr'hasNext)
+            (begin
+               (let ((elementMeta (itr'next)) (element (LayoutElement'new)))
+                  (element'name (elementMeta'name))
+                  (element'ordinal i)
+                  (element'layout layout)
+                  (element'caption (elementMeta'caption))
+                  (set! i (+ i 1))
+                  (iterateLayout elementMeta)
+               )
+               (loop)
+            )
+         )
+      )
+   )   
+)
+
+(define (iterateLayout layoutMeta)
+   (if (or (= (layoutMeta'type) "TableLayout")
+            (= (layoutMeta'type) "GroupLayout")
+            (= (layoutMeta'type) "SplitterLayout"))
+      (let ((itr (layoutMeta'iterator)))
+         (let loop ()
+            (if (itr'hasNext)
+               (begin
+                     (let ((elementMeta (itr'next)))
+                        (checkLayout elementMeta)
+                        (iterateLayout elementMeta)
+                     )
+                     (loop)
+                )
+            )
+         )
+      )
+   )
+)
+
+(define (checkLayout layoutMeta)
+   (if (= (layoutMeta'type) "GroupLayout")
+      (let ((layout (Layout'new)))
+            (layout'name (layoutMeta'name))
+            (layout'personalizeableLayout this)
+            (createElements layoutMeta layout)
+      )
+   )
+) 
+
+(iterateLayout layoutMeta)
+]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

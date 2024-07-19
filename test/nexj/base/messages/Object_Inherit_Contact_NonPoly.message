@@ -1,0 +1,6 @@
+<Message format="Object" derivation="final">
+   <ObjectMapping class="Contact"/>
+   <Parts>
+      <Value name="firstName" type="string"/>
+   </Parts>
+</Message>

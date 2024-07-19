@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010-2011 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <xsd:include schemaLocation="baseTypes.xsd"/>
+
+   <xsd:complexType name="DataSourceConnections">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="RelationalDatabaseConnection" type="RelationalDatabaseConnection"/>
+         <xsd:element name="FileStorageConnection" type="FileStorageConnection"/>
+         <xsd:element name="ServiceDataSourceConnection" type="ServiceDataSourceConnection"/>
+         <xsd:element name="DataSourceConnection">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:any minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+               </xsd:sequence>
+               <xsd:anyAttribute processContents="lax"/>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+
+   <xsd:complexType name="ChannelConnections">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+         <xsd:element name="MessageQueueConnection" type="MessageQueueConnection"/>
+         <xsd:element name="MailConnection" type="MailConnection"/>
+         <xsd:element name="HTTPConnection" type="HTTPConnection"/>
+         <xsd:element name="UDPConnection" type="UDPConnection"/>
+         <xsd:element name="TCPConnection" type="TCPConnection"/>
+         <xsd:element name="FileConnection" type="FileConnection"/>
+         <xsd:element name="ChannelConnection">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:any minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+               </xsd:sequence>
+               <xsd:anyAttribute processContents="lax"/>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:choice>
+   </xsd:complexType>
+
+   <xsd:complexType name="Environment">
+      <xsd:complexContent>
+         <xsd:extension base="Configuration">
+            <xsd:sequence>
+               <xsd:element name="DataSourceConnections" type="DataSourceConnections" minOccurs="0" maxOccurs="1"/>
+               <xsd:element name="ChannelConnections" type="ChannelConnections" minOccurs="0" maxOccurs="1"/>
+               <xsd:element name="SOAConnections" type="SOAConnections" minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="Server">
+      <xsd:complexContent>
+         <xsd:extension base="Configuration">
+            <xsd:sequence>
+               <xsd:element name="ValidConnections" minOccurs="0" maxOccurs="1">
+                  <xsd:complexType>
+                     <xsd:sequence>
+                        <xsd:element name="Connection" minOccurs="0" maxOccurs="unbounded">
+                           <xsd:complexType>
+                              <xsd:attribute name="name" type="xsd:string" use="required"/>
+                              <!--
+                                 Uniquely identifies the Connection.
+                              -->
+                           </xsd:complexType>
+                        </xsd:element>
+                     </xsd:sequence>
+                  </xsd:complexType>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="Connections">
+      <xsd:sequence>
+         <xsd:element name="DataSourceConnections" type="DataSourceConnections" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="ChannelConnections" type="ChannelConnections" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="SOAConnections" type="SOAConnections" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="description" type="xsd:string"/>
+      <!--
+         Connection set description.
+      -->
+      <xsd:attribute name="test" type="xsd:boolean" default="false"/>
+      <!--
+         Flag set to specify if a connection is for testing.
+      -->
+   </xsd:complexType>
+</xsd:schema>

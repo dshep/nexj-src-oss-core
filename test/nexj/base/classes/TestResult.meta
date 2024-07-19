@@ -1,0 +1,15 @@
+<Class aspects="LOCKING">
+   <Attributes>
+      <Attribute name="name" type="string"/>
+      <Attribute name="service" type="boolean"/>
+   </Attributes>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="TestResult">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name"/>
+            <AttributeMapping column="service" name="service"/>
+            <AttributeMapping column="locking" name="locking"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

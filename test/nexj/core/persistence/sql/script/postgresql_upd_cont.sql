@@ -1,0 +1,1 @@
+update test.Contact set rec_ver=1, first_name='a' where id=decode('00000000000000000000000000000001','hex');

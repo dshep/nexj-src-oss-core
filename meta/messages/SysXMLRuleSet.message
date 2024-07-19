@@ -1,0 +1,31 @@
+<Message aggregation="sequential" format="XML">
+   <XMLMapping node="RuleSet" type="element"/>
+   <Parts>
+      <Value maxCount="1" minCount="0" name="version" type="integer">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value maxCount="1" minCount="0" name="description" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Message aggregation="sequential" maxCount="2147483647" minCount="0" name="Rule">
+         <XMLMapping type="element"/>
+         <Parts>
+            <Value maxCount="1" minCount="1" name="name" type="string">
+               <XMLMapping type="attribute"/>
+            </Value>
+            <Value maxCount="1" minCount="0" name="condition" type="string">
+               <XMLMapping type="attribute"/>
+            </Value>
+            <Value maxCount="1" minCount="0" name="enabled" type="boolean">
+               <XMLMapping type="attribute"/>
+            </Value>
+            <Value maxCount="1" minCount="0" name="description" type="string">
+               <XMLMapping type="attribute"/>
+            </Value>
+            <Value maxCount="1" minCount="0" name="Script" type="string">
+               <XMLMapping type="element"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

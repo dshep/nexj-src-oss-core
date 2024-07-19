@@ -1,0 +1,53 @@
+<Message description="Patient Identification" format="HL7">
+   <HL7Mapping name="PID" seq="39"/>
+   <Parts>
+      <Value name="setIdPid" type="integer">
+         <HL7Mapping seq="1"/>
+      </Value>
+      <Value name="patientId" type="string">
+         <HL7Mapping seq="2"/>
+      </Value>
+      <Message maxCount="0" name="patientIdentifierList">
+         <HL7Mapping seq="3"/>
+         <Parts>
+            <Value minCount="1" name="idNumber" type="string">
+               <HL7Mapping seq="1"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Value maxCount="0" name="alternatePatientIdPid" type="string">
+         <HL7Mapping seq="4"/>
+      </Value>
+      <Message maxCount="0" minCount="1" name="patientName">
+         <HL7Mapping seq="5"/>
+         <Parts>
+            <Message name="familyName">
+               <HL7Mapping seq="1"/>
+               <Parts>
+                  <Value minCount="1" name="surname" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Value name="givenName" type="string">
+               <HL7Mapping seq="2"/>
+            </Value>
+            <Value name="secondAndFurtherGivenNamesOrInitialsThereof" type="string">
+               <HL7Mapping seq="3"/>
+            </Value>
+            <Value name="suffixE.g.JrOrIii" type="string">
+               <HL7Mapping seq="4"/>
+            </Value>
+            <Value name="prefixE.g.Dr" type="string">
+               <HL7Mapping seq="5"/>
+            </Value>
+            <Value description="Degree/license/certificate" name="degreeE.g.Md" type="string">
+               <HL7Mapping seq="6"/>
+            </Value>
+            <Value description="Name type" name="nameTypeCode" type="string">
+               <HL7Mapping seq="7"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

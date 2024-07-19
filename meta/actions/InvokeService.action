@@ -1,0 +1,15 @@
+<Action caption="Invoke Service" description="Invokes an integration service and returns the 'result of the invocation." icon="question_and_answer" service="true" tooltip="Invokes an Integration Service">
+   <Arguments>
+      <Argument category="Data" description="An expression that evaluates to the name of the service to invoke." name="service" type="any"/>
+      <Argument category="Data" default="(@)" description="An expression that evaluates to a message to pass into the service." name="message" type="any"/>
+      <Argument category="Data" default="'()" description="An expression that evaluates to the default output channel for the service.  Default is null." name="output" type="any"/>
+      <Argument category="Data" default="()" description="An expression that evaluates to a list of arguments to pass to the service." name="args" type="list"/>
+   </Arguments>
+   <Script><![CDATA[`((SysService'invoke 
+         ,service 
+         ,message 
+         ,output
+         ,@args
+   )'result)
+]]></Script>
+</Action>

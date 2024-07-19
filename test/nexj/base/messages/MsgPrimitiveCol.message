@@ -1,0 +1,9 @@
+<Message>
+   <Parts>
+      <Message maxCount="0" name="c">
+         <Parts>
+            <Value name="s" type="string"/>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

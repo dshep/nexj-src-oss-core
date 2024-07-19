@@ -1,0 +1,121 @@
+<Class>
+   <Attributes>
+      <Attribute name="name" type="string"/>
+      <Attribute initializer="0" name="locking" required="true" type="integer"/>
+      <Attribute initializer="(apply max (map (lambda (datum) (if (= &quot;AUTO&quot; ((car datum)'getValue 0)) ((car datum)'getValue 1) 0)) (AnimalPenStore'data)))" name="AUTO" required="true" static="true" type="integer"/>
+      <Attribute name="k1" type="string"/>
+      <Attribute name="k2" type="integer"/>
+      <Attribute collection="true" name="animals" reverse="pen" type="Animal"/>
+      <Attribute initializer="0" name="objectKeyReadCount" required="true" static="true" type="integer"/>
+      <Attribute name="unpersistedAttribute" type="string"/>
+   </Attributes>
+   <Events/>
+   <PersistenceMapping dataSource="MemoryVirtualSource" lockingAttribute="locking">
+      <ServiceMapping>
+         <KeyParts>
+            <KeyPart attribute="k1" type="string"/>
+            <KeyPart attribute="k2" type="integer"/>
+         </KeyParts>
+         <AttributeMappings>
+            <AttributeMapping name="name"/>
+            <AttributeMapping name="locking"/>
+            <AttributeMapping destinationKey="pen" name="animals" objectSourceKey="true"/>
+         </AttributeMappings>
+         <SortKeys>
+            <SortKey attributes="name ()" unique="true"/>
+            <SortKey attributes="k1 k2" unique="false"/>
+            <SortKey attributes="k1 name k2" unique="false"/>
+         </SortKeys>
+         <ReadMapping>
+            <Case where="(= (@) ,key)">
+               <Read>
+                  <Script><![CDATA[(logger'debug "AnimalPen.read" attributes where orderBy count offset xlock)
+(AnimalPen'objectKeyReadCount (+ (AnimalPen'objectKeyReadCount) 1))
+((AnimalPenStore'lookupByOID) key)]]></Script>
+               </Read>
+            </Case>
+            <Case where="(in? (@) ,@oids)">
+               <Read>
+                  <Script><![CDATA[
+(define result (collection))
+(logger'debug "AnimalPen.read" attributes where orderBy count offset xlock)
+(for-each
+   (lambda (key)
+      (let
+         (
+            (col ((AnimalPenStore'lookupByOID) key))
+         )
+         (unless (null? col)
+            (result'add col)
+         )
+      )
+   )
+   oids
+)
+result
+]]></Script>
+               </Read>
+            </Case>
+            <Case where="(= (@ name) ,key)">
+               <Read>
+                  <Script><![CDATA[(logger'debug "AnimalPen.read" attributes where orderBy count offset xlock)
+((AnimalPenStore'lookupManyByAttribute) 'name key)]]></Script>
+               </Read>
+            </Case>
+            <Case where="()">
+               <Read>
+                  <Script><![CDATA[(logger'debug "AnimalPen.read" attributes where orderBy count offset xlock)
+((AnimalPenStore'getAll))]]></Script>
+               </Read>
+            </Case>
+         </ReadMapping>
+         <CreateMapping>
+            <Script><![CDATA[
+(when (null? (this':oid))
+   (this':oid
+      (oid
+         "AUTO"
+         (+ (AnimalPen'AUTO) 1)
+      )
+   )
+)
+
+((AnimalPenStore'create) this)
+
+(AnimalPen'AUTO (+ (AnimalPen'AUTO) 1))
+]]></Script>
+         </CreateMapping>
+         <UpdateMapping>
+            <Case attributes="name">
+               <Script><![CDATA[
+(let
+   (
+      (result ((AnimalPenStore'updateByOID) (this':oid) this))
+   )
+   (unless result
+      (throw-optimistic-lock this)
+   )
+)
+]]></Script>
+            </Case>
+            <Case attributes="k1 k2">
+               <Script><![CDATA[
+(let
+   (
+      (result ((AnimalPenStore'changeOID) (this':oid) (oid (this'k1) (this'k2)) this))
+   )
+   (unless result
+      (throw-optimistic-lock this)
+   )
+)
+]]></Script>
+            </Case>
+         </UpdateMapping>
+         <DeleteMapping>
+            <Script><![CDATA[(unless ((AnimalPenStore'deleteByOID) (this':oid) (this'locking))
+   (throw-optimistic-lock this)
+)]]></Script>
+         </DeleteMapping>
+      </ServiceMapping>
+   </PersistenceMapping>
+</Class>

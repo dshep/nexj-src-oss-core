@@ -1,0 +1,14 @@
+<Message format="HL7">
+   <HL7Mapping seq="2"/>
+   <Parts>
+      <Value name="q" type="string">
+         <HL7Mapping seq="1"/>
+      </Value>
+      <Value name="r" type="string">
+         <HL7Mapping seq="2"/>
+      </Value>
+      <Message name="f" ref="HL7_F">
+         <HL7Mapping seq="3"/>
+      </Message>
+   </Parts>
+</Message>

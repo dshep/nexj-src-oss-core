@@ -1,0 +1,92 @@
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xsd:element name="account">
+		<xsd:complexType>
+			<xsd:choice minOccurs="0">
+				<xsd:element name="clientNumber" type="xsd:string" maxOccurs="unbounded"/>
+				<xsd:element name="accountNumber" type="xsd:string" maxOccurs="unbounded"/>
+			</xsd:choice>
+			<xsd:attribute name="include" type="xsd:boolean" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+   <xsd:element name="phoneNumberA">
+      <xsd:complexType>
+           <xsd:choice>
+                <xsd:sequence>
+                     <xsd:element name="phoneNumber">
+                           <xsd:simpleType>
+                                <xsd:restriction base="xsd:token">
+                                     <xsd:maxLength value="25"/>
+                                </xsd:restriction>
+                           </xsd:simpleType>
+                     </xsd:element>
+                     <xsd:element name="extension" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+                <xsd:sequence>
+                     <xsd:element name="areaCode" type="xsd:token"/>
+                     <xsd:element name="number" type="xsd:token"/>
+                     <xsd:element name="exchange" type="xsd:token" minOccurs="0"/>
+                </xsd:sequence>
+           </xsd:choice>
+           <xsd:attribute name="phoneNumberType" type="xsd:string" use="required"/>
+     </xsd:complexType>
+   </xsd:element>
+   <xsd:element name="aaaParent">
+      <xsd:complexType>
+           <xsd:sequence minOccurs='2' maxOccurs='unbounded'>
+               <xsd:element name="aaaChild">
+                  <xsd:complexType>
+                       <xsd:sequence minOccurs='3' maxOccurs='unbounded'>
+                          <xsd:element name="areaCode" type="xsd:token" minOccurs='5' maxOccurs='unbounded'/>
+                       </xsd:sequence>
+                 </xsd:complexType>
+              </xsd:element>
+           </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+   
+   <xsd:element name="sequencechoice">
+<xsd:complexType>
+      <xsd:sequence>
+         <xsd:element name="realmCode" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+         <xsd:element name="typeId" type="xsd:string" minOccurs="0"/>
+         <xsd:element name="templateId" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+         <xsd:element name="seperatableInd" type="xsd:string" minOccurs="0"/>
+         <xsd:choice>
+            <xsd:element name="externalAct" type="xsd:string"/>
+            <xsd:element name="externalObservation" type="xsd:string"/>
+            <xsd:element name="externalProcedure" type="xsd:string"/>
+            <xsd:element name="externalDocument" type="xsd:string"/>
+         </xsd:choice>
+      </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+
+   <xsd:element name="unboundedChoice">
+        <xsd:complexType>
+      <xsd:choice maxOccurs="unbounded">
+         <xsd:element name="th" type="xsd:string"/>
+         <xsd:element name="td" type="xsd:string"/>
+      </xsd:choice>
+</xsd:complexType>
+   </xsd:element>
+   
+   <xsd:element name="wierdBoolean">
+      <xsd:complexType>
+         <xsd:attribute name="ba" type="bl" use="required"/>
+      </xsd:complexType>
+   </xsd:element>
+   
+<xsd:simpleType name="bl">
+      <xsd:annotation>
+         <xsd:documentation>
+            The Boolean type stands for the values of two-valued logic.
+            A Boolean value can be either true or
+            false, or, as any other value may be NULL.
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:restriction base="xsd:boolean">
+         <xsd:pattern value="true|false"/>
+      </xsd:restriction>
+   </xsd:simpleType>   
+</xsd:schema>

@@ -1,0 +1,8 @@
+<Environment description="Local machine with JBoss and MySQL in their default configurations." httpURL="http://localhost:6080/nexj" location="c:\java\container\deploy" password="jbadm1n" previewThreshold="202400" secureTransport="false" test="true" type="Generic" user="admin">
+   <DataSourceConnections>
+      <RelationalDatabaseConnection adapter="MySQL" dataSource="DefaultRelationalDatabase" database="unittest" host="tor-sv-bld-mys" password="nexj" path="mysql-connector-java-5.1.7-bin.jar" port="3306" unicode="true" user="nexj"/>
+   </DataSourceConnections>
+   <ChannelConnections>
+      <MessageQueueConnection channel="ErrorQueue" password="nexj" user="nexjsa"/>
+   </ChannelConnections>
+</Environment>

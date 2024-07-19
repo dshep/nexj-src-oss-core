@@ -1,0 +1,59 @@
+<RelationalDatabase alias="NEXJ_DATABASE" indexfill="80" prefix="test." role="test" tablespace="nexjtest01">
+   <Tables>
+      <Table name="test.Request" primaryKey="Request.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column name="rec_ver" type="integer"/>
+            <Column name="startDate" type="timestamp"/>
+            <Column allocation="fixed" name="code" precision="3" type="string"/>
+            <Column allocation="fixed" name="patientId" precision="16" type="binary"/>
+            <Column allocation="fixed" name="visitId" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="Request.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="Request.FK1" type="virtual">
+               <IndexColumn name="patientId"/>
+            </Index>
+            <Index name="Request.FK2" relatedTable="test.Visit" type="virtual">
+               <IndexColumn name="visitId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="test.Visit" primaryKey="Visit.PK">
+         <Columns>
+            <Column allocation="fixed" name="id" precision="16" type="binary"/>
+            <Column name="rec_ver" type="integer"/>
+            <Column name="startDate" type="timestamp"/>
+            <Column name="endDate" type="timestamp"/>
+            <Column allocation="varying" name="reason" precision="256" type="string"/>
+            <Column name="patientId" precision="16" type="binary"/>
+         </Columns>
+         <Indexes>
+            <Index name="Visit.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="Visit.FK1" type="virtual">
+               <IndexColumn name="patientId"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="DS2Table" primaryKey="DS2Table.PK">
+         <Columns>
+            <Column allocation="fixed" caseInsensitive="false" name="id" nullable="false" precision="16" type="binary"/>
+            <Column caseInsensitive="false" name="z" nullable="false" type="integer"/>
+         </Columns>
+         <Indexes>
+            <Index name="DS2Table.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </Table>
+      <Table name="DS2ASPECT" pointcuts="DS2Table" type="aspect">
+         <Columns>
+            <Column caseInsensitive="false" name="y" nullable="false" type="integer"/>
+         </Columns>
+      </Table>
+   </Tables>
+</RelationalDatabase>

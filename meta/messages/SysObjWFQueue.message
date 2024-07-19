@@ -1,0 +1,13 @@
+<Message base="SysObjQueue" description="Object mapping for SysWorkflowQueue" format="Object">
+   <ObjectMapping class="SysWorkflowQueue"/>
+   <Parts>
+      <Message name="scheduler">
+         <ObjectMapping attribute="scheduler" class="SysWorkflowSchedulerBatchJob" create="false" local="false" update="false"/>
+         <Parts>
+            <Value name="oid" type="any">
+               <ObjectMapping attribute=":oid"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

@@ -1,0 +1,78 @@
+<Class>
+   <Attributes>
+      <Attribute description="The name of the channel. It's how people refer to your service. If you have an HTML website that contains the same information as your RSS file, the title of your channel should be the same as the title of your website." name="title" required="true" type="string"/>
+      <Attribute description="The URL to the HTML website corresponding to the channel." name="link" required="true" type="string"/>
+      <Attribute description="Phrase or sentence describing the channel." name="description" required="true" type="string"/>
+      <Attribute description="The language the channel is written in. This allows aggregators to group all Italian language sites, for example, on a single page. A list of allowable Attributes for this element, as provided by Netscape, is here. You may also use Values defined by the W3C." initializer="en-us" name="language" type="string"/>
+      <Attribute description="Copyright notice for content in the channel." initializer="&quot;Copyright 2003-2011 NexJ Systems Inc.&quot;" name="copyright" type="string"/>
+      <Attribute description="Email address for person responsible for editorial content.  NOTE: Should use the regexp definiton of E-Mail Address by Lucadean from the .NET RegExp Pattern Repository at http://www.3leaf.com/default/NetRegExpRepository.aspx" name="managingEditor" type="string"/>
+      <Attribute description="Email address for person responsible for technical issues relating to channel.  NOTE: Should use the regexp definiton of E-Mail Address by Lucadean from the .NET RegExp Pattern Repository at http://www.3leaf.com/default/NetRegExpRepository.aspx" name="webMaster" type="string"/>
+      <Attribute description="The publication date for the content in the channel. All date-times in RSS conform to the Date and Time Specification of RFC 822, with the exception that the year may be expressed with two characters or four characters (four preferred)." name="pubDate" type="timestamp"/>
+      <Attribute description="The last time the content of the channel changed.  A date-time displayed in RFC-822 format." name="lastBuildDate" type="timestamp"/>
+      <Attribute collection="true" description="Specify one or more categories that the channel belongs to. Follows the same rules as the &lt;item&gt;-level category element. More info." name="categories" type="RSSCategory"/>
+      <Attribute description="A string indicating the program used to generate the channel." name="generator" type="string"/>
+      <Attribute description="A URL that points to the documentation for the format used in the RSS file. It's probably a pointer to this page. It's for people who might stumble across an RSS file on a Web server 25 years from now and wonder what it is." name="docs" type="string"/>
+      <Attribute description="A workstation calls the cloud to register. The procedure takes five parameters: the name of the procedure that the cloud should call to notify the workstation of changes, the TCP port the workstation is listening on, the path to its responder, a string indicating which protocol to use (xml-rpc or soap, case-sensitive), and a list of urls of RSS files to be watched. The cloud can determine the IP address of the caller from the request. A workstation cannot make a registration call on behalf of another. The cloud returns true if it was able to do the registration, false otherwise.&#10;&#10;When a subscribed-to channel changes the cloud calls back to the procedure named in the registration call with one parameter, the url of the channel that changed. At that point the workstation could read the channel, or notify other workstations that the channel has changed, clear a cache, send an email or do nothing. The workstation returns true.&#10;&#10;By convention registrations expire after 25 hours. Workstations should register every 24 hours for each subscription to keep them current.&#10;&#10;UserLand is operating a cloud that conforms to this spec at radio.xmlstoragesystem.com. The workstation side is implemented in Radio UserLand." name="cloud" type="RSSCloud"/>
+      <Attribute description="ttl stands for time to live. It's a number of minutes that indicates how long a channel can be cached before refreshing from the source." name="ttl" type="integer"/>
+      <Attribute description="Specifies a GIF, JPEG or PNG image that can be displayed with the channel." name="image" type="RSSImage"/>
+      <Attribute description="The label of the Submit button in the text input area." name="textInputTitle" type="string"/>
+      <Attribute description="Explains the text input area." name="textInputDescription" type="string"/>
+      <Attribute description="The name of the text object in the text input area." name="textInputName" type="string"/>
+      <Attribute description="The URL of the CGI script that processes text input requests." name="textInputLink" type="string"/>
+      <Attribute collection="true" description="A hint for aggregators telling them which hours they can skip." name="skipHours" type="RSSSkipHour"/>
+      <Attribute description="A hint for aggregators telling them which days they can skip." name="skipMonday" type="boolean"/>
+      <Attribute description="A hint for aggregators telling them which days they can skip." name="skipTuesday" type="boolean"/>
+      <Attribute description="A hint for aggregators telling them which days they can skip." name="skipWednesday" type="boolean"/>
+      <Attribute description="A hint for aggregators telling them which days they can skip." name="skipThursday" type="boolean"/>
+      <Attribute description="A hint for aggregators telling them which days they can skip." name="skipFriday" type="boolean"/>
+      <Attribute description="A hint for aggregators telling them which days they can skip." name="skipSaturday" type="boolean"/>
+      <Attribute description="A hint for aggregators telling them which days they can skip." name="skipSunday" type="boolean"/>
+      <Attribute collection="true" name="items" reverse="channel" type="RSSItem"/>
+   </Attributes>
+   <Events>
+      <Event args="attributes where orderBy count offset xlock" name="read" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let 
+   ((result 
+      ((SysService'invoke 
+         "RSSClient" ;  service name
+         '()         ;  message
+         '()         ;  output
+         "http://www.economist.com/media/rss/economist.xml"         ;  args
+       )'result
+      )
+    )
+    (colItems (instance-collection))
+   )
+
+   ; iterate through the returned message and map the accounts and positions to domain objects
+   (for-each 
+      (lambda (i)
+         (colItems'add 
+            (instance RSSItem
+               (vector (i'link))
+               (: title (string-append "NexJ " (i'title)))
+               (: link (i'link))
+               (: description (i'description))
+            )
+         )   
+      )
+      (result'items)
+   )
+   
+   (instance-collection 
+      (instance RSSChannel 
+         (vector (result'link))
+         (: title (string-append "NexJ " (result'title))) 
+         (: link (result'link)) 
+         (: description (string-append "NexJ " (result'description))) 
+         (: items colItems)
+      )
+   )
+)
+      
+      ]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

@@ -1,0 +1,13 @@
+<Message base="VCard_base" format="vCard">
+   <VCardMapping name="" type="group" wrapping="whitespace"/>
+   <Parts>
+      <Message name="telephone">
+         <VCardMapping name="TEL" type="value"/>
+         <Parts>
+            <Value name="kind" type="string">
+               <VCardMapping default="VOICE" name="TYPE" type="parameter"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

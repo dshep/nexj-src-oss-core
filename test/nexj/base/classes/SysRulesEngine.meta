@@ -1,0 +1,329 @@
+<Class description="The rules engine" visibility="protected">
+   <Attributes>
+      <Attribute name="obj" required="true" type="Object"/>
+      <Attribute name="name" required="true" type="any"/>
+      <Attribute name="rules" required="true" type="any"/>
+      <Attribute name="ruleMap" required="true" type="any"/>
+      <Attribute name="varNames" required="true" type="any"/>
+      <Attribute name="vars" required="true" type="any"/>
+      <Attribute name="activeSet" required="true" type="any"/>
+      <Attribute name="currentRule" type="any"/>
+      <Attribute initializer="(nexj.core.util.HashTab2D'new)" name="objMap" static="true" type="any"/>
+   </Attributes>
+   <Events>
+      <Event args="class name rules" description="Compiles the rules and returns a rules engine constructor taking an object as an argument" name="compile" static="true" visibility="protected">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[; The rules can compute the values of one or more object attributes and/or custom variables
+; using non-recursive backward chaining, i.e. an attribute or a variable cannot depend on itself.
+; Each rule in the list has the following format:
+; (rule <rule-name> (when <condition> <action1> ... <actionN>))
+; Expressions of the form (this'<attribute-name>), (@ <attr>) or (@ attr1 ... attrN)
+; can be used to get the value of an attribute of the object to which the rules are applied.
+; (var'<variable-name>) can be used to get the value of a custom variable.
+; The actions must set the value of an attribute or a custom variable and have the following format:
+; (this'<attribute-name> <expression>) or (var'<var-name> <expression>).
+; Alternatively, an action can execute arbitrary code, which must not modify the values of the
+; attributes or variables specified in the rules actions:
+; (action expr1 ... exprN)
+
+(define env (initial-environment))
+(define var-map (nexj.core.util.HashTab'new))
+(define rule-map (nexj.core.util.HashTab'new))
+(define engine (string->symbol "#engine"))
+
+(define (add-var sym)
+   (let ((i (var-map'get sym)))
+      (when (null? i)
+         (set! i (var-map'size))
+         (var-map'put sym i)
+      )
+      i
+   )
+)
+
+(define (find-prereqs expr prereqs locals rule-name)
+   (if (pair? expr)
+      (let ((head (car expr)))
+         (if (and (symbol? head) (= (length expr) 2) (memq head '(this var)) (not (memq head locals)) (list? (cadr expr))
+               (= (length (cadr expr)) 2) (eq? (caadr expr) 'quote) (symbol? (cadadr expr)))
+            (let ((v (cadadr expr)))
+               (case head
+                  ((this)
+                     (if (null? (class'findAttribute v))
+                        (error "err.rules.unknownAttribute"  v (class'name) rule-name name)
+                     )
+                  )
+                  ((var)
+                     (set! v (add-var v))
+                     (set-car! expr engine)
+                     (set-cdr! expr (list ''var v))
+                  )
+               )
+               (if (memv v prereqs)
+                  prereqs
+                  (cons v prereqs)
+               )
+            )
+            (begin
+               (if (eq? head 'lambda) (set! locals (append (cadr expr) locals)))
+               (for-each
+                  (lambda (x)
+                     (set! prereqs (find-prereqs x prereqs locals rule-name))
+                  )
+                  expr
+               )
+               prereqs
+            )
+         )
+      )
+      prereqs
+   )
+)
+
+(define rule-list '())
+(define rule-count 0)
+
+(logger'debug "Compiling rule set" name)
+
+(for-each
+   (lambda (rule)
+      (if (and (list? rule) (= (length rule) 3) (eq? (car rule) 'rule)
+               (list? (caddr rule)) (eq? (caaddr rule) 'when) (not (null? (cdaddr rule))))
+         (let
+            (
+               (rule-name (cadr rule))
+               (rule-cond (map (lambda (expr) (sys:expand-macro expr env #t #f)) (cdaddr rule)))
+               (rule-actions '())
+               (rule-prereqs '())
+               (action-count 0)
+               (action-list '())
+            )
+            (set! rule-actions (cdr rule-cond))
+            (set! rule-cond (car rule-cond))
+            (set! rule-prereqs (find-prereqs rule-cond rule-prereqs '() rule-name))
+            (for-each 
+               (lambda (action)
+                  (cond
+                     ((and (list? action) (= (length action) 3) (memq (car action) '(this var))
+                        (eq? (caadr action) 'quote) (symbol? (cadadr action)))
+                        (let ((v (cadadr action)))
+                           (case (car action)
+                              ((this)
+                                 (let ((attr (class'findAttribute v)))
+                                    (if (null? attr)
+                                       (error "err.rules.unknownAttribute"  v (class'name) rule-name name)
+                                    )
+                                    (if (not (attr'cached))
+                                       (error "err.rules.uncachedAttribute" v (class'name) rule-name name)
+                                    )
+                                    (if (attr'readOnly)
+                                       (error "err.rules.readOnlyAttribute" v (class'name) rule-name name)
+                                    )
+                                 )
+                              )
+                              ((var)
+                                 (set! v (add-var v))
+                                 (set-car! action engine)
+                                 (set-car! (cdr action) v)
+                                 (set-cdr! action (cons ''var (cdr action)))
+                              )
+                           )
+                           (rule-map'put v (cons rule-count (rule-map'get v)))
+                           (set! rule-prereqs (find-prereqs (cddr action) rule-prereqs '() rule-name))
+                           (set! action-list (cons `(,engine 'deactivate ',v) (cons action action-list)))
+                        )
+                     )
+                     ((and (list? action) (eq? (car action) 'action))
+                        (set! rule-prereqs (find-prereqs (cdr action) rule-prereqs '() rule-name))
+                        (set! action-list (append (cdr action) action-list))
+                     )
+                     (else (error "err.rules.invalidAction" (+ action-count 1) rule-name name))
+                  )
+                  (set! action-count (+ action-count 1))
+               )
+               rule-actions
+            )
+            (set! rule-prereqs (reverse! rule-prereqs))
+            (set! action-list (reverse! action-list))
+            (logger'dump "Rule" rule-name (string-append "[" (number->string rule-count) "]" ))
+            (logger'dump "   Prerequisites:" rule-prereqs)
+            (logger'dump "   Condition:" rule-cond)
+            (logger'dump "   Actions:" action-list)
+            ; wrap and compile the rule
+            (try
+               (set! rule-list 
+                  (cons 
+                     (vector
+                        rule-name
+                        rule-prereqs
+                        (eval `(lambda (this ,engine) ,rule-cond) env)
+                        (eval `(lambda (this ,engine) ,@action-list) env)
+                     )
+                     rule-list
+                  )
+               )
+               (lambda (e)
+                  (if (and (instance? e nexj.core.util.ErrorCode) ((e'errorCode)'startsWith "err.rules."))
+                     (throw e)
+                     (error "err.rules.compilation" rule-name name e)
+                  )
+               )
+            )
+         )
+         (error "err.rules.invalidRule" (+ rule-count 1) name)
+      )
+      (set! rule-count (+ rule-count 1))
+   )
+   rules
+)
+
+; Reverse the order of attribute rules
+(do ((itr (rule-map'iterator)))
+   ((not (itr'hasNext)))
+   (itr'next)
+   (itr'value (reverse! (itr'value)))
+)
+
+(logger'dump "Rule map:" rule-map)
+(logger'dump "Variable map:" var-map)
+
+; Compile the constructor
+(eval
+   `(lambda (this)
+      (SysRulesEngine'new
+         `(obj . ,this)
+         '(name . ,name)
+         '(rules . ,(list->vector (reverse! rule-list)))
+         '(ruleMap . ,rule-map)
+         '(varNames .
+            ,(do
+               (
+                  (var-names (make-vector (var-map'size)))
+                  (itr (var-map'iterator))
+               )
+               ((not (itr'hasNext)) var-names)
+               (itr'next)
+               (vector-set! var-names (itr'value) (itr'key))
+             )
+          )
+      )
+   )
+   env
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Initializes the rules engine, overrides the transaction mode (non-persisted class)." name="create" transaction="supported" visibility="public">
+         <Actions>
+            <Action description="Initializes the rules engine for a new calculation" name="initialize" type="before"><![CDATA[(this'vars (make-vector (vector-length (@ varNames)) 'undefined))
+(this'activeSet (nexj.core.util.HashTab'new))
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="i" description="Gets the value of an ad-hoc variable and invokes the rules evaluation, if necessary" name="var" visibility="protected">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let ((value (vector-ref (@ vars) i)))
+   (if (eq? value 'undefined)
+      (this'compute i)
+      value
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="i value" description="Sets the value of an ad-hoc variable" name="var" visibility="protected">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(vector-set! (@ vars) i value)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="obj" description="Removes a rule of variable object from the active set" name="deactivate" visibility="protected">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[((@ activeSet)'remove obj)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="var" description="Computes the value of a given variable or attribute by backwards chaining the rules" name="compute" visibility="protected">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let
+   (
+      (obj (@ obj))
+      (activeSet (@ activeSet))
+      (current-saved (@ currentRule))
+   )
+   (if (null? (activeSet'put var #t))
+      (try
+         (let loop ((rules ((@ ruleMap)'get var)))
+            (if (null? rules)
+               (if (symbol? var)
+                  (error "err.rules.missingAttrRule" var (@ name))
+                  (error "err.rules.missingVarRule" (vector-ref (@ varNames) var) (@ name))
+               )
+            )
+            (let ((rule (vector-ref (@ rules) (car rules))))
+               (if (activeSet'contains rule)
+                  (loop (cdr rules))
+               )
+               (if (some (lambda (var) (activeSet'contains var)) (vector-ref rule 1))
+                  (loop (cdr rules))
+               )
+               (activeSet'put rule #t)
+               (this'currentRule rule)
+               (if ((vector-ref rule 2) obj this)
+                  (begin
+                     ((vector-ref rule 3) obj this)
+                     (activeSet'remove rule)
+                     (this'currentRule current-saved)
+                     (if (number? var)
+                        (vector-ref (@ vars) var)
+                        (obj var)
+                     )
+                  )
+                  (begin
+                     (activeSet'remove rule)
+                     (loop (cdr rules))
+                  )
+               )
+            )
+         )
+         (lambda (e)
+            (if (and (instance? e nexj.core.util.ErrorCode) ((e'errorCode)'startsWith "err.rules."))
+               (throw e)
+               (error "err.rules.computation" (vector-ref (ifnull (@ currentRule) '#("<init>")) 0) (@ name) e)
+            )
+         )
+      )
+      (if (symbol? var)
+         (error "err.rules.circularAttr" var (@ name))
+         (error "err.rules.circularVar" (vector-ref (@ varNames) var) (@ name))
+      )
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="obj name attribute attributes" description="Invokes the rules engine for a specified object, rule set name and attributes" name="invoke" static="true" vararg="true" visibility="protected">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.invokeRulesEngine" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="class name" description="Loads and returns the rules in Scheme format" name="loadRules" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(logger'debug "Loading rule set" name)
+(if (or (null? (class'findSelector 'loadRules))
+      (null? (((class'findSelector 'loadRules)'findMember 2))))
+   (SysRuleSet'generate name)
+   (class'loadRules class name)
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="name" description="Clears a given rule set from the cache" name="clearCache" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.clearRulesCache" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event description="Overrides the transaction mode (non-persisted class)." name="delete" transaction="supported" visibility="public"/>
+      <Event description="Overrides the transaction mode (non-persisted class)." name="update" transaction="supported" visibility="public"/>
+      <Event description="Overrides the transaction mode (non-persisted class)." name="commit" transaction="supported"/>
+   </Events>
+</Class>

@@ -1,0 +1,7 @@
+<Message base="Object_Inherit_Contact" format="Object">
+   <ObjectMapping class="Surgeon"/>
+   <Parts>
+      <Value name="speciality" type="string"/>
+      <Value name="lastName" type="string"/>
+   </Parts>
+</Message>

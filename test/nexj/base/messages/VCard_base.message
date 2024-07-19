@@ -1,0 +1,170 @@
+<Message format="vCard">
+   <VCardMapping name="" type="group" wrapping="whitespace"/>
+   <Parts>
+      <Value name="BEGIN" type="string">
+         <VCardMapping default="VCARD"/>
+      </Value>
+      <Value name="VERSION" type="string">
+         <VCardMapping default="2.1"/>
+      </Value>
+      <Value minCount="1" name="fullName" type="string">
+         <VCardMapping name="FN"/>
+      </Value>
+      <Value maxCount="2" name="company" type="string">
+         <VCardMapping delimiter=";" name="ORG"/>
+      </Value>
+      <Message name="telephone">
+         <VCardMapping name="TEL" type="value"/>
+         <Parts>
+            <Value name="number" type="string">
+               <VCardMapping type="value"/>
+            </Value>
+            <Value name="kind" type="string">
+               <VCardMapping default="FAX" name="TYPE" type="parameter"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message name="collection">
+         <VCardMapping name="X-NexJ-Collection" type="value"/>
+         <Parts>
+            <Value maxCount="0" minCount="3" name="value" type="string">
+               <VCardMapping type="value"/>
+            </Value>
+            <Value maxCount="0" minCount="1" name="p1" type="integer">
+               <VCardMapping type="parameter"/>
+            </Value>
+            <Value maxCount="2" name="p2" type="integer">
+               <VCardMapping type="parameter"/>
+            </Value>
+            <Value minCount="3" name="p3" type="integer">
+               <VCardMapping default="4,9,16" type="parameter"/>
+            </Value>
+            <Value name="p4" type="string">
+               <VCardMapping type="parameter"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message name="logicalGrouping">
+         <VCardMapping name="Home" type="group"/>
+         <Parts>
+            <Value name="TEL" type="string"/>
+            <Value name="NOTE" type="string"/>
+         </Parts>
+      </Message>
+      <Message name="containedVCardSimple">
+         <VCardMapping name="" type="group"/>
+         <Parts>
+            <Value name="BEGIN" type="string">
+               <VCardMapping default="VCARD_CONTAINED"/>
+            </Value>
+            <Value name="VERSION" type="string">
+               <VCardMapping default="2.1"/>
+            </Value>
+            <Value maxCount="5" name="N" type="string"/>
+            <Value name="END" type="string">
+               <VCardMapping default="VCARD_CONTAINED"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message name="containedVCardRef" ref="VCard_v21"/>
+      <Message maxCount="0" name="telephones">
+         <VCardMapping name="TEL" type="value"/>
+         <Parts>
+            <Value name="number" type="string">
+               <VCardMapping type="value"/>
+            </Value>
+            <Value name="kind" type="string">
+               <VCardMapping default="VOICE" name="TYPE" type="parameter"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message maxCount="0" name="addresses">
+         <VCardMapping name="ADR" type="value"/>
+         <Parts>
+            <Value maxCount="7" name="address" type="string">
+               <VCardMapping delimiter=";" quoting="qp" type="value"/>
+            </Value>
+            <Value maxCount="0" name="type" type="string">
+               <VCardMapping default="INTL,POSTAL,PARCEL,WORK" delimiter="," name="TYPE" type="parameter"/>
+               <Enumerations>
+                  <Enumeration description="Domestic Address" value="DOM"/>
+                  <Enumeration description="International Address" value="INTL"/>
+                  <Enumeration description="Postal Delivery Address" value="POSTAL"/>
+                  <Enumeration description="Parcel Delivery Address" value="PARCEL"/>
+                  <Enumeration description="Home Deliver Address" value="HOME"/>
+                  <Enumeration description="Work Delivery Address" value="WORK"/>
+               </Enumerations>
+            </Value>
+            <Value name="encoding" type="string">
+               <VCardMapping default="QUOTED-PRINTABLE" name="ENCODING" type="parameter"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message name="logo">
+         <VCardMapping name="LOGO" type="value"/>
+         <Parts>
+            <Value name="data" type="binary">
+               <VCardMapping quoting="base64" type="value"/>
+            </Value>
+            <Value name="TYPE" type="string">
+               <VCardMapping default="PNG" type="parameter"/>
+            </Value>
+            <Value name="ENCODING" type="string">
+               <VCardMapping default="BASE64" type="parameter"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message name="trueName">
+         <VCardMapping name="X-NexJ-IntlName" type="value"/>
+         <Parts>
+            <Value name="name" type="string">
+               <VCardMapping encoding="ISO-8859-1" quoting="qp" type="value"/>
+            </Value>
+            <Value name="CHARSET" type="string">
+               <VCardMapping default="ISO-8859-1" type="parameter"/>
+            </Value>
+            <Value name="ENCODING" type="string">
+               <VCardMapping default="QUOTED-PRINTABLE" type="parameter"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message name="assistant1">
+         <VCardMapping name="AGENT" type="value"/>
+         <Parts>
+            <Message name="card">
+               <VCardMapping name="" type="group"/>
+               <Parts>
+                  <Value name="BEGIN" type="string">
+                     <VCardMapping default="VCARD"/>
+                  </Value>
+                  <Value name="VERSION" type="string">
+                     <VCardMapping default="2.1"/>
+                  </Value>
+                  <Value name="FN" type="string"/>
+                  <Value name="END" type="string">
+                     <VCardMapping default="VCARD"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Value name="NUM" type="integer">
+               <VCardMapping default="1" type="parameter"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message name="assistant2">
+         <VCardMapping name="AGENT" type="value"/>
+         <Parts>
+            <Message name="card" ref="VCard_v21"/>
+            <Value name="NUM" type="integer">
+               <VCardMapping default="2" type="parameter"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Value name="omit" type="string">
+         <VCardMapping name="X-NexJ-Omit"/>
+      </Value>
+      <Value name="END" type="string">
+         <VCardMapping default="VCARD"/>
+      </Value>
+   </Parts>
+</Message>

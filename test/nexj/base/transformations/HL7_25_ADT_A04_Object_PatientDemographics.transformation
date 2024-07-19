@@ -1,0 +1,161 @@
+<Transformation destination="Object_PatientDemographics" source="HL7_25_ADT_A04">
+   <Initializer><![CDATA[(define this (Object'new))
+(logger'debug "initializing HL7 A04->Object Patient demographics")
+]]></Initializer>
+   <Mappings>
+      <Mapping destination="player firstName" layout="y:-82;x:0.5" name="FN">
+         <Sources>
+            <Source name="fn" source="patientIdentification patientName givenName"/>
+         </Sources>
+         <Script><![CDATA[
+      ]]></Script>
+      </Mapping>
+      <Mapping destination="player lastName" name="LN">
+         <Sources>
+            <Source source="patientIdentification patientName familyName surname"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="player fullName" layout="y:34;x:0.5157593123209169">
+         <Sources>
+            <Source mapping="FN" name="fn"/>
+            <Source mapping="LN" name="ln"/>
+         </Sources>
+         <Script><![CDATA[(string-append ln ", " fn)
+      ]]></Script>
+      </Mapping>
+      <Mapping destination="player initials">
+         <Sources>
+            <Source source="patientIdentification patientName initials"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="player title">
+         <Sources>
+            <Source source="patientIdentification patientName degree"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="player affix">
+         <Sources>
+            <Source source="patientIdentification patientName degree"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="player birthTime">
+         <Sources>
+            <Source source="patientIdentification dateTimeOfBirth time"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="player genderCode value">
+         <Sources>
+            <Source source="patientIdentification administrativeSex"/>
+         </Sources>
+      </Mapping>
+      <Mapping condition="(and (null? (assigningAuthority'universalId)) (null? (assigningAuthority'universalIdType)) (not (null? (assigningAuthority'namespaceId))))" destination="player ids type" name="namespaceIdOnly">
+         <Sources>
+            <Source name="assigningAuthority" source="patientIdentification patientIdentifierList assigningAuthority"/>
+         </Sources>
+         <Script><![CDATA[(logger'debug "Mapping namespaceId only(e.g. ^ADT1^)")
+(assigningAuthority'namespaceId)
+      ]]></Script>
+      </Mapping>
+      <Mapping condition="(and (not (null? (assigningAuthority'universalId))) (not (null? (assigningAuthority'universalIdType))) (null? (assigningAuthority'namespaceId)))" destination="player ids type" name="universalIdAndType">
+         <Sources>
+            <Source name="assigningAuthority" source="patientIdentification patientIdentifierList assigningAuthority"/>
+         </Sources>
+         <Script><![CDATA[(logger'debug "Mapping universalId and type (e.g. ^&123.12334.1234&ISO^)")
+(string-append (assigningAuthority'universalId) (assigningAuthority'universalIdType))
+      ]]></Script>
+      </Mapping>
+      <Mapping condition="(and (not (null? (assigningAuthority'universalId))) (null? (assigningAuthority'universalIdType)) (null? (assigningAuthority'namespaceId)))" destination="player ids type" name="universalIdOnly">
+         <Sources>
+            <Source name="assigningAuthority" source="patientIdentification patientIdentifierList assigningAuthority"/>
+         </Sources>
+         <Script><![CDATA[(logger'debug "Mapping universalId only (e.g. ^&OHIP^)")
+(assigningAuthority'universalId)
+      ]]></Script>
+      </Mapping>
+      <Mapping condition="(and (null? (auth'universalId)) (null? (auth'universalIdType)) (null? (auth'namespaceId)))" destination="player ids type" name="IHEMESA">
+         <Sources>
+            <Source name="auth" source="patientIdentification patientIdentifierList assigningAuthority"/>
+         </Sources>
+         <Script><![CDATA[(logger'debug "IHEMESA")
+"IHEMESA"
+      ]]></Script>
+      </Mapping>
+      <Mapping destination="player ids id">
+         <Sources>
+            <Source source="patientIdentification patientIdentifierList idNumber"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="player addrs type useCodes code" layout="y:20;x:0.5031645569620253">
+         <Sources>
+            <Source name="type" null="true" default="()" source="patientIdentification patientAddress addressType"/>
+         </Sources>
+         <Script><![CDATA[(cdr (or (assoc type '(("H" . "HP") ("B" . "WP"))) '(() . "HP")))]]></Script>
+      </Mapping>
+      <Mapping destination="player addrs address1">
+         <Sources>
+            <Source source="patientIdentification patientAddress streetAddress streetAddress"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="player addrs address2">
+         <Sources>
+            <Source source="patientIdentification patientAddress otherDesignation"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="player addrs city">
+         <Sources>
+            <Source source="patientIdentification patientAddress city"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="player addrs state">
+         <Sources>
+            <Source source="patientIdentification patientAddress state"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="player addrs country">
+         <Sources>
+            <Source source="patientIdentification patientAddress country"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="player addrs zip">
+         <Sources>
+            <Source source="patientIdentification patientAddress zip"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="player telcoms type useCodes$ code" layout="y:-11;x:0.6236559139784946" name="HP">
+         <Sources>
+            <Source name="tel" source="patientIdentification$ phoneNumberHome$ telephoneNumber"/>
+         </Sources>
+         <Script>"HP"</Script>
+      </Mapping>
+      <Mapping destination="player telcoms address" layout="130,210">
+         <Sources>
+            <Source source="patientIdentification$ phoneNumberHome$ telephoneNumber"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="player telcoms type useCodes$ code" layout="y:19;x:0.6290322580645161" name="EMAIL">
+         <Sources>
+            <Source name="tel" source="patientIdentification$ phoneNumberHome$ emailAddress"/>
+         </Sources>
+         <Script>"EMAIL"</Script>
+      </Mapping>
+      <Mapping destination="player telcoms address">
+         <Sources>
+            <Source source="patientIdentification$ phoneNumberHome$ emailAddress"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="player telcoms type useCodes$ code" layout="y:51;x:0.6320224719101124" name="WP">
+         <Sources>
+            <Source name="tel" source="patientIdentification$ phoneNumberBusiness$ telephoneNumber"/>
+         </Sources>
+         <Script>"WP"</Script>
+      </Mapping>
+      <Mapping destination="player telcoms address">
+         <Sources>
+            <Source source="patientIdentification$ phoneNumberBusiness$ telephoneNumber"/>
+         </Sources>
+      </Mapping>
+   </Mappings>
+   <Finalizer><![CDATA[(logger'debug "finalizing HL7 A04->Object Patient demographics")
+;(destination':event "add")
+]]></Finalizer>
+</Transformation>

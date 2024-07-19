@@ -1,0 +1,7 @@
+<Interface description="Interface for testing inheritance." format="XML">
+   <Requests>
+      <Request message="XML_Inherit_Child1"/>
+      <Request message="XML_Inherit_Child2"/>
+      <Request message="XML_Inherit_Parent"/>
+   </Requests>
+</Interface>

@@ -1,0 +1,3 @@
+<Service args="prefix mapDate" layout="startX:133;startY:176;endX:400;endY:173">
+   <Transform args="prefix &quot;-POST&quot; mapDate" layout="y:171;x:237" name="transform" transformation="&quot;XMLTestSuiteResultToCSVTestSuiteResult&quot;"/>
+</Service>

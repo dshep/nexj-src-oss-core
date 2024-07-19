@@ -1,0 +1,1010 @@
+<Enumeration description="Enumeration of all known currencies." typeCode="SCURRENCYENUM">
+   <Locales>
+      <Locale caption="Enumeration of all known currencies." description="Enumeration of all known currencies." name="en"/>
+      <Locale caption="Énumération de toutes les devises connues" name="fr"/>
+   </Locales>
+   <Values>
+      <Value hasBehavior="true" name="AED" value="AED">
+         <Locales>
+            <Locale caption="(AED) United Arab Emirates, Dirhams" name="en" shortCaption="AED"/>
+            <Locale caption="(AED) Émirats arabes unis" name="fr" shortCaption="AED"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AFN" value="AFN">
+         <Locales>
+            <Locale caption="(AFN) Afghanistan, Afghanis" name="en" shortCaption="AFN"/>
+            <Locale caption="(AFA) Afghanistan, Afghanis" name="fr" shortCaption="AFA"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ALL" value="ALL">
+         <Locales>
+            <Locale caption="(ALL) Albania, Leke" name="en" shortCaption="ALL"/>
+            <Locale caption="(ALL) Albanie, Lek" name="fr" shortCaption="TOUS"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AMD" value="AMD">
+         <Locales>
+            <Locale caption="(AMD) Armenia, Drams" name="en" shortCaption="AMD"/>
+            <Locale caption="(AMD) Arménie, Drams" name="fr" shortCaption="AMD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ANG" value="ANG">
+         <Locales>
+            <Locale caption="(ANG) Netherlands Antilles, Guilders (also called Florins)" name="en" shortCaption="ANG"/>
+            <Locale caption="(ANG) Antilles néerlandaises, Guldens (aussi appelés Florins)" name="fr" shortCaption="ANG"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AOA" value="AOA">
+         <Locales>
+            <Locale caption="(AOA) Angola, Kwanza" name="en" shortCaption="AOA"/>
+            <Locale caption="(AOA) Angola, Kwanza" name="fr" shortCaption="AOA"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ARS" value="ARS">
+         <Locales>
+            <Locale caption="(ARS) Argentina, Pesos" name="en" shortCaption="ARS"/>
+            <Locale caption="(ARS) Argentine, Pesos" name="fr" shortCaption="ARS"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AUD" value="AUD">
+         <Locales>
+            <Locale caption="(AUD) Australia, Dollars" name="en" shortCaption="AUD"/>
+            <Locale caption="(AUD) Australie, Dollars" name="fr" shortCaption="AUD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AWG" value="AWG">
+         <Locales>
+            <Locale caption="(AWG) Aruba, Guilders (also called Florins)" name="en" shortCaption="AWG"/>
+            <Locale caption="(AWG) Aruba, Gulden (aussi appelés Florins)" name="fr" shortCaption="AWG"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="AZN" value="AZN">
+         <Locales>
+            <Locale caption="(AZN) Azerbaijan, New Manats" name="en" shortCaption="AZN"/>
+            <Locale caption="(AZM) Azerbaïdjan, Nouveaux azerbaïdjanais" name="fr" shortCaption="AZM"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="BAM" value="BAM">
+         <Locales>
+            <Locale caption="(BAM) Bosnia and Herzegovina, Convertible Marka" name="en" shortCaption="BAM"/>
+            <Locale caption="(BAM) Bosnie-Herzégovine, Mark convertible" name="fr" shortCaption="BAM"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="BBD" value="BBD">
+         <Locales>
+            <Locale caption="(BBD) Barbados, Dollars" name="en" shortCaption="BBD"/>
+            <Locale caption="(BBD) Barbade, Dollars" name="fr" shortCaption="BBD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="BDT" value="BDT">
+         <Locales>
+            <Locale caption="(BDT) Bangladesh, Taka" name="en" shortCaption="BDT"/>
+            <Locale caption="(BDT) Bangladesh, Taka" name="fr" shortCaption="BDT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="BGN" value="BGN">
+         <Locales>
+            <Locale caption="(BGN) Bulgaria, Leva" name="en" shortCaption="BGN"/>
+            <Locale caption="(BGN) Bulgarie, Lev" name="fr" shortCaption="BGN"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="BHD" value="BHD">
+         <Locales>
+            <Locale caption="(BHD) Bahrain, Dinars" name="en" shortCaption="BHD"/>
+            <Locale caption="(BHD) Bahreïn, Dinars" name="fr" shortCaption="BHD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="BIF" value="BIF">
+         <Locales>
+            <Locale caption="(BIF) Burundi, Francs" name="en" shortCaption="BIF"/>
+            <Locale caption="(BIF) Burundi, Francs" name="fr" shortCaption="BIF"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="BMD" value="BMD">
+         <Locales>
+            <Locale caption="(BMD) Bermuda, Dollars" name="en" shortCaption="BMD"/>
+            <Locale caption="(BMD) Bermude, Dollars" name="fr" shortCaption="BMD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="BND" value="BND">
+         <Locales>
+            <Locale caption="(BND) Brunei Darussalam, Dollars" name="en" shortCaption="BND"/>
+            <Locale caption="(BND) Brunei Darussalam, Dollars" name="fr" shortCaption="BND"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="BOB" value="BOB">
+         <Locales>
+            <Locale caption="(BOB) Bolivia, Bolivianos" name="en" shortCaption="BOB"/>
+            <Locale caption="(BOB) Bolivie, Bolivianos" name="fr" shortCaption="BOB"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="BRL" value="BRL">
+         <Locales>
+            <Locale caption="(BRL) Brazil, Brazil Real" name="en" shortCaption="BRL"/>
+            <Locale caption="(BRL) Brésil, Real brésilien" name="fr" shortCaption="BRL"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="BSD" value="BSD">
+         <Locales>
+            <Locale caption="(BSD) Bahamas, Dollars" name="en" shortCaption="BSD"/>
+            <Locale caption="(BSD) Bahamas, Dollars" name="fr" shortCaption="BSD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="BTN" value="BTN">
+         <Locales>
+            <Locale caption="(BTN) Bhutan, Ngultrum" name="en" shortCaption="BTN"/>
+            <Locale caption="(BTN) Bhutan, Ngultrum" name="fr" shortCaption="BTN"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="BWP" value="BWP">
+         <Locales>
+            <Locale caption="(BWP) Botswana, Pulas" name="en" shortCaption="BWP"/>
+            <Locale caption="(BWP) Botswana, Pulas" name="fr" shortCaption="BWP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="BYR" value="BYR">
+         <Locales>
+            <Locale caption="(BYR) Belarus, Rubles" name="en" shortCaption="BYR"/>
+            <Locale caption="(BYR) Biélorussie, Roubles" name="fr" shortCaption="BYR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="BZD" value="BZD">
+         <Locales>
+            <Locale caption="(BZD) Belize, Dollars" name="en" shortCaption="BZD"/>
+            <Locale caption="(BZD) Belize, Dollars" name="fr" shortCaption="BZD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="CAD" value="CAD">
+         <Locales>
+            <Locale caption="(CAD) Canada, Dollars" name="en" shortCaption="CAD"/>
+            <Locale caption="(CAD) Canada, Dollars" name="fr" shortCaption="CAD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="CDF" value="CDF">
+         <Locales>
+            <Locale caption="(CDF) Congo/Kinshasa, Congolese Francs" name="en" shortCaption="CDF"/>
+            <Locale caption="(CDF) Congo/Kinshasa, Francs cangolais" name="fr" shortCaption="CDF"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="CHF" value="CHF">
+         <Locales>
+            <Locale caption="(CHF) Switzerland, Francs" name="en" shortCaption="CHF"/>
+            <Locale caption="(CHF) Suisse, Francs" name="fr" shortCaption="CHF"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="CLP" value="CLP">
+         <Locales>
+            <Locale caption="(CLP) Chile, Pesos" name="en" shortCaption="CLP"/>
+            <Locale caption="(CLP) Chili, Pesos" name="fr" shortCaption="CLP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="CNY" value="CNY">
+         <Locales>
+            <Locale caption="(CNY) China, Yuan Renminbi" name="en" shortCaption="CNY"/>
+            <Locale caption="(CNY) Chine, Yuan Renminbi" name="fr" shortCaption="CNY"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="COP" value="COP">
+         <Locales>
+            <Locale caption="(COP) Colombia, Pesos" name="en" shortCaption="COP"/>
+            <Locale caption="(COP) Colombie, Pesos" name="fr" shortCaption="COP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="CRC" value="CRC">
+         <Locales>
+            <Locale caption="(CRC) Costa Rica, Colones" name="en" shortCaption="CRC"/>
+            <Locale caption="(CRC) Costa Rica, Colón" name="fr" shortCaption="CRC"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="CSD" value="CSD">
+         <Locales>
+            <Locale caption="(CSD) Serbia, Dinars" name="en" shortCaption="CSD"/>
+            <Locale caption="(CSD) Serbie, Dinars" name="fr" shortCaption="CSD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="CUP" value="CUP">
+         <Locales>
+            <Locale caption="(CUP) Cuba, Pesos" name="en" shortCaption="CUP"/>
+            <Locale caption="(CUP) Cuba, Pesos" name="fr" shortCaption="CUP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="CVE" value="CVE">
+         <Locales>
+            <Locale caption="(CVE) Cape Verde, Escudos" name="en" shortCaption="CVE"/>
+            <Locale caption="(CVE) Cap-Vert, Escudos" name="fr" shortCaption="CVE"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="CYP" value="CYP">
+         <Locales>
+            <Locale caption="(CYP) Cyprus, Pounds" name="en" shortCaption="CYP"/>
+            <Locale caption="(CYP) Chypre, Livres" name="fr" shortCaption="CYP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="CZK" value="CZK">
+         <Locales>
+            <Locale caption="(CZK) Czech Republic, Koruny" name="en" shortCaption="CZK"/>
+            <Locale caption="(CZK) République tchèque, Koruna" name="fr" shortCaption="CZK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="DJF" value="DJF">
+         <Locales>
+            <Locale caption="(DJF) Djibouti, Francs" name="en" shortCaption="DJF"/>
+            <Locale caption="(DJF) Djibouti, Francs" name="fr" shortCaption="DJF"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="DKK" value="DKK">
+         <Locales>
+            <Locale caption="(DKK) Denmark, Kroner" name="en" shortCaption="DKK"/>
+            <Locale caption="(DKK) Danemark, Krone" name="fr" shortCaption="DKK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="DOP" value="DOP">
+         <Locales>
+            <Locale caption="(DOP) Dominican Republic, Pesos" name="en" shortCaption="DOP"/>
+            <Locale caption="(DOP) République dominicaine, Pesos" name="fr" shortCaption="DOP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="DZD" value="DZD">
+         <Locales>
+            <Locale caption="(DZD) Algeria, Algeria Dinars" name="en" shortCaption="DZD"/>
+            <Locale caption="(DZD) Algérie, Dinars algériens" name="fr" shortCaption="DZD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EEK" value="EEK">
+         <Locales>
+            <Locale caption="(EEK) Estonia, Krooni" name="en" shortCaption="EEK"/>
+            <Locale caption="(EEK) Estonie, Kroon" name="fr" shortCaption="EEK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EGP" value="EGP">
+         <Locales>
+            <Locale caption="(EGP) Egypt, Pounds" name="en" shortCaption="EGP"/>
+            <Locale caption="(EGP) Égypte, Livres" name="fr" shortCaption="EGP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ERN" value="ERN">
+         <Locales>
+            <Locale caption="(ERN) Eritrea, Nakfa" name="en" shortCaption="ERN"/>
+            <Locale caption="(ERN) Érythrée, Nakfa" name="fr" shortCaption="ERN"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ETB" value="ETB">
+         <Locales>
+            <Locale caption="(ETB) Ethiopia, Birr" name="en" shortCaption="ETB"/>
+            <Locale caption="(ETB) Éthiopie, Birr" name="fr" shortCaption="ETB"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="EUR" value="EUR">
+         <Locales>
+            <Locale caption="(EUR) Euro Member Countries, Euro" name="en" shortCaption="EUR"/>
+            <Locale caption="(EUR) Pays membres de l'Europe, Euro" name="fr" shortCaption="EUR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="FJD" value="FJD">
+         <Locales>
+            <Locale caption="(FJD) Fiji, Dollars" name="en" shortCaption="FJD"/>
+            <Locale caption="(FJD) Fidji, Dollars" name="fr" shortCaption="FJD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="FKP" value="FKP">
+         <Locales>
+            <Locale caption="(FKP) Falkland Islands (Malvinas), Pounds" name="en" shortCaption="FKP"/>
+            <Locale caption="(FKP) Îles Falkland (Malvinas), Livres" name="fr" shortCaption="FKP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="GBP" value="GBP">
+         <Locales>
+            <Locale caption="(GBP) United Kingdom, Pounds" name="en" shortCaption="GBP"/>
+            <Locale caption="(GBP) Grande-Bretagne, Livres" name="fr" shortCaption="GBP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="GEL" value="GEL">
+         <Locales>
+            <Locale caption="(GEL) Georgia, Lari" name="en" shortCaption="GEL"/>
+            <Locale caption="(GEL) Géorgie, Lari" name="fr" shortCaption="GEL"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="GHC" value="GHC">
+         <Locales>
+            <Locale caption="(GHC) Ghana, Cedis" name="en" shortCaption="GHC"/>
+            <Locale caption="(GHC) Ghana, Cedis" name="fr" shortCaption="GHC"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="GIP" value="GIP">
+         <Locales>
+            <Locale caption="(GIP) Gibraltar, Pounds" name="en" shortCaption="GIP"/>
+            <Locale caption="(GIP) Gibraltar, Livres" name="fr" shortCaption="GIP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="GMD" value="GMD">
+         <Locales>
+            <Locale caption="(GMD) Gambia, Dalasi" name="en" shortCaption="GMD"/>
+            <Locale caption="(GMD) Gambie, Dalasi" name="fr" shortCaption="GMD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="GNF" value="GNF">
+         <Locales>
+            <Locale caption="(GNF) Guinea, Francs" name="en" shortCaption="GNF"/>
+            <Locale caption="(GNF) Guinée, Francs" name="fr" shortCaption="GNF"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="GTQ" value="GTQ">
+         <Locales>
+            <Locale caption="(GTQ) Guatemala, Quetzales" name="en" shortCaption="GTQ"/>
+            <Locale caption="(GTQ) Guatemala, Quetzals" name="fr" shortCaption="GTQ"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="GYD" value="GYD">
+         <Locales>
+            <Locale caption="(GYD) Guyana, Dollars" name="en" shortCaption="GYD"/>
+            <Locale caption="(GYD) Guyana, Dollars" name="fr" shortCaption="GYD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="HKD" value="HKD">
+         <Locales>
+            <Locale caption="(HKD) Hong Kong, Dollars" name="en" shortCaption="HKD"/>
+            <Locale caption="(HKD) Hong Kong, Dollars" name="fr" shortCaption="HKD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="HNL" value="HNL">
+         <Locales>
+            <Locale caption="(HNL) Honduras, Lempiras" name="en" shortCaption="HNL"/>
+            <Locale caption="(HNL) Honduras, Lempiras" name="fr" shortCaption="HNL"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="HRK" value="HRK">
+         <Locales>
+            <Locale caption="(HRK) Croatia, Kuna" name="en" shortCaption="HRK"/>
+            <Locale caption="(HRK) Croatie, Kuna" name="fr" shortCaption="HRK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="HTG" value="HTG">
+         <Locales>
+            <Locale caption="(HTG) Haiti, Gourdes" name="en" shortCaption="HTG"/>
+            <Locale caption="(HTG) Haiti, Gourdes" name="fr" shortCaption="HTG"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="HUF" value="HUF">
+         <Locales>
+            <Locale caption="(HUF) Hungary, Forint" name="en" shortCaption="HUF"/>
+            <Locale caption="(HUF) Hongrie, Forint" name="fr" shortCaption="HUF"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="IDR" value="IDR">
+         <Locales>
+            <Locale caption="(IDR) Indonesia, Rupiahs" name="en" shortCaption="IDR"/>
+            <Locale caption="(IDR) Indonésie, Rupiahs" name="fr" shortCaption="IDR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ILS" value="ILS">
+         <Locales>
+            <Locale caption="(ILS) Israel, New Shekels" name="en" shortCaption="ILS"/>
+            <Locale caption="(ILS) Israël, New Shekels" name="fr" shortCaption="ILS"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="INR" value="INR">
+         <Locales>
+            <Locale caption="(INR) India, Rupees" name="en" shortCaption="INR"/>
+            <Locale caption="(INR) Inde, Roupies" name="fr" shortCaption="INR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="IQD" value="IQD">
+         <Locales>
+            <Locale caption="(IQD) Iraq, Dinars" name="en" shortCaption="IQD"/>
+            <Locale caption="(IQD) Iraq, Dinars" name="fr" shortCaption="IQD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="IRR" value="IRR">
+         <Locales>
+            <Locale caption="(IRR) Iran, Rials" name="en" shortCaption="IRR"/>
+            <Locale caption="(IRR) Iran, Rials" name="fr" shortCaption="IRR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ISK" value="ISK">
+         <Locales>
+            <Locale caption="(ISK) Iceland, Kronur" name="en" shortCaption="ISK"/>
+            <Locale caption="(ISK) Islande, Krona" name="fr" shortCaption="ISK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="JMD" value="JMD">
+         <Locales>
+            <Locale caption="(JMD) Jamaica, Dollars" name="en" shortCaption="JMD"/>
+            <Locale caption="(JMD) Jamaïque, Dollars" name="fr" shortCaption="JMD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="JOD" value="JOD">
+         <Locales>
+            <Locale caption="(JOD) Jordan, Dinars" name="en" shortCaption="JOD"/>
+            <Locale caption="(JOD) Jordanie, Dinars" name="fr" shortCaption="JOD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="JPY" value="JPY">
+         <Locales>
+            <Locale caption="(JPY) Japan, Yen" name="en" shortCaption="JPY"/>
+            <Locale caption="(JPY) Japon, Yen" name="fr" shortCaption="JPY"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="KES" value="KES">
+         <Locales>
+            <Locale caption="(KES) Kenya, Shillings" name="en" shortCaption="KES"/>
+            <Locale caption="(KES) Kenya, Shillings" name="fr" shortCaption="KES"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="KGS" value="KGS">
+         <Locales>
+            <Locale caption="(KGS) Kyrgyzstan, Soms" name="en" shortCaption="KGS"/>
+            <Locale caption="(KGS) Kirghizistan, Soms" name="fr" shortCaption="KGS"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="KHR" value="KHR">
+         <Locales>
+            <Locale caption="(KHR) Cambodia, Riels" name="en" shortCaption="KHR"/>
+            <Locale caption="(KHR) Cambodge, Riels" name="fr" shortCaption="KHR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="KMF" value="KMF">
+         <Locales>
+            <Locale caption="(KMF) Comoros, Francs" name="en" shortCaption="KMF"/>
+            <Locale caption="(KMF) Comores, Francs" name="fr" shortCaption="KMF"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="KPW" value="KPW">
+         <Locales>
+            <Locale caption="(KPW) Korea (North), Won" name="en" shortCaption="KPW"/>
+            <Locale caption="(KPW) Corée du Nord, Won" name="fr" shortCaption="KPW"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="KRW" value="KRW">
+         <Locales>
+            <Locale caption="(KRW) Korea (South), Won" name="en" shortCaption="KRW"/>
+            <Locale caption="(KRW) Corée du Sud, Won" name="fr" shortCaption="KRW"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="KWD" value="KWD">
+         <Locales>
+            <Locale caption="(KWD) Kuwait, Dinars" name="en" shortCaption="KWD"/>
+            <Locale caption="(KWD) Koweït, Dinars" name="fr" shortCaption="KWD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="KYD" value="KYD">
+         <Locales>
+            <Locale caption="(KYD) Cayman Islands, Dollars" name="en" shortCaption="KYD"/>
+            <Locale caption="(KYD) Îles Caïmans, Dollars" name="fr" shortCaption="KYD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="KZT" value="KZT">
+         <Locales>
+            <Locale caption="(KZT) Kazakhstan, Tenge" name="en" shortCaption="KZT"/>
+            <Locale caption="(KZT) Kazakhstan, Tengué" name="fr" shortCaption="KZT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="LAK" value="LAK">
+         <Locales>
+            <Locale caption="(LAK) Laos, Kips" name="en" shortCaption="LAK"/>
+            <Locale caption="(LAK) Laos, Kips" name="fr" shortCaption="LAK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="LBP" value="LBP">
+         <Locales>
+            <Locale caption="(LBP) Lebanon, Pounds" name="en" shortCaption="LBP"/>
+            <Locale caption="(LBP) Liban, Livres" name="fr" shortCaption="LBP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="LKR" value="LKR">
+         <Locales>
+            <Locale caption="(LKR) Sri Lanka, Rupees" name="en" shortCaption="LKR"/>
+            <Locale caption="(LKR) Sri Lanka, Roupies" name="fr" shortCaption="LKR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="LRD" value="LRD">
+         <Locales>
+            <Locale caption="(LRD) Liberia, Dollars" name="en" shortCaption="LRD"/>
+            <Locale caption="(LRD) Liberia, Dollars" name="fr" shortCaption="LRD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="LSL" value="LSL">
+         <Locales>
+            <Locale caption="(LSL) Lesotho, Maloti" name="en" shortCaption="LSL"/>
+            <Locale caption="(LSL) Lesotho, Loti" name="fr" shortCaption="LSL"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="LTL" value="LTL">
+         <Locales>
+            <Locale caption="(LTL) Lithuania, Litai" name="en" shortCaption="LTL"/>
+            <Locale caption="(LTL) Lituanie, Litas" name="fr" shortCaption="LTL"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="LVL" value="LVL">
+         <Locales>
+            <Locale caption="(LVL) Latvia, Lati" name="en" shortCaption="LVL"/>
+            <Locale caption="(LVL) Lettonie, Lats" name="fr" shortCaption="LVL"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="LYD" value="LYD">
+         <Locales>
+            <Locale caption="(LYD) Libya, Dinars" name="en" shortCaption="LYD"/>
+            <Locale caption="(LYD) Libye, Dinars" name="fr" shortCaption="LYD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="MAD" value="MAD">
+         <Locales>
+            <Locale caption="(MAD) Morocco, Dirhams" name="en" shortCaption="MAD"/>
+            <Locale caption="(MAD) Maroc, Dirhams" name="fr" shortCaption="MAD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="MDL" value="MDL">
+         <Locales>
+            <Locale caption="(MDL) Moldova, Lei" name="en" shortCaption="MDL"/>
+            <Locale caption="(MDL) Moldavie, Leu" name="fr" shortCaption="MDL"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="MGA" value="MGA">
+         <Locales>
+            <Locale caption="(MGA) Madagascar, Ariary" name="en" shortCaption="MGA"/>
+            <Locale caption="(MGF) Madagascar, Francs" name="fr" shortCaption="MGA"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="MKD" value="MKD">
+         <Locales>
+            <Locale caption="(MKD) Macedonia, Denars" name="en" shortCaption="MKD"/>
+            <Locale caption="(MKD) Macédoine, Denars" name="fr" shortCaption="MKD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="MMK" value="MMK">
+         <Locales>
+            <Locale caption="(MMK) Myanmar (Burma), Kyats" name="en" shortCaption="MMK"/>
+            <Locale caption="(MMK) Myanmar (Burma), Kyats" name="fr" shortCaption="MMK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="MNT" value="MNT">
+         <Locales>
+            <Locale caption="(MNT) Mongolia, Tugriks" name="en" shortCaption="MNT"/>
+            <Locale caption="(MNT) Mongolie, Tugriks" name="fr" shortCaption="MNT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="MOP" value="MOP">
+         <Locales>
+            <Locale caption="(MOP) Macau, Patacas" name="en" shortCaption="MOP"/>
+            <Locale caption="(MOP) Macau, Patacas" name="fr" shortCaption="MOP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="MRO" value="MRO">
+         <Locales>
+            <Locale caption="(MRO) Mauritania, Ouguiyas" name="en" shortCaption="MRO"/>
+            <Locale caption="(MRO) Mauritanie, Ouguiyas" name="fr" shortCaption="MRO"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="MTL" value="MTL">
+         <Locales>
+            <Locale caption="(MTL) Malta, Liri" name="en" shortCaption="MTL"/>
+            <Locale caption="(MTL) Malte, Livre" name="fr" shortCaption="MTL"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="MUR" value="MUR">
+         <Locales>
+            <Locale caption="(MUR) Mauritius, Rupees" name="en" shortCaption="MUR"/>
+            <Locale caption="(MUR) Maurice, Roupies" name="fr" shortCaption="MUR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="MVR" value="MVR">
+         <Locales>
+            <Locale caption="(MVR) Maldives (Maldive Islands), Rufiyaa" name="en" shortCaption="MVR"/>
+            <Locale caption="(MVR) Maldives (Îles maldives), Rufiyaa" name="fr" shortCaption="MVR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="MWK" value="MWK">
+         <Locales>
+            <Locale caption="(MWK) Malawi, Kwachas" name="en" shortCaption="MWK"/>
+            <Locale caption="(MWK) Malawi, Kwachas" name="fr" shortCaption="MWK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="MXN" value="MXN">
+         <Locales>
+            <Locale caption="(MXN) Mexico, Pesos" name="en" shortCaption="MXN"/>
+            <Locale caption="(MXN) Mexique, Pesos" name="fr" shortCaption="MXN"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="MYR" value="MYR">
+         <Locales>
+            <Locale caption="(MYR) Malaysia, Ringgits" name="en" shortCaption="MYR"/>
+            <Locale caption="(MYR) Malaisie, Ringgits" name="fr" shortCaption="MYR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="MZN" value="MZN">
+         <Locales>
+            <Locale caption="(MZN) Mozambique, Meticais [newer unit, same name]" name="en" shortCaption="MZN"/>
+            <Locale caption="(MZN) Mozambique, Metical [plus récente unité, même nom]" name="fr" shortCaption="MZN"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="NAD" value="NAD">
+         <Locales>
+            <Locale caption="(NAD) Namibia, Dollars" name="en" shortCaption="NAD"/>
+            <Locale caption="(NAD) Namibie, Dollars" name="fr" shortCaption="NAD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="NGN" value="NGN">
+         <Locales>
+            <Locale caption="(NGN) Nigeria, Nairas" name="en" shortCaption="NGN"/>
+            <Locale caption="(NGN) Nigeria, Nairas" name="fr" shortCaption="NGN"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="NIO" value="NIO">
+         <Locales>
+            <Locale caption="(NIO) Nicaragua, Cordobas" name="en" shortCaption="NIO"/>
+            <Locale caption="(NIO) Nicaragua, Cordobas" name="fr" shortCaption="NIO"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="NOK" value="NOK">
+         <Locales>
+            <Locale caption="(NOK) Norway, Krone" name="en" shortCaption="NOK"/>
+            <Locale caption="(NOK) Norvège, Krone" name="fr" shortCaption="NOK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="NPR" value="NPR">
+         <Locales>
+            <Locale caption="(NPR) Nepal, Nepal Rupees" name="en" shortCaption="NPR"/>
+            <Locale caption="(NPR) Népal, Roupies népalaises" name="fr" shortCaption="NPR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="NZD" value="NZD">
+         <Locales>
+            <Locale caption="(NZD) New Zealand, Dollars" name="en" shortCaption="NZD"/>
+            <Locale caption="(NZD) Nouvelle-Zélande, Dollars" name="fr" shortCaption="NZD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="OMR" value="OMR">
+         <Locales>
+            <Locale caption="(OMR) Oman, Rials" name="en" shortCaption="OMR"/>
+            <Locale caption="(OMR) Oman, Rials" name="fr" shortCaption="OMR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="PAB" value="PAB">
+         <Locales>
+            <Locale caption="(PAB) Panama, Balboa" name="en" shortCaption="PAB"/>
+            <Locale caption="(PAB) Panama, Balboa" name="fr" shortCaption="PAB"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="PEN" value="PEN">
+         <Locales>
+            <Locale caption="(PEN) Peru, Nuevos Soles" name="en" shortCaption="PEN"/>
+            <Locale caption="(PEN) Pérou, Sols" name="fr" shortCaption="PEN"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="PGK" value="PGK">
+         <Locales>
+            <Locale caption="(PGK) Papua New Guinea, Kina" name="en" shortCaption="PGK"/>
+            <Locale caption="(PGK) Papouasie-Nouvelle-Guinée, Kina" name="fr" shortCaption="PGK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="PHP" value="PHP">
+         <Locales>
+            <Locale caption="(PHP) Philippines, Pesos" name="en" shortCaption="PHP"/>
+            <Locale caption="(PHP) Philippines, Pesos" name="fr" shortCaption="PHP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="PKR" value="PKR">
+         <Locales>
+            <Locale caption="(PKR) Pakistan, Rupees" name="en" shortCaption="PKR"/>
+            <Locale caption="(PKR) Pakistan, Roupies" name="fr" shortCaption="PKR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="PLN" value="PLN">
+         <Locales>
+            <Locale caption="(PLN) Poland, Zlotych" name="en" shortCaption="PLN"/>
+            <Locale caption="(PLN) Pologne, Zloty" name="fr" shortCaption="PLN"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="PYG" value="PYG">
+         <Locales>
+            <Locale caption="(PYG) Paraguay, Guarani" name="en" shortCaption="PYG"/>
+            <Locale caption="(PYG) Paraguay, Guarani" name="fr" shortCaption="PYG"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="QAR" value="QAR">
+         <Locales>
+            <Locale caption="(QAR) Qatar, Rials" name="en" shortCaption="QAR"/>
+            <Locale caption="(QAR) Qatar, Rials" name="fr" shortCaption="QAR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="RON" value="RON">
+         <Locales>
+            <Locale caption="(RON) Romania, New Lei" name="en" shortCaption="RON"/>
+            <Locale caption="(ROL) Roumanie, Leu" name="fr" shortCaption="RON"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="RUB" value="RUB">
+         <Locales>
+            <Locale caption="(RUB) Russia, Rubles" name="en" shortCaption="RUB"/>
+            <Locale caption="(RUB) Russie, Roubles" name="fr" shortCaption="RUB"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="RWF" value="RWF">
+         <Locales>
+            <Locale caption="(RWF) Rwanda, Rwanda Francs" name="en" shortCaption="RWF"/>
+            <Locale caption="(RWF) Rwanda, Francs rwandais" name="fr" shortCaption="RWF"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SAR" value="SAR">
+         <Locales>
+            <Locale caption="(SAR) Saudi Arabia, Riyals" name="en" shortCaption="SAR"/>
+            <Locale caption="(SAR) Arabie saoudite, Riyals" name="fr" shortCaption="SAR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SBD" value="SBD">
+         <Locales>
+            <Locale caption="(SBD) Solomon Islands, Dollars" name="en" shortCaption="SBD"/>
+            <Locale caption="(SBD) Îles Salomon, Dollars" name="fr" shortCaption="SBD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SCR" value="SCR">
+         <Locales>
+            <Locale caption="(SCR) Seychelles, Rupees" name="en" shortCaption="SCR"/>
+            <Locale caption="(SCR) Seychelles, Roupies" name="fr" shortCaption="SCR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SDD" value="SDD">
+         <Locales>
+            <Locale caption="(SDD) Sudan, Dinars" name="en" shortCaption="SDD"/>
+            <Locale caption="(SDD) Soudan, Dinars" name="fr" shortCaption="SDD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SEK" value="SEK">
+         <Locales>
+            <Locale caption="(SEK) Sweden, Kronor" name="en" shortCaption="SEK"/>
+            <Locale caption="(SEK) Suède, Krona" name="fr" shortCaption="SEK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SGD" value="SGD">
+         <Locales>
+            <Locale caption="(SGD) Singapore, Dollars" name="en" shortCaption="SGD"/>
+            <Locale caption="(SGD) Singapour, Dollars" name="fr" shortCaption="SGD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SHP" value="SHP">
+         <Locales>
+            <Locale caption="(SHP) Saint Helena, Pounds" name="en" shortCaption="SHP"/>
+            <Locale caption="(SHP) Saint-Hélène, Livres" name="fr" shortCaption="SHP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SIT" value="SIT">
+         <Locales>
+            <Locale caption="(SIT) Slovenia, Tolars" name="en" shortCaption="SIT"/>
+            <Locale caption="(SIT) Slovénie, Tolars" name="fr" shortCaption="SIT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SKK" value="SKK">
+         <Locales>
+            <Locale caption="(SKK) Slovakia, Koruny" name="en" shortCaption="SKK"/>
+            <Locale caption="(SKK) Slovaquie, Koruna" name="fr" shortCaption="SKK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SLL" value="SLL">
+         <Locales>
+            <Locale caption="(SLL) Sierra Leone, Leones" name="en" shortCaption="SLL"/>
+            <Locale caption="(SLL) Sierra Leone, Leones" name="fr" shortCaption="SLL"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SOS" value="SOS">
+         <Locales>
+            <Locale caption="(SOS) Somalia, Shillings" name="en" shortCaption="SOS"/>
+            <Locale caption="(SOS) Somalie, Shillings" name="fr" shortCaption="SOS"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SRD" value="SRD">
+         <Locales>
+            <Locale caption="(SRD) Suriname, Dollars" name="en" shortCaption="SRD"/>
+            <Locale caption="(SRG) Suriname, Florins" name="fr" shortCaption="SRD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="STD" value="STD">
+         <Locales>
+            <Locale caption="(STD) São Tome and Principe, Dobras" name="en" shortCaption="STD"/>
+            <Locale caption="(STD) Sao Tomé-et-Principe, Dobras" name="fr" shortCaption="STD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SVC" value="SVC">
+         <Locales>
+            <Locale caption="(SVC) El Salvador, Colones" name="en" shortCaption="SVC"/>
+            <Locale caption="(SVC) El Salvador, Colones" name="fr" shortCaption="SVC"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SYP" value="SYP">
+         <Locales>
+            <Locale caption="(SYP) Syria, Pounds" name="en" shortCaption="SYP"/>
+            <Locale caption="(SYP) Syrie, Livres" name="fr" shortCaption="SYP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="SZL" value="SZL">
+         <Locales>
+            <Locale caption="(SZL) Swaziland, Emalangeni" name="en" shortCaption="SZL"/>
+            <Locale caption="(SZL) Swaziland, Lilangeni" name="fr" shortCaption="SZL"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="THB" value="THB">
+         <Locales>
+            <Locale caption="(THB) Thailand, Baht" name="en" shortCaption="THB"/>
+            <Locale caption="(THB) Thaïlande, Baht" name="fr" shortCaption="THB"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="TJS" value="TJS">
+         <Locales>
+            <Locale caption="(TJS) Tajikistan, Somoni" name="en" shortCaption="TJS"/>
+            <Locale caption="(TJS) Tadjikistan, Somoni" name="fr" shortCaption="TJS"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="TMM" value="TMM">
+         <Locales>
+            <Locale caption="(TMM) Turkmenistan, Manats" name="en" shortCaption="TMM"/>
+            <Locale caption="(TMM) Turkménistan, Manats" name="fr" shortCaption="TMM"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="TND" value="TND">
+         <Locales>
+            <Locale caption="(TND) Tunisia, Dinars" name="en" shortCaption="TND"/>
+            <Locale caption="(TND) Tunisie, Dinars" name="fr" shortCaption="TND"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="TOP" value="TOP">
+         <Locales>
+            <Locale caption="(TOP) Tonga, Pa'anga" name="en" shortCaption="TOP"/>
+            <Locale caption="(TOP) Tonga, Pa'anga" name="fr" shortCaption="TOP"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="TRY" value="TRY">
+         <Locales>
+            <Locale caption="(TRY) Turkey, New Lira" name="en" shortCaption="TRY"/>
+            <Locale caption="(TRL) Turquie, Livre" name="fr" shortCaption="TRY"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="TTD" value="TTD">
+         <Locales>
+            <Locale caption="(TTD) Trinidad and Tobago, Dollars" name="en" shortCaption="TTD"/>
+            <Locale caption="(TTD) Trinité-et-Tobago, Dollars" name="fr" shortCaption="TTD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="TWD" value="TWD">
+         <Locales>
+            <Locale caption="(TWD) Taiwan, New Dollars" name="en" shortCaption="TWD"/>
+            <Locale caption="(TWD) Taiwan, Dollars" name="fr" shortCaption="TWD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="TZS" value="TZS">
+         <Locales>
+            <Locale caption="(TZS) Tanzania, Shillings" name="en" shortCaption="TZS"/>
+            <Locale caption="(TZS) Tanzanie, Shillings" name="fr" shortCaption="TZS"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="UAH" value="UAH">
+         <Locales>
+            <Locale caption="(UAH) Ukraine, Hryvnia" name="en" shortCaption="UAH"/>
+            <Locale caption="(UAH) Ukraine, Hrivna" name="fr" shortCaption="UAH"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="UGX" value="UGX">
+         <Locales>
+            <Locale caption="(UGX) Uganda, Shillings" name="en" shortCaption="UGX"/>
+            <Locale caption="(UGX) Ouganda, Shillings" name="fr" shortCaption="UGX"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="USD" value="USD">
+         <Locales>
+            <Locale caption="(USD) United States of America, Dollars" name="en" shortCaption="USD"/>
+            <Locale caption="(USD) États-Unis, Dollars" name="fr" shortCaption="USD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="UYU" value="UYU">
+         <Locales>
+            <Locale caption="(UYU) Uruguay, Pesos" name="en" shortCaption="UYU"/>
+            <Locale caption="(UYU) Uruguay, Pesos" name="fr" shortCaption="UYU"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="UZS" value="UZS">
+         <Locales>
+            <Locale caption="(UZS) Uzbekistan, Sums" name="en" shortCaption="UZS"/>
+            <Locale caption="(UZS) Ouzbékistan, Sums" name="fr" shortCaption="UZS"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="VEB" value="VEB">
+         <Locales>
+            <Locale caption="(VEB) Venezuela, Bolivares" name="en" shortCaption="VEB"/>
+            <Locale caption="(VEB) Venezuela, Bolivars" name="fr" shortCaption="VEB"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="VND" value="VND">
+         <Locales>
+            <Locale caption="(VND) Viet Nam, Dong" name="en" shortCaption="VND"/>
+            <Locale caption="(VND) Viêt Nam, Dong" name="fr" shortCaption="VND"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="VUV" value="VUV">
+         <Locales>
+            <Locale caption="(VUV) Vanuatu, Vatu" name="en" shortCaption="VUV"/>
+            <Locale caption="(VUV) Vanuatu, Vatu" name="fr" shortCaption="VUV"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="WST" value="WST">
+         <Locales>
+            <Locale caption="(WST) Samoa, Tala" name="en" shortCaption="WST"/>
+            <Locale caption="(WST) Samoa, Tala" name="fr" shortCaption="WST"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="XAF" value="XAF">
+         <Locales>
+            <Locale caption="(XAF) Communauté Financière Africaine BEAC, Francs" name="en" shortCaption="XAF"/>
+            <Locale caption="(XAF) Communauté Financière Africaine BEAC, Francs" name="fr" shortCaption="XAF"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="XAG" value="XAG">
+         <Locales>
+            <Locale caption="(XAG) Silver, Ounces" name="en" shortCaption="XAG"/>
+            <Locale caption="(XAG) Argent, onces" name="fr" shortCaption="XAG"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="XAU" value="XAU">
+         <Locales>
+            <Locale caption="(XAU) Gold, Ounces" name="en" shortCaption="XAU"/>
+            <Locale caption="(XAU) Or, onces" name="fr" shortCaption="XAU"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="XCD" value="XCD">
+         <Locales>
+            <Locale caption="(XCD) East Caribbean Dollars" name="en" shortCaption="XCD"/>
+            <Locale caption="(XCD) dollars des Caraïbes orientales" name="fr" shortCaption="XCD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="XDR" value="XDR">
+         <Locales>
+            <Locale caption="(XDR) International Monetary Fund (IMF) Special Drawing Rights" name="en" shortCaption="XDR"/>
+            <Locale caption="Fonds monétaire international (FMI) Droits de tirage spéciaux (DTS)" name="fr" shortCaption="XDR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="XOF" value="XOF">
+         <Locales>
+            <Locale caption="(XOF) Communauté Financière Africaine BCEAO, Francs" name="en" shortCaption="XOF"/>
+            <Locale caption="(XOF) Côte d'Ivoire, Francs" name="fr" shortCaption="XOF"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="XPD" value="XPD">
+         <Locales>
+            <Locale caption="(XPD) Palladium Ounces" name="en" shortCaption="XPD"/>
+            <Locale caption="(XPD) Palladium Onces" name="fr" shortCaption="XPD"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="XPF" value="XPF">
+         <Locales>
+            <Locale caption="(XPF) Comptoirs Français du Pacifique Francs" name="en" shortCaption="XPF"/>
+            <Locale caption="(XPF) Polynésie française Francs" name="fr" shortCaption="XPF"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="XPT" value="XPT">
+         <Locales>
+            <Locale caption="(XPT) Platinum, Ounces" name="en" shortCaption="XPT"/>
+            <Locale caption="(XPT) Platine, onces" name="fr" shortCaption="XPT"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="YER" value="YER">
+         <Locales>
+            <Locale caption="(YER) Yemen, Rials" name="en" shortCaption="YER"/>
+            <Locale caption="(YER) Yémen, Rials" name="fr" shortCaption="YER"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ZAR" value="ZAR">
+         <Locales>
+            <Locale caption="(ZAR) South Africa, Rand" name="en" shortCaption="ZAR"/>
+            <Locale caption="(ZAR) Afrique du Sud, Rand" name="fr" shortCaption="ZAR"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ZMK" value="ZMK">
+         <Locales>
+            <Locale caption="(ZMK) Zambia, Kwacha" name="en" shortCaption="ZMK"/>
+            <Locale caption="(ZMK) Zambie, Kwacha" name="fr" shortCaption="ZMK"/>
+         </Locales>
+      </Value>
+      <Value hasBehavior="true" name="ZWD" value="ZWD">
+         <Locales>
+            <Locale caption="(ZWD) Zimbabwe, Zimbabwe Dollars" name="en" shortCaption="ZWD"/>
+            <Locale caption="(ZWD) Zimbabwe, dollars du Zimbabwe" name="fr" shortCaption="ZWD"/>
+         </Locales>
+      </Value>
+   </Values>
+</Enumeration>

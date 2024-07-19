@@ -1,0 +1,7 @@
+<Interface description="Interface for testing xsd:anyType support." format="XML">
+   <Requests>
+      <Request message="XML_InternationalPrice"/>
+      <Request message="XML_XSDExportMultipleNamespaces"/>
+      <Request message="XDS_SubmitObjects"/>
+   </Requests>
+</Interface>

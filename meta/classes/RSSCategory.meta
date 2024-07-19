@@ -1,0 +1,5 @@
+<Class description="Specify one or more categories that the channel belongs to. Follows the same rules as the &lt;item&gt;-level category element.">
+   <Attributes>
+      <Attribute name="category" required="true" type="string"/>
+   </Attributes>
+</Class>

@@ -1,0 +1,74 @@
+<Service interface="RSS" layout="startX:46;endY:115;startY:115;endX:1144" variables="url rssFeed">
+   <Dispatch layout="y:109;mergeX:406;mergeY:342;x:169" name="dispatchParamsOrNot">
+      <Case caption="has url parameter" condition="(not (null? ((this'parameters)'url)))" layout="assocAnchorPos:1024,19;labelD:-841.0;labelR:0.625;assoc0:235,122;seg:1" name="urlCase">
+         <Script caption="Get url Parameter" layout="y:112;srcAssocAnchorPos:131072,12;x:270" name="GetUrlParameter"><![CDATA[(logger'debug "have parameter url = " url )
+(set! url (@ parameters url))
+this]]></Script>
+         <Goto next="callRSSClientService"/>
+      </Case>
+      <Case caption="else" layout="assocAnchorPos:131072,18;labelD:443.1744694637937;labelR:0.6517090555645553;seg:1" name="noParametersCase">
+         <Script caption="Read Feed Definition" layout="y:187;srcAssocAnchorPos:131072,17;x:270" name="ReadFeed"><![CDATA[(begin-privileged
+   (set! rssFeed (read-instance RSSFeed 
+      '(name title description  rssTitle rssDescription portalName portalScreen portletName nexjFormRef  itrClass itrAttributes itrWhereClause itrSort) 
+      `(= name ,(@ path)) 
+      #f)))
+this
+]]></Script>
+         <Dispatch layout="y:187;mergeX:456;mergeY:285;x:448" name="dispatch">
+            <Case caption="Feed Found" condition="(not (null? rssFeed))" layout="assocAnchorPos:1024,19;assoc0:643,206" name="FeedFound">
+               <Script caption="Prepare Feed" layout="y:192;x:768" name="prepareFeed"><![CDATA[; Create an RSSObject message with an items collection of the current user's My Contacts collection
+(define portal (((invocation-context)'metadata)'getChannel "Portal"))
+(define classObj (((invocation-context)'metadata)'getMetaclass (rssFeed'itrClass)))
+(logger'debug "Proccessing " (@ path) " request for " (portal'url))
+
+(message 
+   (: :class "RSSObject") 
+   (: title ((rssFeed'readScriptAttrib 'title) '()))
+   (: link "http://www.nexjsystems.com/") 
+   (: description ((rssFeed'readScriptAttrib 'description) '()))
+   (: items 
+      (map 
+         (lambda (i) 
+            ;format url
+            (let ((key (open-output-string))
+                  (server (if (or (null? portal) (null? (portal'url))) "http://localhost:8080/portal/auth/portal" (portal'url)))
+                  (portalName (rssFeed'portalName))
+                  (portalScreen (rssFeed'portalScreen))
+                  (portletName (rssFeed'portletName))
+                  (nexjFormRef (rssFeed'nexjFormRef))
+                  (title ((rssFeed'readScriptAttrib 'rssTitle) i))
+               )
+               (logger'debug i)
+               (write `(= (@) (oid ,@(vector->list ((i':oid)'valueArray)))) key)
+               (message 
+                  (: title title)
+                  (: link (format "{0}/{1}/{2}/{3}?action=2&windowstate=maximized&where={4},{5}" 
+                        server portalName portalScreen portletName nexjFormRef (url-encode (key'toString))))                  
+                  (: description title)
+               )
+            )
+         )
+         (classObj'read (read (open-input-string (rssFeed'itrAttributes))) (read (open-input-string (rssFeed'itrWhereClause))) (read (open-input-string (rssFeed'itrSort))) -1 0 #f)   
+      )
+   ) 
+)
+]]></Script>
+               <Goto next="transformObjectlToRSS"/>
+            </Case>
+            <Case caption="No Feed Found" layout="assocAnchorPos:1024,38;labelD:1886.329195898542;labelR:1.3389098758769564;seg:1" name="NoFeedFound">
+               <Script caption="Set Default url (Economist.com)" layout="y:134;srcAssocAnchorPos:131072,5;srcAssoc0:738,137;x:528" name="SetDefaultURL"><![CDATA[(logger'debug (@ path))
+(set! url "http://www.economist.com/media/rss/economist.xml")
+this]]></Script>
+            </Case>
+         </Dispatch>
+         <Script caption="Call RSSClient Service" description="Call RSSClient Service" layout="y:112;srcAssocAnchorPos:131072,12;srcAssoc0:910,129;x:766" name="callRSSClientService"><![CDATA[((SysService'invoke 
+   "RSSClient" ;  service name
+   '()         ;  message
+   '()         ;  output
+   url         ;  args
+)'result)   
+   ]]></Script>
+      </Case>
+   </Dispatch>
+   <Transform caption="Transform to RSS 2.0" layout="y:112;x:949" name="transformObjectlToRSS" transformation="&quot;ObjectToRSS&quot;"/>
+</Service>

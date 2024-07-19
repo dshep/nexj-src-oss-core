@@ -1,0 +1,63 @@
+<Class description="A class to use as the primary class of workflows.">
+   <Attributes>
+      <Attribute name="trace" type="string"/>
+      <Attribute initializer="#f" name="throwInnerEx" type="boolean"/>
+      <Attribute initializer="#f" name="throwOuterEx" type="boolean"/>
+      <Attribute initializer="#f" name="throwOuter2Ex" type="boolean"/>
+      <Attribute initializer="#f" name="throwUncaughtEx" type="boolean"/>
+      <Attribute initializer="&quot;Semaphore&quot;" name="queueName" type="string"/>
+   </Attributes>
+   <Events>
+      <Event name="go" visibility="public">
+         <Actions>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event name="goSemaphore" visibility="public">
+         <Actions>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="str" name="traceAppend" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(logger'info "TRACING: " str)
+(if (null? (this'trace))
+   (this'trace str)
+   (this'trace (string-append (this'trace) str))
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="goProcessEvent" visibility="public">
+         <Actions>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event name="resumeProcessEvent" visibility="public">
+         <Actions>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event name="goForkTry" visibility="public">
+         <Actions>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event name="resumeForkTry" visibility="public">
+         <Actions>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event name="goForkSemaphore" visibility="public">
+         <Actions>
+            <Action name="main" type="main"/>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="WorkflowTrace">
+         <AttributeMappings>
+            <AttributeMapping column="trace" name="trace" table="WorkflowTrace"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

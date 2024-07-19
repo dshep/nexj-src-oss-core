@@ -1,0 +1,101 @@
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+   <xsd:element name="validTime" type="IVL_TS">
+      <xsd:annotation>
+         <xsd:documentation>
+An interval of time specifying the time during which the name is or
+was used for the entity. This accomodates the fact that people change
+names for people, places and things.
+      </xsd:documentation>
+         <xsd:appinfo/>
+      </xsd:annotation>
+   </xsd:element>
+   <xsd:complexType name="IVL_TS">
+        <xsd:choice minOccurs="0">
+           <xsd:sequence>
+              <xsd:element name="low" minOccurs="1" maxOccurs="1">
+                 <xsd:annotation>
+                    <xsd:documentation>
+The low limit of the interval.
+</xsd:documentation>
+                    <xsd:appinfo/>
+                 </xsd:annotation>
+              </xsd:element>
+              <xsd:choice minOccurs="0">
+                 <xsd:element name="width" minOccurs="0" maxOccurs="1">
+                    <xsd:annotation>
+                       <xsd:documentation>
+The difference between high and low boundary. The purpose of
+distinguishing a width property is to handle all cases of incomplete
+information symmetrically. In any interval representation only two of
+the three properties high, low, and width need to be stated and the
+third can be derived.
+</xsd:documentation>
+                       <xsd:appinfo/>
+                    </xsd:annotation>
+                 </xsd:element>
+                 <xsd:element name="high" minOccurs="0" maxOccurs="1">
+                    <xsd:annotation>
+                       <xsd:documentation>
+The high limit of the interval.
+</xsd:documentation>
+                       <xsd:appinfo/>
+                    </xsd:annotation>
+                 </xsd:element>
+              </xsd:choice>
+           </xsd:sequence>
+           <xsd:element name="high" minOccurs="1" maxOccurs="1">
+              <xsd:annotation>
+                 <xsd:documentation/>
+                 <xsd:appinfo/>
+              </xsd:annotation>
+           </xsd:element>
+           <xsd:sequence>
+              <xsd:element name="width" minOccurs="1" maxOccurs="1">
+                 <xsd:annotation>
+                    <xsd:documentation>
+The difference between high and low boundary. The purpose of
+distinguishing a width property is to handle all cases of incomplete
+information symmetrically. In any interval representation only two of
+the three properties high, low, and width need to be stated and the
+third can be derived.
+</xsd:documentation>
+                    <xsd:appinfo/>
+                 </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="high" minOccurs="0" maxOccurs="1">
+                 <xsd:annotation>
+                    <xsd:documentation>
+The high limit of the interval.
+</xsd:documentation>
+                    <xsd:appinfo/>
+                 </xsd:annotation>
+              </xsd:element>
+           </xsd:sequence>
+           <xsd:sequence>
+              <xsd:element name="center" minOccurs="1" maxOccurs="1">
+                 <xsd:annotation>
+                    <xsd:documentation>
+The arithmetic mean of the interval (low plus high divided by 2). The
+purpose of distinguishing the center as a semantic property is for
+conversions of intervals from and to point values.
+</xsd:documentation>
+                    <xsd:appinfo/>
+                 </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="width" minOccurs="0" maxOccurs="1">
+                 <xsd:annotation>
+                    <xsd:documentation>
+The difference between high and low boundary. The purpose of
+distinguishing a width property is to handle all cases of incomplete
+information symmetrically. In any interval representation only two of
+the three properties high, low, and width need to be stated and the
+third can be derived.
+</xsd:documentation>
+                    <xsd:appinfo/>
+                 </xsd:annotation>
+              </xsd:element>
+           </xsd:sequence>
+        </xsd:choice>
+   </xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,18 @@
+<Message format="CSV">
+   <CSVMapping/>
+   <Parts>
+      <Message maxCount="0" name="rows">
+         <Parts>
+            <Value minCount="1" name="date" type="timestamp">
+               <CSVMapping field="date"/>
+            </Value>
+            <Value minCount="1" name="status" type="string">
+               <CSVMapping field="status"/>
+            </Value>
+            <Value minCount="1" name="result" type="string">
+               <CSVMapping field="result" quoted="true"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

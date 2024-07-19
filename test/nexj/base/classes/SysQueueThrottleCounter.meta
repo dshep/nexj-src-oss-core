@@ -1,0 +1,49 @@
+<Class>
+   <Attributes>
+      <Attribute description="The current task count for this throttle." initializer="(max (@ rate) 1)" name="count" required="true" type="double"/>
+      <Attribute description="The maximum number of tasks that may be initiated in a throttle period." name="rate" required="true" type="double"/>
+      <Attribute cascade="clear" name="queue" required="true" reverse="throttleCounter" type="SysQueue"/>
+      <Attribute cascade="clear" description="The batch job that refreshes this throttle counter every throttle period." name="batchJob" required="true" reverse="throttleCounters" type="SysQueueThrottleCounterBatchJob"/>
+      <Attribute initializer="0" name="locking" required="true" type="integer"/>
+      <Attribute cached="false" description="True if the rate has been reached for the current throttle period." name="throttled" required="true" type="boolean" value="(&lt; (@ count) (- 1 (if (zero? (@ rate)) 0 (/ 2.22E-16 (@ rate)))))"/>
+   </Attributes>
+   <Events>
+      <Event args="attributes where orderBy count offset xlock" description="Overrides the privileges" name="read" privilege="QueueView" static="true" visibility="public"/>
+      <Event description="Overrides the privileges" name="create" privilege="QueueManage" visibility="public"/>
+      <Event description="Overrides the privileges; sets customized attribute." name="update" privilege="QueueManage" visibility="public"/>
+      <Event description="Privilege override, prevents deletion of system queues, and destroys throttle counter." name="delete" privilege="QueueManage" transaction="required" visibility="public"/>
+      <Event description="Resets the throttle counter. Called once every throttle period by the batchJob." name="periodicReset">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(this'count
+   (min
+      (+ (@ count) (@ rate))
+      (max (@ rate) 1)
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="If throttle permits initiation of a new job, returns true and adjusts count. Otherwise, returns false." name="startJob">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[; return:
+(if (@ throttled)
+   #f
+   ; else:
+   (begin
+      (this'count (max (- (@ count) 1) 0))
+      #t
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="ThrottleCounter">
+         <AttributeMappings>
+            <AttributeMapping destinationKey="BatchJob.PK" name="batchJob" sourceKey="ThrottleCounter.FK1"/>
+            <AttributeMapping column="cnt" name="count"/>
+            <AttributeMapping column="rate" name="rate"/>
+            <AttributeMapping column="locking" name="locking"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

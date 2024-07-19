@@ -1,0 +1,130 @@
+<Class>
+   <Attributes>
+      <Attribute initializer="0" name="version" required="true" type="integer"/>
+      <Attribute collection="false" name="startDate" required="true" static="false" type="timestamp"/>
+      <Attribute collection="false" name="endDate" static="false" type="timestamp"/>
+      <Attribute collection="false" name="reason" required="true" static="false" type="string"/>
+      <Attribute collection="true" name="lightVisitParticipants" reverse="visit" type="VisitParticipationLight" value="(Visit'getLightVisitParticipants this)"/>
+      <Attribute collection="false" name="patient" static="false" type="Patient"/>
+      <Attribute collection="true" name="requests" required="false" reverse="visit" static="false" type="Request"/>
+      <Attribute collection="true" name="participants" required="false" reverse="visit" static="false" type="VisitParticipation"/>
+      <Attribute collection="true" name="patients" reverse="visits" type="Patient"/>
+      <Attribute initializer="#f" name="isAllDayChecked" type="boolean"/>
+      <Attribute dependency="isAllDayChecked endDate" name="displayAllDayEndDate" type="timestamp" value="(if (= #t (@ isAllDayChecked))&#10;   (date-add-minutes (@ endDate) -1)&#10;   ;endTime&#10;   (@ endDate)&#10;)"/>
+      <Attribute name="updateLightVisitParticipants" type="long" value="0"/>
+      <Attribute collection="true" name="validReasons" type="ValidReason" value="(ValidReason'read () () () () () ())"/>
+   </Attributes>
+   <Events>
+      <Event name="create" visibility="public">
+         <Actions>
+            <Action condition="(&gt; (@ updateLightVisitParticipants) 0)" name="updateLightVisitParticipants" type="before"><![CDATA[(this'recreateLightVisitParticipants)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="patientName bAllUsers args" name="createVisit" static="true" vararg="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let
+   (
+      (visit (apply Visit 'new (: patient (read-instance Patient '() `(= lastName ,patientName) #f)) 
+         args))
+   )
+   (if bAllUsers
+      (for-each
+         (lambda (patient)
+            (VisitParticipation'new (: patient patient) (: visit visit))
+         )
+         (Patient'read '() '() '() '() '() '())
+      )
+      ; else
+      (VisitParticipation'new (: patient (visit'patient)) (: visit visit))
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="update" visibility="public">
+         <Actions>
+            <Action condition="(and (this'updated 'reason) (equal? (this'reason) &quot;BrokenTest&quot;))" name="checkReason" type="after"><![CDATA[(Patient'new (: firstName "Joe") (: lastName "Visitor"))
+(commit)]]></Action>
+            <Action condition="(&gt; (@ updateLightVisitParticipants) 0)" name="updateLightVisitParticipants" type="before"><![CDATA[(this'recreateLightVisitParticipants)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="startDate endDate" description="Returns a list of pairs containing the start and end dates for an &quot;All Day Visit&quot; between the given startDate and endDate.&#13;&#10;" name="getAllDayDates" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let
+   (
+      (timestamps (list))
+      (newEndDate endDate)
+      (newStartDate startDate)
+      (allDayEndDate endDate)
+   )
+   
+   (set! newEndDate (date-ceil-to-nearest endDate 'DAY))
+   (set! newStartDate (date-ceil-to-nearest (date-add-days startDate -1) 'DAY))
+   (set! allDayEndDate (date-add-minutes newEndDate -1))
+   
+   ; Checks to see if the endTime was incremented by exactly one day meaning 
+   ; the endTime passed in was already 12:00am and therefore the original
+   ; endTime can be used.
+   (when (= (* 24 60) (date-diff-minutes newEndDate endDate))
+      (set! newEndDate endDate)
+   )
+   
+   (set! timestamps (cons (: endDate newEndDate) timestamps))
+   (set! timestamps (cons (: startDate newStartDate) timestamps))
+   (set! timestamps (cons (: allDayEndDate allDayEndDate) timestamps))
+   timestamps
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="visit" name="getLightVisitParticipants" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define lightweights (instance-collection))
+
+(for-each 
+   (lambda (participant)
+      (let
+         (
+            (newVisitLight (instance VisitParticipationLight (participant':oid) (: visit visit) (: group (participant'patientFullName))))
+         )
+      
+         (unless (lightweights'contains newVisitLight) 
+            (lightweights'add newVisitLight)
+         )
+      )
+   )
+   (visit'participants)
+)
+
+lightweights
+]]></Action>
+         </Actions>
+      </Event>
+      <Event name="recreateLightVisitParticipants">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(this'lightVisitParticipants
+   (Visit'getLightVisitParticipants this)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="triggerLightVisitParticipants" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(this'updateLightVisitParticipants
+   (+ (this'updateLightVisitParticipants) 1)
+)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="version">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.Visit">
+         <AttributeMappings>
+            <AttributeMapping column="startDate" name="startDate"/>
+            <AttributeMapping column="endDate" name="endDate"/>
+            <AttributeMapping column="reason" name="reason"/>
+            <AttributeMapping destinationKey="Contact.PK" name="patient" sourceKey="Visit.FK1"/>
+            <AttributeMapping destinationKey="Request.FK2" name="requests"/>
+            <AttributeMapping destinationKey="VisitParticipation.FK2" name="participants"/>
+            <AttributeMapping name="patients" sourceKey="Visit.FK1"/>
+            <AttributeMapping column="rec_ver" name="version"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

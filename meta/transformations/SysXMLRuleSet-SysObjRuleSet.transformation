@@ -1,0 +1,60 @@
+<Transformation destination="SysObjRuleSet" source="SysXMLRuleSet">
+   <Mappings>
+      <Mapping destination="description">
+         <Sources>
+            <Source source="description"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="versions version">
+         <Sources>
+            <Source default="'()" name="version" source="version" null="true"/>
+         </Sources>
+         <Script>(ifnull version 0)
+         </Script>
+      </Mapping>
+      <Mapping destination="versions$ rules name">
+         <Sources>
+            <Source source="Rule name"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="versions$ rules description">
+         <Sources>
+            <Source source="Rule description"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="versions$ rules enabled">
+         <Sources>
+            <Source source="Rule enabled"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="versions$ rules customized">
+         <Sources>
+            <Source source="Rule"/>
+         </Sources>
+         <Script>#f
+         </Script>
+      </Mapping>
+      <Mapping destination="versions$ rules condition">
+         <Sources>
+            <Source source="Rule condition"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="versions$ rules action">
+         <Sources>
+            <Source source="Rule Script"/>
+         </Sources>
+      </Mapping>
+   </Mappings>
+   <Finalizer><![CDATA[
+(destination'name (source'name))
+(let ((nOrder 1))
+   (for-each 
+      (lambda (code)
+            (code'ordinal nOrder)
+            (set! nOrder (+ nOrder 1))
+      )
+      (((destination'versions)'get 0)'rules)
+   )
+)
+   ]]></Finalizer>
+</Transformation>

@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions
+   name="ExampleService"
+   targetNamespace="http://nexj.example.com/ns0/"
+   xmlns="http://schemas.xmlsoap.org/wsdl/"
+   xmlns:ns1="http://nexj.example.com/ns1/"
+   xmlns:ns2="http://nexj.example.com/ns2/"
+   xmlns:tns="http://nexj.example.com/ns0/"
+   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <types>
+      <schema targetNamespace="http://nexj.example.com/ns1/"
+         xmlns="http://www.w3.org/2001/XMLSchema"
+         xmlns:tns="http://nexj.example.com/ns1/">
+         <element name="Process" type="tns:everythingType">
+            <annotation><documentation>Element for the input parameter</documentation></annotation>
+         </element>
+         <element name="ProcessResponse" type="tns:responseType">
+            <annotation><documentation>Element for the output parameter</documentation></annotation>
+         </element>
+         <complexType name="responseType">
+            <annotation><documentation>Type for the response element</documentation></annotation>
+            <sequence>
+               <element name="responseElement" type="tns:responseInnerType"/>
+            </sequence>
+         </complexType>
+         <complexType name="responseInnerType">
+            <annotation><documentation>Type for the response element</documentation></annotation>
+            <sequence>
+               <element name="a" type="tns:responseInnerType"/>
+               <element name="b" type="string"/>
+               <element name="c" type="string"/>
+            </sequence>
+         </complexType>
+
+         <complexType name="everythingType">
+            <annotation><documentation>This type contains all the important top level types to ensure they are imported</documentation></annotation>
+            <sequence>
+               <element ref="tns:topLevelElement"/>
+               <element ref="tns:topLevelElementTwo"/>
+               <element name="childA" type="tns:topLevelType"/>
+               <element name="childB" type="tns:topLevelTypeChoice"/>
+               <element name="childC" type="tns:topLevelTypeSequence"/>
+               <element name="childD" type="tns:topLevelTypeAll"/>
+               <element ref="tns:elementInlineComplexType"/>
+               <element name="childE" type="tns:topLevelSimpleType"/>
+               <element name="childF" type="tns:topLevelType2"/>
+               <element name="childG" type="tns:topLevelType4"/>
+            </sequence>
+         </complexType>
+
+         <element name="topLevelElement">
+            <annotation><documentation>Top level minimal element</documentation></annotation>
+         </element>
+
+         <element name="topLevelElementTwo" nillable="true" type="tns:topLevelType">
+            <annotation><documentation>Top level element that references a type</documentation></annotation>
+         </element>
+
+         <element name="topLevelElementThree" type="tns:topLevelTypeChoice">
+            <annotation><documentation>Top level element that is not included in "everythingType"</documentation></annotation>
+         </element>
+
+         <element name="topLevelElementFour" type="tns:topLevelSimpleType">
+            <annotation><documentation>Top level element that references a simple type</documentation></annotation>
+         </element>
+
+         <complexType name="topLevelType">
+            <annotation><documentation>Top level minimal complex type</documentation></annotation>
+         </complexType>
+
+         <complexType name="topLevelTypeChoice">
+            <annotation><documentation>Complex type, choice aggregation</documentation></annotation>
+            <choice>
+               <element name="localElementA">
+                  <annotation><documentation>Minimal local element</documentation></annotation>
+               </element>
+               <element name="localElementB" type="string">
+                  <annotation><documentation>Local element with primitive type</documentation></annotation>
+               </element>
+               <element name="localElementC" type="tns:topLevelType">
+                  <annotation><documentation>Local element with complex type</documentation></annotation>
+               </element>
+               <element name="localElementD" type="tns:topLevelTypeSequence" maxOccurs="unbounded">
+                  <annotation><documentation>Local element with unbounded maxOccurs</documentation></annotation>
+               </element>
+               <element name="localElementE" type="tns:topLevelTypeAll" maxOccurs="3" minOccurs="2" nillable="true">
+                  <annotation><documentation>Nillable local element with maxOccurs and minOccurs</documentation></annotation>
+               </element>
+               <element name="localElementF" type="tns:topLevelType" nillable="1">
+                  <annotation><documentation>Nillable local element with nillable set to 1</documentation></annotation>
+               </element>
+               <element name="localElementG" type="tns:topLevelType" minOccurs="0">
+                  <annotation><documentation>Local element with minOccurs 0</documentation></annotation>
+               </element>
+               <element name="localElementH">
+                  <annotation><documentation>Local element with inline type</documentation></annotation>
+                  <complexType>
+                     <sequence>
+                        <element name="innerElementA"/>
+                        <element name="innerElementB" type="double"/>
+                        <element ref="tns:topLevelElementTwo"/>
+                     </sequence>
+                  </complexType>
+               </element>
+               <element name="localElementI">
+                  <annotation><documentation>Element for testing the insertion of breadcrumb trail into anonymous/inline defined complex type descriptions</documentation></annotation>
+                  <complexType>
+                     <choice>
+                        <element name="innerInnerElement">
+                           <complexType>
+                              <annotation><documentation>Inline defined type with multi-line documentation.
+This is the second line.</documentation></annotation>
+                              <sequence>
+                                 <element name="innermostElement"/>
+                              </sequence>
+                           </complexType>
+                        </element>
+                     </choice>
+                  </complexType>
+               </element>
+               <element ref="tns:topLevelElement">
+                  <annotation><documentation>Minimal element reference</documentation></annotation>
+               </element>
+               <element ref="tns:topLevelElementTwo" maxOccurs="4" minOccurs="2">
+                  <annotation><documentation>Element reference with maxOccurs and minOccurs</documentation></annotation>
+               </element>
+               <element ref="tns:topLevelElementThree" maxOccurs="unbounded" minOccurs="0" nillable="true">
+                  <annotation><documentation>Element reference with maxOccurs unbounded and minOccurs 0 and nillable</documentation></annotation>
+               </element>
+            </choice>
+         </complexType>
+
+         <complexType name="topLevelTypeSequence">
+            <annotation><documentation>Complex type, sequence aggregation</documentation></annotation>
+            <sequence>
+               <element name="itemA" type="tns:topLevelTypeChoice"/>
+               <element name="itemB" type="tns:topLevelTypeAll"/>
+               <element ref="tns:topLevelElementTwo"/>
+            </sequence>
+         </complexType>
+
+         <complexType name="topLevelTypeAll">
+            <annotation><documentation>Complex type, all aggregation</documentation></annotation>
+            <all>
+               <element name="itemA" type="decimal"/>
+               <element name="itemB" type="tns:topLevelTypeAll"/>
+               <element ref="tns:topLevelElementTwo"/>
+            </all>
+         </complexType>
+
+         <element name="elementInlineComplexType">
+            <annotation><documentation>Element with an inline complex type definition</documentation></annotation>
+            <complexType>
+               <sequence>
+                  <element name="localElement1">
+                     <annotation><documentation>Inner element with an inline complex type definition</documentation></annotation>
+                     <complexType>
+                        <sequence>
+                           <element name="innerElement1" type="string"/>
+                           <element name="innerElement2" type="int"/>
+                        </sequence>
+                     </complexType>
+                  </element>
+                  <element name="localElement2" type="tns:topLevelType"/>
+                  <element ref="tns:topLevelElement"/>
+               </sequence>
+            </complexType>
+         </element>
+
+         <simpleType name="topLevelSimpleType">
+            <annotation><documentation>Simple type example</documentation></annotation>
+            <restriction base="double"/>
+         </simpleType>
+
+         <attribute name="topLevelAttribute" type="boolean">
+            <annotation><documentation>Attribute example</documentation></annotation>
+         </attribute>
+
+         <attribute name="topLevelAttribute2" type="tns:topLevelSimpleType">
+            <annotation><documentation>Another attribute example</documentation></annotation>
+         </attribute>
+
+         <complexType name="topLevelType2">
+            <annotation><documentation>Complex type with attributes</documentation></annotation>
+            <attribute ref="tns:topLevelAttribute"/>
+            <attribute ref="tns:topLevelAttribute2" use="required">
+              <annotation><documentation>Attribute ref that is required</documentation></annotation>
+            </attribute>
+            <attribute name="localAttrA" type="tns:topLevelSimpleType">
+               <annotation><documentation>Local attribute definition</documentation></annotation>
+            </attribute>
+            <attribute name="localAttrB" type="double" use="required"/>
+         </complexType>
+
+         <complexType name="topLevelType3" abstract="true">
+            <annotation><documentation>Complex type that is abstract</documentation></annotation>
+            <choice>
+               <element name="baseElement" type="tns:topLevelType2"/>
+            </choice>
+            <attribute name="baseAttribute" type="tns:topLevelSimpleType"/>
+         </complexType>
+
+         <complexType name="topLevelType4">
+            <annotation><documentation>Complex type that extends another complex type</documentation></annotation>
+            <extension base="tns:topLevelType3">
+               <sequence>
+                  <element name="extensionElement" type="decimal"/>
+               </sequence>
+               <attribute name="extensionAttribute" type="string"/>
+            </extension>
+         </complexType>
+       </schema>
+   </types>
+   <message name="ProcessRequest">
+      <part name="parameters" element="ns1:Process"/>
+   </message>
+   <message name="ProcessResponse">
+      <part name="parameters" element="ns1:ProcessResponse"/>
+   </message>
+   <portType name="AbstractDetails">
+      <operation name="Process">
+         <input message="tns:ProcessRequest"/>
+         <output message="tns:ProcessResponse"/>
+      </operation>
+   </portType>
+   <binding name="ConcreteDetails" type="tns:AbstractDetails">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <operation name="Process">
+         <soap:operation soapAction=""/>
+         <input>
+            <soap:body use="literal" parts="parameters"/>
+         </input>
+         <output>
+            <soap:body use="literal" parts="parameters"/>
+         </output>
+      </operation>
+   </binding>
+   <service name="ExampleService">
+      <port name="Endpoint" binding="tns:ConcreteDetails">
+         <soap:address location="http://nexj.example.com"/>
+      </port>
+   </service>
+</definitions>

@@ -1,0 +1,6 @@
+<Component type="nexj.core.rpc.soap.SOAPServer" activation="context"
+   description="The SOAP generic request stream server">
+   <Properties>
+      <Property name="server">Server.Generic</Property>
+   </Properties>
+</Component>

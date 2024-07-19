@@ -1,0 +1,9 @@
+<Message format="XML">
+   <Parts>
+      <Value name="seed" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value name="a" type="string"/>
+      <Value name="b" type="string"/>
+   </Parts>
+</Message>

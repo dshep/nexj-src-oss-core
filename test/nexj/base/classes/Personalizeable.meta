@@ -1,0 +1,46 @@
+<Class description="Base class for the UI personalizations.">
+   <Attributes>
+      <Attribute name="name" required="true" type="string"/>
+      <Attribute name="type" required="true" type="string"/>
+      <Attribute name="principal" required="true" reverse="personalizations" type="Principal"/>
+      <Attribute cascade="delete" collection="true" name="toolbarItems" reverse="personalizeable" type="ToolbarItem"/>
+      <Attribute initializer="0" name="locking" required="true" type="integer"/>
+   </Attributes>
+   <Events>
+      <Event args="meta" name="personalizeToolbar">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(unless (null? (meta'toolbarMeta))
+   (let ((i 0) (itr ((meta'toolbarMeta)'menuItemIterator)))
+      (let loop ()
+         (if (itr'hasNext)
+            (begin
+               (let ((menuItemMeta (itr'next)) (toolbarItem (ToolbarItem'new)))
+                  (toolbarItem'name (menuItemMeta'name))
+                  (toolbarItem'ordinal i)
+                  (toolbarItem'personalizeable this)
+                  (toolbarItem'icon (menuItemMeta'icon))
+                  (set! i (+ i 1))
+               )
+               (loop)
+            )
+         )
+      )
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="create" visibility="public">
+         <Actions>
+            <Action condition="(isCommit)" name="incrementPersonalization" type="before"><![CDATA[
+((this'principal)'personalizationCounter (+ ((this'principal)'personalizationCounter) 1))
+
+(logger'debug "counter: " ((this'principal)'personalizationCounter))]]></Action>
+         </Actions>
+      </Event>
+      <Event name="delete" visibility="public">
+         <Actions>
+            <Action condition="(isCommit)" name="decrementPersonalization" type="before"><![CDATA[((this'principal)'personalizationCounter (- ((this'principal)'personalizationCounter) 1))]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

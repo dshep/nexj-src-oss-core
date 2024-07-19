@@ -1,0 +1,7 @@
+<Interface description="Interface for testing the WSDL Exporter." format="XML">
+   <Requests>
+      <Request message="XML_NillableSubMessage"/>
+      <Request message="XML_XSDExportComprehensive"/>
+      <Request message="SOAP_Headers_PatientDemographics"/>
+   </Requests>
+</Interface>

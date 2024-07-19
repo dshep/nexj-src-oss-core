@@ -1,0 +1,35 @@
+<Transformation args="prefix affix" base="XMLLinkedListModify" destination="XML_LinkedList_Sub" source="XML_LinkedList_Sub">
+   <Initializer><![CDATA[(logger'info "Hello from derived transformation!")
+(call-next)]]></Initializer>
+   <Mappings>
+      <Mapping destination="count">
+         <Sources>
+            <Source name="count" source="count"/>
+         </Sources>
+         <Script><![CDATA[(* count count)]]></Script>
+      </Mapping>
+      <Mapping destination="dataCopy_ReferenceParentMapping">
+         <Sources>
+            <Source mapping="mapping"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="dataCopy_ReplaceMapping" name="mapping2">
+         <Sources>
+            <Source mapping="mapping" name="s"/>
+         </Sources>
+         <Script><![CDATA[(string-append "Extra:" s)]]></Script>
+      </Mapping>
+      <Mapping destination="dataCopy_Collection">
+         <Sources>
+            <Source mapping="mapping" name="s"/>
+         </Sources>
+         <Script><![CDATA[(string-append "Extra:" s)]]></Script>
+      </Mapping>
+      <Mapping destination="dataCopy">
+         <Sources>
+            <Source mapping="mapping" name="s"/>
+         </Sources>
+         <Script><![CDATA[(string-append "Extra:" s)]]></Script>
+      </Mapping>
+   </Mappings>
+</Transformation>

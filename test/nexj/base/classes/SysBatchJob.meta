@@ -1,0 +1,62 @@
+<Class aspects="LOCKING">
+   <Attributes>
+      <Attribute name="name" required="true" type="string"/>
+      <Attribute name="start" type="timestamp"/>
+      <Attribute initializer="60000" name="period" type="long"/>
+      <Attribute cascade="delete" name="timer" type="SysTimer"/>
+      <Attribute name="classCode" required="true" type="string"/>
+   </Attributes>
+   <Events>
+      <Event name="create" privilege="BatchJobManage" visibility="public">
+         <Actions>
+            <Action name="createTimer" type="before"><![CDATA[(this'recreateTimer)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="update" privilege="BatchJobManage" visibility="public">
+         <Actions>
+            <Action condition="(or (this'updated 'period) (this'updated 'start))" name="recreateTimer" type="before"><![CDATA[(this'recreateTimer)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event name="delete" privilege="BatchJobManage" visibility="public"/>
+      <Event name="read" privilege="BatchJobManage" visibility="public"/>
+      <Event description="Recreate the timer" name="recreateTimer">
+         <Actions>
+            <Action name="deleteTimer" type="before"><![CDATA[((@ timer)'delete)
+(this'timer '())]]></Action>
+            <Action name="main" type="main"><![CDATA[(this'timer  
+   (SysTimer'invoke 
+      this 
+      'run 
+      (@ start) 
+      (@ period)
+      ((user)'name)
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Called by the timer" name="run" privilege="BatchJobRun" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[; no-op - should be overridden]]></Action>
+         </Actions>
+      </Event>
+      <Event args="job" description="Run the given job asynchronously" name="runAsync" privilege="BatchJobRun" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(SysQueue'invoke job 'run) ; Asynchronous execution to avoid holding client thread for a long time
+]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping classCodeAttribute="classCode" dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="BatchJob">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name"/>
+            <AttributeMapping column="classCode" name="classCode"/>
+            <AttributeMapping column="startTime" name="start"/>
+            <AttributeMapping column="period" name="period"/>
+            <AttributeMapping destinationKey="Timer.PK" name="timer" sourceKey="BatchJob.FK_timer"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

@@ -1,0 +1,17 @@
+<Message derivation="final" description="The SOAP 1.1 Fault response message.&#13;&#10;&#13;&#10;Used by applications that need to parse or generate a SOAP fault. Can be used as a base message of application-specific fault messages. To encode application-specific error information, override the &quot;detail&quot; element." format="XML">
+   <XMLMapping envelope="soap" namespace="soap" node="Fault" uri="http://schemas.xmlsoap.org/soap/envelope/"/>
+   <Parts>
+      <Value description="A qualified name. (see Namespaces in XML 1.0, available at http://www.w3.org/TR/REC-xml-names/#ns-qualnames)&#13;&#10;&#13;&#10;The code should provide some information explaining the nature of the fault. It is intended to be read and understood by software." minCount="1" name="code" type="string">
+         <XMLMapping node="faultcode"/>
+      </Value>
+      <Value description="A human-readable explanation of the fault." minCount="1" name="msg" type="string">
+         <XMLMapping node="faultstring"/>
+      </Value>
+      <Value description="A URI identifying the source of the fault.&#13;&#10;&#13;&#10;Indicates the source of the fault. Applications that do not act as the ultimate destination of the SOAP message must specify an actor. The ultimate destination may explicitly specify the actor." name="actor" type="string">
+         <XMLMapping node="faultactor"/>
+      </Value>
+      <Value description="Holds application-specific error information.&#13;&#10;&#13;&#10;Required iff the contents of the request Body element could not be processed. Must not be used to carry header error information." name="detail" type="any">
+         <XMLMapping node="detail"/>
+      </Value>
+   </Parts>
+</Message>

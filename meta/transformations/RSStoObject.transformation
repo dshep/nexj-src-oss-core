@@ -1,0 +1,76 @@
+<Transformation description="Transform from RSS Feed to Internal format" destination="RSSObject" source="RSS2_0">
+<Initializer/>
+   <Mappings>
+      <Mapping destination="title">
+         <Sources>
+            <Source source="channel title"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="link">
+         <Sources>
+            <Source source="channel link"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="description">
+         <Sources>
+            <Source source="channel description"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="language">
+         <Sources>
+            <Source source="channel language"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="copyright">
+         <Sources>
+            <Source source="channel copyright"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="webMaster">
+         <Sources>
+            <Source source="channel webMaster"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="pubDate">
+         <Sources>
+            <Source source="channel pubDate"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="lastBuildDate">
+         <Sources>
+            <Source source="channel lastBuildDate"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="generator">
+         <Sources>
+            <Source source="channel generator"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="docs">
+         <Sources>
+            <Source source="channel docs"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="ttl">
+         <Sources>
+            <Source source="channel ttl"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="items title">
+         <Sources>
+            <Source source="channel item title"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="items link">
+         <Sources>
+            <Source source="channel item link"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="items description">
+         <Sources>
+            <Source source="channel item description"/>
+         </Sources>
+      </Mapping>
+   </Mappings>
+<Finalizer/>
+</Transformation>

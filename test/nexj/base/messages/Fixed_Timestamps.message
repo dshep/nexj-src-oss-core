@@ -1,0 +1,24 @@
+<Message format="Fixed">
+   <FixedMapping/>
+   <Parts>
+      <Message maxCount="0" name="record">
+         <Parts>
+            <Value minCount="1" name="ts_1" type="timestamp">
+               <FixedMapping width="30"/>
+            </Value>
+            <Value minCount="1" name="ts_2" type="timestamp">
+               <FixedMapping format="yyyyMMddHHmmss.SSSZ" width="30"/>
+            </Value>
+            <Value minCount="1" name="ts_3" type="timestamp">
+               <FixedMapping alignment="right" format="yyyyMMddHHmmss.SSS" width="30"/>
+            </Value>
+            <Value minCount="1" name="ts_4" type="timestamp">
+               <FixedMapping alignment="right" format="yyyyMMddHHmmss.SSS" prefix="((" suffix="))" width="30"/>
+            </Value>
+            <Value minCount="1" name="ts_5" type="timestamp">
+               <FixedMapping format="yyyyy.MMMMM.dd GGG hh:mm:ss aaa" padding="_" prefix="[[[[" width="35"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

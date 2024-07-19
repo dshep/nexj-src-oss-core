@@ -1,0 +1,7 @@
+<Service layout="startX:133;startY:176;endX:400;endY:173">
+   <Script layout="y:169;x:238" name="maybe"><![CDATA[(logger'debug "TestMessageReceiver: msg is " this)
+(TestResult'new (: name (@ name)) (: service #t))
+(when (@ failure)
+   (error "err.test.service")
+)]]></Script>
+</Service>

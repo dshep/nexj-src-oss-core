@@ -1,0 +1,13 @@
+<Class description="Workflow timeout command" visibility="protected">
+   <Attributes>
+      <Attribute name="workflow" required="true" type="SysWorkflow" visibility="protected"/>
+      <Attribute name="ordinal" required="true" type="integer" visibility="protected"/>
+   </Attributes>
+   <Events>
+      <Event description="Times out the workflow instance" name="timeout">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[((@ workflow)'timeout (@ ordinal))]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

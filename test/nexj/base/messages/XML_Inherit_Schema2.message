@@ -1,0 +1,6 @@
+<Message base="XML_Inherit_Schema1" format="XML" derivation="final">
+   <XMLMapping namespace="is1" node="schema2" xsdtype="Schema2Type"/>
+   <Parts>
+      <Value name="b" type="string"/>
+   </Parts>
+</Message>

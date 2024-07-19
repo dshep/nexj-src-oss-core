@@ -1,0 +1,394 @@
+<Upgrade>
+   <Label version="0"/>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" version="1">
+      <CreateTable aspects="!LOCKING" name="A" primaryKey="A_PK">
+         <Columns>
+            <Column name="id" type="integer"/>
+            <Column caseInsensitive="false" name="firstName" precision="10" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="A_PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="A_FN" type="virtual" unique="true">
+               <IndexColumn name="firstName"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <CreateColumn name="lastName" nullable="false" precision="30" table="A" type="string"/>
+      <Exec>
+         <SQL>insert into ${table:A}(id, firstName, lastName ${ifci:A.lastName:, lastName$}) values(1, 'Joe', 'Test' ${ifci:A.lastName:, 'TEST'})</SQL>
+         <SQL>insert into ${table:A}(id, firstName, lastName ${ifci:A.lastName:, lastName$}) values(2, 'Zoe', 'Test' ${ifci:A.lastName:, 'TEST'})</SQL>
+      </Exec>
+      <AlterColumn caseInsensitive="true" name="firstName" nullable="false" precision="20" table="A" type="string"/>
+      <CreateIndex name="A_OK0" table="A" unique="false">
+         <IndexColumn name="lastName"/>
+         <IndexColumn name="firstName"/>
+      </CreateIndex>
+      <CreateColumn allocation="fixed" caseInsensitive="false" name="lnsl" precision="4" table="A" type="string"/>
+      <AlterTable name="A" primaryKey="A_OK0"/>
+      <Exec>
+         <Switch>
+            <SQL>update ${table:A} set lnsl=soundex(lastName)</SQL>
+         </Switch>
+      </Exec>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" version="1a">
+      <RenameColumn name="lnsl" table="A" to="lnsx"/>
+      <RenameTable name="A" to="B"/>
+      <CreateTable aspects="!LOCKING" name="V" primaryKey="V_PK" type="view">
+         <Columns>
+            <Column name="id" type="integer"/>
+            <Column caseInsensitive="true" name="firstName" nullable="false" precision="20" type="string"/>
+            <Column caseInsensitive="true" name="lastName" nullable="false" precision="30" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="V_PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+         <View>
+            <SQL>select * from  ${table:B} where lastName like 'Test%'</SQL>
+         </View>
+      </CreateTable>
+      <CreateTable aspects="!LOCKING" name="Q" primaryKey="Q_PK" type="query">
+         <Columns>
+            <Column name="id" type="integer"/>
+            <Column caseInsensitive="false" name="firstName" nullable="false" precision="20" type="string"/>
+            <Column caseInsensitive="false" name="lastName" nullable="false" precision="30" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="Q_PK" type="cluster" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+            <Index name="Q_FK">
+               <IndexColumn name="lastName"/>
+            </Index>
+         </Indexes>
+         <View autoupdated="false">
+            <SQL>select id, lastName, firstName from ${table:B} where lastName like 'Test%'</SQL>
+         </View>
+      </CreateTable>
+      <AlterColumn name="lnsx" nullable="false" table="B"/>
+      <RenameIndex name="A_OK0" to="A.OK1"/>
+      <RenameIndex name="A_FN" to="A.FN"/>
+      <CreateColumn name="count" nullable="false" precision="2" table="B" type="integer">
+         <SQL>update ${table} set ${keyword:count}=0</SQL>
+      </CreateColumn>
+      <CreateTable name="L" type="aspect">
+         <Columns>
+            <Column name="locking" nullable="false" type="integer"/>
+         </Columns>
+         <Indexes>
+            <Index name="L.Locking">
+               <IndexColumn name="locking"/>
+            </Index>
+            <Index name="L.LOCKING" type="aspect">
+               <IndexColumn ascending="false" name="locking"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <ApplyTableAspect name="L" pointcuts="B">
+         <SQL>update ${table} set ${keyword:locking}=0</SQL>
+      </ApplyTableAspect>
+      <ApplyIndexAspect name="L.LOCKING" pointcuts="A_*"/>
+      <CreateColumn name="num" nullable="false" precision="2" table="L" type="integer">
+         <SQL>update ${table} set num=1</SQL>
+      </CreateColumn>
+      <AlterColumn name="num" precision="4" table="L" type="integer"/>
+      <RenameColumn name="num" table="L" to="num4"/>
+      <CreateIndex name="L.Num" table="L">
+         <IndexColumn name="num4"/>
+      </CreateIndex>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" version="2">
+      <CreateColumn name="fullName" precision="50" table="B" type="string"/>
+      <AlterColumn caseInsensitive="false" name="fullName" precision="60" table="B" type="string"/>
+      <AlterColumn caseInsensitive="true" name="fullName" table="B"/>
+      <AlterTable name="B" primaryKey="A_PK"/>
+      <RenameIndex name="A.OK1" to="A.OK2"/>
+      <DropColumn name="lnsx" table="B"/>
+      <DropColumn name="fullName" table="B"/>
+      <DropIndex name="A.OK2"/>
+      <DropIndex name="A.FN"/>
+      <DropIndex name="L.Num"/>
+      <DropColumn name="num4" table="L"/>
+      <RemoveIndexAspect name="L.LOCKING" pointcuts="*"/>
+      <RemoveTableAspect name="L" pointcuts="*"/>
+      <DropIndex name="A_PK"/>
+      <DropTable name="B"/>
+      <DropTable name="V"/>
+      <DropTable name="Q"/>
+      <DropTable name="L"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="ExternalRelationalDatabase" description="Use a different data source" version="2.ext">
+      <CreateTable name="C" primaryKey="C.PK">
+         <Columns>
+            <Column caseInsensitive="false" name="id" nullable="false" type="integer"/>
+         </Columns>
+         <Indexes>
+            <Index name="C.PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Tests ability to use reserved words as table, column, and index names." version="3">
+      <CreateTable name="select" primaryKey="select_PK">
+         <Columns>
+            <Column allocation="fixed" name="where" precision="5" type="string"/>
+            <Column allocation="varying" name="what" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="select_PK" unique="true">
+               <IndexColumn name="where"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <CreateColumn allocation="varying" name="like" table="select" type="string"/>
+      <RenameColumn name="where" table="select" to="is"/>
+      <AlterColumn name="is" table="select" type="integer"/>
+      <DropIndex name="select_PK"/>
+      <DropColumn name="is" table="select"/>
+      <RenameTable name="select" to="update"/>
+      <DropTable name="update"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="ExternalRelationalDatabase" description="Use a different data source" version="3.ext">
+      <DropTable name="C"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Tests Full-Text Search index management." version="4">
+      <CreateTable name="B" primaryKey="B_PK">
+         <Columns>
+            <Column name="id" type="integer"/>
+            <Column name="value1" precision="10" type="string"/>
+            <Column name="value2" precision="10" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="B_PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <CreateIndex name="B.TEXTv1" table="B" type="text">
+         <IndexColumn ascending="true" name="value1"/>
+         <IndexColumn ascending="true" name="value2"/>
+      </CreateIndex>
+      <CreateIndex name="B.TEXTv2" table="B" type="text">
+         <IndexColumn ascending="true" name="value2"/>
+      </CreateIndex>
+      <DropIndex name="B.TEXTv1"/>
+      <DropIndex name="B.TEXTv2"/>
+      <DropTable name="B"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Test LOB column creation/alteration." version="5">
+      <CreateTable aspects="!LOCKING" name="B" primaryKey="B_PK">
+         <Columns>
+            <Column name="id" type="integer"/>
+            <Column allocation="varying" name="value1" precision="10" type="string"/>
+            <Column allocation="locator" name="value2" nullable="true" precision="20" type="string"/>
+            <Column allocation="locator" name="value3" nullable="false" precision="20" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="B_PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <Exec>
+         <SQL><![CDATA[insert into ${table:B} (id, value1 ${ifci:B.value1:, value1$}, value2, value3) values (0, '1' ${ifci:B.value1:, '1CS'}, '2', '3')]]></SQL>
+      </Exec>
+      <CreateColumn allocation="locator" name="value4" nullable="false" precision="30" table="B" type="string">
+         <SQL><![CDATA[update ${table:B} set value4='4']]></SQL>
+      </CreateColumn>
+      <DropColumn name="value4" table="B"/>
+      <AlterColumn allocation="locator" name="value1" table="B" type="string"/>
+      <AlterColumn allocation="varying" caseInsensitive="true" name="value1" precision="10" table="B" type="string"/>
+      <AlterColumn name="value2" nullable="false" table="B"/>
+      <AlterColumn name="value2" nullable="true" table="B"/>
+      <DropTable name="B"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Test column precision change." version="6">
+      <CreateTable aspects="!LOCKING" name="B" primaryKey="B_PK">
+         <Columns>
+            <Column name="id" type="integer"/>
+            <Column allocation="varying" name="value1" precision="10" type="string"/>
+            <Column name="value2" nullable="true" precision="10" scale="5" type="decimal"/>
+         </Columns>
+         <Indexes>
+            <Index name="B_PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <Exec>
+         <SQL><![CDATA[insert into ${table:B} (id, value1 ${ifci:B.value1:, value1$}, value2) values (0, 'AB' ${ifci:B.value1:, 'CS'}, 3.1415926536)]]></SQL>
+      </Exec>
+      <AlterColumn allocation="varying" name="value1" nullable="true" precision="2" table="B" type="string"/>
+      <AlterColumn name="value2" nullable="true" precision="2" scale="1" table="B" type="decimal"/>
+      <DropTable name="B"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Test upgrade of table with long name." version="7">
+      <CreateTable aspects="!LOCKING" name="TableWithAReallyLongTableName" primaryKey="TWARLTN_PK">
+         <Columns>
+            <Column name="id" type="integer"/>
+         </Columns>
+         <Indexes>
+            <Index name="TWARLTN_PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <CreateColumn allocation="varying" name="value" nullable="false" table="TableWithAReallyLongTableName" type="string"/>
+      <DropTable name="TableWithAReallyLongTableName"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Tests alter clustered index column." version="8">
+      <CreateTable aspects="!LOCKING" name="A" primaryKey="A_PK">
+         <Columns>
+            <Column name="id" nullable="false" type="integer"/>
+            <Column name="firstName" nullable="false" precision="30" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="A_PK" type="cluster" unique="true">
+               <IndexColumn name="id"/>
+               <IndexColumn ascending="false" name="firstName"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <AlterColumn allocation="varying" caseInsensitive="true" name="firstName" precision="15" table="A" type="string"/>
+      <DropTable name="A"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Tests view ${concat()} macro." version="9">
+      <CreateTable aspects="!LOCKING" name="V" primaryKey="V_PK" type="view">
+         <Columns>
+            <Column name="id" type="integer"/>
+            <Column caseInsensitive="true" name="name" nullable="false" precision="51" type="string"/>
+         </Columns>
+         <Indexes>
+            <Index name="V_PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+         <View>
+            <SQL>select ${concat(${table:test.Contact}.first_name, ' ', ${table:test.Contact}.last_name)} as name from ${table:test.Contact}</SQL>
+         </View>
+      </CreateTable>
+      <DropTable name="V"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Tests view ${timestampadd()} macro." version="10">
+      <CreateTable aspects="!LOCKING" name="V" primaryKey="V_PK" type="view">
+         <Columns>
+            <Column name="id" type="integer"/>
+            <Column name="before" nullable="false" type="timestamp"/>
+         </Columns>
+         <Indexes>
+            <Index name="V_PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+         <View>
+            <SQL>select ${timestampadd(frac_second, -365, ${table:test.Contact}.birthdate)} as ts0,
+                        ${timestampadd(second, -365, ${table:test.Contact}.birthdate)} as ts1,
+                        ${timestampadd(minute, -365, ${table:test.Contact}.birthdate)} as ts2,
+                        ${timestampadd(hour, -365, ${table:test.Contact}.birthdate)} as ts3,
+                        ${timestampadd(day, -365, ${table:test.Contact}.birthdate)} as ts4,
+                        ${timestampadd(week, -365, ${table:test.Contact}.birthdate)} as ts5,
+                        ${timestampadd(month, -365, ${table:test.Contact}.birthdate)} as ts6,
+                        ${timestampadd(quarter, -365, ${table:test.Contact}.birthdate)} as ts7,
+                        ${timestampadd(year, -365, ${table:test.Contact}.birthdate)} as ts8
+                 from ${table:test.Contact}</SQL>
+         </View>
+      </CreateTable>
+      <DropTable name="V"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Tests view ${extract()} macro." version="11">
+      <CreateTable aspects="!LOCKING" name="V" primaryKey="V_PK" type="view">
+         <Columns>
+            <Column name="id" type="integer"/>
+            <Column name="before" nullable="false" type="timestamp"/>
+         </Columns>
+         <Indexes>
+            <Index name="V_PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+         <View>
+            <SQL>select ${extract(frac_second, ${table:test.Contact}.birthdate)} as usec,
+                        ${extract(second, ${table:test.Contact}.birthdate)} as sec,
+                        ${extract(minute, ${table:test.Contact}.birthdate)} as "MINUTE",
+                        ${extract(hour, ${table:test.Contact}.birthdate)} as hr,
+                        ${extract(day, ${table:test.Contact}.birthdate)} as "DAY",
+                        ${extract(week, ${table:test.Contact}.birthdate)} as week,
+                        ${extract(month, ${table:test.Contact}.birthdate)} as "MONTH",
+                        ${extract(quarter, ${table:test.Contact}.birthdate)} as q,
+                        ${extract(year, ${table:test.Contact}.birthdate)} as yr
+                 from ${table:test.Contact}</SQL>
+         </View>
+      </CreateTable>
+      <DropTable name="V"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Tests modify clustered index." version="12">
+      <CreateTable aspects="!LOCKING" name="A" primaryKey="A_PK">
+         <Columns>
+            <Column name="id" nullable="false" type="integer"/>
+            <Column name="id1" nullable="false" type="integer"/>
+            <Column name="id2" nullable="false" type="integer"/>
+         </Columns>
+         <Indexes>
+            <Index name="A_PK" unique="true">
+               <IndexColumn name="id1"/>
+            </Index>
+            <Index name="A_OK1" type="cluster" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <DropIndex name="A_OK1"/>
+      <CreateIndex name="A_OK2" table="A" type="cluster" unique="true">
+         <IndexColumn name="id2"/>
+      </CreateIndex>
+      <DropTable name="A"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Test renaming an index then dropping its table." version="13">
+      <CreateTable aspects="!LOCKING" name="A" primaryKey="A_PK">
+         <Columns>
+            <Column name="id" nullable="false" type="integer"/>
+         </Columns>
+         <Indexes>
+            <Index name="A_PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <RenameIndex name="A_PK" to="A_PK1"/>
+      <DropTable name="A"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Test renaming an index inherited from an aspect then dropping its table." version="14">
+      <CreateTable aspects="!LOCKING VERSIONED" name="A" primaryKey="A_PK">
+         <Columns>
+            <Column name="id" nullable="false" type="integer"/>
+         </Columns>
+         <Indexes>
+            <Index name="A_PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <RenameIndex name="A.OK_Version" to="A_VK"/>
+      <DropTable name="A"/>
+   </RelationalDatabaseUpgrade>
+   <RelationalDatabaseUpgrade dataSource="DefaultRelationalDatabase" description="Test modifying table hints." version="15">
+      <CreateTable aspects="!LOCKING" hints="test1 test2" name="A" primaryKey="A_PK">
+         <Columns>
+            <Column name="id" nullable="false" type="integer"/>
+         </Columns>
+         <Indexes>
+            <Index name="A_PK" unique="true">
+               <IndexColumn name="id"/>
+            </Index>
+         </Indexes>
+      </CreateTable>
+      <AlterTable name="A" hints="test3 !test2"/>
+      <DropTable name="A"/>
+   </RelationalDatabaseUpgrade>
+   <Label version="12345"/>
+</Upgrade>

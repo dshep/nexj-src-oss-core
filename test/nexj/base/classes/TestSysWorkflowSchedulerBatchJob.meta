@@ -1,0 +1,19 @@
+<Class base="SysWorkflowSchedulerBatchJob">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;TEST&quot;"/>
+      <Attribute initializer="(cast timestamp 0)" name="time" static="true" type="timestamp"/>
+      <Attribute collection="true" initializer="(collection)" name="asyncInvokeList" static="true" type="binary"/>
+   </Attributes>
+   <Events>
+      <Event args="assignment" description="Runs an assignment asynchronously." name="runAssignment">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[((this'asyncInvokeList)'add (assignment':oid))]]></Action>
+         </Actions>
+      </Event>
+      <Event name="getCurrentTime">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(@ time)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

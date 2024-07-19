@@ -1,0 +1,56 @@
+<Class base="Animal">
+   <Attributes>
+      <Attribute name="petName" type="string"/>
+      <Attribute name="petFriend" type="DomesticAnimal"/>
+      <Attribute name="classCode" required="true" type="string" value="&quot;DOM&quot;"/>
+   </Attributes>
+   <PersistenceMapping classCodeAttribute="classCode" dataSource="MemoryVirtualSource">
+      <ServiceMapping derived="true">
+         <AttributeMappings>
+            <AttributeMapping name="petName"/>
+            <AttributeMapping destinationKey="petName commonName" name="petFriend"/>
+         </AttributeMappings>
+         <ReadMapping>
+            <Case where="(= (@ petName) ,key)">
+               <Read>
+                  <Script><![CDATA[(logger'info "DomesticAnimal.read" class attributes where orderBy count offset xlock)
+((AnimalStore'lookupManyByAttribute) 'petName key)]]></Script>
+               </Read>
+            </Case>
+            <Case where="(and (= (@ petName) ,key1) (= (@ commonName) ,key2))">
+               <Read>
+                  <Script><![CDATA[(logger'info "DomesticAnimal.readBy2Keys" class attributes where orderBy count offset xlock)
+
+; Take the intersection
+(let
+   (
+      (byPetNameOIDs (map (lambda (animal) (animal':oid)) ((AnimalStore'lookupManyByAttribute) 'petName key1)))
+      (byCommonName ((AnimalStore'lookupManyByAttribute) 'commonName key2))
+   )
+   (filter
+      (lambda (animal)
+         (in? (animal':oid) byPetNameOIDs)
+      )
+      byCommonName
+   )
+)]]></Script>
+               </Read>
+            </Case>
+         </ReadMapping>
+         <UpdateMapping>
+            <Case attributes="petName">
+               <Script><![CDATA[
+(let
+   (
+      (result ((AnimalStore'updateByOID) (this':oid) this))
+   )
+   (unless result
+      (throw-optimistic-lock this)
+   )
+)
+]]></Script>
+            </Case>
+         </UpdateMapping>
+      </ServiceMapping>
+   </PersistenceMapping>
+</Class>

@@ -1,0 +1,98 @@
+<Message description="The SubmitObjectsRequest allows one to submit a list of RegistryObject elements." format="XML">
+   <XMLMapping namespace="rs" node="SubmitObjectsRequest" schema="rs.xsd" uri="urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0"/>
+   <Parts>
+      <Message name="LeafRegistryObjectList" aggregation="random">
+         <XMLMapping namespace="rim" schema="http://docs.oasis-open.org/regrep/v3.0/schema/rim.xsd" uri="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0"/>
+         <Parts>
+            <Message name="Classification">
+               <XMLMapping namespace="rim"/>
+            </Message>
+            <Message name="ExtrinsicObject">
+               <XMLMapping namespace="rim"/>
+               <Parts>
+                  <Value name="id" type="string">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Value name="mimeType" type="string">
+                     <XMLMapping type="attribute"/>
+                  </Value>
+                  <Message name="Name">
+                     <XMLMapping namespace="rim"/>
+                     <Parts>
+                        <Message name="LocalizedString">
+                           <XMLMapping namespace="rim"/>
+                           <Parts>
+                              <Value name="value" type="string">
+                                 <XMLMapping type="attribute"/>
+                              </Value>
+                           </Parts>
+                        </Message>
+                     </Parts>
+                  </Message>
+                  <Message maxCount="0" name="Slot">
+                     <XMLMapping namespace="rim"/>
+                     <Parts>
+                        <Value name="name" type="string">
+                           <XMLMapping type="attribute"/>
+                        </Value>
+                        <Message name="ValueList">
+                           <XMLMapping namespace="rim"/>
+                           <Parts>
+                              <Value name="Value" type="string">
+                                 <XMLMapping namespace="rim"/>
+                              </Value>
+                           </Parts>
+                        </Message>
+                     </Parts>
+                  </Message>
+                  <Message name="Classification">
+                     <XMLMapping namespace="rim"/>
+                     <Parts>
+                        <Value name="classificationScheme" type="string">
+                           <XMLMapping type="attribute"/>
+                        </Value>
+                        <Message name="Name">
+                           <XMLMapping namespace="rim"/>
+                           <Parts>
+                              <Message name="LocalizedString">
+                                 <XMLMapping namespace="rim"/>
+                                 <Parts>
+                                    <Value name="value" type="string">
+                                       <XMLMapping type="attribute"/>
+                                    </Value>
+                                 </Parts>
+                              </Message>
+                           </Parts>
+                        </Message>
+                     </Parts>
+                  </Message>
+                  <Message maxCount="0" name="ExternalIdentifier">
+                     <XMLMapping namespace="rim"/>
+                     <Parts>
+                        <Value name="identificationScheme" type="string">
+                           <XMLMapping type="attribute"/>
+                        </Value>
+                        <Value name="value" type="string">
+                           <XMLMapping type="attribute"/>
+                        </Value>
+                        <Message name="Name">
+                           <XMLMapping namespace="rim"/>
+                           <Parts>
+                              <Message name="LocalizedString">
+                                 <XMLMapping namespace="rim"/>
+                                 <Parts>
+                                    <Value name="value" type="string">
+                                       <XMLMapping type="attribute"/>
+                                    </Value>
+                                 </Parts>
+                              </Message>
+                           </Parts>
+                        </Message>
+                     </Parts>
+                  </Message>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

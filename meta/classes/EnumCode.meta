@@ -1,0 +1,140 @@
+<Class aspects="LOCKING" caption="idsc.EnumCode.caption" nameAttribute="value">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;E&quot;"/>
+      <Attribute name="type" required="true" reverse="codes" type="EnumType"/>
+      <Attribute access="isNewInstance" description="PART OF THE MULTI-PART PK --&gt; exposed here as a workaround" name="typeCode" required="true" type="string" validation="(= (@ typeCode) (@ type typeCode))" value="(@ type typeCode)"/>
+      <Attribute description="This field is to persist the code tag used in the repository (or rules engine) to build business logic against this value. Only required for system enums." name="name" type="string"/>
+      <Attribute access="isNewInstance" caption="idsc.EnumCode.valueCode" description="This is the coded value for the list element" name="value" required="true" type="string"/>
+      <Attribute access="hasRuntimeEditableType" description="Specifies the order that the items appear in a drop-down" name="displayOrder" required="true" type="integer"/>
+      <Attribute access="hasRuntimeEditableType" name="description" type="string"/>
+      <Attribute access="hasRuntimeEditableType" caption="idsc.EnumCode.behaveAsValue" description="Allows you to determine the business behaviour of a code.  I.e. you could create 3 different closed values, but have them all point to the same behaviour value (closed).  Set this to code for most items.  This field should always be filled in.  In most cases, it will be the same as the Value.  ALL BUSINESS logic should operate on the behaveAsValue NOT the value attribute." initializer="(@ value)" name="behaveAsValue" required="true" type="string"/>
+      <Attribute description="Indicates if behaviour is associated with this value.  If you have added business logic against a particular value, than you should set this flag to TRUE." initializer="#f" name="hasBehavior" required="true" type="boolean"/>
+      <Attribute description="Determines if this value's display text is editable at Run time.  Important: This field is not used in enumeration logic; its usefulness needs to be discuss the next time the enumeration model is evaluated." initializer="#f" name="displayUpdateable" required="true" type="boolean"/>
+      <Attribute description="Is the Code editable at run time?  Important: This field is not used in enumeration logic; its usefulness needs to be discuss the next time the enumeration model is evaluated." initializer="#f" name="codeUpdateable" required="true" type="boolean"/>
+      <Attribute description="Determines if the code can hidden.  Important: This field is not used in enumeration logic; its usefulness needs to be discuss the next time the enumeration model is evaluated." initializer="#t" name="hideable" required="true" type="boolean"/>
+      <Attribute description="Determines if the code can be deleted.  Important: This field is not used in enumeration logic; its usefulness needs to be discuss the next time the enumeration model is evaluated." initializer="#f" name="deleteable" required="true" type="boolean"/>
+      <Attribute description="During an upgrade, disable updates to this entry.  Important: This field is not used in enumeration logic; its usefulness needs to be discuss the next time the enumeration model is evaluated." initializer="#t" name="upgradeUpdateable" required="true" type="boolean"/>
+      <Attribute access="isNewInstance" description="Classification of the code itself" initializer="(EnumCodeClassificationEnum'USER_DEFINED)" name="classification" required="true" type="string"/>
+      <Attribute access="hasRuntimeEditableType" description="Allows clients to set a SINGLE external code that this relates to for integration purposes" name="externalValue" type="string"/>
+      <Attribute description="Exposed parent typeCode foreign key part" name="parentTypeCode" type="string" value="(@ parent typeCode)" visibility="protected"/>
+      <Attribute description="Exposed parent valueCode foreign key part" name="parentValueCode" type="string" value="(@ parent value)" visibility="protected"/>
+      <Attribute access="hasRuntimeEditableParent" description="Simple dependency parent" name="parent" reverse="children" type="EnumCode"/>
+      <Attribute access="hasRuntimeEditableCaptions" cascade="delete" collection="true" description="Localized Display values" name="displayValues" reverse="code" type="EnumDisplay"/>
+      <Attribute collection="true" name="children" reverse="parent" type="EnumCode"/>
+      <Attribute access="hasRuntimeEditableCaptions" description="Localized Display value" name="display" reverse="code" type="EnumDisplayLocalized"/>
+      <Attribute access="hasRuntimeEditableType" description="Base attribute overridden to apply additional security." initializer="#t" name="active" required="true" type="boolean"/>
+      <Attribute access="hasRuntimeEditableCaptions" cached="true" caption="ids.Caption" description="Virtual Attribute to simplify setting captions on all locales on create." name="defaultCaption" type="string" validation="(or (null? value) (&lt;= (string-length value) 100))" value="(@ display caption)"/>
+      <Attribute description="True if enum code has captions that differ from the default." name="hasCustomCaptions" type="boolean" value="(any (!= (@ displayValues caption) (@ defaultCaption)))"/>
+      <Attribute description="Sets an alternate style when enum code has custom captions." name="defaultCaptionStyle" type="string" value="(when (@ hasCustomCaptions) &quot;baseFontSize10Bold&quot;)"/>
+      <Attribute description="True if enum code is a new instance." name="isNewInstance" type="boolean" value="(this'isNew)"/>
+      <Attribute description="True if captions are runtime editable (i.e., enum type classification is system design time display, system design time editable or custom field picklist)." name="hasRuntimeEditableCaptions" type="boolean" value="(@ type hasRuntimeEditableCaptions)"/>
+      <Attribute description="True if its enum type is runtime editable (i.e., enum type classification is system design time editable or custom field picklist)." name="hasRuntimeEditableType" type="boolean" value="(@ type isRuntimeEditable)"/>
+      <Attribute description="True if enum code is runtime deleteable (i.e., enum type classification is custom field picklist)." name="isRuntimeDeleteable" type="boolean" value="(@ type isCustomFieldPicklist)"/>
+      <Attribute description="True if parent is not null and not a system enum, false otherwise." name="hasRuntimeEditableParent" required="true" type="boolean" value="(and (not(null? (@ type parentTypeCode))) (@ hasRuntimeEditableType))"/>
+      <Attribute name="createable" type="boolean" value="(@ type isRuntimeEditable)"/>
+   </Attributes>
+   <Events>
+      <Event access="createable" name="create" privilege="EnumManage" visibility="public">
+         <Actions>
+            <Action condition="(and (null? (@ behaveAsValue)) (not (null? (@ value))))" description="Initialize behaveAsValue" name="initBehaveAsValue" type="before"><![CDATA[(this'behaveAsValue (@ value))]]></Action>
+            <Action condition="(null? (@ displayOrder))" description="Sets the display order to the next value in order.  " name="initDisplayOrder" type="before"><![CDATA[(this'displayOrder (this'getNextDisplayOrder))]]></Action>
+            <Action condition="(not (null? (@ defaultCaption)))" description="Initializes all the displayValues to a default caption." name="addDefaultDisplayValues" type="before"><![CDATA[(this'updateAllCaptions (@ defaultCaption))]]></Action>
+         </Actions>
+      </Event>
+      <Event access="hasRuntimeEditableCaptions" name="update" privilege="EnumManage" visibility="public">
+         <Actions>
+            <Action condition="(this'updated 'displayOrder)" description="Update Denormalized Display Order" name="updateDisplayOrderDenorm" type="before"><![CDATA[(for-each (lambda (d)
+      (d'displayOrder (@ displayOrder))
+   )
+   (@ displayValues)
+)]]></Action>
+            <Action condition="(and (this'updated 'defaultCaption) (or (not (this'isNew)) (not (null? (@ defaultCaption))))   )" description="Reset all captions when the defaultCaption attribute is updated.  Only update new instances if default caption is not null." name="updateDefaultCaption" type="before"><![CDATA[(this'updateAllCaptions (@ defaultCaption))]]></Action>
+         </Actions>
+      </Event>
+      <Event access="isRuntimeDeleteable" name="delete" privilege="EnumManage" visibility="public"/>
+      <Event args="locale caption" name="addCaption">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let ((displayValue (this'findDisplay locale)))
+   (if displayValue
+      (displayValue'caption caption)
+      ;else:
+      (set! displayValue (EnumDisplay'new (: code this) (: locale locale) (: caption caption)))
+   )
+   ;return:
+   displayValue
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="locale" description="Returns #f if display doesn't exist." name="findDisplay">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(this'load '(displayValues locale caption))
+(some 
+   (lambda (dv) 
+      (if (= (dv'locale) locale)
+         dv
+         ;else
+         #f
+      )
+   )
+   (@ displayValues)
+)    ]]></Action>
+         </Actions>
+      </Event>
+      <Event args="caption" description="Sets the caption for all supported locales.  Creates the displayValue for any locales that do not exist." name="updateAllCaptions">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(logger'debug "setting caption to " caption " for all locales.")
+(for-each 
+   (lambda (locale)
+      (logger'debug "locale = " (locale'toString))
+      (this'addCaption (locale'toString) caption)
+   )
+   (((invocation-context)'metadata)'localeIterator)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Finds the next displayOrder." name="getNextDisplayOrder">
+         <Actions>
+            <Action condition="(not (null? (@ type)))" name="main" type="main"><![CDATA[((@ type)'load '(codes displayOrder))
+(let ((maxSeq -1))
+   (for-each (lambda (s)
+         (when (and (not (eq? this s)) (< maxSeq (s'displayOrder)))
+            (set! maxSeq (s'displayOrder))
+         )
+      )
+      (@ type codes)
+   )
+   ;return:
+   (+ maxSeq 1)
+)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping classCodeAttribute="classCode" dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping primaryTable="EnumCode">
+         <AttributeMappings>
+            <AttributeMapping column="classCode" name="classCode"/>
+            <AttributeMapping column="typeCode" name="typeCode"/>
+            <AttributeMapping column="valueCode" name="value"/>
+            <AttributeMapping column="name" name="name"/>
+            <AttributeMapping column="displayOrder" name="displayOrder"/>
+            <AttributeMapping column="description" name="description"/>
+            <AttributeMapping column="behaveAsValueCode" name="behaveAsValue"/>
+            <AttributeMapping column="behaveFlag" name="hasBehavior"/>
+            <AttributeMapping column="editDisplayFlag" name="displayUpdateable"/>
+            <AttributeMapping column="editCodeFlag" name="codeUpdateable"/>
+            <AttributeMapping column="allowHideFlag" name="hideable"/>
+            <AttributeMapping column="allowDeleteFlag" name="deleteable"/>
+            <AttributeMapping column="classification" name="classification"/>
+            <AttributeMapping column="allowUpgradeUpdateFlag" name="upgradeUpdateable"/>
+            <AttributeMapping column="externalCode" name="externalValue"/>
+            <AttributeMapping column="parentTypeCode" name="parentTypeCode"/>
+            <AttributeMapping column="parentValueCode" name="parentValueCode"/>
+            <AttributeMapping destinationKey="EnumType.PK" name="type" sourceKey="EnumCode.FK_Type"/>
+            <AttributeMapping destinationKey="EnumCode.SK1" name="parent" sourceKey="EnumCode.FK_Parent"/>
+            <AttributeMapping destinationKey="EnumCode.FK_Parent" name="children" sourceKey="EnumCode.SK1"/>
+            <AttributeMapping destinationKey="EnumDisplay.FK_Code" name="displayValues" sourceKey="EnumCode.PK"/>
+            <AttributeMapping destinationKey="EnumDisplay.FK_Code" name="display" sourceKey="EnumCode.PK"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+<connector xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd" version="1.5">
+   <display-name>NexJ File Resource Adapter</display-name>
+   <vendor-name>NexJ Systems, Inc.</vendor-name>
+   <eis-type>Integration</eis-type>
+   <resourceadapter-version>1.0</resourceadapter-version>
+   <resourceadapter>
+      <resourceadapter-class>nexj.core.rpc.file.ra.FileResourceAdapter</resourceadapter-class>
+      <outbound-resourceadapter>
+         <connection-definition>
+            <managedconnectionfactory-class>nexj.core.rpc.file.ra.FileManagedConnectionFactory</managedconnectionfactory-class>
+            <config-property>
+               <config-property-name>inputConnection</config-property-name>
+               <config-property-type>java.lang.Boolean</config-property-type>
+            </config-property>
+            <config-property>
+               <config-property-name>outgoingDirectory</config-property-name>
+               <config-property-type>java.lang.String</config-property-type>
+            </config-property>
+            <config-property>
+               <config-property-name>outgoingTempDirectory</config-property-name>
+               <config-property-type>java.lang.String</config-property-type>
+            </config-property>
+            <config-property>
+               <config-property-name>journalDirectory</config-property-name>
+               <config-property-type>java.lang.String</config-property-type>
+            </config-property>
+            <connectionfactory-interface>nexj.core.rpc.file.FileConnectionFactory</connectionfactory-interface>
+            <connectionfactory-impl-class>nexj.core.rpc.file.ra.FileConnectionFactory</connectionfactory-impl-class>
+            <connection-interface>nexj.core.rpc.file.FileConnection</connection-interface>
+            <connection-impl-class>nexj.core.rpc.file.ra.FileConnection</connection-impl-class>
+         </connection-definition>
+         <transaction-support>XATransaction</transaction-support>
+         <reauthentication-support>false</reauthentication-support>
+      </outbound-resourceadapter>
+      <inbound-resourceadapter>
+         <messageadapter>
+            <messagelistener>
+               <messagelistener-type>nexj.core.rpc.file.FileListener</messagelistener-type>
+               <activationspec>
+                  <activationspec-class>nexj.core.rpc.file.ra.FileConsumerConfig</activationspec-class>
+                  <required-config-property>
+                     <config-property-name>incomingDirectory</config-property-name>
+                  </required-config-property>
+                  <required-config-property>
+                     <config-property-name>journalDirectory</config-property-name>
+                  </required-config-property>
+               </activationspec>
+            </messagelistener>
+         </messageadapter>
+      </inbound-resourceadapter>
+   </resourceadapter>
+</connector>

@@ -1,0 +1,596 @@
+(declare scope server)
+(import
+   '( javax.transaction.Status
+      nexj.core.meta.integration.Channel
+      nexj.core.meta.integration.Message
+      nexj.core.meta.integration.CompositeMessagePartInstance
+      nexj.core.meta.integration.CompositeMessagePartRef
+      nexj.core.meta.integration.format.xml.XMLMessagePartMapping
+      nexj.core.meta.integration.MessageTable
+      nexj.core.meta.integration.service.Interface
+      nexj.core.integration.Transformer
+      nexj.core.integration.Input
+      nexj.core.integration.io.ObjectInput
+      nexj.core.integration.io.ObjectOutput
+      nexj.core.integration.io.StreamInput       
+      nexj.core.integration.io.WriterOutput
+      nexj.core.util.IndentingXMLWriter
+      nexj.core.rpc.tcp.ra.TCPTimeoutException
+   )
+)
+
+
+; Server-side message transformer.
+;
+; @arg msg transferObject The source message to transform.
+; @arg transformation-name string The name of the transformation.
+; @arg args A list of arguments to the transformation; omit if
+; transformation takes no arguments.
+; @ret The transformed message.
+(define (transform-message msg transformation-name . args)
+   (let*
+      ((transformation
+            (((invocation-context)'metadata)'getTransformation transformation-name)
+         )
+         (transformer (nexj.core.integration.Transformer'new (invocation-context)))
+      )
+      (transformer'transform msg transformation args)
+   )
+)
+
+; Server-side message formatter.  Serializes an internal message 
+; and formats it to raw format based on its message type's format.
+; 
+; @arg msg transferObject The message to format.  It should be in internal format (transfer object).
+; @ret any The formatted message.
+(define (format-message msg)
+   (let*
+      ((messageType (((invocation-context)'metadata)'getMessage (msg':class)))
+         (formatter (((messageType'format)'formatter)'getInstance (invocation-context)))
+         (out (nexj.core.integration.io.ObjectOutput'new))
+      )
+
+      (logger'debug "Starting format step")
+      (logger'dump "- formatting message:\n" msg)
+      (formatter'format msg messageType out)
+      (out'object)
+   )
+)
+
+; Server-side pretty message formatter.  
+; 
+; Serializes an internal message and formats it to a pretty version of it's raw format.
+; 
+; XML messages are currently supported.  All other formats are passed
+; on to the regular (non-pretty) formatter.
+; 
+; @arg msg TransferObject The message to format.  It should be in internal format (transfer object).
+; @ret any The pretty formatted message.
+; @see format-message parse-message transform-message
+(define (format-message-pretty msg)
+   (let*
+      (
+         (messageType (((invocation-context)'metadata)'getMessage (msg':class)))
+         (formatter (((messageType'format)'formatter)'getInstance (invocation-context)))
+         (out (open-output-string))
+         (outPretty (nexj.core.util.IndentingXMLWriter'new out))
+         (output (nexj.core.integration.io.WriterOutput'new outPretty))
+      )
+      (logger'debug (messageType'format))
+      (if (in? ((messageType'format)'name) "XML")
+         (begin
+            (logger'debug "Starting pretty format step")
+            (logger'dump "- pretty formatting message:\n" msg)
+            (formatter'format msg messageType output)
+            (out'toString)
+         )
+         (format-message msg)
+      )
+         
+   )
+)
+
+; Server-side message parser.  Unserializes a message from a particular raw format to an internal message type.
+; @detail
+; Note that for object messages, the "raw" format is an instance of an object.  As an example, if we have a
+; message type with an object format based on the Contact class named "WireContact" we might parse an instance 
+; to internal format as (parse-message myContactInstance "WireContact").
+; @arg messages string A space-seperated list of expressions that evaluate to message type name (string).  The message type that most closely matches the format of the raw message will be used for parsing.  e.g. "MessageType1" variable1 "MessageType2" (get-message name)
+; @arg body expression An expression that evaluates to the raw message content e.g. (@ params xml)
+; @ret any The parsed message.
+(define (parse-message body . messages)
+   (let*
+      (
+         (table (nexj.core.meta.integration.MessageTable'new))
+         (context (invocation-context))
+         (metadata (context'metadata))
+      )
+      (logger 'debug "Starting parser step")
+      (for-each
+         (lambda (messageTypeName)
+            (let ((messageType (metadata'getMessage messageTypeName)))
+               (logger'debug (format "- adding {0} to MessageTable" messageTypeName))
+               (table'addMessage messageType)
+            )
+         )
+         messages
+      )
+
+      (let
+         (
+            (parser (((table'format)'parser)'getInstance context))
+         )
+         (parser'initializeMessageTable table)
+
+         ; If the message is an Input itself, parse its contents directly
+         ; Otherwise, if the message is a primitive, parse it through an Input.
+         (logger'dump "- parsing message:\n" body)
+         (if (instance? body nexj.core.integration.Input)
+            (parser'parse body table)
+            (parser'parse (nexj.core.integration.io.ObjectInput'new body) table)
+         )
+      )
+   )
+)
+
+; Invokes an integration service with a given message, output channel and arguments
+; 
+; 
+; The message can be one of:
+; 
+; - a message in canonical form
+; 
+; - a raw message in a transfer object's "body" part
+; 
+; - a raw message as a primitive type.  
+; 
+; If there is an interface specified on the service, the raw message will be parsed automatically.  In all cases
+; if there is an inteface on the service and the provided message doesn't exist in the interface's request
+; list, the message will be rejected.
+; 
+; The args will be bound to the list of args specified in the service definition.  The number of args must match
+; the number of arguments expected by the service.
+; 
+; If there is an interface specified on the service, the result will always be the 
+; internal (canonical) format of one of the interface's response messages.  If there is no interface 
+; specified, it will be the return value of the last script step executed in the service i.e. could be anything.
+; @arg service-name string Name of the service to invoke.
+; @arg message message Message to pass to the service.  See invokeService description for more information.
+; @arg output string Default output channel name.
+; @arg args any List of arguments to pass to the service.  See invokeService description for more information.
+; @ret any  Result value of the service call.  See invokeService description for more information.
+; @example
+; ; calling with a message in canonical form
+; (invokeService 
+;     "AddPerson" 
+;     (message 
+;        (: :class "PersonMsg") 
+;        (: firstName "James") 
+;        (: lastName "Tuxedo")
+;     ) 
+;     "outChannel"
+; )
+; ; calling with a message in raw form
+; (invokeService 
+;     "AddPerson" 
+;     "<PersonMsg><firstName>James</firstName><lastName>Tuxedo</lastName></PersonMsg>"
+;     "outChannel"
+; )
+(define (invokeService service-name message output . args)
+   ((apply SysService 'invoke
+         service-name
+         message
+         output
+         args
+      )'result
+   )
+)
+
+; Creates a test message 
+; Provides an easy way to generate sample messages to test message formatting and transformations.  
+; The function generates the correct structure for a given message type with appropriate values.  
+; Any collection parts will generate two occurrences.
+; The default name of string values reflect their "full path" in the message.  
+; The generated primitive values may be overridden by providing a message of the correct type 
+; with some of the values filled in.  The generator only adds message parts once that would result
+; in infinite recursion.
+; 
+; If using the "defaults" message parameter, string primitive values may contain "{0}" which will be replaced by
+; an internal "occurrence" variable used for collection parts (e.g. Smith{0} results in Smith1, Smith2).
+; 
+; In addition, any primitive part in the "defaults" message parameter may be set to a procedure that takes two
+; arguments - part (a PrimitiveMessagePart with attributes 'name and 'fullPath) and the occurrence (an indicator
+; of occurrence for collections).
+; @arg msg any String, symbol or instance of the message type to create.
+; @arg defaults message An optional message of the same structure as the message type containing any desired default primitive values.
+; @ret message A sample of the requested message type complete with default values 
+; @example
+; (define m (create-test-message "SysXMLEnum" (message (: :class "SysXMLEnum") (: parent "CurrencyEnum"))))
+; (define fm (format-message m))
+; (define pm (parse-message fm "SysXMLEnum"))
+; (transform-message pm "SysXMLEnum-SysObjEnum")
+; 
+; (define msgName "ContactCSV")
+; (define m 
+;    (create-test-message msgName 
+;       (message (: :class "ContactCSV") (: rows (collection (message (: lastName (lambda (part occurrence) ((guid)'toString))) (: homeZip "hello")))))
+;    )
+; )
+(define (create-test-message msg . defaults)
+   (letrec
+      (
+         (find-in-default-msg 
+            (lambda (path defaults part occurrence)
+               (set! defaults ; strip out collections
+                  (if (eq? (defaults'class) java.util.ArrayList) 
+                     (if (> (defaults'size) 0) (defaults 0) ()) 
+                     defaults
+                  )
+               )
+               (if (or (null? defaults) (null? path))
+                  ()
+                  (let
+                     (
+                        (current (car path))
+                        (remaining (cdr path))
+                     )
+                     (if (null? remaining) ; at the end of the path
+                        (let
+                           (
+                              (defaultVal (defaults (string->symbol current)))
+                           )
+                           ; if it's not a collection or a message - return the value
+                           (if (and (not (procedure? defaultVal)) (or (eq? (defaultVal'class) java.util.ArrayList) (instance? defaultVal nexj.core.rpc.TransferObject)))
+                              ()
+                              (begin
+                                 (cond
+                                    ((string? defaultVal) (format defaultVal occurrence))
+                                    ((procedure? defaultVal) (defaultVal part occurrence))
+                                    (else defaultVal)
+                                 )
+                              )   
+                            )
+                        )
+                           
+                        ; more to go
+                        (find-in-default-msg remaining (defaults (string->symbol current)) part occurrence)
+                     )
+                  )
+               )
+            )
+         )
+         (get-test-value
+            (lambda (part occurrence)
+               (let 
+                  (
+                     (defaultValue (find-in-default-msg (cdr (string-split (part'fullPath) " ")) defaults part occurrence))
+                  )
+                  (if (not (null? defaultValue))
+                     defaultValue
+                     (if (> (part'enumerationCount) 0)
+                        (let ((enum '())) (for-each (lambda (e) (set! enum e)) (part'enumerationIterator)) enum) ; selects last enumeration
+                        (case ((part'type)'name) ; otherwise gets a default value 
+                           (("string") (string-append (part'fullPath) (occurrence'toString)))
+                           (("binary") #z123456) 
+                           (("integer") occurrence)
+                           (("long") occurrence)
+                           (("decimal")  occurrence)
+                           (("float")  occurrence)
+                           (("double") occurrence)
+                           (("timestamp") (now))
+                           (("boolean")  #t)
+                           (("any")  ; if there is an interface, create a test message with createTestMessage <messageFromInterface>
+                              (if 
+                                 (and 
+                                    (= ((part'mapping)'class) nexj.core.meta.integration.format.xml.XMLMessagePartMapping)
+                                    (not (null? ((part'mapping)'interface)))
+                                 )
+                                 ; interface
+                                 (let ((interfaceMessage ((((part'mapping)'interface)'requestTable)'getMessage 0)))
+                                    (logger'debug "+++ Got the interface message")
+                                    ;(format-message (create-test-message (interfaceMessage'name)))
+                                    (create-test-message (interfaceMessage'name))
+                                    )
+                                 ; not an interface
+                                 (string-append (part'fullPath) (occurrence'toString) "(any)")
+                              )
+                           )
+                           (else "notFound")
+                        )
+                     )
+                  )
+               )
+            )
+         )
+         ; returns a populated name value pair a submessage
+         (construct-part 
+            (lambda (part occurrence visitedRefs)
+               (if (or (eq? (part'class) nexj.core.meta.integration.CompositeMessagePartInstance) (eq? (part'class) nexj.core.meta.integration.CompositeMessagePartRef))
+                  (let 
+                     (
+                        (subMessage (message))
+                        (subMessage2 (message))
+                     )
+                     (for-each ; submessage, add the submessage's name value pair to the message we are building
+                        (lambda (subpart)
+                           (let* (
+                                    (skipping #f)
+                                 )
+                                 (if (eq? (subpart'class) nexj.core.meta.integration.CompositeMessagePartRef)
+                                    (let ((visitedKeyRef (string-append (subpart'name) ":" ((subpart'refPart)'name))))
+                                       (if (in? visitedKeyRef visitedRefs)
+                                          (set! skipping #t) ; skip it - it's a ref we've seen before - avoid infinite recursion
+                                          (set! visitedRefs (cons visitedKeyRef visitedRefs)) ; add the new ref to the list
+                                       )
+                                    )
+                                 )                              
+                                 (when (not skipping)
+                                    (let
+                                       ((p (construct-part subpart 1 visitedRefs)))
+                                       (subMessage (p'head) (p'tail)) 
+                                    )
+                                    (when (part'collection) ; generate a second pass submessage
+                                       (let
+                                          ((p (construct-part subpart 2 visitedRefs)))
+                                          (subMessage2 (p'head) (p'tail)) 
+                                       )
+                                    )
+                                 )
+                              )
+                        )
+                        (part'partIterator)
+                     )
+                     (if (eq? part (part'root))
+                        (begin ; if we are on the root, add the class name and return the entire
+                           (subMessage':class (part'name))
+                           subMessage
+                        )
+                        (cons (string->symbol (part'name)) 
+                           (if (part'collection)
+                              (collection subMessage subMessage2)
+                              subMessage
+                           )
+                        )
+                     )
+                  )     
+                  ; else primitive part
+                  (cons (string->symbol (part'name)) 
+                     (if (part'collection)
+                        (collection (get-test-value part (+ (* occurrence 10) 1)) (get-test-value part (+ (* occurrence 10) 2)))
+                        (get-test-value part occurrence)
+                     )
+                  )
+               )   
+            )
+         )
+      )
+      ; main - handle all valid input types and pass the message root to the recusive function "construct-part"
+      (begin
+         (when (not (null? defaults)) (set! defaults (car defaults))) ; get the message out of the args list
+         (construct-part 
+            ((cond
+               ((string? msg) (((invocation-context)'metadata)'getMessage msg))
+               ((symbol? msg) (((invocation-context)'metadata)'getMessage (symbol->string msg)))
+               ((eq? (msg'class) nexj.core.meta.integration.Message) msg)
+               (else (error (format "createTestMessage: Unable to read message type {0}" msg)))
+             )'root)
+            1 ; occurrence
+            () ; visitedRefs - list to avoid infinite recursion
+          )   
+      )
+   )
+)
+
+; Sends a message and receives the response.
+;
+; @arg req nexj.core.rpc.TransferObject The request message. If :class is unspecified and there
+; is no request table passed in the interface parameter, then req is treated as raw. Otherwise,
+; it is formatted.
+; @arg channel nexj.core.meta.integration.Channel The channel on which to send the request; may
+; be the channel's name or the channel object itself.
+; @arg interface nexj.core.meta.integration.service.Interface The interface to use for formatting
+; the request message and parsing the response message. May be one of the following:
+; 1) interface: In this case, the req message must be in the interface's request table. The
+;    response is parsed into one of the messages in the interface's response table.
+; 2) (list msg1 "msg2name" msg3 ...): In this case, the req message must be one of the messages
+;    in this list, and the response is parsed into one of the messages in this list, too.
+; 3) (cons requestInterface responseInterface): In this case, the req message must be in the
+;    requestInterface's request table. The response is parsed to one of the messages in
+;    responseInterface's response table.
+; 4) (cons (list reqM1 "reqM2Name") (list respM1 respM2)): In this case, the req message must
+;    be one of the messages in the request message list, and the response message must be one
+;    of the messages in the response message list.
+; 5) (cons (list ...) responseInterface) or (cons requestInterface (list ...)).
+; 6) (cons [(list ...) | requestInterface] ()): The raw response message will be returned.
+; 7) (cons () [(list ...) | responseInterface]): The req message will be formatted into whatever
+;    message is specified in its :class.
+; @ret The response message.
+(define (integration-send-receive req channel interface)
+   (let*
+      (
+         (context (invocation-context))
+         (metadata (context'metadata))
+         (channel
+            (cond
+               ((instance? channel nexj.core.meta.integration.Channel) channel)
+               ((string? channel) (metadata'getChannel channel))
+               (else (error "fail.integration.send-receive.invalidChannel"))
+            )
+         )
+         (buildTable
+            (lambda (lst initializeParserTable?)
+               (let
+                  (
+                     (table (nexj.core.meta.integration.MessageTable'new))
+                  )
+                  (for-each
+                     (lambda (msg)
+                        (table'addMessage
+                           (cond
+                              ((instance? msg nexj.core.meta.integration.Message) msg)
+                              ((string? msg) (metadata'getMessage msg))
+                              (else (error "fail.integration.send-receive.invalidMessage" msg))
+                           )
+                        )
+                     )
+                     lst
+                  )
+                  (when initializeParserTable?
+                     (let
+                        (
+                           (parser (((table'format)'parser)'getInstance context))
+                        )
+                        (parser'initializeMessageTable table)
+                     )
+                  )
+                  table
+               )
+            )
+         )
+         (getTable
+            (lambda (interface response?)
+               (let
+                  (
+                     (interface
+                        (cond
+                           ((and (pair? interface) (instance? (car interface) nexj.core.meta.integration.service.Interface))
+                              (if response? (cdr interface) (car interface))
+                           )
+                           ((and (pair? interface) (list? (car interface)))
+                              (if response? (cdr interface) (car interface))
+                           )
+                           (else interface)
+                        )
+                     )
+                  )
+                  (cond
+                     ((null? interface) ())
+                     ((instance? interface nexj.core.meta.integration.service.Interface)
+                        (if response? (interface'responseTable) (interface'requestTable))
+                     )
+                     ((list? interface) (buildTable interface response?))
+                     (else (error "fail.integration.send-receive.invalidInterface"))
+                  )
+               )
+            )
+         )
+         (responseTable (getTable interface #t))
+         (requestTable (getTable interface #f))
+         (reqMsg
+            (if (null? requestTable)
+               (unless (string-empty? (req':class))
+                  (metadata'getMessage (req':class))
+               )
+               ; else:
+               (requestTable'getMessage (req':class))
+            )
+         )
+         (responder ((channel'sender)'getInstance context))
+      )
+      (let*
+         (
+            (raw
+               (if (or (null? reqMsg) (null? (reqMsg'format)))
+                  req
+                  ; else:
+                  (let
+                     (
+                        (formatter (((reqMsg'format)'formatter)'getInstance context))
+                        (out (nexj.core.integration.io.ObjectOutput'new))
+                     )
+                     (message
+                        (: body
+                           (begin
+                              (formatter'format req reqMsg out)
+                              (out'object)
+                           )
+                        )
+                     )
+                  )
+               )
+            )
+            (response
+               (begin
+                  (unless (null? reqMsg)
+                     (responder'prepare raw req reqMsg)
+                  )
+                   (if (channel'synchronous)
+                     (responder'respond raw)
+                     (responder'send raw)
+                  )
+               )
+            )
+         )
+         (if (null? responseTable)
+            response
+            ; else:
+            (let*
+               (
+                  (parser (((responseTable'format)'parser)'getInstance context))
+                  (input (nexj.core.integration.io.ObjectInput'new (response'body)))
+               )
+               (parser'parse input responseTable)
+            )
+         )
+      )
+   )
+)
+
+; Determines if an object is a message.
+;
+; @arg obj any The object to test.
+; @ret boolean #t if the object is a message, #f otherwise.
+; @example 
+; (message? (message)) => #t
+; (message? "abc") => #f
+(define (message? obj)
+   (instance? obj nexj.core.rpc.TransferObject)
+)
+
+; Determines if a message is an instance of a given message type, taking into account the message type hierarchy.
+; 
+; @arg msg any The object to test.
+; @arg type string(message)|nexj.core.meta.integration.Message Name or instance of a message type.
+; @ret boolean #t if the message is an instance of the message type, #f otherwise.
+; @example
+; (message-instance? (message (: :class "HTTP")) "HTTP") => #t
+; (message-instance? (message (: :class "HTTP")) "Raw") => #t
+; (message-instance? (message (: :class "HTTP")) "File") => #f
+; (message-instance? (message (: :class "HTTP")) (((invocation-context)'metadata)'findMessage "Raw")) => #t
+; (message-instance? (message (: :class "HTTP")) (((invocation-context)'metadata)'findMessage "File")) => #f
+; (message-instance? (message (: :class "HTTP")) Person) => #f
+(define (message-instance? msg type)
+   (if (and (message? msg) (not (null? (msg':class))))
+      (let
+         ((msgMessage (((invocation-context)'metadata)'findMessage (msg':class))))
+         (if (not (null? msgMessage))
+            (let
+               ((typeMessage
+                     (cond
+                        ((string? type) (((invocation-context)'metadata)'findMessage type))
+                        ((instance? type nexj.core.meta.integration.Message) type)
+                     )
+                  )
+               )
+
+               (if (not (null? typeMessage))
+                  (typeMessage'isUpcast msgMessage)
+                  #f ; type message doesn't exist in this model
+               )
+            )
+            #f ; msg not found in this model
+         )
+      )
+      #f ; msg is not a message structure
+   )
+)
+
+; Creates a StreamInput with the given args.
+; 
+; @arg args Option arguments. One or two arguments must be provided: 
+;  1) istream, a java.io.InputStream: The input stream to wrap.
+;  2) encoding, a string: The encoding of the input stream (optional).
+; @ret nexj.core.integration.io.StreamInput The instantiated StreamInput object
+(define (make-stream-input . args)
+   (apply nexj.core.integration.io.StreamInput'new args)
+)

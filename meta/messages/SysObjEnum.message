@@ -1,0 +1,75 @@
+<Message description="Object mapping to EnumType" format="Object">
+   <ObjectMapping class="EnumType"/>
+   <Parts>
+      <Message maxCount="0" name="typeDisplayValue">
+         <ObjectMapping attribute="typeDisplayValues" class="EnumTypeDisplay"/>
+         <Parts>
+            <Value minCount="1" name="typeCode" type="string">
+               <ObjectMapping key="true"/>
+            </Value>
+            <Value minCount="1" name="locale" type="string">
+               <ObjectMapping key="true"/>
+            </Value>
+            <Value name="caption" type="string"/>
+            <Value name="description" type="string"/>
+         </Parts>
+      </Message>
+      <Message maxCount="0" name="code">
+         <ObjectMapping attribute="codes" class="EnumCode"/>
+         <Parts>
+            <Message maxCount="0" name="displayValue">
+               <ObjectMapping attribute="displayValues" class="EnumDisplay"/>
+               <Parts>
+                  <Value minCount="1" name="typeCode" type="string">
+                     <ObjectMapping key="true"/>
+                  </Value>
+                  <Value minCount="1" name="value" type="string">
+                     <ObjectMapping key="true"/>
+                  </Value>
+                  <Value minCount="1" name="locale" type="string">
+                     <ObjectMapping key="true"/>
+                  </Value>
+                  <Value name="caption" type="string">
+                     <ObjectMapping update="false"/>
+                  </Value>
+                  <Value name="shortCaption" type="string">
+                     <ObjectMapping update="false"/>
+                  </Value>
+                  <Value name="behaveAsValue" type="string">
+                     <ObjectMapping update="false"/>
+                  </Value>
+                  <Value name="parentTypeCode" type="string"/>
+                  <Value name="parentValueCode" type="string"/>
+               </Parts>
+            </Message>
+            <Value minCount="1" name="typeCode" type="string">
+               <ObjectMapping key="true"/>
+            </Value>
+            <Value minCount="1" name="value" type="string">
+               <ObjectMapping key="true"/>
+            </Value>
+            <Value name="behaveAsValue" type="string"/>
+            <Value name="hasBehavior" type="boolean"/>
+            <Value name="displayUpdateable" type="boolean"/>
+            <Value name="codeUpdateable" type="boolean"/>
+            <Value name="hideable" type="boolean"/>
+            <Value name="externalValue" type="string"/>
+            <Value name="name" type="string"/>
+            <Value name="displayOrder" type="integer"/>
+            <Value name="classification" type="string"/>
+            <Value name="upgradeUpdateable" type="boolean"/>
+            <Value name="parentTypeCode" type="string"/>
+            <Value name="parentValueCode" type="string"/>
+         </Parts>
+      </Message>
+      <Value minCount="1" name="typeCode" type="string">
+         <ObjectMapping key="true"/>
+      </Value>
+      <Value name="description" type="string"/>
+      <Value name="classification" type="string"/>
+      <Value name="userQuickpickEnabled" type="boolean"/>
+      <Value name="allowAddedCodes" type="boolean"/>
+      <Value name="upgradeable" type="boolean"/>
+      <Value name="parentTypeCode" type="string"/>
+   </Parts>
+</Message>

@@ -1,0 +1,32 @@
+<Enumeration typeCode="address" base="StringEnum" description="Contact Address Type enumeration">
+   <Locales>
+      <Locale name="en" caption="Address Type"/>
+   </Locales>
+   <Values>
+      <Value name="BUSINESS" value="Business" hasBehavior="true">
+         <Locales>
+            <Locale name="en" caption="Business"/>
+         </Locales>
+      </Value>
+      <Value name="HOME" value="Home" hasBehavior="true">
+         <Locales>
+            <Locale name="en" caption="Home"/>
+         </Locales>
+      </Value>
+      <Value name="RURAL" value="Rural">
+         <Locales>
+            <Locale name="en" caption="Rural"/>
+         </Locales>
+      </Value>
+      <Value name="COTTAGE" value="Cottage">
+         <Locales>
+            <Locale name="en" caption="Cottage"/>
+         </Locales>
+      </Value>
+      <Value name="RESIDENCE" value="Residence">
+         <Locales>
+            <Locale name="en" caption="Residence"/>
+         </Locales>
+      </Value>
+   </Values>
+</Enumeration>

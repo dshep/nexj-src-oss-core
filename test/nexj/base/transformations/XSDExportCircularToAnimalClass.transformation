@@ -1,0 +1,14 @@
+<Transformation source="XML_XSDExportCircular1" destination="Animal">
+   <Mappings>
+      <Mapping destination="commonName">
+         <Sources>
+            <Source source="a"/>
+         </Sources>
+      </Mapping>
+      <Mapping destination="pen name">
+         <Sources>
+            <Source source="other b"/>
+         </Sources>
+      </Mapping>
+   </Mappings>
+</Transformation>

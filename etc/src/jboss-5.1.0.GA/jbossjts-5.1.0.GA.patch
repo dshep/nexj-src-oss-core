@@ -1,0 +1,111 @@
+diff -rupN ArjunaJTA-source-original//com/arjuna/ats/internal/jta/resources/arjunacore/XAResourceRecord.java ArjunaJTA-source-changed//com/arjuna/ats/internal/jta/resources/arjunacore/XAResourceRecord.java
+--- ArjunaJTA-source-original//com/arjuna/ats/internal/jta/resources/arjunacore/XAResourceRecord.java	2011-04-04 17:10:14.756469000 -0400
++++ ArjunaJTA-source-changed//com/arjuna/ats/internal/jta/resources/arjunacore/XAResourceRecord.java	2011-07-20 12:36:03.126576400 -0400
+@@ -490,8 +490,17 @@ public class XAResourceRecord extends Ab
+ 					  new Object[] {_tranID});
+ 			    }
+ 
+-			    if (XAResourceRecord._assumedComplete)
+-			    {
++             /*
++              * The logic is that if all resources were available during recovery but JBoss
++              * did not match XIDs, and if the user set assumedComplete property to true, 
++              * then stop attempting recovery
++              */
++
++	            if (XAResourceRecord._assumedComplete && bAllResourcesAvailable)
++	             {
++	                // Need to set this to default so it won't affect other transactions
++	                
++	                bAllResourcesAvailable = false;
+ 				if (jtaLogger.loggerI18N.isInfoEnabled())
+ 				{
+ 				    jtaLogger.loggerI18N
+@@ -658,8 +667,18 @@ public class XAResourceRecord extends Ab
+ 					  new Object[] {_tranID});
+ 			    }
+ 
+-			    if (XAResourceRecord._assumedComplete)
++             /*
++              * The logic is that if all resources were available during recovery but JBoss
++              * did not match XIDs, and if the user set assumedComplete property to true, 
++              * then stop attempting recovery
++              */
++
++			    if (XAResourceRecord._assumedComplete && bAllResourcesAvailable)
+ 			    {
++			       // Need to set this to default so it won't affect other transactions
++			       
++			       bAllResourcesAvailable = false;
++			       
+ 				if (jtaLogger.loggerI18N.isInfoEnabled())
+ 				{
+ 				    jtaLogger.loggerI18N
+@@ -1254,7 +1273,16 @@ public class XAResourceRecord extends Ab
+ 				     * Blaargh! There are better ways to do this!
+ 				     */
+ 
+-					return ((XARecoveryModule) m).getNewXAResource(_tranID);
++				   XARecoveryModule xaRecModuleTemp = (XARecoveryModule) m;
++				   
++    			   XAResource xar = xaRecModuleTemp.getNewXAResource(_tranID);
++				    
++				   if (xar == null && !xaRecModuleTemp.isFailedResource())
++				   {
++				      bAllResourcesAvailable = true;
++				   }
++				    
++					return xar;
+ 				}
+ 			}
+ 		}
+@@ -1312,6 +1340,8 @@ public class XAResourceRecord extends Ab
+ 	private boolean _prepared;
+ 
+ 	private boolean _valid;
++	
++	private boolean bAllResourcesAvailable;
+ 
+ 	private int _heuristic;
+diff -rupN ArjunaJTA-source-original//com/arjuna/ats/internal/jta/recovery/arjunacore/XARecoveryModule.java ArjunaJTA-source-changed//com/arjuna/ats/internal/jta/recovery/arjunacore/XARecoveryModule.java
+--- ArjunaJTA-source-original//com/arjuna/ats/internal/jta/recovery/arjunacore/XARecoveryModule.java	2011-04-04 17:10:14.673452400 -0400
++++ ArjunaJTA-source-changed//com/arjuna/ats/internal/jta/recovery/arjunacore/XARecoveryModule.java	2011-07-20 12:27:50.084277100 -0400
+@@ -663,6 +663,8 @@ public class XARecoveryModule implements
+ 							resource = ri.getXAResource();
+ 
+ 							xaRecovery(resource);
++							
++							bFailedResource = false;
+ 						}
+ 						catch (Exception exp)
+ 						{
+@@ -673,6 +675,8 @@ public class XARecoveryModule implements
+ 												"com.arjuna.ats.internal.jta.recovery.getxaresource",
+ 												exp);
+ 							}
++							
++							bFailedResource = true;
+ 						}
+ 					}
+ 				}
+@@ -1316,6 +1320,11 @@ public class XARecoveryModule implements
+ 		if (_failures != null)
+ 			_failures.clear();
+ 	}
++	
++	public boolean isFailedResource()
++	{
++	   return bFailedResource;
++	}
+ 
+ 	private ObjectStore _objStore = new ObjectStore();
+ 
+@@ -1350,6 +1359,8 @@ public class XARecoveryModule implements
+ 	private static final char BREAKCHARACTER = ';'; // delimiter for xaconnrecov
+ 	// property
+ 
++	private static boolean bFailedResource = false;
++
+ 	static
+ 	{
+ 		String env = jtaPropertyManager.propertyManager

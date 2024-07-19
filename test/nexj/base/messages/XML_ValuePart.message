@@ -1,0 +1,14 @@
+<Message format="XML">
+   <XMLMapping node="outer"/>
+   <Parts>
+      <Value maxCount="0" name="a" type="string">
+         <XMLMapping/>
+      </Value>
+      <Value name="data" type="string">
+         <XMLMapping type="value"/>
+      </Value>
+      <Value name="attr" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+   </Parts>
+</Message>

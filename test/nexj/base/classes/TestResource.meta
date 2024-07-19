@@ -1,0 +1,14 @@
+<Class>
+   <Attributes>
+      <Attribute cascade="delete" name="messages" reverse="resource" type="TestResourceLink"/>
+      <Attribute name="name" type="string"/>
+   </Attributes>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="TestResource">
+         <AttributeMappings>
+            <AttributeMapping destinationKey="TestResourceLink.FK_resource" name="messages" sourceKey="TestResource.PK"/>
+            <AttributeMapping column="name" name="name"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

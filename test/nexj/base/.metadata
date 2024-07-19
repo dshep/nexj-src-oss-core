@@ -1,0 +1,9 @@
+<Metadata name="NexJ Core Test" namespace="http://www.nexjsystems.com/ns/core-test" revision="1.0" version="12345">
+   <Resources>
+      <ResourceRef enabled="false" resource="xsds/inherit_schema1.xsd"/>
+      <ResourceRef enabled="false" resource="xsds/inherit_schema3.xsd"/>
+      <ResourceRef enabled="false" resource="xsds/schema_a.xsd"/>
+      <ResourceRef enabled="false" resource="xsds/schema_a_nillable.xsd"/>
+      <ResourceRef enabled="false" resource="xsds/schema_b.xsd"/>
+   </Resources>
+</Metadata>

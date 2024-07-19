@@ -1,0 +1,10 @@
+<Message base="XML_Inherit_Parent_Parent" format="XML">
+   <XMLMapping node="parent" xsdtype="ParentType"/>
+   <Parts>
+      <Value minCount="1" name="a" type="string"/>
+      <Value name="b" type="integer"/>
+      <Value name="value" type="binary">
+         <XMLMapping subtype="hex" type="value"/>
+      </Value>
+   </Parts>
+</Message>

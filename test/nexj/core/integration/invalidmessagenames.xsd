@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:oasis:names:tc:ebxml-regrep:rim:xsd:2.1"
+	xmlns:tns="urn:oasis:names:tc:ebxml-regrep:rim:xsd:2.1">
+	<xsd:element name="Table">
+		<xsd:complexType>
+			<xsd:sequence>
+			  <xsd:element name="a-b" type="tns:Row"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="Row">
+		<xsd:annotation>
+			<xsd:documentation xml:lang = "en">
+Association is the mapping of the same named interface in ebRIM.
+It extends RegistryObject.
+
+An Association specifies references to two previously submitted
+registry entrys.
+
+The sourceObject is id of the sourceObject in association
+The targetObject is id of the targetObject in association
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name = "isConfirmedBySourceOwner" use = "optional" type = "xsd:boolean"/>
+		<xsd:attribute name = "isConfirmedByTargetOwner" use = "optional" type = "xsd:boolean"/>
+	</xsd:complexType>
+
+</xsd:schema>

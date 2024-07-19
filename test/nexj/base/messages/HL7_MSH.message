@@ -1,0 +1,67 @@
+<Message description="The HL7 v.2.3 MSH segment as sent from CML." format="HL7">
+   <HL7Mapping name="MSH" seq="20"/>
+   <Parts>
+      <Value description="Field Separator" minCount="1" name="fieldSep" type="string">
+         <HL7Mapping seq="1"/>
+      </Value>
+      <Value description="Encoding Characters" minCount="1" name="encodingChars" type="string">
+         <HL7Mapping seq="2"/>
+      </Value>
+      <Value name="sendingApplication" type="string">
+         <HL7Mapping seq="3"/>
+      </Value>
+      <Value name="sendingFacility" type="string">
+         <HL7Mapping seq="4"/>
+      </Value>
+      <Value name="receivingApplication" type="string">
+         <HL7Mapping seq="5"/>
+      </Value>
+      <Value name="receivingFacility" type="string">
+         <HL7Mapping seq="6"/>
+      </Value>
+      <Value name="dateTimeOfMessage" type="timestamp">
+         <HL7Mapping seq="7" subtype="DTM"/>
+      </Value>
+      <Message minCount="1" name="messageType">
+         <HL7Mapping seq="9"/>
+         <Parts>
+            <Value name="messageCode" type="string">
+               <HL7Mapping seq="1"/>
+               <Enumerations>
+                  <Enumeration description="Observ result/unsolicited" value="ORU"/>
+               </Enumerations>
+            </Value>
+            <Value name="eventType" type="string">
+               <HL7Mapping seq="2"/>
+               <Enumerations>
+                  <Enumeration description="ORU/ACK - Unsolicited transmission of an observation message" value="R01"/>
+               </Enumerations>
+            </Value>
+            <Value name="messageStructure" type="string">
+               <HL7Mapping seq="3"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Value name="messageControlID" type="string">
+         <HL7Mapping seq="10"/>
+      </Value>
+      <Value minCount="1" name="processingID" type="string">
+         <HL7Mapping seq="11"/>
+      </Value>
+      <Value minCount="1" name="versionID" type="string">
+         <HL7Mapping seq="12"/>
+         <Enumerations>
+            <Enumeration description="Version 2.1" value="2.1"/>
+            <Enumeration description="Version 2.2" value="2.2"/>
+            <Enumeration description="Version 2.3" value="2.3"/>
+            <Enumeration description="Version 2.5" value="2.5"/>
+         </Enumerations>
+      </Value>
+      <Value name="acceptAcknowledgmentType" type="string">
+         <HL7Mapping seq="15"/>
+      </Value>
+      <Value name="applicationAcknowledgmentType" type="string">
+         <HL7Mapping seq="16"/>
+      </Value>
+   </Parts>
+</Message>

@@ -1,0 +1,1 @@
+Class-Path: nexj-scheme.jar nexj-server.jar nexj-env.jar nexj-ver.jar xercesImpl.jar xalan.jar serializer.jar @metalibs@ @extlibs@

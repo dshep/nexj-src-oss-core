@@ -1,0 +1,5 @@
+<Class>
+   <Attributes>
+      <Attribute collection="false" name="type" required="false" type="string"/>
+   </Attributes>
+</Class>

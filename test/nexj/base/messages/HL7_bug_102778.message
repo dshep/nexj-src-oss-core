@@ -1,0 +1,66 @@
+<Message description="RSP - Get corresponding identifiers response" format="HL7">
+   <HL7Mapping name="RSP^K23"/>
+   <Parts>
+      <Message minCount="1" name="MSH">
+         <HL7Mapping name="MSH" seq="2"/>
+         <Parts>
+            <Value minCount="1" name="fieldSeparator" type="string">
+               <HL7Mapping seq="1"/>
+            </Value>
+            <Value minCount="1" name="encodingCharacters" type="string">
+               <HL7Mapping seq="2"/>
+            </Value>
+            <Value minCount="0" name="datetimeOfMessage" type="string">
+               <HL7Mapping seq="7"/>
+            </Value>
+            <Value name="security" type="string">
+               <HL7Mapping seq="8"/>
+            </Value>
+            <Message minCount="1" name="messageType">
+               <HL7Mapping seq="9"/>
+               <Parts>
+                  <Value name="messageCode" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+                  <Value name="triggerEvent" type="string">
+                     <HL7Mapping seq="2"/>
+                  </Value>
+                  <Value name="messageStructure" type="string">
+                     <HL7Mapping seq="3"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Value name="messageControlId" type="string">
+               <HL7Mapping seq="10"/>
+            </Value>
+            <Message minCount="1" name="processingId">
+               <HL7Mapping seq="11"/>
+               <Parts>
+                  <Value description="Processing ID" name="processingId" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+                  <Value description="Processing mode" name="processingMode" type="string">
+                     <HL7Mapping seq="2"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message minCount="1" name="versionId">
+               <HL7Mapping seq="12"/>
+               <Parts>
+                  <Value name="versionId" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Value description="Alternate character sets" maxCount="0" name="characterSet" type="string">
+               <HL7Mapping seq="18"/>
+            </Value>
+         </Parts>
+      </Message>
+      <Message name="query_response">
+         <Parts>
+            <Message minCount="1" name="PID" ref="HL7_bug_102778_PID"/>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

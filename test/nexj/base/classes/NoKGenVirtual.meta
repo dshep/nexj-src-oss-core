@@ -1,0 +1,60 @@
+<Class description="A virtual-persisted class that will generate run-time errors when various mappings are read.&#13;&#10;">
+   <Attributes>
+      <Attribute name="relational" type="NoKGenRelational"/>
+      <Attribute name="name" type="string"/>
+      <Attribute name="REL_OID" static="true" type="any"/>
+   </Attributes>
+   <PersistenceMapping dataSource="MemoryVirtualSource">
+      <ServiceMapping>
+         <KeyParts>
+            <KeyPart type="binary"/>
+         </KeyParts>
+         <AttributeMappings>
+            <AttributeMapping name="name"/>
+            <AttributeMapping destinationKey="NoKGen.PK" name="relational"/>
+         </AttributeMappings>
+         <SortKeys/>
+         <ReadMapping>
+            <Case where="(in? (@) ,@oids)">
+               <Read>
+                  <Script><![CDATA[(map
+   (lambda (id)
+      (message
+         (: :oid id)
+         (: name "The virtual")
+         (: relational (NoKGenVirtual'REL_OID))
+      )
+   )
+   (filter
+      (lambda (id) (= id (oid #z112233445566778899aabbccddeeff00)))
+      oids
+   )
+)
+]]></Script>
+               </Read>
+            </Case>
+            <Case where="()">
+               <Read>
+                  <Script><![CDATA[(message
+   (: :oid (oid #z112233445566778899aabbccddeeff00))
+   (: name "The virtual")
+   (: relational (NoKGenVirtual'REL_OID))
+)]]></Script>
+               </Read>
+            </Case>
+         </ReadMapping>
+         <CreateMapping>
+            <Script><![CDATA[(logger'debug "Creating NoKGenVirtual with FK to relational OID" (this'relational))
+(unless (null? (this'relational))
+   (if (null? (NoKGenVirtual'REL_OID))
+      (NoKGenVirtual'REL_OID (this'relational))
+      (error "A second instance is created")
+   )
+)
+(this':oid (oid #z112233445566778899aabbccddeeff00))
+]]></Script>
+         </CreateMapping>
+         <UpdateMapping/>
+      </ServiceMapping>
+   </PersistenceMapping>
+</Class>

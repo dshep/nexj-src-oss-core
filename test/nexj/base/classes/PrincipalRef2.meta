@@ -1,0 +1,11 @@
+<Class aspects="PRINCIPAL_REF_2" base="PrincipalRef" description="AOP test class">
+   <Attributes>
+      <Attribute name="aspectBaseAttr" type="string"/>
+      <Attribute name="aspectDerivedAttr" type="string"/>
+      <Attribute name="classBaseAttr" type="string"/>
+      <Attribute name="classDerivedAttr" type="string"/>
+   </Attributes>
+   <Events>
+      <Event args="attributes where orderBy count offset xlock" description="This is the framework read event. The main action is implemented by the framework." name="read" static="true" visibility="public"/>
+   </Events>
+</Class>

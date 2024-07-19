@@ -1,0 +1,10 @@
+<Connections description="MySQL Server JUnit test environment">
+   <DataSourceConnections>
+      <RelationalDatabaseConnection adapter="MySQL" dataSource="DefaultRelationalDatabase" database="test" host="tor-sv-mysql" password="test" port="3306" user="test"/>
+      <RelationalDatabaseConnection adapter="MySQL" dataSource="ExternalRelationalDatabase" database="test" host="tor-sv-mysql" password="test" port="3306" user="test"/>
+   </DataSourceConnections>
+   <ChannelConnections>
+      <MessageQueueConnection channel="ErrorQueue" password="mqpass" user="mq"/>
+      <MailConnection channel="Mail" from="mailtest@nexjsystems.com" inHost="192.168.25.1" inProtocol="pop3" inEncryption="TLS" outHost="192.168.25.1" outProtocol="smtp" password="mail123pass" user="mailtest"/>
+   </ChannelConnections>
+</Connections>

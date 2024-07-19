@@ -1,0 +1,6 @@
+<Message base="XML_Inherit_Schema2" format="XML">
+   <XMLMapping namespace="is3" node="schema3" resource="(http://www.nexjsystems.com/ns/test/inherit/schema3.xsd xsds/inherit_schema3.xsd)" schema="http://www.nexjsystems.com/ns/test/inherit/schema3.xsd" uri="urn:com.nexjsystems:ns:test:inherit:schema3" xsdtype="Schema3Type"/>
+   <Parts>
+      <Value name="cReal" type="string"/>
+   </Parts>
+</Message>

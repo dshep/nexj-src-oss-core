@@ -1,0 +1,28 @@
+<Class>
+   <Attributes>
+      <Attribute initializer="0" name="version" required="true" type="integer"/>
+      <Attribute collection="false" name="startDate" required="true" static="false" type="timestamp"/>
+      <Attribute collection="false" name="endDate" static="false" type="timestamp"/>
+      <Attribute collection="false" name="reason" required="true" static="false" type="string"/>
+      <Attribute collection="false" name="patient" reverse="externalVisits" static="false" type="Patient"/>
+      <Attribute collection="true" name="requests" required="false" static="false" type="Request"/>
+      <Attribute collection="true" name="participants" required="false" static="false" type="VisitParticipation"/>
+      <Attribute collection="true" name="patients" reverse="externalVisits" type="Patient"/>
+      <Attribute collection="true" name="externalRequests" reverse="externalVisit" type="ExternalRequest"/>
+   </Attributes>
+   <PersistenceMapping dataSource="ExternalRelationalDatabase" lockingAttribute="version">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.Visit">
+         <AttributeMappings>
+            <AttributeMapping column="startDate" name="startDate"/>
+            <AttributeMapping column="endDate" name="endDate"/>
+            <AttributeMapping column="reason" name="reason"/>
+            <AttributeMapping destinationKey="Contact.PK" name="patient" sourceKey="Visit.FK1"/>
+            <AttributeMapping destinationKey="Request.FK2" name="requests"/>
+            <AttributeMapping destinationKey="VisitParticipation.FK2" name="participants"/>
+            <AttributeMapping name="patients" sourceKey="Visit.FK1"/>
+            <AttributeMapping column="rec_ver" name="version"/>
+            <AttributeMapping destinationKey="Request.FK2" name="externalRequests"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

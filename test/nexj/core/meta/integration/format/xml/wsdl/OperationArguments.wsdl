@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="OperationArguments"
+	targetNamespace="http://nexj.example.org/operationarguments"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://nexj.example.org/operationarguments"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+	<wsdl:message name="opInputOne">
+	</wsdl:message>
+
+	<wsdl:message name="opInputTwo">
+		<wsdl:part name="partOne" />
+    <wsdl:part name="partTwo" />
+    <wsdl:part name="partThree" />
+	</wsdl:message>
+
+	<wsdl:message name="opOutputOne">
+	</wsdl:message>
+
+	<wsdl:message name="opOutputTwo">
+		<wsdl:part name="partFour" />
+    <wsdl:part name="partFive" />
+    <wsdl:part name="partSix" />
+	</wsdl:message>
+  
+	<wsdl:portType name="PortTypeOne">
+		<wsdl:operation name="OperationOne">
+		</wsdl:operation>
+
+    <wsdl:operation name="OperationTwo">
+      <wsdl:input name="OpTwoInput" message="tns:opInputOne">
+      </wsdl:input>
+		</wsdl:operation>
+    
+    <wsdl:operation name="OperationThree">
+      <wsdl:output name="OpThreeOutput" message="tns:opOutputOne">
+      </wsdl:output>
+		</wsdl:operation>
+    
+    <wsdl:operation name="OperationFour">
+      <wsdl:input name="OpFourInput" message="tns:opInputTwo">
+      </wsdl:input>
+      <wsdl:output name="OpFourOutput" message="tns:opOutputTwo">
+      </wsdl:output>
+		</wsdl:operation>
+  </wsdl:portType>
+  
+	<wsdl:binding name="BindingOne" type="tns:PortTypeOne">
+	</wsdl:binding>
+  
+	<wsdl:service name="ServiceOne">
+		<wsdl:port binding="tns:BindingOne" name="PortOne">
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

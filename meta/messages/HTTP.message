@@ -1,0 +1,271 @@
+<Message aggregation="random" base="Raw" derivation="abstract" description="Raw HTTP message" lax="true">
+   <Parts>
+      <Value description="The string or binary body of the message to send. Body is not sent when the method is GET." name="body" type="any"/>
+      <Value description="The base URL on which to send the request. &#13;&#10;@detail&#13;&#10;If the URL doesn’t need to change at run-time, you can simply specify the URL in the channel or connection url property and leave the message URL property blank.&#13;&#10;If you want to override the URL (or any other channel properties) during deployment, set the channel properties in your deploy environment or connection. URLs can also be dynamically set when called from Services. This can only be done when sending a raw message. In this case, set the url property on the raw HTTP transfer object e.g. (this'url &quot;http://www.nexj.com/example&quot;).  You can retrieve the currently set URL with  ((((invocation-context)'metadata)'getChannel &quot;MyChannelName&quot;)'url)&#13;&#10;and modify it with code.&#13;&#10;If you use the outbound parameters argument, you MUST end the url with &quot;?&quot;, e.g. &quot;http://localhost:7080/nexj/xml/Account?&quot;&#13;&#10;@example&#13;&#10;http://localhost:7080/nexj/xml/Account" name="url" type="string"/>
+      <Value description="The type of HTTP request. On outbound, Defaults to &quot;GET&quot; if the body is null, &quot;POST&quot; if the body is specified.&#13;&#10;@see&#13;&#10;See http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html for more information." minCount="1" name="method" type="string">
+         <Enumerations>
+            <Enumeration description="Request information about the available communication options." value="OPTIONS"/>
+            <Enumeration description="Retrieve information in the form of an entity." value="GET"/>
+            <Enumeration description="Identical to GET but the server MUST NOT return a message-body in the response." value="HEAD"/>
+            <Enumeration description="Accept the entity enclosed in the request as a new subordinate of the identified resource." value="POST"/>
+            <Enumeration description="Store the enclosed entity." value="PUT"/>
+            <Enumeration description="Delete the resource." value="DELETE"/>
+            <Enumeration description="Invoke a remote, application-layer loop- back of the request message." value="TRACE"/>
+            <Enumeration description="For proxys that can dynamically switch to being a tunnel." value="CONNECT"/>
+         </Enumerations>
+      </Value>
+      <Message aggregation="random" description="A transfer object with key/value pairs of headers for the incoming or outgoing message." lax="true" name="headers">
+         <Parts>
+            <Value description="Content-Types that are acceptable (http request)&#13;&#10;@example&#13;&#10;accept: text/plain" name="accept" type="string"/>
+            <Value description="Character sets that are acceptable (http request)&#13;&#10;@example&#13;&#10;accept-charset: iso-8859-5" name="accept-charset" type="string"/>
+            <Value description="Acceptable encodings  (http request)&#13;&#10;@example&#13;&#10;accept-encoding: compress, gzip" name="accept-encoding" type="string"/>
+            <Value description="Acceptable languages for response  (http request)&#13;&#10;@example&#13;&#10;accept-language: da" name="accept-language" type="string"/>
+            <Value description="The age the object has been in a proxy cache in seconds (http response)&#13;&#10;@example&#13;&#10;age: 12" name="age" type="integer"/>
+            <Value description="Allows the server to indicate its acceptance of range requests for a resource  (http request/response)&#13;&#10;@example&#13;&#10;accept-ranges: bytes" name="accept-ranges" type="string"/>
+            <Value description="Valid actions for a specified resource. To be used for a 405 Method not allowed (http response)&#13;&#10;@example&#13;&#10;allow: GET, HEAD" name="allow" type="string"/>
+            <Value description="Authentication credentials for HTTP authentication (http request)&#13;&#10;@example&#13;&#10;authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" name="authorization" type="string"/>
+            <Value description="Used to specify directives that MUST be obeyed by all caching mechanisms along the request/response chain  (http request/response)&#13;&#10;@example&#13;&#10;cache-control: no-cache" name="cache-control" type="string"/>
+            <Value description="What type of connection the user-agent would prefer (http request)&#13;&#10;@example&#13;&#10;connection: close" name="connection" type="string"/>
+            <Value description="The type of encoding used on the data (http response)&#13;&#10;@example&#13;&#10;content-encoding: gzip" name="content-encoding" type="string"/>
+            <Value description="The language the content is in (http response)&#13;&#10;@example&#13;&#10;content-language: da" name="content-language" type="string"/>
+            <Value description="The length of the request or response body in octets (8-bit bytes)  (http request/response)&#13;&#10;@example&#13;&#10;content-length: 348" name="content-length" type="integer"/>
+            <Value description="An alternate location for the returned data (http response)&#13;&#10;@example&#13;&#10;content-location: /index.htm" name="content-location" type="string"/>
+            <Value description="An opportunity to raise a &quot;File Download&quot; dialogue box for a known MIME type (http response)&#13;&#10;@example&#13;&#10;content-disposition: attachment; filename=fname.ext" name="content-disposition" type="string"/>
+            <Value description="A Base64-encoded binary MD5 sum of the content of the response  (http response)&#13;&#10;@example&#13;&#10;content-MD5: Q2hlY2sgSW50ZWdyaXR5IQ==" name="content-MD5" type="binary"/>
+            <Value description="Where in a full body message this partial message belongs (http response)&#13;&#10;@example&#13;&#10;content-range: bytes 21010-47021/47022" name="content-range" type="string"/>
+            <Value description="The mime type of the body of the request (used with POST and PUT requests) or response content (http request/response).&#13;&#10;@detail&#13;&#10;This header indicates the Internet media type of the message content, consisting of a type and subtype.&#13;&#10;@example&#13;&#10;content-type: application/x-www-form-urlencoded" name="content-type" type="string">
+               <Enumerations>
+                  <Enumeration value="application/aom"/>
+                  <Enumeration value="application/cdf"/>
+                  <Enumeration description="EDI X12 data. Defined in RFC 1767" value="application/EDI-X12"/>
+                  <Enumeration description="EDI EDIFACT data. Defined in RFC 1767" value="application/EDIFACT"/>
+                  <Enumeration value="application/envoy"/>
+                  <Enumeration value="application/fractals"/>
+                  <Enumeration value="application/internet-property-stream"/>
+                  <Enumeration value="application/hta"/>
+                  <Enumeration description="JavaScript. Defined in RFC 4329 but not accepted in IE 8 or earlier" value="application/javascript"/>
+                  <Enumeration description="JavaScript Object Notation JSON. Defined in RFC 4627" value="application/json"/>
+                  <Enumeration value="application/mac-binhex40"/>
+                  <Enumeration value="application/msaccess"/>
+                  <Enumeration value="application/msword"/>
+                  <Enumeration description="Arbitrary binary data." value="application/octet-stream"/>
+                  <Enumeration value="application/oda"/>
+                  <Enumeration value="application/olescript"/>
+                  <Enumeration description="Ogg, a multimedia bitstream container format. Defined in RFC 5334" value="application/ogg"/>
+                  <Enumeration value="application/pkix-crl"/>
+                  <Enumeration description="Portable Document Format. Defined in RFC 3778" value="application/pdf"/>
+                  <Enumeration value="application/postscript"/>
+                  <Enumeration value="application/vnd.adobe.edn"/>
+                  <Enumeration value="application/vnd.fdf"/>
+                  <Enumeration value="application/vnd.ms-mediapackage"/>
+                  <Enumeration value="application/vnd.ms-pki.seccat"/>
+                  <Enumeration value="application/vnd.ms-project"/>
+                  <Enumeration value="application/vnd.ms-word.document.macroEnabled.12"/>
+                  <Enumeration value="application/vnd.ms-word.template.macroEnabled.12"/>
+                  <Enumeration value="application/vnd.oasis.opendocument.formula"/>
+                  <Enumeration value="application/vnd.oasis.opendocument.graphics"/>
+                  <Enumeration value="application/vnd.oasis.opendocument.presentation"/>
+                  <Enumeration value="application/vnd.oasis.opendocument.spreadsheet"/>
+                  <Enumeration value="application/vnd.oasis.opendocument.text"/>
+                  <Enumeration value="application/vnd.oasis.opendocument.text-master"/>
+                  <Enumeration value="application/vnd.oasis.opendocument.text-web"/>
+                  <Enumeration value="application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
+                  <Enumeration value="application/vnd.openxmlformats-officedocument.wordprocessingml.template"/>
+                  <Enumeration value="application/vnd.sun.xml.base"/>
+                  <Enumeration value="application/winhelp"/>
+                  <Enumeration description="Form encoded data" value="application/x-www-form-urlencoded"/>
+                  <Enumeration value="application/x-bcpio"/>
+                  <Enumeration value="application/x-cpio"/>
+                  <Enumeration value="application/x-csh"/>
+                  <Enumeration value="application/x-director"/>
+                  <Enumeration value="application/x-dvi"/>
+                  <Enumeration value="application/x-ebx"/>
+                  <Enumeration value="application/x-gtar"/>
+                  <Enumeration value="application/x-gzip"/>
+                  <Enumeration value="application/x-hdf"/>
+                  <Enumeration value="application/x-internet-signup"/>
+                  <Enumeration value="application/x-iphone"/>
+                  <Enumeration value="application/x-java-jnlp-file"/>
+                  <Enumeration value="application/x-javascript"/>
+                  <Enumeration value="application/x-latex"/>
+                  <Enumeration value="application/x-mix-transfer"/>
+                  <Enumeration value="application/x-ms-application"/>
+                  <Enumeration value="application/x-mscardfile"/>
+                  <Enumeration value="application/x-msclip"/>
+                  <Enumeration value="application/x-msdownload"/>
+                  <Enumeration value="application/x-msmediaview"/>
+                  <Enumeration value="application/x-msmoney"/>
+                  <Enumeration value="application/x-troff-man"/>
+                  <Enumeration value="application/x-troff-me"/>
+                  <Enumeration value="application/x-troff-ms"/>
+                  <Enumeration value="application/x-x509-ca-cert"/>
+                  <Enumeration description="XHTML. Defined by RFC 3236" value="application/xhtml+xml"/>
+                  <Enumeration description="DTD files. Defined by RFC 3023" value="application/xml-dtd"/>
+                  <Enumeration description="ZIP archive files." value="application/zip"/>
+                  <Enumeration value="audio/aiff"/>
+                  <Enumeration value="audio/AMR"/>
+                  <Enumeration description="mulaw audio at 8KHz, 1 channel; Defined in RFC 2046" value="audio/basic"/>
+                  <Enumeration value="audio/mid"/>
+                  <Enumeration description="MP4 audio" value="audio/mp4"/>
+                  <Enumeration description="MP3 or other MPEG audio; Defined in RFC 3003" value="audio/mpeg"/>
+                  <Enumeration description="Ogg Vorbis, Speex, Flac and other audio; Defined in RFC 5334" value="audio/ogg"/>
+                  <Enumeration value="audio/oggvorbis"/>
+                  <Enumeration description="Vorbis encoded audio; Defined in RFC 5215" value="audio/vorbis"/>
+                  <Enumeration description="Windows Media Audio; Documented in Microsoft KB 288102" value="audio/x-ms-wma"/>
+                  <Enumeration description="RealAudio; Documented in RealPlayer Customer Support Answer 2559" value="audio/vnd.rn-realaudio"/>
+                  <Enumeration description="WAV audio; Defined in RFC 2361" value="audio/vnd.wave"/>
+                  <Enumeration value="audio/x-aiff"/>
+                  <Enumeration value="audio/x-gsm"/>
+                  <Enumeration value="audio/x-m4a"/>
+                  <Enumeration value="audio/x-m4b"/>
+                  <Enumeration value="audio/x-m4p"/>
+                  <Enumeration value="audio/x-mpeg"/>
+                  <Enumeration value="audio/x-mpegurl"/>
+                  <Enumeration value="image/bmp"/>
+                  <Enumeration value="image/cis-cod"/>
+                  <Enumeration description="GIF image; Defined in RFC 2045 and RFC 2046" value="image/gif"/>
+                  <Enumeration value="image/ief"/>
+                  <Enumeration description="JPEG JFIF image; Defined in RFC 2045 and RFC 2046" value="image/jpeg"/>
+                  <Enumeration value="image/pipeg"/>
+                  <Enumeration description="Portable Network Graphics; Registered, Defined in RFC 2083" value="image/png"/>
+                  <Enumeration description="SVG vector image; Defined in RFC 3023" value="image/svg+xml"/>
+                  <Enumeration description="Tag Image File Format; Defined in RFC 3302" value="image/tiff"/>
+                  <Enumeration description="ICO image; Registered" value="image/vnd.microsoft.icon"/>
+                  <Enumeration value="image/vnd.ms-modi"/>
+                  <Enumeration value="image/x-cmx"/>
+                  <Enumeration value="image/x-icon"/>
+                  <Enumeration value="message/http"/>
+                  <Enumeration value="message/rfc822"/>
+                  <Enumeration description="MIME E-mail; Defined in RFC 2045 and RFC 2046" value="multipart/mixed"/>
+                  <Enumeration description="MIME E-mail; Defined in RFC 2045 and RFC 2046" value="multipart/alternative"/>
+                  <Enumeration description="MIME E-mail; Defined in RFC 2387 and used by MHTML (HTML mail)" value="multipart/related"/>
+                  <Enumeration description="MIME Webform; Defined in RFC 2388" value="multipart/form-data"/>
+                  <Enumeration description="Defined in RFC 1847" value="multipart/signed"/>
+                  <Enumeration description="Defined in RFC 1847" value="multipart/encrypted"/>
+                  <Enumeration value="text/calendar"/>
+                  <Enumeration description="Comma-separated values" value="text/csv"/>
+                  <Enumeration description="Cascading style sheets" value="text/css"/>
+                  <Enumeration value="text/h323"/>
+                  <Enumeration description="HTML" value="text/html"/>
+                  <Enumeration description="Javascript" value="text/javascript"/>
+                  <Enumeration description="Textual data (default)" value="text/plain"/>
+                  <Enumeration value="text/webviewhtml"/>
+                  <Enumeration description="Extensible Markup Language" value="text/xml"/>
+                  <Enumeration value="text/x-component"/>
+                  <Enumeration value="text/x-java-source"/>
+                  <Enumeration value="text/x-ms-igy"/>
+                  <Enumeration value="text/x-ms-odc"/>
+                  <Enumeration value="text/x-setext"/>
+                  <Enumeration value="video/3gpp"/>
+                  <Enumeration value="video/3gpp2"/>
+                  <Enumeration value="video/avi"/>
+                  <Enumeration value="video/flc"/>
+                  <Enumeration description="MPEG-1 video with multiplexed audio; Defined in RFC 2045 and RFC 2046" value="video/mpeg"/>
+                  <Enumeration description="MP4 video; Defined in RFC 4337" value="video/mp4"/>
+                  <Enumeration description="Ogg Theora or other video (with audio); Defined in RFC 5334" value="video/ogg"/>
+                  <Enumeration description="QuickTime video; Registered" value="video/quicktime"/>
+                  <Enumeration value="video/x-flv"/>
+                  <Enumeration value="video/x-ivf"/>
+                  <Enumeration value="video/x-la-asf"/>
+                  <Enumeration value="video/x-m4v"/>
+                  <Enumeration value="video/x-ms-asf"/>
+                  <Enumeration description="Windows Media Video; Documented in Microsoft KB 288102" value="video/x-ms-wmv"/>
+                  <Enumeration value="video/x-sgi-movie"/>
+                  <Enumeration value="x-world/x-vrml"/>
+               </Enumerations>
+            </Value>
+            <Value description="an HTTP cookie previously sent by the server with Set-Cookie  (http request)&#13;&#10;@example&#13;&#10;cookie: $Version=1; Skin=new;" name="cookie" type="string"/>
+            <Value description="The date and time that the message was sent  (http request/response)&#13;&#10;@example&#13;&#10;date: Tue, 15 Nov 1994 08:12:31 GMT" name="date" type="string"/>
+            <Value description="An identifier for a specific version of a resource, often a Message Digest (http response)&#9;&#13;&#10;@example&#13;&#10;etag: &quot;737060cd8c284d8af7ad3082f209582d&quot;" name="etag" type="string"/>
+            <Value description="Indicates that particular server behaviors are required by the client (http request)&#13;&#10;@example&#13;&#10;expect: 100-continue" name="expect" type="string"/>
+            <Value description="Gives the date/time after which the response is considered stale (http response)&#13;&#10;@example&#13;&#10;expires: Thu, 01 Dec 1994 16:00:00 GMT" name="expires" type="string"/>
+            <Value description="The email address of the user making the request (http request)&#13;&#10;@example&#13;&#10;from: user@email.com" name="from" type="string"/>
+            <Value description="The domain name of the server (for virtual hosting), mandatory since HTTP/1.1  (http request)&#13;&#10;@example&#13;&#10;host: en.wikipedia.org" name="host" type="string"/>
+            <Value description="Only perform the action if the client supplied entity matches the same entity on the server. This is mainly for methods like PUT to only update a resource if it has not been modified since the user last updated it. (http request)&#13;&#10;@example&#13;&#10;if-match: &quot;737060cd8c284d8af7ad3082f209582d&quot;" name="if-match" type="string"/>
+            <Value description="Allows a 304 Not Modified to be returned if content is unchanged (http request)&#13;&#10;@example&#13;&#10;if-modified-since: Sat, 29 Oct 1994 19:43:31 GMT" name="if-modified-since" type="string"/>
+            <Value description="Allows a 304 Not Modified to be returned if content is unchanged, see HTTP etag (http request)&#13;&#10;@example&#13;&#10;if-none-match: &quot;737060cd8c284d8af7ad3082f209582d&quot;" name="if-none-match" type="string"/>
+            <Value description="If the entity is unchanged, send me the part(s) that I am missing; otherwise, send me the entire new entity (http request)&#13;&#10;@example&#13;&#10;if-range: &quot;737060cd8c284d8af7ad3082f209582d&quot;" name="if-range" type="string"/>
+            <Value description="Only send the response if the entity has not been modified since a specific time. (http request)&#13;&#10;@example&#13;&#10;if-unmodified-since: Sat, 29 Oct 1994 19:43:31 GMT" name="if-unmodified-since" type="string"/>
+            <Value description="The last modified date for the requested object, in RFC 2822 format (http response)&#13;&#10;@example&#13;&#10;last-modified: Tue, 15 Nov 1994 12:45:26 GMT" name="last-modified" type="string"/>
+            <Value description="Used in redirection, or when a new resource has been created. (http response)&#13;&#10;@example&#13;&#10;location: http://www.w3.org/pub/WWW/People.html" name="location" type="string"/>
+            <Value description="Limit the number of times the message can be forwarded through proxies or gateways. (http request)&#13;&#10;@example&#13;&#10;max-forwards: 10" name="max-forwards" type="integer"/>
+            <Value description="Implementation-specific headers that may have various effects anywhere along the request-response chain. (http request/response)&#13;&#10;@example&#13;&#10;pragma: no-cache" name="pragma" type="string"/>
+            <Value description="Request authentication to access the proxy. (http response)&#13;&#10;@example&#13;&#10;proxy-authenticate: Basic" name="proxy-authenticate" type="string"/>
+            <Value description="Authorization credentials for connecting to a proxy. (http request)&#13;&#10;@example&#13;&#10;proxy-authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" name="proxy-authorization" type="string"/>
+            <Value description="Request only part of an entity. (http request)&#13;&#10;@example&#13;&#10;range: bytes=500-999" name="range" type="string"/>
+            <Value description="This is the address of the previous web page from which a link to the currently requested page was followed. (http request)&#13;&#10;@example&#13;&#10;referer: http://en.wikipedia.org/wiki/Main_Page" name="referer" type="string"/>
+            <Value description="Used in redirection, or when a new resource has been created. This refresh redirects after 5 seconds.&#13;&#10;(This is a proprietary/non-standard header extension introduced by Netscape and supported by most web browsers.) (http response)&#13;&#10;@example&#13;&#10;refresh: 5; url=http://www.w3.org/pub/WWW/People.html" name="refresh" type="string"/>
+            <Value description="If an entity is temporarily unavailable, this instructs the client to try again after a specified period of time. (http response)&#13;&#10;@example&#13;&#10;retry-after: 120" name="retry-after" type="string"/>
+            <Value description="A name for the server (http response)&#13;&#10;@example&#13;&#10;server: Apache/1.3.27 (Unix) (Red-Hat/Linux)" name="server" type="string"/>
+            <Value description="an HTTP cookie (http response)&#13;&#10;@example&#13;&#10;set-cookie: UserID=JohnDoe; Max-Age=3600; Version=1" name="set-cookie" type="string"/>
+            <Value description="The transfer encodings the user agent is willing to accept: the same values as for the response header Transfer-Encoding can be used, plus the &quot;trailers&quot; value (related to the &quot;chunked&quot; transfer method) to notify the server it accepts to receive additional headers (the trailers) after the last, zero-sized, chunk. (http request)&#9;&#13;&#10;@example&#13;&#10;te: trailers, deflate;q=0.5" name="te" type="string"/>
+            <Value description="The Trailer general field value indicates that the given set of header fields is present in the trailer of a message encoded with chunked transfer-coding. (http response)&#13;&#10;@example&#13;&#10;trailer: Max-Forwards" name="trailer" type="string"/>
+            <Value description="The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity. (http response)&#13;&#10;@example&#13;&#10;transfer-encoding: chunked" name="transfer-encoding" type="string"/>
+            <Value description="Ask the server to upgrade to another protocol. (http request)&#13;&#10;@example&#13;&#10;upgrade: HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11" name="upgrade" type="string"/>
+            <Value description="The user agent string of the user (http request)&#13;&#10;@example&#13;&#10;user-agent: Mozilla/5.0 (Linux; X11)" name="user-agent" type="string"/>
+            <Value description="Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server. (http response)&#13;&#10;@example&#13;&#10;vary: *" name="vary" type="string"/>
+            <Value description="Informs the server of proxies through which the request or response was sent. (http request/response)&#9;&#13;&#10;@example&#13;&#10;via: 1.0 fred, 1.1 nowhere.com (Apache/1.1)" name="via" type="string"/>
+            <Value description="A general warning about possible problems with the entity body. (http request)&#13;&#10;@example&#13;&#10;warn: 199 Miscellaneous warning" name="warn" type="string"/>
+            <Value description="A general warning about possible problems with the entity body. (http response)&#9;&#13;&#10;@example&#13;&#10;warning: 199 Miscellaneous warning" name="warning" type="string"/>
+            <Value description="Indicates the authentication scheme that should be used to access the requested entity. (http response)&#13;&#10;@example&#13;&#10;www-authenticate: Basic" name="www-authenticate" type="string"/>
+         </Parts>
+      </Message>
+      <Message aggregation="random" description="A transfer object with key/value pairs of parameters from the incoming message or parameters to send out. The values should be strings or something that is easily encoded as a string and will be URL encoded automatically.&#13;&#10;If you are sending parameters on an outbound request, you must end the URL with &quot;?&quot;, e.g. &quot;http://localhost:7080/nexj/xml/Account?&quot;  &#13;&#10;In a &quot;GET&quot; request the parameters will be encoded and appended to the URL.&#13;&#10;In a &quot;POST&quot; request the parameters will be encoded and put in the body of the request unless the URL contains a question mark followed by one or more parameter/value pairs. In this case the parameters whose names match the parameters in the URL will be encoded into the URL and the remaining parameters will be encoded in the body.&#13;&#10;If any parameters will be placed in the body, you must set the content type to &quot;application/x-www-form-urlencoded&quot;.&#13;&#10;This may be done by setting the &quot;Content Type&quot; field in the Channel metadata. If you wish to set this at run-time, it should be set in the message headers, e.g.:&#13;&#10;(: headers&#13;&#10;(message&#13;&#10;(: Content-Type &quot;application/x-www-form-urlencoded&quot;)&#13;&#10;)&#13;&#10;)&#13;&#10;If both parameters and a body are specified, the parameters that would have gone into the body will be discarded." lax="true" name="parameters"/>
+      <Value description="The path after the channel name in the incoming request URL. e.g. /nexj/xml/Account." name="path" type="string"/>
+      <Value name="principal" type="string"/>
+      <Value description="Status code of the HTTP response, e.g. 200.&#13;&#10;See http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html for more information." name="status" type="integer">
+         <Enumerations>
+            <Enumeration description="Continue (Informational)" value="100"/>
+            <Enumeration description="Switching Protocols (Informational)" value="101"/>
+            <Enumeration description="OK (Successful)" value="200"/>
+            <Enumeration description="Created (Successful)" value="201"/>
+            <Enumeration description="Accepted  (Successful)" value="202"/>
+            <Enumeration description="Non-Authoritative Information (Successful)" value="203"/>
+            <Enumeration description="No Content (Successful)" value="204"/>
+            <Enumeration description="Reset Content (Successful)" value="205"/>
+            <Enumeration description="Partial Content (Successful)" value="206"/>
+            <Enumeration description="Multiple Choices (Redirection)" value="300"/>
+            <Enumeration description="Moved Permanently (Redirection)" value="301"/>
+            <Enumeration description="Found (Redirection)" value="302"/>
+            <Enumeration description="See Other (Redirection)" value="303"/>
+            <Enumeration description="Not Modified (Redirection)" value="304"/>
+            <Enumeration description="Use Proxy (Redirection)" value="305"/>
+            <Enumeration description="(Unused) (Redirection)" value="306"/>
+            <Enumeration description="Temporary Redirect (Redirection)" value="307"/>
+            <Enumeration description="Bad Request (Client Error)" value="400"/>
+            <Enumeration description="Unauthorized (Client Error)" value="401"/>
+            <Enumeration description="Payment Required (Client Error)" value="402"/>
+            <Enumeration description="Forbidden (Client Error)" value="403"/>
+            <Enumeration description="Not Found (Client Error)" value="404"/>
+            <Enumeration description="Method Not Allowed (Client Error)" value="405"/>
+            <Enumeration description="Not Acceptable (Client Error)" value="406"/>
+            <Enumeration description="Proxy Authentication Required (Client Error)" value="407"/>
+            <Enumeration description="Request Timeout (Client Error)" value="408"/>
+            <Enumeration description="Conflict (Client Error)" value="409"/>
+            <Enumeration description="Gone (Client Error)" value="410"/>
+            <Enumeration description="Length Required  (Client Error)" value="411"/>
+            <Enumeration description="Precondition Failed (Client Error)" value="412"/>
+            <Enumeration description="Request Entity Too Large (Client Error)" value="413"/>
+            <Enumeration description="Request-URI Too Long (Client Error)" value="414"/>
+            <Enumeration description="Unsupported Media Type (Client Error)" value="415"/>
+            <Enumeration description="Request Range Not Satisfiable (Client Error)" value="416"/>
+            <Enumeration description="Expectation Failed (Client Error)" value="417"/>
+            <Enumeration description="Internal Server Error (Server Error)" value="500"/>
+            <Enumeration description="Not Implemented (Server Error)" value="501"/>
+            <Enumeration description="Bad Gateway" value="502"/>
+            <Enumeration description="Service Unavailable (Server Error)" value="503"/>
+            <Enumeration description="Gateway Timeout (Server Error)" value="504"/>
+            <Enumeration description="HTTP Version Not Supported (Server Error)" value="505"/>
+         </Enumerations>
+      </Value>
+      <Value name="password" type="string"/>
+      <Value description="e.g. &quot;OK&quot;" name="message" type="string"/>
+      <Value name="proxyHost" type="string"/>
+      <Value name="proxyPort" type="integer"/>
+      <Value name="proxyUser" type="string"/>
+      <Value name="proxyPassword" type="string"/>
+      <Message description="User state associated with the request. Normally, if the state is set in a response message then its attributes will be set in the user state, provided that the user state already exists.  If the state is set in a response message to a request on an authentication channel then its attributes will be set in the user state, creating the state if none already exists.  Only a response to a request on an authentication channel may set attributes starting with &quot;$&quot; (system attributes).&#13;&#10;&#13;&#10;Two system attributes are worth noting:&#13;&#10;&#13;&#10;- $principal: The user principal login name associated with the request. Returning a message with this value destroys all pre-existing attributes before setting the new state attributes, and associates the state with the specified user principal.&#13;&#10;&#13;&#10;- $roles: The roles of $principal, a collection of strings.  Typically (collection &quot;nexjusers&quot;)." lax="true" name="state">
+         <Parts/>
+      </Message>
+   </Parts>
+</Message>

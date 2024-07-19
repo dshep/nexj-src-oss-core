@@ -1,0 +1,32 @@
+<Class base="Contact" description="Contact, an entity for which we track contact info">
+   <Attributes>
+      <Attribute collection="false" name="firstName" required="true" static="false" type="string"/>
+      <Attribute collection="false" name="lastName" required="true" type="string"/>
+      <Attribute name="classCode" required="true" type="string" value="&quot;CNV&quot;"/>
+   </Attributes>
+   <Events/>
+   <PersistenceMapping classCodeAttribute="classCode" dataSource="DefaultRelationalDatabase" lockingAttribute="version">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.Contact">
+         <AttributeMappings>
+            <AttributeMapping column="first_name" name="firstName" table="test.Contact"/>
+            <AttributeMapping column="last_name" name="lastName" table="test.Contact"/>
+            <AttributeMapping column="rec_ver" name="version" table="test.Contact"/>
+            <AttributeMapping name="primaryAddress" sourceKey="Contact.FK1"/>
+            <AttributeMapping name="readPrincipal" sourceKey="Contact.FK2"/>
+            <AttributeMapping name="type" sourceKey="Contact.FK3"/>
+            <AttributeMapping destinationKey="Address.FK1" name="noAddresses"/>
+            <AttributeMapping destinationKey="Address.FK1" name="businessAddress"/>
+            <AttributeMapping destinationKey="Address.FK1" name="businessAddress2"/>
+            <AttributeMapping destinationKey="Address.FK1" name="businessAddress3"/>
+            <AttributeMapping destinationKey="Usr.FK1" name="qaUser"/>
+            <AttributeMapping column="classCode" name="classCode"/>
+            <AttributeMapping column="testCategory" name="testCategory"/>
+            <AttributeMapping column="lastUpdated" name="lastUpdated"/>
+            <AttributeMapping column="lastUpdatedMillisecond" name="lastUpdatedMillisecond"/>
+            <AttributeMapping column="businessAddressCount" name="businessAddressCount"/>
+            <AttributeMapping destinationKey="Account.FK1" name="accounts"/>
+            <AttributeMapping destinationKey="SupportGroup.PK" name="supportGroup" sourceKey="Contact.FK7"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

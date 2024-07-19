@@ -1,0 +1,781 @@
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <xsd:include schemaLocation="types.xsd"/>
+
+   <xsd:element name="DataSourceTypes" type="DataSourceTypes"/>
+   <!--
+      @hide
+   -->
+   <xsd:element name="DataSourceType" type="DataSourceType"/>
+   <!--
+      @hide
+      Type of DataSource.  e.g. RelationalDatabase, XML...
+      @detail
+      A DataSource is a logical representation of physical storage that supports a Create, Read, Update, Delete (CRUD) interface.
+   -->
+   <xsd:element name="RelationalDatabase" type="RelationalDatabase"/>
+   <xsd:element name="FileStorage" type="FileStorage"/>
+   <xsd:element name="ServiceDataSource" type="ServiceDataSource"/>
+   <xsd:element name="DataSource" type="GenericDataSource"/>
+   <!--
+   A datasource is a logical representation of physical storage that is used to create, read, update and delete object instances.
+   @detail
+   A datasource is a logical representation of physical storage that is used to create, read, update and delete object instances.
+   Each class’ persistence mapping specifies how its instances will be persisted in a given datasource.
+
+   Currently supported datasource types include:
+   <pre>
+       * RelationalDatabase - persist instances in a relational database
+       * FileStorage - persist instances in a file system
+       * XML - persist instances in an XML file
+       * Service - persist instances using a collection of services. e.g. web services or stored procedures. 
+       * Generic - for a custom developed persistence channel.
+   </pre>
+
+   DataSources are configured and bound to physical storage addresses through connections,
+   with which applications are deployed.
+
+   Datasources support a CRUD interface for interaction with external systems,
+   whereas channels support a send/receive interface. The persistence interface for
+   datasources is synchronous.
+
+   In NexJ Studio, datasources appear under the persistence tab of the repository navigator.
+   -->
+   <xsd:element name="SOADefinition" type="SOADefinition"/>
+   <!--
+      Services Oriented Architecture service definition.
+   -->
+   <xsd:element name="SOAImplementation" type="SOAImplementation"/>
+   <!--
+      Services Oriented Architecture service implementation.
+   -->
+   <xsd:element name="ChannelTypes" type="ChannelTypes"/>
+   <!--
+   @hide
+   -->
+   <xsd:element name="ChannelType" type="ChannelType"/>
+   <!--
+   @hide
+   -->
+   <xsd:element name="MessageQueue" type="MessageQueue"/>
+   <!--
+   Abstract integration endpoint representing a Message Queue.
+   @detail
+   Integration Channels are abstract representations of the Network Transport Layer.
+   MessageQueues represent JMS Queues and Topics to support P2P and publish/subscribe communicaiton.
+   MessageQueues are bound to JNDI JMS resources.
+
+   Whereas DataSources support a CRUD interface for interaction with external systems, integration Channels support
+   Send and Receive. Most channels can work as senders and as receivers. Channel interaction is message based and
+   can be asynchronous where the persistence interface for DataSources is synchronous.
+
+   Channels may be bound to Services where they will forward received messages.
+   -->
+   <xsd:element name="Mail" type="Mail"/>
+   <!--
+   An Integration Mail Channel.
+   @detail
+   Channels specify a communication protocol and other relevant metadata through the ChannelType.
+   Mail channels are bound to physical mail accounts and other communication parameters through Connections,
+   with which applications are deployed.
+
+   Whereas DataSources support a CRUD interface for interaction with external systems, integration Channels support
+   Send and Receive. Most channels can work as senders and as receivers. Channel interaction is message based and
+   can be asynchronous where the persistence interface for DataSources is synchronous.
+
+   A channel is an abstract integration endpoint that works through a particular transport adapter. Currently we support:
+   <pre>
+       * HTTP - both as a client and as a server - make any custom http message from our system.
+       * JMS
+       * UDP
+       * TCP - both as a client and as a server.
+       * Mail - send and receive email messages. Not fully implemented as a channel yet.
+       * File - send and receive from a set of directories.
+       * Generic - for a custom developed channel.
+   </pre>
+   An advantage of NexJ integration engine channels is that regardless of transport, they have the same interface.
+   Rather than dealing with different channels to external systems through their own APIs, channel adapters present
+   them as the same API.
+
+   In NexJ Studio, Channels appear under the Integration tab of the Repository Navigator.
+
+   When deployed, Channels are accessed at the <ServerURL>/channel/<ChannelName> URL.
+
+   Channels may be bound to Services where they will forward received messages.
+   -->
+   <xsd:element name="HTTP" type="HTTP"/>
+   <!--
+   An HTTP Integration Channel.
+   @detail
+   An abstract endpoint for sending and/or receiving messages over the HTTP protocol.
+
+   HTTP channels, like most channels, support a send/receive interface for interacting with external systems.
+   This is in contrast to data sources, which support a CRUD interface.  Channel interaction is message based
+   and can be asynchronous where the persistence interface for DataSources is synchronous.
+
+   Properties on a raw message (see Message) for an HTTP channel include:
+   <pre>
+      * channel - the channel name on which the message was received or will be sent
+      * body - the string or binary body of the message to send. Body is not sent when the method is GET.
+      * correlationId - an identifier used to correlate messages. This is currently only used on MessageQueue
+        channels for JMS messages.
+      * url - the base URL on which to send the request. e.g. http://localhost:7080/nexj/xml/Account.
+        If the URL doesn’t need to change at run-time, you can just specify the URL in the channel
+        properties.
+
+        If you want to override the URL or any other channel settings at deploy-time, modfy the channel settings in
+        the currently selected Connection.  URLs can also be dynamically set when called from Services.  This
+        can only be done when sending a raw message (see Message).  In this case, set the url property on the
+        raw HTTP transfer object e.g. (this'url "http://www.nexj.com/example").
+
+        You can retrieve the currently set URL with ((((invocation-context)'metadata)'getChannel "MyChannelName")'url)
+        and modify it with code.
+      * method - The type of HTTP request. On outbound, Defaults to "GET" if the body is null, "POST" if
+        the body is specified.
+      * headers - A transfer object with key/value pairs of headers from the incoming message or headers to send out.
+      * parameters - A transfer object with key/value pairs of parameters from the incoming message or parameters
+        to send out.  The values should be strings or something that is easily encoded as a string and will
+        be URL encoded automatically.
+
+        In a "GET" request the parameters will be encoded and appended to the URL.
+
+        In a "POST" request the parameters will be encoded and put in the body of the request unless the URL contains
+        a question mark followed by one or more parameter/value pairs.  In this case the parameters whose names match the
+        parameters in the URL will be encoded into the URL and the remaining parameters will be encoded in the body.
+        If any parameters will be placed in the body, you must set the content type to "application/x-www-form-urlencoded".
+        This may be done by setting the "Content Type" field in the Channel metadata. If you wish to set this at run-time,
+        it should be set in the message headers, e.g.:
+
+        (: headers
+           (message
+              (: Content-Type "application/x-www-form-urlencoded")
+           )
+        )
+
+        If both parameters and a body are specified, the parameters that would have gone into the body will be discarded.
+      * path - the path after the channel name in the incoming request URL. e.g. /nexj/xml/Account
+      * principal
+      * status - Status code of the HTTP response, e.g. 200
+      * password
+      * message - e.g. "OK"
+      * proxyHost
+      * proxyPort
+      * proxyUser
+      * proxyPassword
+   </pre>
+
+   Other channel types include JMS, UDP, TCP, Mail, File and Generic for custom channels.
+
+   An advantage of NexJ integration engine channels is that regardless of transport, they have the same interface.
+   Rather than dealing with different channels to external systems through their own APIs, channel adapters present
+   them as the same API.
+
+   In NexJ Studio, Channels appear under the Integration tab of the Repository Navigator.
+
+   When deployed, Channels are accessed at the <ServerURL>/channel/<ChannelName> URL.  Anonymous channels
+   (channels that have their connection's authentication property set to "none")
+   are available at the <ServerURL>/anon/channel/<ChannelName> URL.
+
+   Channels may be bound to Services to which they will forward incoming messages.
+   -->
+   <xsd:element name="TCP" type="TCP"/>
+   <!--
+   A TCP Integration Channel.
+   @detail
+   Channels specify a communication protocol and other relevant metadata through the ChannelType.
+   TCP channels are bound to concrete physical communication addresses and other communication parameters through Connections,
+   with which applications are deployed.
+
+   Whereas DataSources support a CRUD interface for interaction with external systems, integration Channels support
+   Send and Receive. Most channels can work as senders and as receivers. Channel interaction is message based and
+   can be asynchronous where the persistence interface for DataSources is synchronous.
+
+   A channel is an abstract integration endpoint that works through a particular transport adapter. Currently we support:
+   <pre>
+       * HTTP - both as a client and as a server - make any custom http message from our system.
+       * JMS
+       * UDP
+       * TCP - both as a client and as a server.
+       * Mail - send and receive email messages. Not fully implemented as a channel yet.
+       * File - send and receive from a set of directories.
+       * Generic - for a custom developed channel.
+   </pre>
+   An advantage of NexJ integration engine channels is that regardless of transport, they have the same interface.
+   Rather than dealing with different channels to external systems through their own APIs, channel adapters present
+   them as the same API.
+
+   In NexJ Studio, Channels appear under the Integration tab of the Repository Navigator.
+
+   When deployed, Channels are accessed at the <ServerURL>/channel/<ChannelName> URL.
+
+   Channels may be bound to Services where they will forward received messages.
+   -->
+   <xsd:element name="UDP" type="UDP"/>
+   <!--
+   A UDP Integration Channel.
+   @detail
+   Channels specify a communication protocol and other relevant metadata through the ChannelType.
+   UDP channels are bound to concrete physical communication addresses and other communication parameters through Connections,
+   with which applications are deployed.
+
+   Whereas DataSources support a CRUD interface for interaction with external systems, integration Channels support
+   Send and Receive. Most channels can work as senders and as receivers. Channel interaction is message based and
+   can be asynchronous where the persistence interface for DataSources is synchronous.
+
+   A channel is an abstract integration endpoint that works through a particular transport adapter. Currently we support:
+   <pre>
+       * HTTP - both as a client and as a server - make any custom http message from our system.
+       * JMS
+       * UDP
+       * TCP - both as a client and as a server.
+       * Mail - send and receive email messages. Not fully implemented as a channel yet.
+       * File - send and receive from a set of directories.
+       * Generic - for a custom developed channel.
+   </pre>
+   An advantage of NexJ integration engine channels is that regardless of transport, they have the same interface.
+   Rather than dealing with different channels to external systems through their own APIs, channel adapters present
+   them as the same API.
+
+   In NexJ Studio, Channels appear under the Integration tab of the Repository Navigator.
+
+   When deployed, Channels are accessed at the <ServerURL>/channel/<ChannelName> URL.
+
+   Channels may be bound to Services where they will forward received messages.
+   -->
+   <xsd:element name="ObjectQueue" type="ObjectQueue"/>
+   <!--
+   An ObjectQueue Integration Channel.
+   @detail
+   Channels specify a communication protocol and other relevant metadata through the ChannelType.
+   ObjectQueue channels are bound to SysObjectQueue instances.
+
+   Whereas DataSources support a CRUD interface for interaction with external systems, integration Channels support
+   Send and Receive. Most channels can work as senders and as receivers. Channel interaction is message based and
+   can be asynchronous where the persistence interface for DataSources is synchronous.
+
+   A channel is an abstract integration endpoint that works through a particular transport adapter. Currently we support:
+   <pre>
+       * HTTP - both as a client and as a server - make any custom http message from our system.
+       * JMS
+       * UDP
+       * TCP - both as a client and as a server.
+       * Mail - send and receive email messages. Not fully implemented as a channel yet.
+       * File - send and receive from a set of directories
+       * Generic - for a custom developed channel.
+       * ObjectQueue - for internal application messaging.
+   </pre>
+   An advantage of NexJ integration engine channels is that regardless of transport, they have the same interface.
+   Rather than dealing with different channels to external systems through their own APIs, channel adapters present
+   them as the same API.
+
+   In NexJ Studio, Channels appear under the Integration tab of the Repository Navigator.
+
+   When deployed, Channels are accessed at the <ServerURL>/channel/<ChannelName> URL.
+
+   Channels may be bound to Services where they will forward received messages.
+   -->
+   <xsd:element name="File" type="FileChannel"/>
+   <!--
+   A File Integration Channel.
+   @detail
+   Channels specify a communication protocol and other relevant metadata through the ChannelType.
+   File Channels are bound to physical folders and files through Connections,
+   with which applications are deployed.
+
+   Whereas DataSources support a CRUD interface for interaction with external systems, integration Channels support
+   Send and Receive. Most channels can work as senders and as receivers. Channel interaction is message based and
+   can be asynchronous where the persistence interface for DataSources is synchronous.
+
+   A channel is an abstract integration endpoint that works through a particular transport adapter. Currently we support:
+   <pre>
+       * HTTP - both as a client and as a server - make any custom http message from our system.
+       * JMS
+       * UDP
+       * TCP - both as a client and as a server.
+       * Mail - send and receive email messages. Not fully implemented as a channel yet.
+       * File - send and receive from a set of directories.
+       * Generic - for a custom developed channel.
+   </pre>
+   An advantage of NexJ integration engine channels is that regardless of transport, they have the same interface.
+   Rather than dealing with different channels to external systems through their own APIs, channel adapters present
+   them as the same API.
+
+   In NexJ Studio, Channels appear under the Integration tab of the Repository Navigator.
+
+   When deployed, Channels are accessed at the <ServerURL>/channel/<ChannelName> URL.
+
+   Channels may be bound to Services where they will forward received messages.
+   @context FileChannel
+   -->
+   <xsd:element name="Channel" type="GenericChannel"/>
+   <!--
+      Channels are abstract integration endpoints representating the Network Transport Layer.  They are used to send or receive Messages.
+      @detail
+      A channel is an abstract integration endpoint that works through a particular transport adapter.
+      Currently supported transports include:
+      <pre>
+          * HTTP - both as a client and as a server - make any custom http message from our system.
+          * Message Queue - send and receive using JMS
+          * UDP - send and receive using the User Datagram Protocol
+          * TCP - send and receive using the Transmission Control Protocol.
+          * Mail - send and receive email messages. Not fully implemented as a channel yet.
+          * File - send and receive using a set of directories.
+          * Generic - for a custom developed channel.
+      </pre>
+      Channels specify their communication protocol and other relevant information through their ChannelType.
+      Channels are configured and bound to physical communication addresses through Connections,
+      with which applications are deployed.
+
+      Integration Channels support a Send and Receive interface for interaction with external systems,
+      whereas DataSources support a CRUD interface. Most channels can work as senders and as receivers.
+      Channel interaction is message based and can be asynchronous where the persistence interface for
+      DataSources is synchronous.
+
+      An advantage of NexJ integration engine channels is that regardless of transport, they have the same interface.
+      Rather than dealing with different channels to external systems through their own APIs, channel adapters present
+      them as the same API.
+
+      In NexJ Studio, Channels appear under the Integration tab of the Repository Navigator.
+
+      When deployed, Channels are accessed at the <ServerURL>/channel/<ChannelName> URL.
+
+      Channels may be bound to Services to which they will forward messages they receive.
+   -->
+   <xsd:element name="Connections" type="Connections"/>
+   <!--
+      Connections contain deployment settings for Datasources and Channels.
+      @detail
+      Datasources and Channels are logical representations of physical storage and integration
+      channels.  Connections tie these to actual physical systems during deployment.
+
+      A connections file is configured for each environment you will be working with
+      e.g. LocalDevelopment, QA, Staging, etc. Connections may be encrypted using NexJ Studio to protect
+      their contents.
+
+      Connections may be merged together with a Server configuration to create an Environment in
+      NexJ Studio by right-clicking a Connection and selecting "Merge to Environment...".
+      @see
+      Server Environment Datasource Channel
+   -->
+   <xsd:element name="Server" type="Server"/>
+   <!--
+      A Server specifies it's type (e.g. WebSphere) and various other settings to support deployment.
+      @detail
+      The server specifies it's container type (WebSphere, JBoss or NJAS) and various other settings to
+      support deployment.  For details on how to set up single-signon, clustering, ldap ... see the "NexJ Application Server
+      Deployment Guide".
+      Servers may be encrypted using NexJ Studio to protect their contents.
+      Servers may be merged together with a connections to create an Environment using
+      the right mouse menu item "Merge to Environment..." on a Server in NexJ Studio.
+      There are various "extra properties" that may be set on a server to support testing.  These will
+      be documented in a future version of this guide.
+      @see
+      Environment Connections
+   -->
+   <xsd:element name="Environment" type="Environment"/>
+   <!--
+   An Environment represents physical system configurations and combines server and connection settings into one convenient file.
+   @detail
+   You may define multiple environments in which to work on your model.  These environments represent physical system 
+   configurations e.g. Development, QA, Staging, or Production.  Among other things, environments store log-on and password information, 
+   database connection information, and deployment and connection information. Once they are defined, you can move easily between the 
+   environmental settings by selecting them from a drop-down list in NexJ Studio.  
+   
+   Environments may be encrypted using NexJ Studio to protect their contents.
+   Environments may be split into Server and Connections files using the right mouse
+   button menu item "Extract to Server/Connections" in NexJ Studio.
+   @see
+   Server Connections
+   -->
+   <xsd:element name="ExternalLibrary" type="ExternalLibrary"/>
+   <!--
+      ExternalLibraries reference jar files located in the project's /lib folder.  This is for documentation purposes only.
+      @detail
+      When we include a jar file from a 3rd party in our solution, it is good to know who the vendor is and
+      what the license terms are.  ExternalLibraries provide a way to document this information.  The framework doesn't use
+      this information, it is for documentation purposes only.
+   -->
+   <xsd:element name="Metadata" type="Metadata"/>
+   <xsd:element name="Aspect" type="Aspect"/>
+   <!--
+      Aspects are functional groupings of additional attributes and/or events that may be applied to your model.
+      @detail
+      Aspects do not represent real Classes in the business model.  They represent functional groupings of additional attributes
+      and/or events that may be applied to Classes directly or through pointcuts.  An Aspect is
+      applied to all Classes (or other Aspects) that either:
+      <pre>
+         *  specify it by name in their "aspects" property or
+         *  match the Aspect's "pointcut" property.
+      </pre>
+      If a Class or Aspect matches the Aspect's "poincut" property but excludes the aspect by name
+      in its "aspects" property, the aspect will not be applied.
+   -->
+   <xsd:element name="Class" type="Class"/>
+   <!--
+      A Class is an abstraction of a business model concept.
+      @detail
+      Maintained in the Classes tab of the Business Model in NexJ Studio.
+      
+      A Class describes of a set of objects with common structural characteristics (see Attribute)
+      and behaviors (see Event). For example, the class Person may contain relevant shared attributes 
+      for all people being considered, such as height and eye color, and behaviors, such as the ability to speak and jump
+      (events). An Instance of a class is a member of the set represented by the class.
+      e.g. "Joe Test: 5"8 - blue eyes"
+      
+      Class attributes can be primitive (integer, string, ...) or non-primitive if they refer
+      to associated classes within the domain model.
+      
+      A class' persistence mapping determines how an instance's state is stored when not in memory. Each persisted class
+      specifies how its class attributes will be mapped to to phycical locations in a data source.
+      
+      Classes support single inheritence and are fully polymorphic.  i.e. all of their events are virtual.
+      They are metadata but are interpreted as fully functional objects by the Model Server.
+      
+      All classes are derived from a common base object - called Object - that provides
+      common functionality and lifecycle events.  You can review documentation on Object
+      in the scheme help system by typing Object' and ctrl-space in a scheme editor within
+      NexJ Studio.  Also, see the documentation on Class'Events for information about the common events.
+      
+      Both attributes and events may be static.  Statics are available on instances and on
+      the class metadata object.
+      
+      e.g. Object'read is a static event so (Person'read ...) and (myInstance'read ...) are
+      both valid.
+      
+      Static attributes are shared between all class instances, with non-static ones are
+      allocated separately for each class instance.  Static events can update only shared
+      state, non-static ones update instance state.
+      
+      There are significant advantages to NexJ classes over generic class sytems, such as Java classes.
+      These advantages include:
+         <pre>
+         *  NexJ Classes provide multiple-inheritance features through Aspects
+         *  NexJ classes are designed specifically to support persisting to data sources and include
+             automatic generation of appropriate back-end instructions (such as DBMS specific SQL)
+             from a flexible persistance mapping.
+         *  All instances are referenced by an Object Identifier (OID) that typically is the primary key
+             where the instance is persisted.
+         *  NexJ classes use the Event-Condition-Action pattern instead of simple methods
+         *  Events may be invoked explicitly by business logic or by RPC calls.
+         *  Some events are implicitly raised by the object model.
+                - The update event is raised when attributes are updated on an instance.
+                - The create event is raised when certain events such as update are called and the instance does not
+                   yet have an identifier (OID) In this case, any attributes that already have values on the object are
+                   used as initial values and are acessible in the create event.
+         *  NexJ attributes support an explicit initialization script
+         *  NexJ attributes may be calculated with an expression configured in their value property
+         *  NexJ attributes do not support getter/setter paradigms but allow actions to be invoked when attributes are updated.
+         *  NexJ classes do not support traditional contructors, but allow actions to be invoked when a create event occurs. The create
+             event is similar to a contructor, but, unlike a contructor, may be called multiple times. For example, if a new instance is
+             modified after the instance is initially created but before the instance is committed, the create event is called again, but
+             with the new modifications applied.
+         </pre>
+    -->
+   <xsd:element name="Enumeration" type="Enumeration"/>
+    <!--
+       Enumerations are a special type of Class that provide a list of values along with localizable captions.
+       @detail
+       Enumerations represent lists of values with localizable captions.  They are a design-time and run-time concept,
+       meaning they are created in NexJ Studio and are part of the Model, but are also loaded into database
+       tables for use and modification at run-time.  They provide a standardized way to create lists of values, like the
+       days of the week, and localize them or associate them with UI elements like combo boxes.  They can also be
+       associated in a parent child relationship such as country and state.
+       Example: Our enumeration is called DayOfWeekEnum.  It has a list of values named MONDAY, TUESDAY, WEDNESDAY...
+       the code values are "1", "2", "3", ... Each of the values has French and English captions.
+       In usage, (DayOfWeekEnum'MONDAY) returns "1" which you might use in a comparison like (= currentDay (DayOfWeekEnum'MONDAY)) if currentDay was simply a String value.
+       To get an instance of the value use the 'get' syntax as in (DayOfWeekEnum'get'MONDAY).
+       To get the caption of the value, use the caption property, as in ((DayOfWeekEnum'get'MONDAY)'caption).  This
+       will return the caption in the current invocation context's locale.
+       @context Class
+    -->
+   <xsd:element name="Workflow" type="Workflow"/>
+   <xsd:element name="WorkflowQueue" type="WorkflowQueue"/>
+   <xsd:element name="SecurityDescriptor" type="SecurityDescriptor"/>
+   <xsd:element name="Formats" type="Formats"/>
+   <xsd:element name="Format" type="Format"/>
+   <!--
+   Format for a Typed Message
+   @detail
+   Typed messages can have a Format, which defines how they are marshalled between external and internal format.
+   The way in which parts are mapped to the external representation is different depending on the format.
+   Formats supported include:
+   <pre>
+    * CSV - comma separated value
+    * Fixed - fixed-length fields ("flat file") format
+    * HL7 - health level 7 format
+    * Object - the message is mapped to an internal class.
+    * vCard - standard for electronic business cards.
+    * XML - XML mappings can support SOAP messages as well. The adapter knows based on the definition how to deal with soap specific (with soap envelopes). We can define soap 1.2 we can define the soap action, namespace alias and the actual namespace uri for different parts and so on.
+    * Zip - represents a zip file archive.
+   </pre>
+   -->
+   <xsd:element name="Message" type="RootMessage"/>
+   <!--
+      A message carries information from a source system to a destination system over an integration channel.
+      @detail
+      Messages are maintained in the integration layer and are used to carry information between systems.
+      
+      Each message type is represented internally (in canonical form) as a tree of parts. An 
+      internal representation might look like 
+      
+      Messages have a single root part that defines certain characteristics for the entire
+      message, such as it's format. The root's child parts are either:
+      <pre>
+      * messages - composite parts that may have more child parts
+      * or values - primitive parts such as string, integer, date, ...
+      </pre>
+      
+      To programmatically create a message use the (message) procedure.  You may create a message of
+      a certain type with it's :class property. 
+      
+      e.g. (define myMessage (message (: :class "SystemXMessage")))
+      
+      A message's format defines how it is marshalled between external and internal format. e.g. between 
+      canonical form and XML. Supported formats include CSV, Fixed, HL7, Object, vCard, XML and Zip.  To
+      format a message, use the (format-message msg) procedure.  See "parse-message" for information
+      about creating internal messages from external inputs, such as CSV files.
+      
+      Messages support inheritance and containment.  Messages may extend other messages using
+      the "base" property and may contain other message types using the "ref" property.
+      
+      Raw messages are special types of system messages tha vary by the type of channel on which they 
+      are received or sent. All raw messages have the following parts:
+       <pre>
+       * channel - the channel name that the message was received on
+       * body - the body of the message.  (not applicable to an HTTP Get)
+       * correlationId - an identifier used to correlate messages.  Useful in asynchronous settings.
+       </pre>
+       Additional parts by channel type include:
+       <pre>
+       HTTP
+          * url - the base URL on which to send the request.  e.g. http://localhost:7080/nexj/xml/Account. 
+            If you use the outbound parameters argument, you MUST end the url with "?". 
+            e.g. "http://localhost:7080/nexj/xml/Account?"
+          * method - The type of HTTP request.  On outbound, Defaults to "GET" if the body is null, 
+            "POST" if the body is specified.
+          * headers - A transfer object with headers.
+          * parameters - A transfer object with key/value pairs of parameters from the incoming message 
+            or parameters to send outgoing. The values should be strings or something that is easily encoded 
+            as a string and will be URL encoded automatically.  If you are sending parameters on an outbound 
+            request, you must end the URL with "?". 
+            e.g. "http://localhost:7080/nexj/xml/Account?"
+          * path - the path after the channel name in the incoming request URL.  e.g. /nexj/xml/Account
+          * principal
+          * status - Status code of the HTTP response, e.g. 200
+          * password
+          * message - e.g. "OK"
+          * proxyHost
+          * proxyPort
+          * proxyUser
+          * proxyPassword
+
+       JMS
+          * properties (jmsErrorCount, jmsMaxErrorCount, jmsBackoffDelay, jmsOldMessageId,
+            jmsOldDestination)
+          * priority - message priority 0..9
+          * persistent - boolean
+          * ttl - time-to-live
+          * type
+          * replyTo - reply-to destination name
+          * node - source node
+          * user
+          * protected
+
+       Mail
+          <not implemented as a channel adapter yet>
+
+       UDP
+          * host
+          * port
+          * localHost
+          * localPort
+          * ttl - time-to-live
+          * tos - service level
+
+       TCP
+          * host
+          * port
+          * localHost
+          * localPort
+
+       File
+          * file - the incoming filename (when receiving) and filename override (when sending).
+       </pre>
+
+      @context Root Message
+   -->
+   <xsd:element name="Transformation" type="Transformation"/>
+   <!--
+      Transforms an instance of one message type to another message type.
+      @detail
+      Messages can be converted from one message type to another using Transformations. You can use single transformations or for more complex transformations chain them together in Services. Transformations specify how parts of one message map to values in another message. Transformations are one-way.
+      @category Integration
+   -->
+   <xsd:element name="Interface" type="Interface"/>
+    <!--
+       Lists of valid request and/or response messages for services, send and sendReceive steps, and 'any' message parts.
+       @detail
+       An Interface specifies the types of Messages that a Service is expected to receive or send.
+       If an interface with Request messages is specified, the message will come into the Service
+       already parsed to internal format based on the message's format. Sending a file is similar,
+       if a message type is specified on the Interface for a Service, the Message is automatically
+       formatted to the external representation - otherwise we have to format it ourselves.
+       Any messages that are specified as a Request message for an interface automatically has the
+       message's response message added to the interface's list of response messages. The response
+       attribute on a message is optional - it allows you to pair-up a request/response set of message formats.
+
+       If no interface is specified, or the Interface doesn't list any Request message types,
+       the message is received by the Service in unparsed - or raw - form. Raw message formats differ slightly
+       by channel type. (see Message documentation for details)
+
+       Most of the settings specified in the channel or connection are defaulted to those specified in
+       the metadata but you can override them with message attributes so you can dynamically send a message
+       to another channel to accomplish content based routing.
+       For example, the channel name could be specified in the raw message for flexibility.
+
+       Interfaces are also used on Send and SendReceive steps in services.  In this case, the request table
+       is applied to outbound messages and the response table to inbound (in the case of SendReceive).
+
+       Additionally, interfaces may be set on message parts of type 'any'.  This works like the
+       xsi:any attribute type in wsdl.  See the xml message format interface property for more details.
+    -->
+   <xsd:element name="Service" type="Service"/>
+   <!--
+      Services provide integration service orchestration capabilities. They are essentially workflow for integration.
+      @detail
+      Services tie together integration structures. They are very similar to Workflows,
+      but instead of a Class as the process token, a Service uses a message.
+      Each step in a Service returns a message. Steps can:
+      <pre>
+         * run script,
+         * send messages,
+         * send and receive messages to external systems asynchronously,
+         * transform messages
+         * persist object messages to the domain model
+         * sync object messages using the additional capabilities of the synchronization framework. The sync framework maintains a model of various sync targets and keeps track of each synchronized instance so it can detect conflicts. The sync step is really an extension of the persist step that allows for processing and conflict resolution.
+         * try/catch blocks to handle exceptions
+         * dispatch for branching based on conditions of the message or service
+         * parse and format messages
+       </pre>
+       Services can be either invoked by
+       <pre>
+          * calling SysService'invoke - similar to SysWorkflow'start
+          * or it can be bound to a channel. When a message arrives on the channel asynchronously the service is activated.
+       </pre>
+   -->
+   <xsd:element name="Component" type="Component"/>
+   <xsd:element name="Action" type="FlowMacro"/>
+   <!--
+      Custom Actions used to extend the Workflow or Service palette.
+      @context Custom Action
+   -->
+   <xsd:element name="UnitTest" type="UnitTest"/>
+   <!--
+      A set of test cases to test Model functionality.
+      @detail
+      A unit test tests functional components of the Business Model.  It is run
+      as part of an automated test to verify that the model is functioning as expected.
+      A unit test consists of an initializer, a finalizer and a set of test cases.  Test
+      cases are essentially script with access to special assert statements used to compare
+      actual to expected results.
+
+      The initializer and finalizer are run before and after each test case regardless of the UnitTest's
+      mode ("sequential" or "dirty").  The initializer is typically used to set up test conditions
+      and the finalizer to clean up unmanaged resources.
+      
+      If a UnitTest's mode property is set to "sequential" a clean dump file, specified in the
+      "dump" property, is restored prior to running each test case.  This is to ensure that there
+      are no side-effects between tests.
+
+      If a UnitTest's mode property is set to "dirty" the dump file will be restored only once prior to
+      running the first test case.  Subsequent test cases will execute immediately following the previous
+      test without a clean restore.
+
+      Note that in "dirty" mode you shouldn't rely on the initializer and finalizer to set up and tear down data
+      and resources as they are run before and after each test case.  If you want to initialize data in "dirty" mode
+      you could insert a test case at the beginning of the UnitTest and use it to do initialization.  Similarly,
+      if you want to clean up unmanaged resources at the end of a "dirty" UnitTest, insert a final test case to
+      perform cleanup.
+
+      An optional list of variables may be used to pass state from one test case to another.  As an
+      example, another approach to the question of how to initialize a UnitTest in "dirty" mode
+      could be to use a variable called "firstCase".  This variable could be used to determine
+      what script to run in the initializer.  Even though the initializer runs before each test case, the code
+      in the initializer would only run when the "firstCase" variable was true.  "firstCase" would be set
+      to false after the initializer was run the first time.
+
+      You may use the Loop construct to loop over the UnitTest with any combination of "looped" variables.
+      During each iteration one of the variables will advance to the next value in its list of values.  In this
+      way, the UnitTest will be evaluated against the combination of all sets of variables.
+   -->
+   <xsd:element name="Upgrade" type="Upgrade"/>
+   <!--
+      The set of upgrade steps for all versions of a DataSource.
+   -->
+   <xsd:element name="RuleSet">
+   <!--
+   A set of rules to support run-time configurable business logic.
+   @detail
+   Rules are a powerful and flexible way of providing run-time configurable business logic.  NexJ's backwards chaining
+   inference engine evaluates rules, in order, until all unknown variables are satisfied.  At this point the result,
+   or goal, is returned and sets an attribute on a class instance.
+   -->
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="Rule" minOccurs="0" maxOccurs="unbounded">
+            <!--
+            An individual rule in a ruleset.
+            @detail
+            Rules are eveluated in order until all unknown variables are satisfied.  At this point
+            the result, or goal, is returned.
+            -->
+               <xsd:complexType>
+                  <xsd:sequence>
+                     <xsd:element name="Script" type="Script"/>
+                     <!--
+                        @context Rule
+                     -->
+                  </xsd:sequence>
+                  <xsd:attribute name="name" type="identifier" use="required"/>
+                  <!--
+                     Uniquely identifies the Rule.
+                  -->
+                  <xsd:attribute name="condition" type="xsd:string"/>
+                  <!--
+                     The condition upon which the rule is subject to. A Scheme expression.
+                  -->
+                  <xsd:attribute name="enabled" type="xsd:boolean" default="true"/>
+                  <!--
+                     Specifies if the rule is enabled or not.
+                     @category Behavior
+                  -->
+                  <xsd:attribute name="description">
+                     <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                           <xsd:maxLength value="255"/>
+                        </xsd:restriction>
+                     </xsd:simpleType>
+                  </xsd:attribute>
+                  <!--
+                     Description of the Rule.
+                  -->
+               </xsd:complexType>
+            </xsd:element>
+         </xsd:sequence>
+         <xsd:attribute name="version" type="nonNegativeInt" default="0"/>
+         <!--
+            The version of the RuleSet. Cannot be negative.
+         -->
+         <xsd:attribute name="description">
+            <xsd:simpleType>
+               <xsd:restriction base="xsd:string">
+                  <xsd:maxLength value="255"/>
+               </xsd:restriction>
+            </xsd:simpleType>
+         </xsd:attribute>
+         <!--
+            Description of the RuleSet.
+         -->
+      </xsd:complexType>
+   </xsd:element>
+</xsd:schema>

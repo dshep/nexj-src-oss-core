@@ -1,0 +1,171 @@
+<Class aspects="LOCKING PERSISTENCE_INITIALIZER RUNTIME_INITIALIZER" description="The message queue wrapper.">
+   <Attributes>
+      <Attribute name="name" required="true" type="string"/>
+      <Attribute name="type" required="true" type="string" value="&quot;Queue&quot;"/>
+      <Attribute name="caption" type="string"/>
+      <Attribute name="description" type="string" value="(format (@ caption))"/>
+      <Attribute description="Relative priority to other SysQueue, lower numbers are higher priority." name="priority" type="integer"/>
+      <Attribute description="The maximum number of assignments on this queue permitted to be in a RUNNING state. 0 or null for infinite." name="concurrency" type="integer"/>
+      <Attribute description="True if queue altered from its initial seeding by SysUpgrade." initializer="#t" name="customized" required="true" type="boolean"/>
+      <Attribute name="statPath" required="true" type="string" value="&quot;&quot;" visibility="protected"/>
+      <Attribute description="True if queue was created by seeding done by SysUpgrade." initializer="#f" name="system" required="true" type="boolean"/>
+      <Attribute cascade="delete" description="The counter for task throttling. Null for no throttle limits." name="throttleCounter" reverse="queue" type="SysQueueThrottleCounter"/>
+      <Attribute description="True if this instance may be deleted." name="deletable" type="boolean" value="(not (@ system))"/>
+   </Attributes>
+   <Events>
+      <Event args="name" description="Gets a queue by name" name="getQueue" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(begin-privileged
+   ; read-instance requires "QueueView" privilege, which most users will not have
+   (read-instance SysQueue '(name caption) `(= name ,name) #f)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="attributes where orderBy count offset xlock" description="Overrides the privileges" name="read" privilege="QueueView" static="true" visibility="public"/>
+      <Event description="Overrides the privileges" name="create" privilege="QueueManage" visibility="public"/>
+      <Event description="Overrides the privileges" name="update" privilege="QueueManage" visibility="public">
+         <Actions>
+            <Action condition="(and (this'isUpdated'name) (this'system))" name="disallowRename" type="before"><![CDATA[(error "err.SysQueue.renameSystem" (this'old 'name) (@ name))]]></Action>
+         </Actions>
+      </Event>
+      <Event access="deletable" description="Privilege override, prevents deletion of system queues, and destroys throttle counter." name="delete" privilege="QueueManage" transaction="required" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(if (@ system)
+   (error "err.SysQueue.deleteSystem" (@ name))
+   (this'hardDelete)
+)]]></Action>
+            <Action name="destroyThrottleCounter" type="after"><![CDATA[(unless (null? (@ throttleCounter))
+   ((@ throttleCounter)'delete)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Sets customized attribute" name="commit">
+         <Actions>
+            <Action name="customize" type="before"><![CDATA[(if (null? (this'customized))
+   (this'customized #f)
+   (unless (this'isDirty'customized)
+      (this'customized #t)
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="time" description="Computes the start time of the next execution window for this queue. If time is already within a valid execution window, returns a timestamp &lt;= time." name="getWindowStartTime">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[time]]></Action>
+         </Actions>
+      </Event>
+      <Event audit="true" description="Invoked to delete the instance. The main action is implemented by the framework." name="hardDelete" transaction="required">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.delete" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="object event" description="Asynchronously invokes an event.&#13;&#10;@arg object The instance or metaclass to invoke.&#13;&#10;@arg event The symbol of the event to invoke." name="invoke" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysQueue.invoke" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="object event args" description="Asynchronously invokes an event with arguments." name="invoke" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysQueue.invoke" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="object event priority ttl" description="Asynchronously invokes an event." name="invoke" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysQueue.invoke" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="object event args priority ttl" description="Asynchronously invokes an event with arguments." name="invoke" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysQueue.invoke" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="object event correlator corevent priority ttl" description="Asynchronously invokes an event with a correlation instance." name="invoke" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysQueue.invoke" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="object event correlator corevent priority ttl destination" description="Asynchronously invokes an event with a correlation instance, using a given destination." name="invoke" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysQueue.invoke" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="object event args correlator corevent priority ttl destination" description="Asynchronously invokes an event with arguments and a correlation instance, using a given destination." name="invoke" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysQueue.invoke" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="object event nolocal" description="Asynchronously broadcasts an event." name="broadcast" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysQueue.broadcast" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="object event args nolocal" description="Asynchronously broadcasts an event with arguments." name="broadcast" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysQueue.broadcast" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="object event nolocal priority ttl" description="Asynchronously broadcasts an event." name="broadcast" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysQueue.broadcast" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="object event args nolocal priority ttl" description="Asynchronously broadcasts an event with arguments." name="broadcast" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysQueue.broadcast" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="object event correlator corevent nolocal priority ttl" description="Asynchronously broadcasts an event with a correlation instance." name="broadcast" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysQueue.broadcast" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="object event args correlator corevent nolocal priority ttl" description="Asynchronously broadcasts an event with arguments and a correlation instance." name="broadcast" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysQueue.broadcast" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="destination message properties" description="Asynchronously sends a message." name="send" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysQueue.send" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="destination message properties nolocal priority ttl" description="Asynchronously sends a message." name="send" static="true">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysQueue.send" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event name="initializeRuntime" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(begin-unpartitioned
+   (for-each
+      (lambda (queue)
+         (queue'initializeStatistics)
+      )
+      (SysQueue'read '(name) '() '() '() '() '())
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Initialize statistics." name="initializeStatistics">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(error "err.subClassToImplement")]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping classCodeAttribute="type" dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="Queue">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name"/>
+            <AttributeMapping column="classCode" name="type"/>
+            <AttributeMapping column="caption" name="caption"/>
+            <AttributeMapping column="locking" name="locking"/>
+            <AttributeMapping column="priority" name="priority"/>
+            <AttributeMapping column="customized" name="customized"/>
+            <AttributeMapping column="concurrency" name="concurrency"/>
+            <AttributeMapping name="throttleCounter" sourceKey="Queue.FK2"/>
+            <AttributeMapping column="system" name="system"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

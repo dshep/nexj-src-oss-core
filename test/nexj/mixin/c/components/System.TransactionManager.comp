@@ -1,0 +1,10 @@
+<Component type="javax.transaction.TransactionManager" activation="singleton"
+	description="The global JTA transaction manager instance">
+	<Factory type="nexj.core.runtime.platform.TransactionManagerLocator" method="getTransactionManager" activation="new">
+		<Factory type="nexj.core.runtime.platform.PlatformFactory" method="create" activation="new">
+			<Properties>
+				<Property name="classTemplate">nexj.core.runtime.platform.${platform}.${Platform}TransactionManagerLocator</Property>
+			</Properties>
+		</Factory>
+	</Factory>
+</Component>

@@ -1,0 +1,61 @@
+<Transformation destination="TransformTestMsg" source="TransformTestMsg">
+   <Mappings>
+      <Mapping destination="primitive">
+         <Sources>
+            <Source name="value" source="primitive"/>
+         </Sources>
+         <Script><![CDATA[value]]></Script>
+      </Mapping>
+      <Mapping destination="primitiveCollection">
+         <Sources>
+            <Source name="value" source="primitive"/>
+         </Sources>
+         <Script><![CDATA[value]]></Script>
+      </Mapping>
+      <Mapping destination="primitiveCollection">
+         <Sources>
+            <Source name="value" source="primitive"/>
+         </Sources>
+         <Script><![CDATA[(map (lambda (v) (+ v value)) (collection 1 2 3))]]></Script>
+      </Mapping>
+      
+      <Mapping destination="message primitive">
+         <Sources>
+            <Source name="value" source="message primitiveCollection"/>
+         </Sources>
+         <Script><![CDATA[value]]></Script>
+      </Mapping>
+      <Mapping destination="message primitiveCollection">
+         <Sources>
+            <Source name="value" source="message primitiveCollection"/>
+         </Sources>
+         <Script><![CDATA[value]]></Script>
+      </Mapping>
+      <Mapping destination="message primitiveCollection">
+         <Sources>
+            <Source name="value" source="message primitiveCollection"/>
+         </Sources>
+         <Script><![CDATA[value]]></Script>
+      </Mapping>
+      
+      <Mapping destination="messageCollection primitive">
+         <Sources>
+            <Source name="value" source="messageCollection primitiveCollection$"/>
+         </Sources>
+         <Script><![CDATA[value]]></Script>
+      </Mapping>
+      <Mapping destination="messageCollection primitiveCollection">
+         <Sources>
+            <Source name="value" source="messageCollection primitive"/>
+         </Sources>
+         <Script><![CDATA[value]]></Script>
+      </Mapping>
+      <Mapping destination="messageCollection primitiveCollection">
+         <Sources>
+            <Source name="value" source="messageCollection primitiveCollection"/>
+         </Sources>
+         <Script><![CDATA[value]]></Script>
+      </Mapping>
+      
+   </Mappings>
+</Transformation>

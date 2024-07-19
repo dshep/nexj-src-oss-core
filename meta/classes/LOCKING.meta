@@ -1,0 +1,14 @@
+<Aspect description="Class aspect for applying locking attribute to classes.&#13;&#10;@detail&#13;&#10;The LOCKING class aspect should be applied to any persisted class on which you want to support optimistic locking. The table support for this is automatically added in the DefaultRelationalDatabase data source via the LOCKING data source aspect.&#13;&#10;&#13;&#10;Optimistic locking is based on the assumption that most database transactions do not conflict with other transactions, allowing this to be as permissive as possible in allowing transactions to execute.&#13;&#10;&#13;&#10;There are three phases in an optimistic locking transaction:&#13;&#10;&#13;&#10;1. Read: The client reads values from the database along with the locking attribute and may edit them locally.&#13;&#10;2. Validate: When the client has completed editing of the local values it initiates the storage of the changes back to the database. It keeps track of the original locking value and also generates a new locking value. During validation, the original locking value is compared to the one currently in the database. If these values do not match, some other process has changed the record and an optimistic lock exception is raised.&#13;&#10;3. Write: If there is no optimistic lock conflict, the transaction commits.">
+   <Attributes>
+      <Attribute initializer="0" name="locking" required="true" type="integer"/>
+   </Attributes>
+   <PersistenceMappings>
+      <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+         <RelationalMapping primaryTable="LOCKING">
+            <AttributeMappings>
+               <AttributeMapping column="locking" name="locking"/>
+            </AttributeMappings>
+         </RelationalMapping>
+      </PersistenceMapping>
+   </PersistenceMappings>
+</Aspect>

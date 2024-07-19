@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+<connector xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd" version="1.5">
+   <display-name>NexJ SQL Resource Adapter</display-name>
+   <vendor-name>NexJ Systems, Inc.</vendor-name>
+   <eis-type>Integration</eis-type>
+   <resourceadapter-version>1.0</resourceadapter-version>
+   <resourceadapter>
+      <resourceadapter-class>nexj.core.rpc.sql.ra.SQLResourceAdapter</resourceadapter-class>
+      <outbound-resourceadapter>
+         <connection-definition>
+            <managedconnectionfactory-class>nexj.core.rpc.sql.ra.SQLManagedConnectionFactory</managedconnectionfactory-class>
+            <connectionfactory-interface>javax.sql.DataSource</connectionfactory-interface>
+            <connectionfactory-impl-class>nexj.core.rpc.sql.ra.SQLConnectionFactory</connectionfactory-impl-class>
+            <connection-interface>java.sql.Connection</connection-interface>
+            <connection-impl-class>nexj.core.rpc.sql.ra.SQLConnection</connection-impl-class>
+         </connection-definition>
+         <transaction-support>XATransaction</transaction-support>
+         <reauthentication-support>false</reauthentication-support>
+      </outbound-resourceadapter>
+   </resourceadapter>
+</connector>

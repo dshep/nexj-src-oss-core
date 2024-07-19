@@ -1,0 +1,7 @@
+<Message format="XML">
+   <Parts>
+      <Value minCount="1" name="value" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+   </Parts>
+</Message>

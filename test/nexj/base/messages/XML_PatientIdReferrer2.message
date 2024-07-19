@@ -1,0 +1,18 @@
+<Message format="XML">
+   <XMLMapping namespace="a" node="PatientIdReferrer2" schema="http://www.nexjsystems.com/nexj/integration.xsd" uri="urn:com.nexjsystems:ns:test:a"/>
+   <Parts>
+      <Message maxCount="0" name="id1" ref="XML_PatientId">
+         <XMLMapping node="id1"/>
+      </Message>
+      <Message name="cost" ref="XML_InternationalPrice"/>
+      <Message name="localCost" ref="XML_LocalPrice"/>
+      <Message name="singleValueChild">
+         <XMLMapping node="singleValueChild"/>
+         <Parts>
+            <Value name="value" type="integer">
+               <XMLMapping node="value" type="value"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

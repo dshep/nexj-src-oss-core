@@ -1,0 +1,8 @@
+<Component type="nexj.core.rpc.http.IntegrationHTTPServer" activation="context"
+   description="Integration HTTP server">
+   <Properties>
+      <Property name="type">integration</Property>
+      <Property name="bufferSize">8192</Property>
+      <Property name="address" override="httpURL"/>
+   </Properties>
+</Component>

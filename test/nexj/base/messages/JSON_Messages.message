@@ -1,0 +1,29 @@
+<Message format="JSON">
+   <Parts>
+      <Message name="message1">
+         <Parts>
+            <Value name="value1" type="string"/>
+         </Parts>
+      </Message>
+      <Message minCount="1" name="message2">
+         <Parts>
+            <Value name="value2" type="boolean"/>
+         </Parts>
+      </Message>
+      <Message maxCount="5" minCount="2" name="message3">
+         <Parts>
+            <Value name="value3" type="integer"/>
+         </Parts>
+      </Message>
+      <Message name="message4">
+         <Parts>
+            <Message name="innermessage">
+               <Parts>
+                  <Value name="innervalue" type="string"/>
+               </Parts>
+            </Message>
+            <Value name="value4" type="string"/>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

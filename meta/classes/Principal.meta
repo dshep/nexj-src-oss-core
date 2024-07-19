@@ -1,0 +1,19 @@
+<Class aspects="LOCKING" nameAttribute="fullName">
+   <Attributes>
+      <Attribute description="P - Base Class&#13;&#10;S - Principal Group&#13;&#10;V - User Base&#13;&#10;U - User&#13;&#10;T - User Template&#13;&#10;G - User Group&#13;&#10;Z - ReadOnly Principal&#13;&#10;" name="classCode" required="true" type="string" value="&quot;P&quot;"/>
+      <Attribute name="name" type="string"/>
+      <Attribute description="Description" name="description" type="string"/>
+      <Attribute description="Status of the principal" initializer="&quot;1&quot;" name="status" required="true" type="string"/>
+      <Attribute name="fullName" type="string" value="(@ name)"/>
+      <Attribute name="icon" type="string" value="(icon &quot;user&quot;)"/>
+   </Attributes>
+   <Events/>
+   <PersistenceMapping classCodeAttribute="classCode" dataSource="DefaultRelationalDatabase" lockingAttribute="locking">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="Principal">
+         <AttributeMappings>
+            <AttributeMapping column="classCode" name="classCode"/>
+            <AttributeMapping column="name" name="name"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

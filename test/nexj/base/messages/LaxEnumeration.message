@@ -1,0 +1,18 @@
+<Message format="HL7">
+   <HL7Mapping name="hL7Mapping"/>
+   <Parts>
+      <Message minCount="1" name="B">
+         <HL7Mapping name="B" seq="2"/>
+         <Parts>
+            <Value minCount="1" name="value" type="string">
+               <HL7Mapping seq="1"/>
+               <Enumerations lax="true">
+                  <Enumeration value="A"/>
+                  <Enumeration value="B"/>
+                  <Enumeration value="C"/>
+               </Enumerations>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

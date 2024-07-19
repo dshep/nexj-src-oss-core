@@ -1,0 +1,13 @@
+<Message format="Fixed">
+   <FixedMapping/>
+   <Parts>
+      <Message maxCount="0" name="record">
+         <FixedMapping suffix="^^^^^"/>
+         <Parts>
+            <Value minCount="1" name="field_1" type="string">
+               <FixedMapping width="10"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

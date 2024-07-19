@@ -1,0 +1,17 @@
+<Message format="CSV">
+   <CSVMapping delimiter=","/>
+   <Parts>
+      <Message maxCount="0" name="rows">
+         <Parts>
+            <Value minCount="1" name="formatBool" type="boolean">
+               <CSVMapping format="y;"/>
+            </Value>
+            <Value minCount="1" name="normalDT" type="timestamp">
+            </Value>
+            <Value minCount="1" name="formatDT" type="timestamp">
+               <CSVMapping format="yyyyMMddHHmmss.SSSZ"/>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

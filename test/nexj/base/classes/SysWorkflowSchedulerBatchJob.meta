@@ -1,0 +1,294 @@
+<Class aspects="RUNTIME_INITIALIZER" base="SysBatchJob">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;WFSC&quot;"/>
+      <Attribute collection="true" description="The Workflow Queues managed by this scheduler." name="queues" reverse="scheduler" type="SysWorkflowQueue"/>
+      <Attribute description="The maximum number of assignments for this scheduler permitted to be in a RUNNING state." name="concurrency" type="integer"/>
+      <Attribute initializer="(read-instance SysWorkflowSchedulerBatchJob '(concurrency lockObject) #t #f)" name="instance" static="true" type="SysWorkflowSchedulerBatchJob"/>
+      <Attribute cascade="delete" description="Global concurrency control object." name="lockObject" required="true" type="SysWorkflowSchedulerLock"/>
+      <Attribute name="SCHEDULER_INVOCATION_KEY" readOnly="true" static="true" type="string" value="&quot;SCHEDULER_INVOCATION_KEY&quot;"/>
+   </Attributes>
+   <Events>
+      <Event name="create" privilege="WorkflowManage" visibility="public">
+         <Actions>
+            <Action name="createLock" type="before"><![CDATA[(this'lockObject (SysWorkflowSchedulerLock'new))]]></Action>
+         </Actions>
+      </Event>
+      <Event name="update" privilege="WorkflowManage" visibility="public"/>
+      <Event name="delete" privilege="WorkflowManage" visibility="public"/>
+      <Event args="assignment" description="Notifies the scheduler of a new assignment." name="add">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define currentTime '())
+(define startTime '())
+
+(this'lock)
+(pre-commit)
+
+; Consult queue's window to determine if tasks should be
+; scheduled now or in the future.
+(set! currentTime (this'getCurrentTime))
+(set! startTime ((assignment'queue)'getWindowStartTime currentTime))
+(if (<= startTime currentTime)
+   (this'schedule)
+   (this'scheduleFuture startTime currentTime)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="assignment" description="Notifies the scheduler that an assignment has completed." name="remove">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(this'lock)
+(assignment'status (SysWorkflowAssignment'COMPLETE))
+(pre-commit)
+
+; Schedule new assignments to replace the one that just completed.
+(this'schedule)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Locks this instance until the end of transaction." name="lock">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[((this'lockObject)'lock)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Invoked by the batch job timer. Executes tasks that are valid now. Sets timer for next invocation." name="run" privilege="WorkflowManage" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define nowTime '())
+(define bTimerSet #f)
+
+; Execute assignments that are valid now
+(this'schedule)
+
+; Schedule this batch job for beginning of next time window
+(set! nowTime (this'getCurrentTime))
+(for-each
+   (lambda (queue)
+      (define startTime (queue'getWindowStartTime nowTime))
+      (if (> startTime nowTime)
+         (begin
+            (this'scheduleFuture startTime nowTime)
+            (set! bTimerSet #t)
+         )
+      )
+   )
+   ; Look at queues for this scheduler that have assignments
+   (SysWorkflowQueue'read '() `(and (any (@ assignments)) (= (@ scheduler) ,(@))) '() '() '() #f)
+)
+(if (not bTimerSet)
+   (begin
+      ((this'timer)'delete)
+      (this'timer '())
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Schedules assignments to run." name="schedule">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(SysStat'time "Workflow Scheduler" "Average Scheduling Time (ms)"
+   (lambda ()
+      ; Groups the collection by the result of applying fun to each item
+      (define (group lst fun)
+         (if (zero? (lst'size))
+            (list)
+            (let*
+               (
+                  (innerResult '())
+                  (result '())
+                  (prevItem '())
+               )
+               (sort! lst (lambda (left right) (< ((fun left)'compareTo (fun right)) 0) ))
+               (set! prevItem (lst 0))
+               (for-each
+                  (lambda (item)
+                     (if (= (fun item) (fun prevItem))
+                        (set! innerResult (cons item innerResult))
+                        (begin
+                           (set! result (cons innerResult result))
+                           (set! innerResult (list item))
+                        )
+                     )
+                     (set! prevItem item)
+                  )
+                  lst
+               )
+               (cons innerResult result)
+            )
+         )
+      )
+
+      (define runningTasks '())
+      (define runningTaskCount 0)
+      (define queueTaskLookup '())
+      (define assignments '())
+      (define toRunCount 0)
+      (define currentTime 0)
+
+      (this'lock)
+      (this'read '(concurrency lockObject) `(= (@) ,this) '() 1 '() '()) ; reload attributes
+
+      ; Get tasks currently in execution
+      (set! runningTasks
+         (begin-privileged
+            (SysWorkflowAssignment'read '(queue) 
+               `(and
+                  (@ semaphore)
+                  (= (@ status) (SysWorkflowAssignment'RUNNING))
+                  (= (@ queue scheduler) ,(@))
+               )
+               '() (@ concurrency) 0 #f
+            )
+         )
+      )
+
+      (logger'debug "runningTasks: " runningTasks)
+
+      ; Count number of tasks running on a per-queue basis
+      (set! queueTaskLookup
+         (map
+            (lambda (group)
+               (cons ((car group)'queue) (length group))
+            )
+            (group runningTasks
+               (lambda (item)
+                  ((item'queue)':oid)
+               )
+            )
+         )
+      )
+
+      (set! runningTaskCount (runningTasks'size))
+      (set! toRunCount (- (@ concurrency) runningTaskCount) )
+      (set! currentTime (this'getCurrentTime))
+
+      (pre-commit)
+
+      ; Run Assignments
+      (if (> toRunCount 0)
+         (try
+            (begin
+               (define assignment '())
+               ; Cursor to query assignments in priority order
+               (set! assignments
+                  (begin-privileged
+                     (SysWorkflowAssignment'openCursor '((queue concurrency (throttleCounter count rate))) 
+                        `(and
+                           (@ semaphore)
+                           (= (@ status) (SysWorkflowAssignment'READY))
+                           (= (@ queue scheduler) ,(@))
+                           (not (null? (@ creator)))
+                        )
+                        '(((@ queue priority) . #t) ((@ priority) . #t)) '() '() #f
+                     )
+                  )
+               )
+
+               ; Execute all assignments that can currently be executed
+               (set! assignment (assignments'next))
+               (while (and (> toRunCount 0) (not (null? assignment)))
+                  ; Is # of running assignments < Queue's maximum concurrency?
+                  (if
+                     (or
+                        (null? ((assignment'queue)'concurrency))
+                        (<
+                           (let ((queueInfo (assoc (assignment'queue) queueTaskLookup)))
+                              (if queueInfo (cdr queueInfo) 0)
+                           )
+                           ((assignment'queue)'concurrency)
+                        )
+                     )
+
+                     ; Is Queue time window open?
+                     (if (<= ((assignment'queue)'getWindowStartTime currentTime) currentTime)
+                        ; Check throttling
+                        (if
+                           (or
+                              (null? ((assignment'queue)'throttleCounter))
+                              (((assignment'queue)'throttleCounter)'startJob)
+                           )
+                           (begin-privileged
+                              (logger'debug "Invoking" assignment)
+                              (assignment'status (SysWorkflowAssignment'RUNNING))
+                              (if (not (assoc (assignment'queue) queueTaskLookup))
+                                 (set! queueTaskLookup (cons (cons (assignment'queue) 0) queueTaskLookup))
+                              )
+                              (let ((queueInfo (assoc (assignment'queue) queueTaskLookup)))
+                                 (set-cdr! queueInfo (+ (cdr queueInfo) 1))
+                              )
+                              (this'runAssignment assignment)
+                              (set! toRunCount (- toRunCount 1))
+                           )
+                           ; else:
+                           (logger'debug "Skipped invocation (rate exceeded)" assignment)
+                        )
+                        ; else: Time window closed; schedule for future invocation
+                        (begin
+                           (logger'debug "Skipped invocation (time window closed)" assignment)
+                           (this'scheduleFuture ((assignment'queue)'getWindowStartTime currentTime) currentTime)
+                        )
+                     )
+                     ; else:
+                     (logger'debug "Skipped invocation (queue concurrency exceeded)" assignment)
+                  )
+                  (set! assignment (assignments'next))
+               )
+            )
+            ; catch: (rethrow exceptions)
+            ()
+            ; finally:
+            (assignments'close)
+         )
+      )
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="assignment" description="Runs an assignment asynchronously." name="runAssignment">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(begin-switch-user (assignment'creator)
+   (SysQueue'invoke assignment 'schedulerRun)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="time currentTime" description="Sets this timer to be executed at &quot;time&quot;, unless already scheduled for an earlier window." name="scheduleFuture">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(if (or (< time (@ start)) (< (@ start) currentTime))
+   (begin
+      (this'start time)
+      (this'period (- (cast long time) (cast long currentTime)))
+      (this'recreateTimer)
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Gets the current system time." name="getCurrentTime">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(now)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Reschedules the scheduler." name="reschedule">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[; One invocation of scheduler per unit of work is sufficient.
+(define uow ((invocation-context)'unitOfWork))
+(when (null? (uow'getCachedLocal (SysWorkflowSchedulerBatchJob'SCHEDULER_INVOCATION_KEY)))
+   (uow'cacheLocal (SysWorkflowSchedulerBatchJob'SCHEDULER_INVOCATION_KEY) (SysWorkflowSchedulerBatchJob'SCHEDULER_INVOCATION_KEY))
+   (SysQueue'invoke this 'run)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="initializeRuntime" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(SysStat'define "Workflow Scheduler" "Average Scheduling Time (ms)" 'mean #t)
+]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping classCodeAttribute="classCode" dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="BatchJob">
+         <AttributeMappings>
+            <AttributeMapping column="concurrency" name="concurrency"/>
+            <AttributeMapping destinationKey="WFSchedulerLock.PK" name="lockObject" sourceKey="BatchJob.PK"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

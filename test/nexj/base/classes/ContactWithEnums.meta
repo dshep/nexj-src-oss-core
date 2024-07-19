@@ -1,0 +1,16 @@
+<Class description="Contact, an entity for which we track contact info">
+   <Attributes>
+      <Attribute collection="false" initializer="0" name="version" required="true" type="integer"/>
+      <Attribute enumeration="ContactTypeEnum" name="type" static="false" type="ContactTypeEnum"/>
+      <Attribute enumeration="ContactTypeEnum" name="typePrim" type="string"/>
+   </Attributes>
+   <Events/>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="version">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.Contact">
+         <AttributeMappings>
+            <AttributeMapping name="type" sourceKey="Contact.FK3"/>
+            <AttributeMapping column="rec_ver" name="version" table="test.Contact"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

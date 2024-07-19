@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+   <xs:element name="Metadata">
+	   <xs:complexType>
+      		<xs:attribute name="version" type="version" use="required"/>
+            <xs:attribute name="type" type="primitiveType"/>
+			<xs:attribute name="ascending" type="xs:boolean" default="true"/>
+	   </xs:complexType>	
+	</xs:element>
+
+   <xs:simpleType name="version">
+      <xs:restriction base="xs:string">
+         <xs:pattern value="\d{1,8}\.\d{1,8}"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+   <xs:simpleType name="primitiveType">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="string"/>
+         <xs:enumeration value="binary"/>
+         <xs:enumeration value="integer"/>
+         <xs:enumeration value="long"/>
+         <xs:enumeration value="double"/>
+         <xs:enumeration value="decimal"/>
+         <xs:enumeration value="timestamp"/>
+         <xs:enumeration value="boolean"/>
+         <xs:enumeration value="any"/>
+      </xs:restriction>
+   </xs:simpleType>
+
+</xs:schema>

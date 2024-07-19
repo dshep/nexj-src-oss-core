@@ -1,0 +1,12 @@
+<SOADefinition name="nexj:test:UndefinedGlobalTypeReference" version="1.0">
+   <Service/>
+   <Interfaces>
+      <Interface name="main">
+         <Method name="method">
+            <Arguments>
+               <Argument name="arg" type="nexj:test:Undefined:1.0:type:Undefined"/>
+            </Arguments>
+         </Method>
+      </Interface>
+   </Interfaces>
+</SOADefinition>

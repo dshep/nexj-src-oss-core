@@ -1,0 +1,272 @@
+<Class base="SysQueue">
+   <Attributes>
+      <Attribute name="type" required="true" type="string" value="&quot;ObjQueue&quot;"/>
+      <Attribute description="UnitOfWork timeout duration in milliseconds to use when processing this message.  0 or null for unlimited." initializer="0" name="timeout" type="long"/>
+      <Attribute description="False to disable sending to this queue (all calls to send raise an exception)." initializer="#t" name="sendEnabled" required="true" type="boolean"/>
+      <Attribute description="False to leave all message in waiting state until receive is re-enabled." initializer="#t" name="receiveEnabled" required="true" type="boolean"/>
+      <Attribute description="Number of errors after which a message will be failed. 0 or null for infinite." initializer="1" name="errorCount" type="integer"/>
+      <Attribute cascade="clear" description="If non-null, default fail behaviour is to resubmit to the errorQueue." name="errorQueue" type="SysObjectQueue"/>
+      <Attribute description="Relative priority to other SysQueue, lower numbers are higher priority." initializer="(- (java.lang.Integer'MAX_VALUE) 1)" name="priority" type="integer"/>
+      <Attribute description="Statistic's path." name="statPath" required="true" type="string" value="(string-append &quot;Object Queue/&quot; (@ name))" visibility="protected"/>
+   </Attributes>
+   <Events>
+      <Event description="Notify dispatcher of changes to queue and update queue's concurrency semaphore." name="commit">
+         <Actions>
+            <Action name="wakeDispatcher" type="before"><![CDATA[; after the database commit is finished, notify the dispatcher of pending work
+(((invocation-context)'unitOfWork)'addCompensator 'SysObjectQueueDispatcher-wake 
+   (lambda (status)
+      (when (= status (javax.transaction.Status'STATUS_COMMITTED))
+         (logger'dump "On commit, waking dispatcher")
+         (((invocation-context)'getComponentInstance "System.ObjectQueueDispatcher")'clientWake)
+      )
+   )
+)]]></Action>
+            <Action name="initializeStatistics" type="after"><![CDATA[(when (or (this'isNew) (this'isUpdated 'name))
+   (this'initializeStatistics)
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msgOrMsgs" description="Send one or a collection of SysMessages, transfer objects, or serializable data." name="send" transaction="required">
+         <Arguments>
+            <Argument description="one SysMessage or a collection of SysMessages to send" name="msgOrMsgs" required="true" type="any"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(SysStat'time (@ statPath) "Average Send Time (ms)"
+   (lambda ()
+      (logger'debug "send called with message(s)" msgOrMsgs)
+
+      (unless (@ sendEnabled)
+         (error "err.rpc.queueing.disabled" (@ name))
+      )
+      (let ((loginName ((user)'loginName)))
+         (begin-privileged
+            (for-each
+               (lambda (obj)
+                  (if (and (message? obj) (equal? (obj':class) "ObjectQueueMessage") (not (null? (obj'receiver))))
+                     (begin
+                        (if (null? (obj'user))
+                           (obj'user loginName)
+                           (unless (or (equal? loginName (obj'user)) (in-privilege? "SysMessageManage") (not ((invocation-context)'secure)))
+                              (error "err.rpc.queueing.privilege" "SysMessageManage")
+                           )
+                        )
+                        (when 
+                           (and 
+                              (string? (obj'receiver)) 
+                              (not ((SysObjectQueueDispatcher'COMPONENT)'isAvailable (obj'receiver)))
+                           )
+                           (error "err.rpc.queueing.invalidNode" (obj'receiver))
+                        )
+                        (when (null? (obj'channel)) (obj'channel (@ name)))
+                        (when (null? (obj'priority)) (obj'priority (@ priority)))
+                        (let* 
+                           (  (post 
+                                 (lambda (status)
+                                    (when (= status (javax.transaction.Status'STATUS_COMMITTED))
+                                       (logger'debug "On commit, posting to message dispatcher" obj)
+                                       (((invocation-context)'getComponentInstance "System.ObjectQueueDispatcher")
+                                          'clientPost
+                                          obj
+                                       )
+                                    )
+                                 )
+                              )
+                           )
+                           (((invocation-context)'unitOfWork)'addCompensator post post)
+                        )
+                     )
+                     ; persisted delivery
+                     (let ((msg (this'prepareMessage obj)))
+                        (if (msg'sent)
+                           ; a message already on some queue must be resubmitted by the dispatcher, to avoid race conditions
+                           (SysObjectQueueDispatcher'sendToDispatcher (SysResubmitMessage'createResubmit this (list msg)))
+                           (begin
+                              (when (null? (msg'originalQueue)) (msg'originalQueue (@)))
+                              (msg'queue (@))
+                              (SysObjectQueueDispatcher'clientSend msg loginName)
+                           )
+                        )
+                     )
+                  )
+               )
+               (if (iteratable? msgOrMsgs) msgOrMsgs (vector msgOrMsgs))
+            )
+         )
+      )
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msg" description="Prepare a SysMessage, transfer object or serializable datum to be sent in persisted mode.  Returns the prepared SysMessage." name="prepareMessage">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define (get-tobj obj)
+   (if (message? obj)
+      obj
+      (message
+         (: name "object")
+         (: body obj)
+      )
+   )
+)
+
+(define (get-raw obj)
+   (let 
+      (  (tobj
+            (if (and (message? obj) (equal? (obj':class) "ObjectQueueMessage"))
+               obj
+               (let ((body (get-tobj obj)))
+                  (message
+                     (: :class "ObjectQueueMessage")
+                     (: body body)
+                     (: name (ifnull (body':class) "message"))
+                  )
+               )
+            )
+         )
+      )
+      (when (null? (tobj'channel)) (tobj'channel (@ name)))
+      (when (null? (tobj'delay)) (tobj'delay 0))
+      (when (null? (tobj'name))
+         (if (and (instance? (tobj'body) nexj.core.rpc.Request) (positive? ((obj'body)'invocationCount)))
+            (let ((invocation ((tobj'body)'getInvocation 0)))
+               (tobj'name 
+                  (string-append 
+                     ((invocation'object)':class) 
+                     "'" 
+                     (ifnull (invocation'eventName) ((invocation'object)':event))
+                  )
+               )
+            )
+            (tobj'name (((tobj'body)'class)'name))
+         )
+      )
+      (unless (nexj.core.rpc.text.TextMarshaller'isSerializable (tobj'body))
+         (tobj'object (nexj.core.util.Binary'fromObject (tobj'body)))
+         (tobj'body ())
+      )
+      tobj
+   )
+)
+
+(define (get-msg obj)
+   (if (instance? obj SysMessage)
+      obj
+      (this'createMessage (get-raw obj))
+   )
+)
+
+(get-msg msg)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="rawMsg" description="Creates a SysMessage, given a raw ObjectQueueMessage." name="createMessage">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(SysMessage'new
+   (: name (rawMsg'name))
+   (: queue (SysQueue'getQueue (rawMsg'channel)))
+   (: delay (rawMsg'delay))
+   (: user (rawMsg'user))
+   (: body rawMsg)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Deletes all messages waiting for delivery to this queue." name="clear" privilege="SysMessageManage" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(this'clear #f)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="bDeleteQueue" description="Deletes all messages waiting for delivery to this queue and destroys the queue if necessary." name="clear">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define removeQueueMsg
+   (when bDeleteQueue
+      (SysRemoveQueueMessage'createRemoveQueue this)
+   )
+)
+
+(for-each-page SysMessage '() `(= (@ queue) ,this) '() -1 100 #f
+   (lambda (msg-page)
+      (SysObjectQueueDispatcher'sendToDispatcher (SysResubmitMessage'createCancel removeQueueMsg
+            (vector->list msg-page)))
+      (pre-commit)
+   )
+)
+
+(when bDeleteQueue
+   (SysObjectQueueDispatcher'sendToDispatcher removeQueueMsg)
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msg" description="Delete a single message (SysMessage) waiting for delivery to this queue." name="cancel">
+         <Arguments>
+            <Argument description="the SysMessage instance to cancel." name="msg" required="true" type="SysMessage"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(SysObjectQueueDispatcher'sendToDispatcher (SysResubmitMessage'createCancel (list msg)))]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msg" description="Return list of semaphore ( resource . count ) pairs which must be acquired prior to delivery of msg." name="getSemaphores">
+         <Arguments>
+            <Argument description="the SysMessage for which to return a list of semaphores" name="msg" required="true" type="SysMessage"/>
+         </Arguments>
+         <Result description="list of semaphores (resource . count) pairs" type="any"/>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let ((semaphores (sort! (msg'getSemaphores) (lambda (a b) (< (car a) (car b)))))) ; order resources to avoid deadlock
+   (if (or (null? (@ concurrency)) (= 0 (@ concurrency)))
+      semaphores
+      (append semaphores (list (cons ((@ :oid)'toBinary) (@ concurrency)))) ; place queue resource last, to reduce contention on the queue
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event name="update" visibility="public">
+         <Actions>
+            <Action condition="(and (this'isUpdated'receiveEnabled) (not (this'isNew)))" description="If receiveEnabled has changed, the stateCode of SysMessages associated with this queue must be modified." name="messageState" type="before"><![CDATA[(SysObjectQueueDispatcher'sendToDispatcher (SysEnableQueueMessage'createSetEnabled this))]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Initialize statistics." name="initializeStatistics">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let
+   (
+      (path (@ statPath))
+   )
+   (SysStat'define path "Persistent Sent Count" 'counter #t "SysQueueStat")
+   (SysStat'define path "Persistent Received Count" 'counter #t "SysQueueStat")
+   (SysStat'define path "Persistent Failed Count" 'counter #t "SysQueueStat")
+   (SysStat'define path "Persistent Cancelled Count" 'counter #t "SysQueueStat")
+   (SysStat'define path "Average Send Time (ms)" 'mean #t "SysQueueStat")
+   (SysStat'define path "Average Receive Time (ms)" 'mean #t "SysQueueStat")
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Overridden to support clearing the queue." name="delete" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(begin-transaction
+   (this'sendEnabled #f)
+)
+
+(this'clear #t)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Invoked to delete the instance. The main action is implemented by the framework." name="hardDelete" transaction="required">
+         <Actions>
+            <Action method="nexj.core.runtime.sys.SysObject.delete" name="main" type="main"/>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="Queue">
+         <AttributeMappings>
+            <AttributeMapping column="timeout" name="timeout" table="ObjectQueue"/>
+            <AttributeMapping column="sendEnabled" name="sendEnabled" table="ObjectQueue"/>
+            <AttributeMapping column="receiveEnabled" name="receiveEnabled" table="ObjectQueue"/>
+            <AttributeMapping destinationKey="ObjectQueue.PK" name="errorQueue" sourceKey="ObjectQueue.FK_errorQueue"/>
+            <AttributeMapping column="errorCount" name="errorCount" table="ObjectQueue"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

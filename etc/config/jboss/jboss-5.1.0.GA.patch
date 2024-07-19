@@ -1,0 +1,260 @@
+diff -durN jboss-5.1.0.GA-original/server/all/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml jboss-5.1.0.GA-patched/server/all/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml
+--- jboss-5.1.0.GA-original/server/all/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml	2011-04-26 13:24:39.657340400 -0400
++++ jboss-5.1.0.GA-patched/server/all/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml	2011-04-27 10:48:18.914247000 -0400
+@@ -439,6 +439,7 @@
+ 
+      <xsl:variable name="portAJP" select="$port - 71"/>
+      <xsl:variable name="portHttps" select="$port + 363"/>
++     <xsl:variable name="portAJPHttps" select="$portHttps - 8000"/>
+ 
+      <xsl:template match="/">
+        <xsl:apply-templates/>
+@@ -454,9 +455,12 @@
+                <xsl:when test="(name() = 'port' and . = '8009')">
+                   <xsl:attribute name="port"><xsl:value-of select="$portAJP" /></xsl:attribute>
+                </xsl:when>
+-               <xsl:when test="(name() = 'redirectPort')">
++               <xsl:when test="(name() = 'redirectPort' and . = '8443')">
+                   <xsl:attribute name="redirectPort"><xsl:value-of select="$portHttps" /></xsl:attribute>
+                </xsl:when>
++               <xsl:when test="(name() = 'redirectPort' and . = '443')">
++                  <xsl:attribute name="redirectPort"><xsl:value-of select="$portAJPHttps" /></xsl:attribute>
++               </xsl:when>
+                <xsl:when test="(name() = 'port' and . = '8443')">
+                   <xsl:attribute name="port"><xsl:value-of select="$portHttps" /></xsl:attribute>
+                </xsl:when>
+diff -durN jboss-5.1.0.GA-original/server/all/conf/jboss-service.xml jboss-5.1.0.GA-patched/server/all/conf/jboss-service.xml
+--- jboss-5.1.0.GA-original/server/all/conf/jboss-service.xml	2011-04-26 13:24:39.432317900 -0400
++++ jboss-5.1.0.GA-patched/server/all/conf/jboss-service.xml	2011-04-27 10:48:18.782247000 -0400
+@@ -158,7 +158,7 @@
+       <!--  The address to use for the host portion of the RMI codebase URL -->
+       <attribute name="Host">${java.rmi.server.hostname}</attribute>
+       <!-- Should non-EJB .class files be downloadable -->
+-      <attribute name="DownloadServerClasses">true</attribute>
++      <attribute name="DownloadServerClasses">false</attribute>
+       <!-- Should resources other than .class files be downloadable. Both
+          DownloadServerClasses and DownloadResources must be true for resources
+          to be downloadable. This is false by default because its generally a
+diff -durN jboss-5.1.0.GA-original/server/all/conf/login-config.xml jboss-5.1.0.GA-patched/server/all/conf/login-config.xml
+--- jboss-5.1.0.GA-original/server/all/conf/login-config.xml	2011-04-26 13:24:39.499324600 -0400
++++ jboss-5.1.0.GA-patched/server/all/conf/login-config.xml	2011-04-27 10:48:18.790247000 -0400
+@@ -85,8 +85,8 @@
+     <authentication>
+       <login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule"
+         flag="required">
+-        <module-option name="usersProperties">web-console-users.properties</module-option>
+-        <module-option name="rolesProperties">web-console-roles.properties</module-option>
++        <module-option name="usersProperties">props/web-console-users.properties</module-option>
++        <module-option name="rolesProperties">props/web-console-roles.properties</module-option>
+       </login-module>
+     </authentication>
+   </application-policy>
+diff -durN jboss-5.1.0.GA-original/server/all/conf/props/jmx-console-users.properties jboss-5.1.0.GA-patched/server/all/conf/props/jmx-console-users.properties
+--- jboss-5.1.0.GA-original/server/all/conf/props/jmx-console-users.properties	2011-04-26 13:24:39.842358900 -0400
++++ jboss-5.1.0.GA-patched/server/all/conf/props/jmx-console-users.properties	2011-04-27 10:48:18.799247000 -0400
+@@ -1,2 +1,2 @@
+ # A sample users.properties file for use with the UsersRolesLoginModule
+-admin=admin
++admin=jbadm1n
+diff -durN jboss-5.1.0.GA-original/server/all/conf/props/web-console-roles.properties jboss-5.1.0.GA-patched/server/all/conf/props/web-console-roles.properties
+--- jboss-5.1.0.GA-original/server/all/conf/props/web-console-roles.properties	1969-12-31 19:00:00.000000000 -0500
++++ jboss-5.1.0.GA-patched/server/all/conf/props/web-console-roles.properties	2011-04-27 10:48:18.808247000 -0400
+@@ -0,0 +1,2 @@
++# A sample roles.properties file for use with the UsersRolesLoginModule
++admin=JBossAdmin,HttpInvoker
+diff -durN jboss-5.1.0.GA-original/server/all/conf/props/web-console-users.properties jboss-5.1.0.GA-patched/server/all/conf/props/web-console-users.properties
+--- jboss-5.1.0.GA-original/server/all/conf/props/web-console-users.properties	1969-12-31 19:00:00.000000000 -0500
++++ jboss-5.1.0.GA-patched/server/all/conf/props/web-console-users.properties	2011-04-27 10:48:18.817247000 -0400
+@@ -0,0 +1,2 @@
++# A sample users.properties file for use with the UsersRolesLoginModule
++admin=jbadm1n
+diff -durN jboss-5.1.0.GA-original/server/all/deploy/jbossweb.sar/server.xml jboss-5.1.0.GA-patched/server/all/deploy/jbossweb.sar/server.xml
+--- jboss-5.1.0.GA-original/server/all/deploy/jbossweb.sar/server.xml	2011-04-26 13:25:01.966571100 -0400
++++ jboss-5.1.0.GA-patched/server/all/deploy/jbossweb.sar/server.xml	2011-04-27 10:48:18.828247000 -0400
+@@ -21,13 +21,12 @@
+       <Connector protocol="AJP/1.3" port="8009" address="${jboss.bind.address}"
+          redirectPort="8443" />
+ 
+-      <!-- SSL/TLS Connector configuration using the admin devl guide keystore
++      <!-- SSL/TLS Connector configuration using the admin devl guide keystore -->
+       <Connector protocol="HTTP/1.1" SSLEnabled="true" 
+            port="8443" address="${jboss.bind.address}"
+            scheme="https" secure="true" clientAuth="false" 
+-           keystoreFile="${jboss.server.home.dir}/conf/chap8.keystore"
+-           keystorePass="rmi+ssl" sslProtocol = "TLS" />
+-      -->
++           keystoreFile="${jboss.server.home.dir}/conf/ssl.keystore"
++           keystorePass="keypass" sslProtocol = "TLS" />
+ 
+       <Engine name="jboss.web" defaultHost="localhost">
+ 
+diff -durN jboss-5.1.0.GA-original/server/all/deploy/jmx-console.war/WEB-INF/jboss-web.xml jboss-5.1.0.GA-patched/server/all/deploy/jmx-console.war/WEB-INF/jboss-web.xml
+--- jboss-5.1.0.GA-original/server/all/deploy/jmx-console.war/WEB-INF/jboss-web.xml	2011-04-26 13:25:02.955670000 -0400
++++ jboss-5.1.0.GA-patched/server/all/deploy/jmx-console.war/WEB-INF/jboss-web.xml	2011-04-27 10:48:18.836247000 -0400
+@@ -5,7 +5,6 @@
+ <jboss-web>
+    <!-- Uncomment the security-domain to enable security. You will
+       need to edit the htmladaptor login configuration to setup the
+-      login modules used to authentication users.
++      login modules used to authentication users. -->
+       <security-domain>java:/jaas/jmx-console</security-domain>
+-   -->
+ </jboss-web>
+diff -durN jboss-5.1.0.GA-original/server/all/deploy/jmx-console.war/WEB-INF/web.xml jboss-5.1.0.GA-patched/server/all/deploy/jmx-console.war/WEB-INF/web.xml
+--- jboss-5.1.0.GA-original/server/all/deploy/jmx-console.war/WEB-INF/web.xml	2011-04-26 13:25:02.968671300 -0400
++++ jboss-5.1.0.GA-patched/server/all/deploy/jmx-console.war/WEB-INF/web.xml	2011-04-27 10:48:18.847247000 -0400
+@@ -96,7 +96,7 @@
+    <!-- A security constraint that restricts access to the HTML JMX console
+    to users with the role JBossAdmin. Edit the roles to what you want and
+    uncomment the WEB-INF/jboss-web.xml/security-domain element to enable
+-   secured access to the HTML JMX console.
++   secured access to the HTML JMX console. -->
+    <security-constraint>
+      <web-resource-collection>
+        <web-resource-name>HtmlAdaptor</web-resource-name>
+@@ -104,14 +104,14 @@
+          role JBossAdmin to access the HTML JMX console web application
+        </description>
+        <url-pattern>/*</url-pattern>
+-       <http-method>GET</http-method>
+-       <http-method>POST</http-method>
+      </web-resource-collection>
+      <auth-constraint>
+        <role-name>JBossAdmin</role-name>
+      </auth-constraint>
++   <user-data-constraint>
++       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
++     </user-data-constraint>
+    </security-constraint>
+-   -->
+ 
+    <login-config>
+       <auth-method>BASIC</auth-method>
+diff -durN jboss-5.1.0.GA-original/server/all/deploy/jmx-invoker-service.xml jboss-5.1.0.GA-patched/server/all/deploy/jmx-invoker-service.xml
+--- jboss-5.1.0.GA-original/server/all/deploy/jmx-invoker-service.xml	2011-04-26 13:24:40.479422600 -0400
++++ jboss-5.1.0.GA-patched/server/all/deploy/jmx-invoker-service.xml	2011-04-27 10:48:18.856247000 -0400
+@@ -111,10 +111,11 @@
+             <return-type>java.lang.Object</return-type>
+             <descriptors>
+                <interceptors>
+-                  <!-- Uncomment to require authenticated users
++                  <!-- Uncomment to require authenticated users -->
+                   <interceptor code="org.jboss.jmx.connector.invoker.AuthenticationInterceptor"
+                      securityDomain="java:/jaas/jmx-console"/>
+-                  -->               
++                  <interceptor code="org.jboss.jmx.connector.invoker.AuthorizationInterceptor"
++                     authorizingClass="org.jboss.jmx.connector.invoker.RolesAuthorization"/>
+                   <!-- Interceptor that deals with non-serializable results -->
+                   <interceptor code="org.jboss.jmx.connector.invoker.SerializableInterceptor"
+                      policyClass="StripModelMBeanInfoPolicy"/>
+diff -durN jboss-5.1.0.GA-original/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/classes/web-console-roles.properties jboss-5.1.0.GA-patched/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/classes/web-console-roles.properties
+--- jboss-5.1.0.GA-original/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/classes/web-console-roles.properties	2011-04-26 13:25:07.352109600 -0400
++++ jboss-5.1.0.GA-patched/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/classes/web-console-roles.properties	1969-12-31 19:00:00.000000000 -0500
+@@ -1,2 +0,0 @@
+-# A sample roles.properties file for use with the UsersRolesLoginModule
+-admin=JBossAdmin
+diff -durN jboss-5.1.0.GA-original/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/classes/web-console-users.properties jboss-5.1.0.GA-patched/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/classes/web-console-users.properties
+--- jboss-5.1.0.GA-original/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/classes/web-console-users.properties	2011-04-26 13:25:07.361110500 -0400
++++ jboss-5.1.0.GA-patched/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/classes/web-console-users.properties	1969-12-31 19:00:00.000000000 -0500
+@@ -1,2 +0,0 @@
+-# A sample users.properties file for use with the UsersRolesLoginModule
+-admin=admin
+diff -durN jboss-5.1.0.GA-original/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/jboss-web.xml jboss-5.1.0.GA-patched/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/jboss-web.xml
+--- jboss-5.1.0.GA-original/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/jboss-web.xml	2011-04-26 13:25:07.274101800 -0400
++++ jboss-5.1.0.GA-patched/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/jboss-web.xml	2011-04-27 10:48:18.875247000 -0400
+@@ -8,9 +8,8 @@
+ 
+    <!-- Uncomment the security-domain to enable security. You will
+    need to edit the htmladaptor login configuration to setup the
+-   login modules used to authentication users.
++   login modules used to authentication users. -->
+    <security-domain>java:/jaas/web-console</security-domain>
+-   -->
+ 
+    <!-- The war depends on the -->
+    <depends>jboss.admin:service=PluginManager</depends>
+diff -durN jboss-5.1.0.GA-original/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/web.xml jboss-5.1.0.GA-patched/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/web.xml
+--- jboss-5.1.0.GA-original/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/web.xml	2011-04-26 13:25:07.286103000 -0400
++++ jboss-5.1.0.GA-patched/server/all/deploy/management/console-mgr.sar/web-console.war/WEB-INF/web.xml	2011-04-27 10:48:18.882247000 -0400
+@@ -338,7 +338,7 @@
+    <!-- A security constraint that restricts access to the HTML JMX console
+    to users with the role JBossAdmin. Edit the roles to what you want and
+    uncomment the WEB-INF/jboss-web.xml/security-domain element to enable
+-   secured access to the HTML JMX console.
++   secured access to the HTML JMX console. -->
+ 
+    <security-constraint>
+    <web-resource-collection>
+@@ -347,14 +347,14 @@
+    role JBossAdmin to access the HTML JMX console web application
+    </description>
+    <url-pattern>/*</url-pattern>
+-   <http-method>GET</http-method>
+-   <http-method>POST</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+    <role-name>JBossAdmin</role-name>
+    </auth-constraint>
++   <user-data-constraint>
++       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
++   </user-data-constraint>
+    </security-constraint>
+-   -->
+ 
+    <login-config>
+       <auth-method>BASIC</auth-method>
+diff -durN jboss-5.1.0.GA-original/server/all/conf/bootstrap/profile.xml jboss-5.1.0.GA-patched/server/all/conf/bootstrap/profile.xml
+--- jboss-5.1.0.GA-original/server/all/conf/bootstrap/profile.xml	2011-04-26 13:25:07.966171000 -0400
++++ jboss-5.1.0.GA-patched/server/all/conf/bootstrap/profile.xml	2011-04-27 10:48:18.892247000 -0400
+@@ -144,7 +144,7 @@
+ 
+ 	<!-- The attachment store -->
+ 	<bean name="AttachmentStore" class="org.jboss.system.server.profileservice.repository.AbstractAttachmentStore">
+-		<constructor><parameter><inject bean="BootstrapProfileFactory" property="attachmentStoreRoot" /></parameter></constructor>
++		<constructor><parameter class="java.io.File"><inject bean="BootstrapProfileFactory" property="attachmentStoreRoot" /></parameter></constructor>
+ 		<property name="mainDeployer"><inject bean="MainDeployer" /></property>
+ 		<property name="serializer"><inject bean="AttachmentsSerializer" /></property>
+ 		<property name="persistenceFactory"><inject bean="PersistenceFactory" /></property>
+diff -durN jboss-5.1.0.GA-original/server/all/deploy/messaging/messaging-jboss-beans.xml jboss-5.1.0.GA-patched/server/all/deploy/messaging/messaging-jboss-beans.xml
+--- jboss-5.1.0.GA-original/server/all/deploy/messaging/messaging-jboss-beans.xml	2011-04-26 13:25:07.966171000 -0400
++++ jboss-5.1.0.GA-patched/server/all/deploy/messaging/messaging-jboss-beans.xml	2011-04-27 10:48:18.892247000 -0400
+@@ -10,7 +10,6 @@
+    <application-policy xmlns="urn:jboss:security-beans:1.0" name="messaging">
+       <authentication>
+          <login-module code="org.jboss.security.auth.spi.DatabaseServerLoginModule" flag="required">
+-            <module-option name="unauthenticatedIdentity">guest</module-option>
+             <module-option name="dsJndiName">java:/DefaultDS</module-option>
+             <module-option name="principalsQuery">SELECT PASSWD FROM JBM_USER WHERE USER_ID=?</module-option>
+             <module-option name="rolesQuery">SELECT ROLE_ID, 'Roles' FROM JBM_ROLE WHERE USER_ID=?</module-option>
+@@ -19,15 +18,7 @@
+    </application-policy>
+ 
+    <bean name="SecurityStore" class="org.jboss.jms.server.jbosssx.JBossASSecurityMetadataStore">
+-      <!-- default security configuration -->
+-      <property name="defaultSecurityConfig">
+-         <![CDATA[
+-            <security>
+-               <role name="guest" read="true" write="true" create="true"/>
+-            </security>
+-         ]]>
+-      </property>
+-      <property name="suckerPassword">CHANGE ME!!</property>
++      <property name="suckerPassword">chang3d</property>
+       <property name="securityDomain">messaging</property>
+       <property name="securityManagement"><inject bean="JNDIBasedSecurityManagement"/></property>
+       <!-- @JMX annotation to export the management view of this bean -->
+diff -durN jboss-5.1.0.GA-original/server/all/deploy/messaging/messaging-service.xml jboss-5.1.0.GA-patched/server/all/deploy/messaging/messaging-service.xml
+--- jboss-5.1.0.GA-original/server/all/deploy/messaging/messaging-service.xml	2011-04-26 13:25:07.991173500 -0400
++++ jboss-5.1.0.GA-patched/server/all/deploy/messaging/messaging-service.xml	2011-04-27 10:48:18.901247000 -0400
+@@ -85,9 +85,8 @@
+       <attribute name="EnableMessageCounters">false</attribute>
+       
+       <!-- The password used by the message sucker connections to create connections.
+-           THIS SHOULD ALWAYS BE CHANGED AT INSTALL TIME TO SECURE SYSTEM
+-      <attribute name="SuckerPassword"></attribute>
+-      -->
++           THIS SHOULD ALWAYS BE CHANGED AT INSTALL TIME TO SECURE SYSTEM -->
++      <attribute name="SuckerPassword">chang3d</attribute>
+ 
+       <!-- The name of the server aspects configuration resource
+       <attribute name="ServerAopConfig">aop/jboss-aop-messaging-server.xml</attribute>

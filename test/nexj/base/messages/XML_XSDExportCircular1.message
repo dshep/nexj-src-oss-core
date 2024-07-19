@@ -1,0 +1,9 @@
+<Message format="XML">
+   <XMLMapping namespace="test" node="circ1" uri="urn:test"/>
+   <Parts>
+      <Message minCount="1" name="other" ref="XML_XSDExportCircular2"/>
+      <Value name="a" type="string">
+         <XMLMapping namespace="test" node="a"/>
+      </Value>
+   </Parts>
+</Message>

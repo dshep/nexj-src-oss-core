@@ -1,0 +1,40 @@
+<Class description="The abstract security Principal for applying authorization rules." nameAttribute="name">
+   <Attributes>
+      <Attribute collection="false" name="name" required="true" type="string"/>
+      <Attribute collection="false" name="typeCode" required="true" type="string"/>
+      <Attribute initializer="0" name="updateCount" required="true" type="integer"/>
+      <Attribute name="description" type="string"/>
+      <Attribute collection="true" name="personalizations" reverse="principal" type="Personalizeable"/>
+      <Attribute initializer="0" name="personalizationCounter" type="integer"/>
+      <Attribute dependency="personalizationCounter" name="personalizationStyle" type="string" value="(if (&gt; (@ personalizationCounter) 0) &quot;LabelBold&quot; '())"/>
+   </Attributes>
+   <Events>
+      <Event args="x y" audit="true" name="test" vararg="true" variables="var1 (var2 2) (var3 &quot;3&quot;)">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(unless
+   (or
+      (and var1 (equal? var2 2) (equal? var3 "3"))
+      (and (not var1) (equal? var2 2) (equal? var3 'pass))
+   )
+   (error "Variable management error")
+)
+
+(apply + x y)
+]]></Action>
+            <Action condition="#f" method="nexj.core.meta.persistence.sql.XMLRelationalMetadataLoader.loadMapping" name="a" type="before"/>
+            <Action condition="(= x -1)" name="b" type="around"><![CDATA[-123]]></Action>
+            <Action condition="(even? x)" name="c" type="before"><![CDATA[(set! x (+ x 1))
+]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping classCodeAttribute="typeCode" dataSource="DefaultRelationalDatabase" lockingAttribute="updateCount">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.Usr">
+         <AttributeMappings>
+            <AttributeMapping column="name" name="name" table="test.Usr"/>
+            <AttributeMapping column="tc" name="typeCode" table="test.Usr"/>
+            <AttributeMapping column="update_count" name="updateCount" table="test.Usr"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

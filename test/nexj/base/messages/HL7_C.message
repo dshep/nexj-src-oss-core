@@ -1,0 +1,8 @@
+<Message format="HL7">
+   <HL7Mapping name="C" seq="2"/>
+   <Parts>
+      <Value name="n" type="integer">
+         <HL7Mapping seq="1"/>
+      </Value>
+   </Parts>
+</Message>

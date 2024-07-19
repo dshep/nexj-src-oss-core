@@ -1,0 +1,21 @@
+<Class description="Represents an item in a workflow queue">
+   <Attributes>
+      <Attribute name="actor" required="true" type="Principal"/>
+      <Attribute name="name" required="true" type="string"/>
+      <Attribute name="description" type="string"/>
+      <Attribute initializer="1" name="priority" required="true" type="float"/>
+      <Attribute name="hrRequest" reverse="workItems" type="HRRequest"/>
+   </Attributes>
+   <Events/>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.WorkItem">
+         <AttributeMappings>
+            <AttributeMapping name="actor" sourceKey="WorkItem.FK1"/>
+            <AttributeMapping column="description" name="description" table="test.WorkItem"/>
+            <AttributeMapping column="priority" name="priority" table="test.WorkItem"/>
+            <AttributeMapping name="hrRequest" sourceKey="WorkItem.FK2"/>
+            <AttributeMapping column="itemName" name="name" table="test.WorkItem"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

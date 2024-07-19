@@ -1,0 +1,22 @@
+<Class aspects="VERSIONED" description="HR Request">
+   <Attributes>
+      <Attribute name="start" required="true" type="timestamp"/>
+      <Attribute name="end" required="true" type="timestamp"/>
+      <Attribute name="comment" type="string"/>
+      <Attribute name="applicant" required="true" type="User"/>
+      <Attribute name="approved" type="boolean"/>
+      <Attribute name="reviewed" type="boolean"/>
+      <Attribute cascade="delete" collection="true" name="workItems" reverse="hrRequest" type="WorkItem"/>
+   </Attributes>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.HRRequest">
+         <AttributeMappings>
+            <AttributeMapping column="startDate" name="start" table="test.HRRequest"/>
+            <AttributeMapping column="endDate" name="end" table="test.HRRequest"/>
+            <AttributeMapping column="comment" name="comment" table="test.HRRequest"/>
+            <AttributeMapping name="applicant" sourceKey="HRRequest.FK1"/>
+            <AttributeMapping column="approved" name="approved" table="test.HRRequest"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

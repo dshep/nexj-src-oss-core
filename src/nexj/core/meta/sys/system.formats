@@ -1,0 +1,44 @@
+<Formats>
+   <Format name="HL7" element="HL7Mapping"
+      loader="nexj.core.meta.integration.format.hl7.XMLHL7MessageMappingLoader">
+      <Parser type="nexj.core.integration.format.hl7.HL7MessageParser" activation="new"/>
+      <Formatter type="nexj.core.integration.format.hl7.HL7MessageFormatter" activation="new"/>
+   </Format>
+   <Format name="Object" element="ObjectMapping"
+      loader="nexj.core.meta.integration.format.object.XMLObjectMessageMappingLoader"
+      exporter="nexj.core.meta.integration.format.object.XMLObjectMessageMappingExporter">
+      <Parser type="nexj.core.integration.format.object.ObjectMessageParser" activation="new"/>
+      <Formatter type="nexj.core.integration.format.object.ObjectMessageFormatter" activation="new"/>
+   </Format>
+   <Format name="XML" element="XMLMapping"
+      loader="nexj.core.meta.integration.format.xml.XMLXMLMessageMappingLoader"
+      exporter="nexj.core.meta.integration.format.xml.XMLXMLMessageMappingExporter">
+      <Parser type="nexj.core.integration.format.xml.XMLMessageParser" activation="new"/>
+      <Formatter type="nexj.core.integration.format.xml.XMLMessageFormatter" activation="new"/>
+   </Format>
+   <Format name="CSV" element="CSVMapping"
+      loader="nexj.core.meta.integration.format.csv.XMLCSVMessageMappingLoader">
+      <Parser type="nexj.core.integration.format.csv.CSVMessageParser" activation="new"/>
+      <Formatter type="nexj.core.integration.format.csv.CSVMessageFormatter" activation="new"/>
+   </Format>
+   <Format name="Fixed" element="FixedMapping"
+      loader="nexj.core.meta.integration.format.fixed.XMLFixedMessageMappingLoader">
+      <Parser type="nexj.core.integration.format.fixed.FixedMessageParser" activation="new"/>
+      <Formatter type="nexj.core.integration.format.fixed.FixedMessageFormatter" activation="new"/>
+   </Format>
+   <Format name="Zip" element="ZipMapping"
+      loader="nexj.core.meta.integration.format.zip.XMLZipMessageMappingLoader">
+      <Parser type="nexj.core.integration.format.zip.ZipMessageParser" activation="new"/>
+      <Formatter type="nexj.core.integration.format.zip.ZipMessageFormatter" activation="new"/>
+   </Format>
+   <Format name="vCard" element="VCardMapping"
+      loader="nexj.core.meta.integration.format.vcard.XMLVCardMessageMappingLoader">
+      <Parser type="nexj.core.integration.format.vcard.VCardMessageParser" activation="new"/>
+      <Formatter type="nexj.core.integration.format.vcard.VCardMessageFormatter" activation="new"/>
+   </Format>
+   <Format name="JSON" element="JSONMapping"
+      loader="nexj.core.meta.integration.format.json.XMLJSONMessageMappingLoader">
+      <Parser type="nexj.core.integration.format.json.JSONMessageParser" activation="new"/>
+      <Formatter type="nexj.core.integration.format.json.JSONMessageFormatter" activation="new"/>
+   </Format>
+</Formats>

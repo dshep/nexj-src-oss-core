@@ -1,0 +1,33 @@
+<ClassModelCollection>
+   <ClassModel class="Privilege" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/Privilege.meta" visibleAttributes="classCode icon allowOnBehalfOf name" visibleEvents="" x="242" y="82"/>
+   <ClassModel class="PrivilegeGroup" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/PrivilegeGroup.meta" visibleAttributes="classCode icon" visibleEvents="" x="362" y="267">
+      <InheritanceAssociation srcAnchorAlignment="top" srcAnchorOffset="13"/>
+   </ClassModel>
+   <ClassModel class="PrivilegePrimitive" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/PrivilegePrimitive.meta" visibleAttributes="classCode icon" visibleEvents="" x="204" y="267">
+      <InheritanceAssociation/>
+   </ClassModel>
+   <Notes>
+      <Note h="-1" w="150" x="24" y="16">
+         <Text><![CDATA[Privilege Model
+]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="533" y="250">
+         <Attachments>
+            <Attachment ref="PrivilegeGroup"/>
+         </Attachments>
+         <Text><![CDATA[Group of Privileges and PrivilegeGroups - Not Persisted]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="161" y="362">
+         <Attachments>
+            <Attachment ref="PrivilegePrimitive"/>
+         </Attachments>
+         <Text><![CDATA[Atomic Privilege Primitives]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="533" y="71">
+         <Attachments>
+            <Attachment ref="Privilege"/>
+         </Attachments>
+         <Text><![CDATA[Privilege Base Class -- made up of Privileges and Privilege Groups --> Not persisted, sourced from MetaData]]></Text>
+      </Note>
+   </Notes>
+</ClassModelCollection>

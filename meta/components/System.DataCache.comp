@@ -1,0 +1,6 @@
+<Component type="nexj.core.runtime.platform.generic.GenericDataCache" activation="singleton"
+	description="Global data cache adapter">
+   <Properties>
+      <Property name="distributed" override="distributed">false</Property>
+   </Properties>
+</Component>

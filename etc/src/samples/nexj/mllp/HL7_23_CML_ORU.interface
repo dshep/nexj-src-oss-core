@@ -1,0 +1,5 @@
+<Interface format="HL7">
+   <Requests>
+      <Request message="HL7_23_CML_ORU"/>
+   </Requests>
+</Interface>

@@ -1,0 +1,29 @@
+<Service args="power" layout="startX:6;endY:274;startY:277;endX:1025" variables="result rows row">
+   <Script layout="y:271;x:72" name="scrStart"><![CDATA[(set! rows (collection))
+this]]></Script>
+   <Loop collection="(iterator (this'data))" layout="w:584;h:288;y:143;x:199" name="rowsLoop">
+      <Script layout="y:117;x:9" name="scrStartRow"><![CDATA[(logger'debug "Processing row: " this)
+(set! row (collection))
+(rows'add row)
+this]]></Script>
+      <Loop layout="w:320;h:185;y:41;x:117" name="itemsLoop" variable="i">
+         <Dispatch layout="y:57;x:25" name="stopEarly">
+            <Case condition="(= i 4)" layout="labelD:729.0;labelR:0.5573770491803278;seg:1;assoc0:405,347;assoc1:849,347" name="isFour">
+               <Goto next="scrEnd"/>
+            </Case>
+            <Case layout="labelD:-185.33759616345287;labelR:0.464082325906684;seg:1" name="otherwise">
+               <Script layout="y:57;x:157" name="scrExponentiate"><![CDATA[(logger'debug "Processing item: " i ", this=" this)
+(row'add ((round (expt i power))'intValue))
+this]]></Script>
+            </Case>
+         </Dispatch>
+      </Loop>
+      <Script layout="y:117;x:461" name="scrEndRow"><![CDATA[(logger'debug "End row, this=" this)
+this]]></Script>
+   </Loop>
+   <Script layout="y:271;x:815" name="scrEnd"><![CDATA[(logger'debug "RUNNING END SCRIPT, this=" this)
+(set! result (message (: data rows)))]]></Script>
+   <Script layout="y:271;x:914" name="scrDone"><![CDATA[(logger'debug "DONE, this=" this)
+this]]></Script>
+</Service>
+

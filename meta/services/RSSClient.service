@@ -1,0 +1,9 @@
+<Service args="argURL" layout="startX:75;endY:108;startY:111;endX:839">
+   <Script layout="srcAssocAnchorPos:131072,12;y:106;x:147" name="prepareRequest"><![CDATA[(logger'debug "prepareRequest" this)
+(logger'debug "Sending request on RSSClient to " argURL)
+(message (: method "GET") (: url argURL))
+
+   ]]></Script>
+   <SendReceive caption="Send / Receive on RSSClient Channel" interface="RSS" layout="y:106;srcAssocAnchorPos:131072,14;x:309" name="sendReceive" output="&quot;RSSClient&quot;"/>
+   <Transform caption="Transform RSS Response to RSS Object" layout="srcAssocAnchorPos:1024,103;y:106;x:565" name="transformRSSToObject" transformation="&quot;RSStoObject&quot;"/>
+</Service>

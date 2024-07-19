@@ -1,0 +1,18 @@
+<Class aspects="LOGGER">
+   <Attributes>
+      <Attribute initializer="(SeverityEnum'get &quot;U&quot;)" name="logLevel" required="true" type="SeverityEnum"/>
+   </Attributes>
+   <Events>
+      <Event args="level code args exception" name="log">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(TestLogMessage'new 
+   (: logger "One")
+   (: level (level'caption))
+   (: code code)
+   (: argCount (vector-length args))
+   (: hasException (not (null? exception)))
+)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

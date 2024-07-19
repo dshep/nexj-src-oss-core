@@ -1,0 +1,5 @@
+<Class>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.Counter" primaryTable="test.CounterTest"/>
+   </PersistenceMapping>
+</Class>

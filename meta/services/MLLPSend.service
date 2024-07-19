@@ -1,0 +1,89 @@
+<Service args="sendRetryCount bWaitForResponse" description="Sends a raw message on a channel and (optionally) waits for a response.&#13;&#10;&#13;&#10;This service is meant to be used by a TCP channel.&#13;&#10;&#13;&#10;For MLLP version 1, if a response is received, it will be returned and the service will exit.&#13;&#10;For MLLP version 2, an ACK response will cause the service to return 'ACK, a NAK response will be handled like a timeout, and any other response will result in an exception being thrown.&#13;&#10;&#13;&#10;If a timeout occurrs while waiting for a response or a NAK is received, the message will be resent up to a maximum of 'sendRetryCount' times.&#13;&#10;@arg sendRetryCount integer The maximum number of times to try sending the message.  If this many timeouts or NAKs occur, the service will throw an exception.&#13;&#10;@arg bWaitForResponse boolean If true, the service will wait for a response.  If false, the message will be sent and the service will return null.&#13;&#10;@ret message The raw response message received, or null." layout="startX:-481;endY:79;startY:119;endX:530" variables="nLoopCount ackStr nakStr ackBin nakBin original e splitter">
+   <Script caption="Start" layout="y:113;x:-427" name="scrStart"><![CDATA[(let*
+   (
+      (context (invocation-context))
+      (channel ((context'metadata)'getChannel (this'channel)))
+   )
+   (set! splitter (channel'getMessageStreamFactory context))
+   (logger'dump "Sending MLLP version" (splitter'version) "message" this)
+   this
+)
+]]></Script>
+   <Dispatch layout="showMerge:false;y:114;mergeX:184;mergeY:79;x:-338" name="dispatch">
+      <Case caption="Don't Wait" condition="(not bWaitForResponse)" layout="connectedToMerge:false;assocAnchorPos:131072,8;labelD:256.0;labelR:-0.16666667;assoc0:-306,49;seg:2" name="caseNoWait">
+         <Script caption="Send" layout="y:34;srcAssocAnchorPos:131072,0;srcAssoc0:543,48;x:204" name="scrSend"><![CDATA[; send the message
+((((((invocation-context)'metadata)'getChannel
+   (@ channel))'sender)'getInstance (invocation-context))'send this)
+]]></Script>
+         <Goto/>
+      </Case>
+      <Case caption="Wait Response" condition="bWaitForResponse" layout="connectedToMerge:false;labelD:767.7685;labelR:-0.9089115;seg:1" name="caseWait">
+         <Script caption="Initialize" layout="y:115;x:-245" name="scrInit"><![CDATA[(set! nLoopCount 0)
+(set! original this)
+(set! ackStr (java.lang.String'valueOf (integer->char (splitter'ackByte))))
+(set! ackBin (nexj.core.util.Binary'new (bytevector (splitter'ackByte))))
+(set! nakStr (java.lang.String'valueOf (integer->char (splitter'nakByte))))
+(set! nakBin (nexj.core.util.Binary'new (bytevector (splitter'nakByte))))
+
+; return
+this]]></Script>
+      </Case>
+   </Dispatch>
+   <TryCatch caption="Try Send/Receive" layout="w:153;h:82;y:90;x:-138" name="trySendReceive" variable="e">
+      <Try>
+         <SendReceive caption="Send/Receive" layout="srcAssoc1:197,209;y:10;srcAssocAnchorPos:131072,17;srcAssoc0:-17,209;x:14" name="sendReceive"/>
+      </Try>
+      <Catch caption="Catch Timeout" description="&#13;&#10;&#13;&#10;" exception="nexj.core.rpc.tcp.ra.TCPTimeoutException" layout="inAssocAnchorPos:1024,92;w:147;h:82;y:92;x:36" name="catchTimeout">
+         <Script caption="Timeout" layout="srcAssoc1:-85,185;srcAssocAnchorPos:131072,13;y:9;x:21;srcAssoc0:116,185" name="scrTimeout"><![CDATA[(logger'dump "Caught timeout exception" e)
+(set! nLoopCount (+ nLoopCount 1))
+
+(cond
+   ((< nLoopCount sendRetryCount) this)
+   (else
+      (throw e)
+   )
+)]]></Script>
+         <Goto next="sendReceive"/>
+      </Catch>
+   </TryCatch>
+   <Dispatch layout="srcAssoc1:-104,330;y:114;mergeX:475;mergeY:238;srcAssoc0:494,330;x:212" name="dispatch1">
+      <Case caption="Version 1?" condition="(= (splitter'version) 1)" layout="connectedToMerge:false;labelD:-549.559;labelR:0.14511764;seg:1" name="caseVersion1">
+         <Script caption="Success" layout="y:116;srcAssocAnchorPos:131072,10;x:364;srcAssoc0:543,140" name="scrSuccess"><![CDATA[(logger'dump "Received a response" this)
+
+; return
+this]]></Script>
+         <Goto/>
+      </Case>
+      <Case caption="ACK" condition="(or (equal? (this'body) ackStr) (equal? (this'body) ackBin))" layout="connectedToMerge:false;labelD:-441.0;labelR:0.1953125;assoc0:244,181;seg:2" name="caseACK">
+         <Script caption="ACK" layout="y:170;srcAssoc0:543,181;x:374" name="scrACK"><![CDATA[(logger'dump "Got ACK result")
+
+; return
+'ACK]]></Script>
+         <Goto/>
+      </Case>
+      <Case caption="NAK" condition="(or (equal? (this'body) nakStr) (equal? (this'body) nakBin))" layout="connectedToMerge:true;labelD:-484.0;labelR:0.1908397;seg:2;assoc0:244,239" name="caseNAK">
+         <Script caption="NAK" layout="srcAssoc2:-97,328;srcAssoc1:454,328;y:227;srcAssoc0:454,243;x:375" name="scrNAK"><![CDATA[(logger'dump "Got NAK result")
+(set! nLoopCount (+ nLoopCount 1))
+
+(cond
+   ((< nLoopCount sendRetryCount) original)
+   (else
+      (throw (nexj.core.rpc.tcp.MLLPNegativeAcknowledgementException'new))
+   )
+)]]></Script>
+      </Case>
+      <Case caption="Error" layout="connectedToMerge:false;labelD:-484.0;labelR:0.18897638;seg:2;assoc0:244,293" name="caseError">
+         <Script caption="Error" layout="y:280;srcAssoc0:543,298;x:371" name="scrError"><![CDATA[; should not happen
+(let
+   (
+      (ex (nexj.core.rpc.RPCException'new "err.rpc.tcp"))
+   )
+   (ex'setValue "response" this)
+   (throw ex)
+)
+]]></Script>
+         <Goto/>
+      </Case>
+   </Dispatch>
+   <Goto next="sendReceive"/>
+</Service>

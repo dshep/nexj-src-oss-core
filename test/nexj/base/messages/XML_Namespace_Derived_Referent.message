@@ -1,0 +1,3 @@
+<Message format="XML" base="XML_Namespace_Referrer">
+   <XMLMapping envelope="soap" namespace="no" node="goodOne" uri="http://www.nexj.com/no"/>
+</Message>

@@ -1,0 +1,23 @@
+<Class>
+   <Attributes>
+      <Attribute collection="true" name="messages" reverse="batch" type="TestMessage"/>
+      <Attribute initializer="0" name="sent" type="integer"/>
+      <Attribute initializer="0&#10;" name="cancelled" type="integer"/>
+      <Attribute initializer="0&#10;" name="delivered" type="integer"/>
+      <Attribute initializer="0" name="completed" type="integer"/>
+      <Attribute initializer="0" name="failed" type="integer"/>
+      <Attribute name="progress" type="float" value="(let ((outstanding (- (@ sent) (@ failed) (@ cancelled)))) (when (&gt; outstanding 0) (/ (* 100 (@ complete)))))"/>
+   </Attributes>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="TestMsgBatch">
+         <AttributeMappings>
+            <AttributeMapping column="cancelled" name="cancelled"/>
+            <AttributeMapping column="complete" name="completed"/>
+            <AttributeMapping column="delivered" name="delivered"/>
+            <AttributeMapping column="failed" name="failed"/>
+            <AttributeMapping destinationKey="TestMessage.FK_batch" name="messages" sourceKey="TestMsgBatch.PK"/>
+            <AttributeMapping column="sent" name="sent"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

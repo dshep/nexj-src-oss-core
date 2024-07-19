@@ -1,0 +1,31 @@
+<Class base="SysBatchJob">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;WFTC&quot;"/>
+      <Attribute description="The throttle period (in ms)." name="PERIOD" readOnly="true" static="true" type="long" value="60000"/>
+      <Attribute collection="true" description="The throttle counters managed by this job." name="throttleCounters" reverse="batchJob" type="SysQueueThrottleCounter"/>
+      <Attribute cached="false" name="instance" static="true" type="SysQueueThrottleCounterBatchJob" value="(read-instance SysQueueThrottleCounterBatchJob '() #t #f)"/>
+   </Attributes>
+   <Events>
+      <Event name="create" visibility="public">
+         <Actions>
+            <Action name="before" type="before"><![CDATA[(this'period (SysQueueThrottleCounterBatchJob'PERIOD))]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Called by the timer once every throttle period to reset the throttle counters." name="run" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(for-each
+   (lambda (counter)
+      (counter'periodicReset)
+   )
+   (@ throttleCounters)
+)
+((SysWorkflowSchedulerBatchJob'instance)'schedule)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping classCodeAttribute="classCode" dataSource="DefaultRelationalDatabase">
+      <RelationalMapping primaryTable="BatchJob">
+         <AttributeMappings/>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

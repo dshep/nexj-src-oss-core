@@ -1,0 +1,23 @@
+
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+   <xsd:element name="validTime">
+	   <xsd:complexType>
+	           <xsd:sequence>
+	              <xsd:element name="elemwithtypereferral" type="IVL_TS" minOccurs="1" maxOccurs="1"/>
+	           </xsd:sequence>
+	   </xsd:complexType>
+   </xsd:element>
+   <xsd:complexType name="IVL_TS">
+           <xsd:sequence>
+              <xsd:element name="low" minOccurs="1" maxOccurs="1">
+                 <xsd:annotation>
+                    <xsd:documentation>
+The low limit of the interval.
+</xsd:documentation>
+                    <xsd:appinfo/>
+                 </xsd:annotation>
+              </xsd:element>
+           </xsd:sequence>
+   </xsd:complexType>
+</xsd:schema>

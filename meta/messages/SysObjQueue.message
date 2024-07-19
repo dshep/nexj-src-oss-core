@@ -1,0 +1,31 @@
+<Message derivation="abstract" description="Object mapping for SysQueue" format="Object">
+   <ObjectMapping class="SysQueue"/>
+   <Parts>
+      <Value description="System Class attribute to allow creating subclasses of queues correctly." name="class" type="string">
+         <ObjectMapping attribute=":class"/>
+      </Value>
+      <Value minCount="1" name="name" type="string">
+         <ObjectMapping key="true"/>
+      </Value>
+      <Value name="caption" type="string"/>
+      <Value name="customized" type="boolean"/>
+      <Value minCount="1" name="system" type="boolean"/>
+      <Value name="priority" type="integer"/>
+      <Value name="concurrency" type="integer"/>
+      <Message name="throttleCounter">
+         <ObjectMapping class="SysQueueThrottleCounter"/>
+         <Parts>
+            <Value name="rate" type="integer"/>
+            <Value name="count" type="integer"/>
+            <Message name="batchJob">
+               <ObjectMapping attribute="batchJob" class="SysQueueThrottleCounterBatchJob" create="false" local="false" update="false"/>
+               <Parts>
+                  <Value name="oid" type="any">
+                     <ObjectMapping attribute=":oid" create="false" local="false" update="false"/>
+                  </Value>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

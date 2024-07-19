@@ -1,0 +1,9 @@
+<Class base="StringEnum" description="Base for string enumerations">
+   <Attributes>
+      <Attribute name="NEW" static="true" type="string" value="&quot;NW&quot;"/>
+      <Attribute name="DISPATCHING" static="true" type="string" value="&quot;DG&quot;"/>
+      <Attribute name="WAITING" static="true" type="string" value="&quot;WG&quot;"/>
+      <Attribute name="PROCESSING" static="true" type="string" value="&quot;PG&quot;"/>
+      <Attribute name="ERROR" static="true" type="string" value="&quot;ER&quot;"/>
+   </Attributes>
+</Class>

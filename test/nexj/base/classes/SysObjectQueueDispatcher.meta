@@ -1,0 +1,717 @@
+<Class aspects="!LOCKING" description="Dispatching of SysMessage instances.  The SysObjectQueueDispatcher is not thread-safe, and relies on its caller ensuring that each of its methods are only called on one thread of one node at a time." visibility="protected">
+   <Attributes>
+      <Attribute description="The message dispatcher." name="dispatcher" readOnly="true" required="true" static="true" type="SysObjectQueueDispatcher" value="(this'getDispatcher #f)"/>
+      <Attribute name="COMPONENT" readOnly="true" static="true" type="any" value="((invocation-context)'getComponentInstance &quot;System.ObjectQueueDispatcher&quot;)"/>
+      <Attribute description="The maximum number of messages to read at a time for delivery.  Should be a fraction of the number of threads available to process deliveries." name="DELIVERY_BATCH_SIZE" readOnly="true" static="true" type="integer" value="16"/>
+      <Attribute name="DISPATCH_BATCH_SIZE" readOnly="true" static="true" type="integer" value="512"/>
+      <Attribute description="Attributes for dispatcher to load when loading a message." name="SELECT_ATTRIBUTES" readOnly="true" static="true" type="any" value="'(user state sent resourceHeld commitRequired resendRequired delay resendQueue queue)"/>
+      <Attribute description="Maximum interval at which the dispatcher will run, in seconds." name="POLLING_INTERVAL" readOnly="true" static="true" type="integer" value="300"/>
+      <Attribute description="Name of the dispatcher queue." name="QUEUE_NAME" readOnly="true" required="true" static="true" type="string" value="&quot;ObjectDispatcherQueue&quot;"/>
+   </Attributes>
+   <Events>
+      <Event args="locked" description="Gets the dispatcher instance.  Lock the instance if locked is true." name="getDispatcher" static="true">
+         <Arguments>
+            <Argument description="True if the database instance should be locked" name="locked" required="true" type="boolean"/>
+         </Arguments>
+         <Result description="The singleton dispatcher" type="SysObjectQueueDispatcher"/>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(read-instance SysObjectQueueDispatcher '() '() locked)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="safe" description="Called by the framework to get a list of deliverable messages.  Completes pending work from completed client transactions and returns pair (nextDelivery[timestamp] . deliverableInstanceList)  When safe is true, processes each message in its own unit of work and blacklists failing messages." name="dispatch" privilege="SysObjectQueueDispatch" static="true">
+         <Arguments>
+            <Argument description="True if each message is to be dispatched on its own transaction" name="safe" type="boolean"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define (add-seconds ts seconds)
+   (cast timestamp (+ (* seconds 1000) (cast long ts)))
+)
+
+(define (getActivation deliveryTime)
+   (lambda (queue)
+      (begin-switch-partition (queue'partition)
+         (begin-partitioned
+            (try
+               (let* 
+                  (  (windowTime (queue'getWindowStartTime deliveryTime))
+                     (throttleTime 
+                        (if ((queue'throttleCounter)'throttled) 
+                           ((((queue'throttleCounter)'batchJob)'timer)'next)
+                           windowTime
+                        )
+                     )
+                  )
+                  (cons throttleTime queue)
+               )
+               (lambda (e)
+                  (logger'debug "Failed to read queue window start time." (queue'name) e)
+                  (cons (add-seconds deliveryTime 1) queue)
+               )  
+            )
+         )
+      )
+   )
+)
+
+(define (minActivationTime deliveryTime) 
+   (lambda (time queueActivation)
+      (let ((queueTime (car queueActivation)))
+         (if (active? deliveryTime queueActivation)
+            time ; the queue is active, next delivery time is determined by looking at associated messages
+            (if (null? time) ; queue is inactive, dispatcher must run when queue is reactivated
+               queueTime 
+               (min time queueTime)
+            )
+         )
+      )
+   )
+)
+
+(define (active? deliveryTime queueActivation)
+   (<= (car queueActivation) deliveryTime)
+)
+
+(define (firstAcquired? msg semaphores)
+   (logger'dump "First acquired?" (msg'resource))
+   (!= (msg'resource) (caar (ifnull semaphores '((())))))
+)
+
+(define (dropPreceding msg)
+   (msg'preceding '())
+   #t
+)
+
+(define (acquireSemaphores msg)
+   ; acquire resources in order, skipping resources already held.
+   (let ((allSemaphores ((msg'queue)'getSemaphores msg)))
+      (let acquire ((semaphores allSemaphores) (acquired (firstAcquired? msg allSemaphores)))
+         (logger'dump "Semaphores: " semaphores "acquired: " acquired)
+         (if (null? semaphores)
+            #t ; all semaphores acquired
+            (let ((remaining (cdr semaphores)))
+               (if acquired
+                  (acquire remaining (firstAcquired? msg remaining)) ; we hold this one, move to next
+                  (if (this'acquireSemaphore (@ COMPONENT) (car semaphores))
+                     (begin
+                        (logger'dump "Acquired semaphore" (car semaphores))
+                        (msg'resourceHeld #t) ; mark message as holding a semaphore
+                        (msg'resource (caar (ifnull remaining '((()))))) ; set resource we are waiting for
+                        (acquire remaining #f) ; acquire remaining semaphores
+                     )
+                     (begin 
+                        (logger'dump "Failed to acquire semaphore" (car semaphores))
+                        #f ; did not acquire all semaphores
+                     )
+                  )
+               )
+            )
+         )
+      )
+   )
+)
+
+(define (passThrottle msg)
+   ; if throttle fails, release all semaphores and set delivery time to sysTimer's next
+   (let ((throttle ((msg'queue)'throttleCounter)))
+      (if (null? throttle)
+         #t
+         (if (throttle'startJob)
+            #t
+            (begin
+               (this'releaseSemaphores msg) ; message could be blocked for a while, release resources.
+               #f
+            )
+         )
+      )
+   )
+)
+
+(define (makeDeliverable msg)
+   (dropPreceding msg) ; if present, preceding is now invalid
+   (let 
+      (  (deliverable
+            (and
+               (acquireSemaphores msg) ; #t if all semaphores acquired
+               (passThrottle msg) ; #t if passes queue's throttle
+            )
+         )
+      )
+      (when deliverable (deliverMessage msg))
+      deliverable
+   )
+)
+
+(define (withSafety f)
+   (lambda (msg)
+      (begin-switch-partition (msg'partition)
+         (begin-partitioned
+            (if safe
+               (try
+                  (begin-transaction (f msg))
+                  (lambda (e)
+                     (if (and (instance? e nexj.core.persistence.OptimisticLockException) (= ((e'oidHolder)':oid) (msg':oid)))
+                        (logger'debug "Failed to dispatch message" e)
+                        (begin
+                           (logger'error "Failed to dispatch message" e)
+                           (this'blacklist msg)
+                        )
+                     )
+                     #f
+                  )
+               )
+               (f msg)
+            )
+         )
+      )
+   )
+)
+
+(define (advancePriority msg)
+   (msg'priority 
+      ((msg'queue)'priority)
+   )
+)
+
+(define (dispatchMessage msg)
+   (if (msg'sent)
+      (if (= #t (msg'commitRequired))
+         (this'complete msg)
+         (this'rollback msg)
+      )
+      (this'send msg)
+   )
+)
+
+(define (deliverMessage msg)
+   (this'deliver msg)
+)
+
+(define (make-list seq) (if (vector? seq) (vector->list seq) seq))
+
+(define (getMessageBatch deliveryTime queueActivationTime inactiveQueues saturatedSemaphores)
+   (let*
+      (  (baseWhereClause
+            `(and 
+               (not (in? (@ queue) ,@inactiveQueues)) ; queue is active
+               (= (@ state) ,waiting) ; message is waiting for delivery
+               (not (in? (@ resource) ,@saturatedSemaphores)) ; message is not waiting on a saturated semaphore
+               (null? (@ preceding sent)) ; there is no preceding message, 
+                  ; need to read the sent flag to ensure that the precedingId actually 
+                  ; maps to something that still exists in the db
+               (not (any (@@ SysMessage following))) ; there is no message which this follows
+            )
+         )
+         (deliverable
+            (begin-unpartitioned
+               (SysMessage'read
+                  (@ SELECT_ATTRIBUTES)
+                  `(and 
+                     ,baseWhereClause 
+                     (<= (@ deliveryTime) ,deliveryTime) ; message delivery time has expired
+                  )
+                  '(((@ priority) . #t) ((@ deliveryTime) . #t) ((@ ordinal) . #t))
+                  (@ DELIVERY_BATCH_SIZE) 0 #f ; Read messages in bulk, no locking
+               )
+            )
+         )
+         (nextTime
+            (if (not (deliverable'empty))
+               deliveryTime ; if any messages are immediately deliverable, best to run dispatcher again as soon as possible
+               (let
+                  (  (nextDelivery
+                        (begin-unpartitioned
+                           (SysMessage'read
+                              '(deliveryTime)
+                              baseWhereClause 
+                              '(((@ priority) . #t) ((@ deliveryTime) . #t))
+                              1 0 #f ; only need the first message
+                           )
+                        )
+                     )
+                  )
+                  (if (nextDelivery'empty)
+                     queueActivationTime
+                     ((nextDelivery 0)'deliveryTime)
+                  )
+               )
+            )
+         )
+      )
+      (cons nextTime deliverable)
+   )
+)
+
+(define waiting '())
+(define dispatching '())
+
+(begin-unpartitioned
+   (begin-switch-partition (read-instance SystemPartition '(fragmentName systemUser) '() '())
+      (begin-partitioned
+         (set! waiting (SysMessageState'get'WAITING))
+         (set! dispatching (SysMessageState'get'DISPATCHING))
+      )
+   )
+)
+
+; process pending message sends and completes
+(begin-unpartitioned
+   (for-each-page
+      SysMessage 
+      (@ SELECT_ATTRIBUTES) 
+      `(= (@ state) ,dispatching)
+      '(((@ priority) . #t) ((@ deliveryTime) . #t) ((@ ordinal) . #t)) 
+      -1 
+      (@ DISPATCH_BATCH_SIZE) 
+      #f
+      (lambda (msg-page)
+         (for-each 
+            (withSafety dispatchMessage)
+            msg-page
+         )
+         (pre-commit)
+      )
+   )
+)
+
+; advance priority of messages which have reached their delivery time.
+(begin-unpartitioned
+   (for-each-page
+      SysMessage '(priority) 
+      `(and
+         (= (@ priority) ,(SysMessage'LAST_PRIORITY))
+         (= (@ state) ,waiting)
+         (< (@ deliveryTime) ,(now))
+      )
+      '() -1 (@ DISPATCH_BATCH_SIZE) #f
+      (lambda (msg-page)
+         (for-each 
+            (withSafety advancePriority)
+            msg-page
+         )
+         (pre-commit)
+      )
+   )
+)
+
+; find deliverable messages
+(let*
+   (  (deliveryTime (now))
+      (queues
+         (begin-unpartitioned
+            (SysObjectQueue'read '() '(@ receiveEnabled) '() '() '() '()) ; all queues with receiveEnabled
+         )
+      )
+      (queueActivations (map (getActivation deliveryTime) (make-list queues))) ; (activationTime . queue) pairs
+      (queueActivationTime (fold-left (minActivationTime deliveryTime) (add-seconds deliveryTime (@ POLLING_INTERVAL)) queueActivations)) ; earliest activation time (may be deliveryTime)
+      (inactiveQueues (map cdr (filter (lambda (queueActivation) (not (active? deliveryTime queueActivation))) queueActivations))) ; queues currently active
+      (saturatedSemaphores
+         (let ((l '()))
+            (for-each
+               (lambda (sem) (set! l (cons sem l)))
+               ((@ COMPONENT)'blockingSet)
+            )
+         )
+      )
+      (messageBatch (getMessageBatch deliveryTime queueActivationTime inactiveQueues saturatedSemaphores))
+      (activationTime (car messageBatch))
+      (candidates (cdr messageBatch))
+      (deliverable (filter (withSafety makeDeliverable) candidates))
+   )
+   (logger'dump "DeliveryTime:" deliveryTime "queueActivationTime:" queueActivationTime "messageBatch:" messageBatch)
+   (assert (or (<= activationTime deliveryTime) (!= (deliverable'size) (@ DELIVERY_BATCH_SIZE))))
+   ; The next activation time and a list of deliverable messages.
+
+   (when (deliverable'empty)
+      (((invocation-context)'getComponentInstance "System.ObjectQueueDispatcher")'notifyCompletion)
+   )
+
+   (cons activationTime deliverable)
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="oidList" description="Called by the framework to fail all messages not in the oidList." name="recover" privilege="SysObjectQueueDispatch" static="true">
+         <Arguments>
+            <Argument description="A list of SysMessage oids, or null" name="oidList" required="true" type="any"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define (attemptRecover attempt msg)
+   (try
+      (begin-privileged
+         (begin-transaction
+            (logger'debug "Recovering message:" msg)
+            (msg'updateEnabled #t)
+            (begin-switch-user (msg'user)
+               (msg'fail '())
+               (pre-commit) ; fire any events as (msg'user)
+            )
+            (logger'debug "Message recovered:" msg)
+            (this'releaseSemaphores msg)
+            (begin-unprivileged
+               (msg'onFailure)
+            )
+            (this'followup msg)
+         )
+      )
+      (lambda (e)
+         (if (and (< attempt 5) (instance? e nexj.core.persistence.OptimisticLockException) (= ((e'oidHolder)'oid) (msg':oid)))
+            (begin
+               (logger'debug "Caught exception during dispatcher recovery" e)
+               (attemptRecover (+ attempt 1) msg)
+            )
+            (begin
+               (logger'error "Caught exception during dispatcher recovery" e)
+               (this'blacklist msg) ; The message is broken.
+            )
+         )
+      )
+   )
+)
+
+(define (recover msg) (attemptRecover 0 msg))
+
+(define (recoverAll)
+   (for-each-page SysMessage
+      '(resource user state errorCount queue)
+      (if (null? oidList) 
+         '(@ resourceHeld)
+         `(and (= (@ state) ,(SysMessageState'get'PROCESSING)) (not (in? (@) ,@oidList)))
+      )
+      '() -1 100 #f
+      (lambda (msg-page)
+         (for-each recover msg-page)
+         (pre-commit)
+      )
+   )
+)
+(begin-unpartitioned
+   (for-each
+      (lambda (partition)
+         (begin-switch-partition partition
+            (begin-partitioned
+               (recoverAll)
+            )
+         )
+      )
+      '(()) ; single null partition
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msg" description="Called by the framework to prepare message for delivery followup." name="clientComplete" static="true" transaction="required">
+         <Arguments>
+            <Argument description="The SysMessage to complete" name="msg" required="true" type="SysMessage"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(msg'state (SysMessageState'get'DISPATCHING))
+
+; after the database commit is finished, notify the dispatcher of pending work
+(((invocation-context)'unitOfWork)'addCompensator 'SysObjectQueueDispatcher-wake 
+   (lambda (status)
+      (when (= status (javax.transaction.Status'STATUS_COMMITTED))
+         (logger'dump "On commit, waking dispatcher to process send")
+         (((invocation-context)'getComponentInstance "System.ObjectQueueDispatcher")'clientWake)
+      )
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msg loginName" description="Called by client to send message to dispatching node." name="clientSend" static="true" transaction="required">
+         <Arguments>
+            <Argument description="The message to send" name="msg" required="true" type="SysMessage"/>
+            <Argument description="The login name of the user sending the message" name="loginName" required="true" type="string"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(if (and (= ((msg'queue)'name) (@ dispatcher QUEUE_NAME)) (not (in-privilege? "SysMessageManage")) ((invocation-context)'secure))
+   (logger'error "User" (user) "is not authorized to post to queue" (@ dispatcher QUEUE_NAME))
+   (begin
+      (msg'deliveryTime (now))
+      (msg'ordinal (this'getMessageOrdinal (msg'deliveryTime)))
+      (when (null? (msg'user))
+         (msg'user loginName)
+      )
+      (logger'debug "Sending for user" (msg'user))
+      (msg'state (SysMessageState'get'DISPATCHING))
+
+      (let*
+         (
+            (context (invocation-context))
+            (unitOfWork (context'unitOfWork))
+            (bTest ((context'metadata)'testEnvironment))
+         )
+         ; after the database commit is finished, notify the dispatcher of pending work
+         (if bTest
+            (unitOfWork'addCompensator 'SysObjectQueueDispatcher-test-wake
+               (lambda (status)
+                  (when (= status (javax.transaction.Status'STATUS_COMMITTED))
+                     (let
+                        (
+                           (dispatcher ((invocation-context)'getComponentInstance
+                                 "System.ObjectQueueDispatcher"))
+                        )
+                        (dispatcher'clientWake)
+
+                        (let
+                           (
+                              (bWaiting #t)
+                           )
+                           (while (and bWaiting (dispatcher'testStarted))
+                              (if (begin-privileged ((SysMessage'read '() `(in? (@ state value)
+                                       ,(SysMessageState'DISPATCHING) ,(SysMessageState'WAITING)
+                                       ,(SysMessageState'PROCESSING)) '() '() 0 #f)'empty))
+                                 (set! bWaiting #f)
+                                 (dispatcher'waitForCompletion)
+                              )
+                           )
+                        )
+                     )
+                  )
+               )
+            )
+            (unitOfWork'addCompensator 'SysObjectQueueDispatcher-wake
+               (lambda (status)
+                  (when (= status (javax.transaction.Status'STATUS_COMMITTED))
+                     (((invocation-context)'getComponentInstance "System.ObjectQueueDispatcher")'clientWake)
+                  )
+               )
+            )
+         )
+      )
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msg" description="Called by client to send a message to the dispatcher's queue.  Use with caution, as these messages block the entire messaging engine when received." name="sendToDispatcher" privilege="SysMessageManage" static="true">
+         <Arguments>
+            <Argument description="The message to send for synchronous dispatch" name="msg" required="true" type="SysMessage"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[((SysQueue'getQueue (@ QUEUE_NAME))'send msg)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msgs" description="Called by SysResubmitMessage to cancel messages." name="sysCancel" privilege="SysObjectQueueDispatch" static="true">
+         <Arguments>
+            <Argument collection="true" description="The collection of messages to cancel" name="msgs" required="true" type="SysMessage"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(for-each
+   (lambda (msg)
+      (when (in? (msg'state) (SysMessageState'get'WAITING) (SysMessageState'get'ERROR) (SysMessageState'get'BLOCKED))
+         (msg'resendRequired #f)
+         (this'resubmit msg)
+      )
+   )
+   msgs
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="queue msgs" description="Called by SysResubmitMessage to resubmit messages." name="sysResubmit" privilege="SysObjectQueueDispatch" static="true">
+         <Arguments>
+            <Argument description="The queue to which to resubmit the messages" name="queue" required="true" type="SysObjectQueue"/>
+            <Argument collection="true" description="The collection of messages to resubmit" name="msgs" required="true" type="SysMessage"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(for-each
+   (lambda (msg)
+      (when (in? (msg'state) (SysMessageState'get'WAITING) (SysMessageState'get'BLOCKED))
+         (msg'resendRequired #t)
+         (msg'delay 0)
+         (msg'resendQueue queue)
+         (this'resubmit msg)
+      )
+   )
+   msgs
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msg" description="INTERNAL USE ONLY: begin delivery of a message." name="deliver" privilege="SysObjectQueueDispatch" static="true">
+         <Arguments>
+            <Argument description="The message to deliver" name="msg" required="true" type="SysMessage"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(begin-unprivileged
+   (msg'onDelivery)
+)
+(msg'state (SysMessageState'get'PROCESSING))
+(msg'resourceHeld #t)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msg" description="INTERNAL USE ONLY: mark a message as permanently undeliverable." name="blacklist" privilege="SysObjectQueueDispatch" static="true">
+         <Arguments>
+            <Argument description="The message to blacklist" name="msg" required="true" type="SysMessage"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(try
+   (try
+      (begin-transaction
+         (logger'error "Blacklisting message with oid:" (msg':oid))
+         (this'releaseSemaphores msg)
+      )
+      (lambda (e)
+         (logger'warn "Failed to release semaphores while blacklisting message with oid:" (msg':oid) e)
+      )
+      (begin-transaction
+         (msg'state (SysMessageState'get'ERROR))
+      )
+   )
+   (lambda (t)
+      (logger'error "Failed to blacklist message with oid:" (msg':oid) t)
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msg" description="INTERNAL USE ONLY: mark a message for dispatch." name="send" privilege="SysObjectQueueDispatch" static="true">
+         <Arguments>
+            <Argument description="The message to send" name="msg" required="true" type="SysMessage"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(assert (not (msg'sent)))
+(msg'resource (caar (ifnull ((msg'queue)'getSemaphores msg) '((())))))
+(this'post msg)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msg" description="INTERNAL USE ONLY: complete a message delivery." name="complete" privilege="SysObjectQueueDispatch" static="true">
+         <Arguments>
+            <Argument description="The message to complete" name="msg" required="true" type="SysMessage"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(begin-unprivileged
+   (msg'onCompletion)
+)
+(this'releaseSemaphores msg)
+(this'followup msg)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msg" description="INTERNAL USE ONLY: rollback a message delivery." name="rollback" privilege="SysObjectQueueDispatch" static="true">
+         <Arguments>
+            <Argument description="The message to rollback" name="msg" required="true" type="SysMessage"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(begin-unprivileged
+   (msg'onFailure)
+)
+(this'releaseSemaphores msg)
+(this'followup msg)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msg" description="INTERNAL USE ONLY: resubmit a waiting message." name="resubmit" privilege="SysObjectQueueDispatch" static="true">
+         <Arguments>
+            <Argument description="The message to resubmit" name="msg" required="true" type="SysMessage"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(begin-unprivileged
+   (msg'onCancel)
+)
+(this'releaseSemaphores msg)
+(this'followup msg)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msg" description="INTERNAL USE ONLY: set properties to configure a message to wait for delivery." name="post" privilege="SysObjectQueueDispatch" static="true">
+         <Arguments>
+            <Argument description="The message to post" name="msg" required="true" type="SysMessage"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(begin-unprivileged
+   (msg'onSend)
+)
+(msg'priority (if (> (msg'delay) 0) (SysMessage'LAST_PRIORITY) ((msg'queue)'priority)))
+(msg'resendQueue (msg'queue))
+(msg'deliveryTime (cast timestamp (+ (cast long (now)) (ifnull (msg'delay) 0))))
+(msg'ordinal (this'getMessageOrdinal (msg'deliveryTime)))
+(msg'state (if ((msg'queue)'receiveEnabled) (SysMessageState'get'WAITING) (SysMessageState'get'BLOCKED)))
+(msg'commitRequired #t)
+(msg'resendRequired #f)
+(msg'delay 0)
+(msg'sent #t)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msg" description="INTERNAL USE ONLY: perform post-receive/fail actions on msg." name="followup" privilege="SysObjectQueueDispatch" static="true">
+         <Arguments>
+            <Argument description="The message to followup" name="msg" required="true" type="SysMessage"/>
+         </Arguments>
+         <Actions>
+            <Action condition="(not (= (msg'state) (SysMessageState'get'ERROR)))" name="main" type="main"><![CDATA[(logger'debug "Followup:" msg)
+
+(let
+   (
+      (bResend (= #t (msg'resendRequired)))
+      (resendQueue (msg'resendQueue))
+   )
+   (if (and bResend (resendQueue'sendEnabled))
+      (begin
+         (msg'queue resendQueue)
+         (this'post msg)
+      )
+      (begin
+         (when bResend
+            (logger'warn "Dropping message with id" (msg':oid) "due to deleted queue" (resendQueue'name))
+         )
+
+         (msg'delete)
+      )
+   )
+)
+]]></Action>
+         </Actions>
+      </Event>
+      <Event args="comp semaphore" description="INTERNAL USE ONLY: acquire a semaphore; returns true if semaphore aquired, else false." name="acquireSemaphore" privilege="SysObjectQueueDispatch" static="true" transaction="required">
+         <Arguments>
+            <Argument description="The System.ObjectQueueDispatcher component instance" name="comp" required="true" type="any"/>
+            <Argument description="The (resource . count) pair, where resource is binary and count is a number" name="semaphore" required="true" type="any"/>
+         </Arguments>
+         <Result description="True if the semaphore is acquired, otherwise false" type="boolean"/>
+         <Actions>
+            <Action method="nexj.core.rpc.queueing.ObjectQueueDispatcher.acquireSemaphore" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="msg" description="INTERNAL USE ONLY: release all semaphores held by msg and resets msg to wait on first resource." name="releaseSemaphores" privilege="SysObjectQueueDispatch" static="true">
+         <Arguments>
+            <Argument description="The message for which to release semaphores" name="msg" required="true" type="SysMessage"/>
+         </Arguments>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let ((allSemaphores ((msg'queue)'getSemaphores msg)))
+   (let release ((semaphores allSemaphores))
+      (unless (or (null? semaphores) (= (caar semaphores) (msg'resource)))
+         (this'releaseSemaphore (@ COMPONENT) (car semaphores))
+         (release (cdr semaphores))
+      )
+   )
+   ; reset message to wait on first resource
+   (msg'resource (caar (ifnull ((msg'resendQueue)'getSemaphores msg) '((())))))
+   (msg'state (if ((msg'queue)'receiveEnabled) (SysMessageState'get'WAITING) (SysMessageState'get'BLOCKED)))
+   (msg'resourceHeld #f)
+   (this'completeTransaction (@ COMPONENT) (msg':oid))
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="comp semaphore" description="INTERNAL USE ONLY: release a semaphore." name="releaseSemaphore" privilege="SysObjectQueueDispatch" static="true" transaction="required">
+         <Arguments>
+            <Argument description="The System.ObjectQueueDispatcher component instance" name="comp" required="true" type="any"/>
+            <Argument description="The (resource . count) pair, where resource is binary and count is a number" name="semaphore" required="true" type="any"/>
+         </Arguments>
+         <Actions>
+            <Action method="nexj.core.rpc.queueing.ObjectQueueDispatcher.releaseSemaphore" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="comp oid" description="INTERNAL USE ONLY: report transaction completion to the component." name="completeTransaction" privilege="SysObjectQueueDispatch" static="true" transaction="required">
+         <Arguments>
+            <Argument description="The System.ObjectQueueDispatcher component instance" name="comp" required="true" type="any"/>
+            <Argument description="The oid of the message to complete" name="oid" required="true" type="any"/>
+         </Arguments>
+         <Actions>
+            <Action method="nexj.core.rpc.queueing.ObjectQueueDispatcher.complete" name="main" type="main"/>
+         </Actions>
+      </Event>
+      <Event args="deliveryTime" description="INTERNAL USE ONLY: get the next message ordinal." name="getMessageOrdinal" static="true">
+         <Actions>
+            <Action method="nexj.core.rpc.queueing.ObjectQueueDispatcher.getMessageOrdinal" name="main" type="main"/>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="ObjectQueueDispatcher">
+         <AttributeMappings/>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

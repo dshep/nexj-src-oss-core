@@ -1,0 +1,41 @@
+<Class description="An Object, to store a file upload">
+   <Attributes>
+      <Attribute initializer="0" name="version" required="true" type="integer"/>
+      <Attribute collection="false" name="data" required="false" static="false" type="binary"/>
+      <Attribute name="size" type="integer" value="(if (null? (@ data)) 0 (vector-length (@ data data)))"/>
+      <Attribute collection="false" dependency="data mimeData" name="mimeType" required="false" static="false" type="string"/>
+      <Attribute collection="false" dependency="data" name="mimeData" required="false" static="false" type="binary"/>
+      <Attribute name="subject" reverse="image" type="Contact"/>
+   </Attributes>
+   <Events>
+      <Event args="attributes" description="Loads on demand an undefined attribute. The main action is implemented by the framework." name="load" vararg="true">
+         <Actions>
+            <Action name="loadMime" type="before"><![CDATA['() ; stub]]></Action>
+         </Actions>
+      </Event>
+      <Event name="delete" visibility="public">
+         <Actions>
+            <Action name="updateSubject" type="before"><![CDATA[((@ subject)'image '())]]></Action>
+         </Actions>
+      </Event>
+      <Event description="" name="update" visibility="public">
+         <Actions>
+            <Action name="setData" type="before"><![CDATA['() ; stub]]></Action>
+         </Actions>
+      </Event>
+      <Event description="" name="create" visibility="public">
+         <Actions>
+            <Action name="setData" type="before"><![CDATA['() ; stub]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase" lockingAttribute="version">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.Object">
+         <AttributeMappings>
+            <AttributeMapping column="obj" name="data"/>
+            <AttributeMapping destinationKey="Contact.FK_Object" name="subject" sourceKey="Object.PK"/>
+            <AttributeMapping column="rec_ver" name="version"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

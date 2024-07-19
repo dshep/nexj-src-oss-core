@@ -1,0 +1,37 @@
+<Class base="UserTemplate" caption="idsc.UserTemplate.caption" description="NOT DONE - Singleton - System User Template">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;S&quot;"/>
+   </Attributes>
+   <Events>
+      <Event name="create" privilege="SystemUserTemplateManage" visibility="public"/>
+      <Event name="update" privilege="SystemUserTemplateManage" visibility="public"/>
+      <Event name="delete" privilege="SystemUserTemplateManage" visibility="public"/>
+      <Event name="instance" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let*
+   (
+      (key '(SystemUserTemplate name System))
+      (userbase (SysCache'get key))
+   )
+   (when (null? userbase)
+      (suspend-transaction
+         (let ((p (SystemUserTemplate'read '(classCode name description locking icon) '() '() 1 0 #f)))
+            (unless (p'empty)
+               (set! userbase (p'get 0))
+               (SysCache'putInstance key userbase '(classCode name description locking icon))
+            )
+         )
+      )
+   )
+   ; Return
+   userbase  
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event description="Java client users this interface.  " name="getInstance" static="true">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(this'instance)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

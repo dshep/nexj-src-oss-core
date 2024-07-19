@@ -1,0 +1,17 @@
+<Message aggregation="single" format="XML">
+   <XMLMapping node="single"/>
+   <Parts>
+      <Message minCount="1" name="PartA">
+         <XMLMapping node="A"/>
+         <Parts>
+            <Value name="a" type="string"/>
+         </Parts>
+      </Message>
+      <Message minCount="1" name="PartB">
+         <XMLMapping node="B"/>
+         <Parts>
+            <Value name="b" type="string"/>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

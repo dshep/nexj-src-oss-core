@@ -1,0 +1,7 @@
+<Class description="Virtual class to allow efficient UI binding to a collection of visit participants with navigation ability to visit.">
+   <Attributes>
+      <Attribute name="visit" reverse="lightVisitParticipants" type="Visit"/>
+      <Attribute name="group" type="string"/>
+   </Attributes>
+   <Events/>
+</Class>

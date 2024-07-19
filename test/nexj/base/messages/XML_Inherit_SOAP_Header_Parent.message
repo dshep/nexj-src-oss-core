@@ -1,0 +1,12 @@
+<Message format="XML">
+   <XMLMapping envelope="soap" node="parent" xsdtype="ParentType"/>
+   <Parts>
+      <Message name="header">
+         <XMLMapping namespace="soap" node="Header"/>
+         <Parts>
+            <Value minCount="1" name="data" type="integer"/>
+         </Parts>
+      </Message>
+      <Value name="a" type="string"/>
+   </Parts>
+</Message>

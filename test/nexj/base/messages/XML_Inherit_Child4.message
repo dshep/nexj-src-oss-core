@@ -1,0 +1,9 @@
+<Message base="XML_Inherit_Parent" format="XML">
+   <XMLMapping node="parent" xsdtype="Child4Type"/>
+   <Parts>
+      <Value name="b" type="string"/>
+      <Value name="value" type="any">
+         <XMLMapping interface="AnyTypeTest" type="value"/>
+      </Value>
+   </Parts>
+</Message>

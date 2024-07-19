@@ -1,0 +1,18 @@
+<Message format="CSV">
+   <CSVMapping escape="\" header="true"/>
+   <Parts>
+      <Message maxCount="0" name="Row">
+         <Parts>
+            <Value description="First Column" name="firstName" type="string"/>
+            <Value description="Second Column" name="lastName" type="string"/>
+            <Value name="age" type="integer"/>
+            <Message name="Phones" maxCount="3">
+               <Parts>
+                  <Value name="location" type="string"/>
+                  <Value name="number" type="string"/>
+               </Parts>
+            </Message>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

@@ -1,0 +1,5 @@
+<Class>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.MaxPlus1" primaryTable="test.Max1Test"/>
+   </PersistenceMapping>
+</Class>

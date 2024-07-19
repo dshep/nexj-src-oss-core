@@ -1,0 +1,22 @@
+<Enumeration base="StringEnum" description="Contact Account Type enumeration" typeCode="account">
+   <Locales>
+      <Locale caption="Account Type" name="en"/>
+   </Locales>
+   <Values>
+      <Value name="RRSP" value="RRSP">
+         <Locales>
+            <Locale caption="RRSP" name="en"/>
+         </Locales>
+      </Value>
+      <Value name="Canadian" value="CAN">
+         <Locales>
+            <Locale caption="Canadian" name="en"/>
+         </Locales>
+      </Value>
+      <Value name="US" value="US">
+         <Locales>
+            <Locale caption="US" name="en"/>
+         </Locales>
+      </Value>
+   </Values>
+</Enumeration>

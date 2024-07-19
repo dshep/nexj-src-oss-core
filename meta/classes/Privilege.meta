@@ -1,0 +1,32 @@
+<Class caption="idsc.Privilege.caption" description="Privilege Base Class -- made up of Privileges and Privilege Groups --&gt; Not persisted, sourced from MetaData">
+   <Attributes>
+      <Attribute description="Base --  blank - abstract.&#10;Primitive -- &quot;P&quot;&#10;Group -- &quot;G&quot;&#10;AdminGroup -- &quot;A&quot;" name="classCode" required="true" type="string"/>
+      <Attribute description="Indicates whether this privilege can be inherited by an on behalf of user" initializer="#f" name="allowOnBehalfOf" required="true" type="boolean"/>
+      <Attribute description="The symbolic name of the privilege.  As defined in metadata.  NOT localized." name="name" required="true" type="string"/>
+      <Attribute name="icon" type="string"/>
+   </Attributes>
+   <Events>
+      <Event args="attributes where orderBy count offset xlock" name="read" static="true" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(define privileges (instance-collection))
+
+(logger'debug "read")
+(for-each
+   (lambda (privilege)
+      (logger'debug "privilege = " privilege ", isPrimitive = " (privilege'primitive) ", caption = " (privilege'caption))
+      (privileges'add
+          (if (privilege'primitive)
+              (instance PrivilegePrimitive (vector (privilege'caption)) (: name (privilege'caption)))
+              (instance PrivilegeGroup (vector (privilege'caption)) (: name (privilege'caption)))
+          )
+      )
+   )
+   (((invocation-context)'metadata)'privilegeIterator)
+)
+ 
+;return:
+privileges]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

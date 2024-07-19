@@ -1,0 +1,6 @@
+<Message format="Object" base="Object_AccountRecursive_Base">
+   <ObjectMapping class="Account"/>
+   <Parts>
+      <Value name="funds" type="double"/>
+   </Parts>
+</Message>

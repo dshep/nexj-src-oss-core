@@ -1,0 +1,13 @@
+<Component type="nexj.core.rpc.http.CharacterStreamHTTPServer" activation="context"
+   description="The SOAP HTTP server">
+   <Properties>
+      <Property name="type">SOAP</Property>
+      <Property name="bufferSize">8192</Property>
+      <Property name="maxRequestSize" override="httpMaxSize">0</Property>
+      <Property name="server">Server.SOAP</Property>
+      <Property name="RPCEnabled" override="authRPC">true</Property>
+      <Property name="trustedCertificate" override="trust"/>
+      <Property name="RPCServer">true</Property>
+      <Property name="anonEnabled" override="anonRPC"/>
+   </Properties>
+</Component>

@@ -1,0 +1,7 @@
+<Message base="XML_Inherit_SOAP_Header_Parent" format="XML">
+   <XMLMapping envelope="soap" node="child2" xsdtype="ChildHeaderRefType"/>
+   <Parts>
+      <Value name="c" type="string"/>
+      <Message name="header" ref="SOAP_CommonHeader"/>
+   </Parts>
+</Message>

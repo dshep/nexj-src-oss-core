@@ -1,0 +1,21 @@
+<Class description="Contact Address">
+   <Attributes>
+      <Attribute collection="false" name="contact" orderBy="((@ contact lastName) . #t)((@ contact firstName) . #t)" required="true" reverse="accounts" type="Contact"/>
+      <Attribute name="type" orderBy="((@ type caption) . #t)" type="AccountTypeEnum" where="(= locale &quot;en&quot;)"/>
+      <Attribute name="funds" type="double"/>
+      <Attribute name="style" type="string" value="(if (&gt; (@ funds) 1000) &quot;red&quot; &quot;blue&quot;)"/>
+      <Attribute name="contactFullName" type="string" value="(@ contact fullName)"/>
+      <Attribute name="typeName" type="string" value="(@ type caption)"/>
+      <Attribute name="today" type="timestamp" value="(now)&#10;"/>
+   </Attributes>
+   <Events/>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.Account">
+         <AttributeMappings>
+            <AttributeMapping name="contact" sourceKey="Account.FK1"/>
+            <AttributeMapping destinationKey="StringEnum.SK1" name="type" sourceKey="Account.FK2"/>
+            <AttributeMapping column="funds" name="funds"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

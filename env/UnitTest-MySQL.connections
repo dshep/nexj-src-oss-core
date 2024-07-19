@@ -1,0 +1,8 @@
+<Connections description="Unit test connections using MySQL database adapter." test="true">
+   <DataSourceConnections>
+      <RelationalDatabaseConnection adapter="MySQL" dataSource="DefaultRelationalDatabase" database="unittest" host="localhost" password="sa" path="mysql-connector-java-5.0.8-bin.jar" port="3306" unicode="true" user="sa"/>
+   </DataSourceConnections>
+   <ChannelConnections>
+      <MessageQueueConnection channel="ErrorQueue" password="nexj" user="nexjsa"/>
+   </ChannelConnections>
+</Connections>

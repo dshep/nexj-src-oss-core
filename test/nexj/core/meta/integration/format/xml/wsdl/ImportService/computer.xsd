@@ -1,0 +1,35 @@
+<schema
+   targetNamespace="http://nexj.example.com/computer/"
+   xmlns:tns="http://nexj.example.com/computer/"
+   xmlns:elec="http://nexj.example.com/electronic/"
+   xmlns="http://www.w3.org/2001/XMLSchema">
+
+   <import
+      namespace="http://nexj.example.com/electronic/"
+      schemaLocation="electronic.xsd"/>
+
+   <element name="cpu">
+      <complexType>
+         <sequence>
+            <element name="register" maxOccurs="unbounded" type="string"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <element name="gpu">
+      <complexType>
+         <sequence>
+            <element name="streamProcessingUnits" maxOccurs="unbounded" type="string"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <element name="motherboard">
+      <complexType>
+         <sequence>
+            <element ref="elec:battery"/>
+            <element ref="tns:cpu"/>
+         </sequence>
+      </complexType>
+   </element>
+</schema>

@@ -1,0 +1,7 @@
+<Action caption="Parse" description="Deserializes a message from a particular raw format to an internal message type." icon="document_into" service="true" tooltip="Deserialize a message from it's external raw format.">
+   <Arguments>
+      <Argument description="A space-seperated list of expressions that evaluate to message type name (string).  The message type that most closely matches the format of the raw message will be used for parsing.  e.g. &quot;MessageType1&quot; variable1 &quot;MessageType2&quot; (get-message name)" name="messages" type="list"/>
+      <Argument default="(@ body)" description="An expression that evaluates to the raw message content e.g. (@ params xml)" name="body" type="any"/>
+   </Arguments>
+   <Script><![CDATA[`(parse-message ,body ,@messages)]]></Script>
+</Action>

@@ -1,0 +1,122 @@
+<Message description="Base HL7 message." format="HL7">
+   <Parts>
+      <Message description="The MSH segment defines the intent, source, destination, and some specifics of the syntax of a message. " minCount="1" name="messageHeader">
+         <HL7Mapping name="MSH" seq="18"/>
+         <Parts>
+            <Value description="Field Separator" minCount="1" name="fieldSep" type="string">
+               <HL7Mapping seq="1"/>
+            </Value>
+            <Value description="Encoding Characters" minCount="1" name="encodingChars" type="string">
+               <HL7Mapping seq="2"/>
+            </Value>
+            <Message description="Sending Application" name="sendingApplication">
+               <HL7Mapping seq="3"/>
+               <Parts>
+                  <Value name="namespaceID" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+                  <Value name="universalID" type="string">
+                     <HL7Mapping seq="2"/>
+                  </Value>
+                  <Value name="universalIDType" type="string">
+                     <HL7Mapping seq="3"/>
+                     <Enumerations>
+                        <Enumeration value="DNS"/>
+                        <Enumeration value="GUID"/>
+                        <Enumeration value="HCD"/>
+                        <Enumeration value="HL7"/>
+                        <Enumeration value="ISO"/>
+                        <Enumeration value="L"/>
+                        <Enumeration value="M"/>
+                        <Enumeration value="N"/>
+                        <Enumeration value="Random"/>
+                        <Enumeration value="UUID"/>
+                        <Enumeration value="x400"/>
+                        <Enumeration value="x500"/>
+                     </Enumerations>
+                  </Value>
+               </Parts>
+            </Message>
+            <Message description="Sending Facility" name="sendingFacility">
+               <HL7Mapping seq="4"/>
+               <Parts>
+                  <Value name="namespaceID" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+                  <Value name="universalID" type="string">
+                     <HL7Mapping seq="2"/>
+                  </Value>
+                  <Value name="universalIDType" type="string">
+                     <HL7Mapping seq="3"/>
+                     <Enumerations>
+                        <Enumeration description="Domain Name Server" value="DNS"/>
+                        <Enumeration value="GUID"/>
+                        <Enumeration value="HCD"/>
+                        <Enumeration value="HL7"/>
+                        <Enumeration value="ISO"/>
+                        <Enumeration value="L"/>
+                        <Enumeration value="M"/>
+                        <Enumeration value="N"/>
+                        <Enumeration value="Random"/>
+                        <Enumeration value="UUID"/>
+                        <Enumeration value="x400"/>
+                        <Enumeration value="x500"/>
+                     </Enumerations>
+                  </Value>
+               </Parts>
+            </Message>
+            <Value name="time" type="timestamp">
+               <HL7Mapping seq="7"/>
+            </Value>
+            <Message minCount="1" name="messageType">
+               <HL7Mapping seq="9"/>
+               <Parts>
+                  <Value minCount="1" name="messageCode" type="string">
+                     <HL7Mapping seq="1"/>
+                  </Value>
+                  <Value minCount="1" name="triggerEvent" type="string">
+                     <HL7Mapping seq="2"/>
+                  </Value>
+               </Parts>
+            </Message>
+            <Value minCount="1" name="messageControlID" type="string">
+               <HL7Mapping seq="10"/>
+            </Value>
+            <Message minCount="1" name="processingID">
+               <HL7Mapping seq="11"/>
+               <Parts>
+                  <Value minCount="1" name="processingID" type="string">
+                     <HL7Mapping seq="1"/>
+                     <Enumerations>
+                        <Enumeration value="D"/>
+                        <Enumeration value="P"/>
+                        <Enumeration value="T"/>
+                     </Enumerations>
+                  </Value>
+                  <Value name="processingMode" type="string">
+                     <HL7Mapping seq="2"/>
+                     <Enumerations>
+                        <Enumeration value="A"/>
+                        <Enumeration value="R"/>
+                        <Enumeration value="I"/>
+                     </Enumerations>
+                  </Value>
+               </Parts>
+            </Message>
+            <Value minCount="1" name="versionID" type="string">
+               <HL7Mapping seq="12"/>
+               <Enumerations>
+                  <Enumeration value="2.0"/>
+                  <Enumeration value="2.0D"/>
+                  <Enumeration value="2.1"/>
+                  <Enumeration value="2.2"/>
+                  <Enumeration value="2.3"/>
+                  <Enumeration value="2.4"/>
+                  <Enumeration value="2.5"/>
+                  <Enumeration value="2.6"/>
+               </Enumerations>
+            </Value>
+         </Parts>
+      </Message>
+   </Parts>
+</Message>

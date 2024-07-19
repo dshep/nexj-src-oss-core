@@ -1,0 +1,5 @@
+<Service layout="startX:129;endY:231;startY:40;endX:128">
+   <Script caption="Send Signal" layout="y:120;x:108" name="scrSendSignal"><![CDATA[
+   (UnitTestSignaller 'signal "TestObjectQueue" "failure")
+]]></Script>
+</Service>

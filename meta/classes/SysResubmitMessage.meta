@@ -1,0 +1,77 @@
+<Class aspects="!LOCKING" base="SysMessage">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;RMSG&quot;"/>
+   </Attributes>
+   <Events>
+      <Event name="receive">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(begin-privileged
+   (let* 
+      (  (ids (if (list? (@ body ids)) (@ body ids) (vector->list (@ body ids))))
+         (msgs 
+            (SysMessage'read 
+               ((SysObjectQueueDispatcher'dispatcher)'SELECT_ATTRIBUTES)
+               `(in? (@) ,@ids)
+               '() '() '() '()
+            )
+         )
+      )
+      (cond
+         ((= (@ body type) 'cancel)
+            (SysObjectQueueDispatcher'sysCancel msgs)
+         )
+         ((= (@ body type) 'resubmit)
+            (SysObjectQueueDispatcher'sysResubmit (SysQueue'getQueue (@ body queue)) msgs)
+         )
+         (else (error "invalid SysResubmitMessage body"))
+      )
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="following msgs" description="Creates an instance of SysResubmitMessage  that when received will cancel msgs." name="createCancel" static="true">
+         <Arguments/>
+         <Result description=" an instance of SysResubmitMessage  that when received will cancel msgs" type="SysResubmitMessage"/>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(SysResubmitMessage'new (: name "SysMessage Cancel")
+   (: following following)
+   (: body
+      (message
+         (: type 'cancel)
+         (: ids
+            (map (lambda (msg) (msg':oid)) msgs)
+         )
+      )
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="msgs" description="Creates an instance of SysResubmitMessage  that when received will cancel msgs." name="createCancel" static="true">
+         <Arguments/>
+         <Result description=" an instance of SysResubmitMessage  that when received will cancel msgs" type="SysResubmitMessage"/>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(this'createCancel '() msgs)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="queue msgs" description="Creates an instance of SysResubmitMessage  that when received will repost msgs to queue." name="createResubmit" static="true">
+         <Arguments>
+            <Argument description="the queue to which to send msgs" name="queue" type="SysObjectQueue"/>
+            <Argument collection="true" description="a collection of SysMessage instances to repost" name="msgs" required="true" type="SysMessage"/>
+         </Arguments>
+         <Result description="an instance of SysResubmitMessage  that when received will repost msgs to queue." type="SysResubmitMessage"/>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(SysResubmitMessage 'new (: name (string-append "SysMessage Resubmit to " (queue'name)))
+   (: body
+      (message
+         (: type 'resubmit)
+         (: queue (queue'name))
+         (: ids
+            (map (lambda (msg) (msg':oid)) msgs)
+         )
+      )
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>

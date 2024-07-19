@@ -1,0 +1,119 @@
+<SOAImplementation service="nexj:example:performance:1.0">
+   <Interface name="Viewer">
+      <Method args="service" name="getCounters">
+         <Script><![CDATA[(define counter-tab (hashtable-ref nexj:example:performance:1.0:implementation:env:service-counters service))
+(if (null? counter-tab)
+   (collection)
+   (apply collection 
+      (map
+         (lambda (name) (:: nexj:example:performance:1.0:type:Counter :service service :counterName name))
+         (vector->list (hashtable-keys counter-tab))
+      )
+   )
+)
+]]></Script>
+      </Method>
+      <Method args="counter" name="getHistory">
+         <Script><![CDATA[()]]></Script>
+      </Method>
+      <Method name="next1">
+         <Script><![CDATA[(if (null? (this':state))
+   (this':state 0)
+   (this':state (+ 1 (this':state)))
+)
+; return:
+(case (this':state)
+   ((0) 'tartare)
+   ((1) 'blue)
+   ((2) 'rare)
+   ((3) 'medium-rare)
+   ((4) 'medium)
+   ((5) 'well-done)
+   ((6) 'chicago)
+   (else 'charred)
+)
+]]></Script>
+      </Method>
+      <Method name="next2">
+         <Script><![CDATA[(if (null? (@ :state))
+   (this':state (:: nexj:example:performance:1.0:type:StateHolder :cnt 0))
+   (case (@ :state cnt)
+      ((0) ((@ :state)'cnt (+ 1 (@ :state cnt))))
+      ((1) (this':state (:: nexj:example:performance:1.0:type:StateHolder :cnt 2)))
+      (else (this':state "bad state"))
+   )
+)
+; return:
+(cond
+   ((null? (@ :state)) 'null)
+   ((string? (@ :state)) 'bad)
+   ((= 0 (@ :state cnt)) 'zero)
+   ((= 1 (@ :state cnt)) 'one)
+   ((= 2 (@ :state cnt)) 'two)
+   (else 'unknown)
+)]]></Script>
+      </Method>
+      <Method name="voidReturnType">
+         <Script><![CDATA[;return a value
+1]]></Script>
+      </Method>
+      <Method args="type arg" name="error">
+         <Script><![CDATA[(case type
+   (("chained")
+      (let
+         ((prox (soa:create-proxy nexj:example:performance:1.0)))
+         (prox'error arg ())
+      )
+   )
+   (("fault.err")
+      (throw (soa:Fault'new "err.soa.test"))
+   )
+   (("fault.fail")
+      (throw (soa:Fault'new "fail.soa.test"))
+   )
+   (("system.err")
+      (error "err.soa.test")
+   )
+   (("system.fail")
+      (error "fail.soa.test")
+   )
+   (("userfault.err")
+      (let
+         (
+            (ex (nexj:example:performance:1.0:type:UserError1'new "err.soa.test"))
+         )
+         (ex'data "hello")
+         (throw ex)
+      )
+   )
+   (("userfault.fail")
+      (let
+         (
+            (ex (nexj:example:performance:1.0:type:UserError1'new "err.soa.test"))
+         )
+         (ex'data "hi")
+         (throw ex)
+      )
+   )
+   (else 42)
+)]]></Script>
+      </Method>
+   </Interface>
+   <Interface name="Registration">
+      <Method args="counter" name="addCounter">
+         <Script><![CDATA[(let*
+   (
+      (service (counter'service))
+      (counter-tab (hashtable-ref nexj:example:performance:1.0:implementation:env:service-counters service))
+   )
+   (when (null? counter-tab)
+      (set! counter-tab (make-hashtable))
+      (hashtable-set! nexj:example:performance:1.0:implementation:env:service-counters service counter-tab)
+   )
+   (hashtable-set! counter-tab (counter'counterName) counter)
+)
+()
+]]></Script>
+      </Method>
+   </Interface>
+</SOAImplementation>

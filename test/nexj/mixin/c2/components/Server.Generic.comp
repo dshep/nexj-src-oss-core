@@ -1,0 +1,3 @@
+<Component type="nexj.core.rpc.GenericServer" activation="context"
+   description="The generic request server">
+</Component>

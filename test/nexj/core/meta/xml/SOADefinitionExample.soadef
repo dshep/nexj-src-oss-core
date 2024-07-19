@@ -1,0 +1,40 @@
+<SOADefinition description="This is a definition. It can have Services, Interfaces, and Types among many other things. Bacon ipsum dolor sit amet dolor sausage id, anim boudin proident voluptate sirloin quis qui shankle. Consectetur minim pig t-bone cillum non. Deserunt est quis turkey reprehenderit, qui sirloin chuck velit spare ribs laboris shank cupidatat ut. Meatball ball tip id ullamco cupidatat, sausage incididunt exercitation shank. Pig cow ex excepteur adipisicing, fatback sunt drumstick sirloin beef in ullamco eiusmod. Excepteur chicken pork hamburger, sint tail drumstick enim. Rump pancetta qui tempor pastrami." name="definition1" version="v2.78.204g">
+   <Service>
+      <Interfaces>
+         <Interface default="true" ref="Registration"/>
+         <Interface ref="Service"/>
+      </Interfaces>
+   </Service>
+   <Interfaces>
+      <Interface description="This interface allows clients to register and unregister themselves." name="Registration">
+         <Method name="register-all">
+            <Arguments>
+               <Argument collection="true" name="clients" type="List"/>
+            </Arguments>
+            <Result collection="true" type="List"/>
+         </Method>
+         <Method description="Registers a client" name="register">
+            <Arguments>
+               <Argument description="The client name" name="client" type="identifier"/>
+               <Argument description="The description of the client" name="description" type="String"/>
+            </Arguments>
+            <Result description="True if registration completed successfully, false otherwise." type="boolean"/>
+         </Method>
+      </Interface>
+      <Interface description="This interface is not used by any services in this SOADefinition." name="Registered Client">
+         <Method name="is-registered">
+            <Result type="boolean"/>
+         </Method>
+      </Interface>
+      <Interface name="Service">
+         <Method name="do-work">
+            <Arguments>
+               <Argument name="arg0" type="Object"/>
+               <Argument name="arg1" type="Object"/>
+            </Arguments>
+            <Result type="Object"/>
+         </Method>
+         <Method name="do-again"/>
+      </Interface>
+   </Interfaces>
+</SOADefinition>

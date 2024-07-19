@@ -1,0 +1,7 @@
+
+syntax: regexp
+^bin$
+syntax: regexp
+^build/build\.properties$
+syntax: regexp
+^env/(?!Development-MySQL\.connections$|JBoss\.server$|JBoss-MySQL\.environment$|UnitTest\.server$|UnitTest-MySQL\.connections$)[^/.]+\.(connections|server|environment)$

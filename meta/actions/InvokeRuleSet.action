@@ -1,0 +1,28 @@
+<Action caption="Invoke Ruleset" description="Invokes a ruleset" icon="gears" tooltip="Invokes a ruleset on an object instance." workflow="true">
+   <Arguments>
+      <Argument description="name of the ruleset to be invoked" name="rulesetName" type="string"/>
+      <Argument description="instance of the object that the ruleset is using as its entry point" name="objectInst" type="any"/>
+      <Argument description="attribute to calculate" name="calcAttribute" type="any"/>
+      <Argument description="result variable" name="result" type="any"/>
+      <Argument description="scheme expression to process the result of the ruleset" name="resultExpr" type="any"/>
+   </Arguments>
+   <Script><![CDATA[`(begin
+   (SysRulesEngine'invoke ,objectInst ,rulesetName ,calcAttribute)
+   ,@
+   (cond
+      ((or (null? result) (null? resultExpr))
+         '()
+      )
+      ((and (list? result) (eq? (car result) '@))
+         (list (append (expand-macro result) (list resultExpr)))
+      )
+      ((symbol? result)
+         `((set! ,result ,resultExpr))
+      )
+      (else
+         (error "Invalid result specification (expected (@ assoc1 ...) or variable name)")
+      )
+   )
+ )
+ ]]></Script>
+</Action>

@@ -1,0 +1,14 @@
+<Class description="UserGroupAssoc, an association class relating a user to a group.">
+   <Attributes>
+      <Attribute collection="false" name="user" readOnly="true" required="true" reverse="ugassocs" type="User"/>
+      <Attribute collection="false" name="group" readOnly="true" required="true" type="Group"/>
+   </Attributes>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.UGAssoc">
+         <AttributeMappings>
+            <AttributeMapping name="user" sourceKey="UGAssoc.FK1"/>
+            <AttributeMapping name="group" sourceKey="UGAssoc.FK2"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

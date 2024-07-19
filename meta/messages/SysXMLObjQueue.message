@@ -1,0 +1,34 @@
+<Message aggregation="sequential" format="XML" lax="true">
+   <XMLMapping node="ObjectQueue" type="element"/>
+   <Parts>
+      <Value name="name" type="string"/>
+      <Value name="class" type="string"/>
+      <Value maxCount="1" minCount="0" name="description" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value name="priority" type="integer">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value name="concurrency" type="integer">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value name="rate" type="double">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value name="timeout" type="long">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value name="send" type="boolean">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value name="receive" type="boolean">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value name="errorCount" type="integer">
+         <XMLMapping type="attribute"/>
+      </Value>
+      <Value name="errorQueue" type="string">
+         <XMLMapping type="attribute"/>
+      </Value>
+   </Parts>
+</Message>

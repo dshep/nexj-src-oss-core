@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+<rs:SubmitObjectsRequest xmlns = "urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" 
+	xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation = "urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0 http://www.oasis-open.org/committees/regrep/documents/2.1/schema/rim.xsd urn:oasis:names:tc:ebxml-regrep:registry:xsd:2.1 http://www.oasis-open.org/committees/regrep/documents/2.1/schema/rs.xsd" xmlns:rim = "urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0" 
+	xmlns:rs = "urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0">  
+
+	<LeafRegistryObjectList>
+                
+		<ExtrinsicObject id="urn:uuid:c96b4e97-0494-4d6e-a70e-cdecf40a02c1" 
+			objectType = "urn:uuid:4bec9843-2492-4119-82c9-ea680d98534c" 
+			mimeType="">                        
+
+			<Slot name="authorInstitution">
+				<ValueList>
+					<Value>Vancouver General Hospital</Value>
+				</ValueList>
+			</Slot>
+
+			<Slot name="authorPerson">
+				<ValueList>
+					<Value>83294982734^Rado^George^^^Dr^MD</Value>
+				</ValueList>
+			</Slot>         
+			
+			<Slot name="referringPerson">
+				<ValueList>
+					<Value>6523341324^Lee^Kathleen^^^Dr^MD</Value>
+				</ValueList>
+			</Slot>         
+
+			<Slot name="creationTime">
+				<ValueList>
+					<Value>2005-06-10 10:20:10</Value>
+				</ValueList>
+			</Slot>			    
+
+			<Slot name="encounter">
+				<ValueList>
+					<Value>Mammogram</Value>
+				</ValueList>
+			</Slot>			    
+			
+			<Classification classificationScheme="urn:uuid:41a5887f-8865-4c09-adf7-e362475b143a"
+				classifiedObject="urn:uuid:c96b4e97-0494-4d6e-a70e-cdecf40a02c1"
+				nodeRepresentation="18748-4">
+				<Name>
+					<LocalizedString value="Bilateral Mammogram"/>
+				</Name>
+			</Classification>
+			
+			<ExternalIdentifier identificationScheme="urn:uuid:58a6f841-87b3-4a3e-92fd-a8ffeff98427"
+				value="0123 456 789 KT^^^&amp;OHIP&amp;ISO">
+				<Name>
+					<LocalizedString value = "patientId"/>
+				</Name>
+			</ExternalIdentifier>
+
+			<ExternalIdentifier identificationScheme="urn:uuid:2e82c1f6-a085-4c72-9da3-8640a32e42ab"
+				value="1.2.840.113619.2.66.2158408118.16050010109110250.1.dcm">
+				<Name>
+					<LocalizedString value = "uniqueId"/>
+				</Name>
+			</ExternalIdentifier>
+
+		</ExtrinsicObject>        
+
+	</LeafRegistryObjectList>
+</rs:SubmitObjectsRequest>
+

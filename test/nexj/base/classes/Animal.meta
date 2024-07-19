@@ -1,0 +1,214 @@
+<Class aspects="LOCKING">
+   <Attributes>
+      <Attribute name="commonName" type="string"/>
+      <Attribute name="limbCount" type="integer" validation="(&gt;= value 0)"/>
+      <Attribute name="scientificName" type="string"/>
+      <Attribute initializer="0" name="updateMapping2Count" required="true" static="true" type="integer"/>
+      <Attribute initializer="0" name="objectKeyReadCount" required="true" static="true" type="integer"/>
+      <Attribute initializer="0" name="penAttrReadCount" required="true" static="true" type="integer"/>
+      <Attribute name="pen" reverse="animals" type="AnimalPen"/>
+      <Attribute collection="true" name="licenses" reverse="animal" type="DomesticAnimalLicense"/>
+      <Attribute collection="true" name="virtCollFromRelFK" reverse="relFKToVirtColl" type="PetOwner"/>
+      <Attribute name="chaserOf" reverse="chasedBy" type="Animal"/>
+      <Attribute name="chasedBy" reverse="chaserOf" type="Animal"/>
+      <Attribute name="fondOf" reverse="likedBy" type="Animal"/>
+      <Attribute name="likedBy" reverse="fondOf" type="Animal"/>
+      <Attribute name="virtFKToRelNone" type="PetOwner"/>
+      <Attribute name="virtAttrFromRelFK" reverse="relFKToVirtAttr" type="PetOwner"/>
+      <Attribute name="virtFKToRelAttr" reverse="relAttrFromVirtFK" type="PetOwner"/>
+      <Attribute name="virtAttrToRelFKNoAttr" type="PetOwner"/>
+      <Attribute name="virtFKToRelColl" reverse="relCollFromVirtFK" type="PetOwner"/>
+      <Attribute name="primitiveFK" type="binary"/>
+      <Attribute name="assocToPrimitiveFK" type="Animal"/>
+      <Attribute name="classCode" required="true" type="string" value="&quot;ANM&quot;"/>
+   </Attributes>
+   <Events>
+      <Event name="test" visibility="public">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(logger'debug "Test says \"commonName\" is" (@ commonName))]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+   <PersistenceMapping classCodeAttribute="classCode" dataSource="MemoryVirtualSource">
+      <ServiceMapping keyGenerator="KeyGenerator.GUIDGen">
+         <KeyParts>
+            <KeyPart type="binary"/>
+         </KeyParts>
+         <AttributeMappings>
+            <AttributeMapping name="commonName"/>
+            <AttributeMapping name="limbCount"/>
+            <AttributeMapping name="scientificName"/>
+            <AttributeMapping name="pen"/>
+            <AttributeMapping attributes="name issued expires" name="licenses"/>
+            <AttributeMapping destinationKey="PetOwner.FK_ANM1" name="virtCollFromRelFK" objectSourceKey="true"/>
+            <AttributeMapping name="chaserOf"/>
+            <AttributeMapping destinationKey="chaserOf" name="chasedBy" objectSourceKey="true"/>
+            <AttributeMapping attributes="commonName locking" name="fondOf"/>
+            <AttributeMapping destinationKey="fondOf" name="likedBy" objectSourceKey="true"/>
+            <AttributeMapping name="virtFKToRelNone"/>
+            <AttributeMapping destinationKey="PetOwner.FK_ANM3" name="virtAttrFromRelFK" objectSourceKey="true"/>
+            <AttributeMapping name="virtFKToRelAttr"/>
+            <AttributeMapping destinationKey="PetOwner.FK_ANM4" name="virtAttrToRelFKNoAttr" objectSourceKey="true"/>
+            <AttributeMapping name="virtFKToRelColl"/>
+            <AttributeMapping destinationKey="primitiveFK" name="assocToPrimitiveFK" objectSourceKey="true"/>
+            <AttributeMapping name="primitiveFK"/>
+            <AttributeMapping name="classCode"/>
+         </AttributeMappings>
+         <SortKeys>
+            <SortKey attributes="()" unique="true"/>
+            <SortKey attributes="commonName" unique="false"/>
+            <SortKey attributes="scientificName commonName" unique="false"/>
+            <SortKey attributes="commonName ()" unique="true"/>
+            <SortKey attributes="(commonName . #f) ()" unique="true"/>
+            <SortKey attributes="pen ()" unique="true"/>
+            <SortKey attributes="pen commonName" unique="false"/>
+            <SortKey attributes="limbCount commonName scientificName pen" unique="true"/>
+            <SortKey attributes="limbCount scientificName commonName pen" unique="true"/>
+         </SortKeys>
+         <ReadMapping>
+            <Case where="(= (@) ,key)">
+               <Read>
+                  <Script><![CDATA[(logger'debug "Animal.read:" class attributes where orderBy count offset xlock associations properties)
+(Animal'objectKeyReadCount (+ (Animal'objectKeyReadCount) 1))
+((AnimalStore'lookupByOID) key)]]></Script>
+               </Read>
+            </Case>
+            <Case where="(= (@) ,key2)">
+               <Read>
+                  <Script><![CDATA[(error "This script should never get executed!")
+]]></Script>
+               </Read>
+            </Case>
+            <Case where="(= (@ limbCount) ,key)">
+               <Read>
+                  <Script><![CDATA[(logger'debug "Animal.read" class attributes where orderBy count offset xlock associations properties)
+((AnimalStore'lookupManyByAttribute) 'limbCount key)]]></Script>
+               </Read>
+            </Case>
+            <Case where="(= (@ commonName) ,key)">
+               <Read>
+                  <Script><![CDATA[(logger'debug "Animal.read" class attributes where orderBy count offset xlock associations properties)
+((AnimalStore'lookupManyByAttribute) 'commonName key)]]></Script>
+               </Read>
+            </Case>
+            <Case where="(= (@ virtFKToRelColl) ,key)">
+               <Read>
+                  <Script><![CDATA[(logger'debug "Animal.read" class attributes where orderBy count offset xlock associations properties)
+((AnimalStore'lookupManyByAttribute) 'virtFKToRelColl key)]]></Script>
+               </Read>
+            </Case>
+            <Case where="()">
+               <Read>
+                  <Script><![CDATA[(logger'debug "Animal.read" class attributes where orderBy count offset xlock associations properties)
+
+(lambda (yield)
+   (for-each
+      (lambda (item)
+         (yield item)
+      )
+      (if (null? orderBy)
+         ((AnimalStore'getAll))
+         (vector-sort! ((AnimalStore'getAll)) (sort-by orderBy))
+      )
+   )
+)
+]]></Script>
+               </Read>
+               <Close>
+                  <Script><![CDATA[(logger'debug "Animal.read CLOSED")]]></Script>
+               </Close>
+            </Case>
+            <Case where="(in? (@ ,attr) ,@oids)">
+               <Read>
+                  <Script><![CDATA[(logger'debug "Animal.read(in?" attr "...)" class attributes where orderBy count offset xlock associations properties)
+(lambda (yield)
+   (for-each
+      (lambda (key)
+         (if (null? attr)
+            (begin
+               (Animal'objectKeyReadCount (+ (Animal'objectKeyReadCount) 1))
+               (yield ((AnimalStore'lookupByOID) key))
+            )
+            ; else:
+            (for-each
+               yield
+               ((AnimalStore'lookupManyByAttribute) attr key)
+            )
+         )
+      )
+      oids
+   )
+)
+]]></Script>
+               </Read>
+            </Case>
+            <Case where="(= (@ pen) ,key)">
+               <Read>
+                  <Script><![CDATA[(logger'debug "Animal.read" class attributes where orderBy count offset xlock associations properties)
+(Animal'penAttrReadCount (+ (Animal'penAttrReadCount) 1))
+((AnimalStore'lookupManyByAttribute) 'pen key)]]></Script>
+               </Read>
+            </Case>
+         </ReadMapping>
+         <CreateMapping>
+            <Script><![CDATA[((AnimalStore'create) this)]]></Script>
+         </CreateMapping>
+         <UpdateMapping>
+            <Case attributes="commonName scientificName pen">
+               <Script><![CDATA[
+(let
+   (
+      (result ((AnimalStore'updateByOID) (this':oid) this))
+   )
+   (unless result
+      (throw-optimistic-lock this)
+   )
+)
+]]></Script>
+            </Case>
+            <Case attributes="limbCount" batch="true">
+               <Script><![CDATA[
+(Animal'updateMapping2Count (+ (Animal'updateMapping2Count) 1))
+(for-each
+   (lambda (item)
+      (let
+         (
+            (result ((AnimalStore'updateByOID) (item':oid) item))
+         )
+         (unless result
+            (throw-optimistic-lock item)
+         )
+      )
+   )
+   this
+)
+]]></Script>
+            </Case>
+            <Case attributes="commonName scientificName limbCount chaserOf">
+               <Script><![CDATA[
+(let
+   (
+      (result ((AnimalStore'updateByOID) (this':oid) this))
+   )
+   (unless result
+      (throw-optimistic-lock this)
+   )
+)
+]]></Script>
+            </Case>
+         </UpdateMapping>
+         <DeleteMapping batch="true">
+            <Script><![CDATA[(logger'debug "Deleting all in" this)
+
+(for-each
+   (lambda (item)
+      (unless ((AnimalStore'deleteByOID) (item':oid) (item'locking))
+         (throw-optimistic-lock item)
+      )
+   )
+   this
+)]]></Script>
+         </DeleteMapping>
+      </ServiceMapping>
+   </PersistenceMapping>
+</Class>

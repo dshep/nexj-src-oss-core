@@ -1,0 +1,52 @@
+<ClassModelCollection>
+   <ClassModel class="RSSCategory" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/RSSCategory.meta" visibleAttributes="category" visibleEvents="" x="632" y="88"/>
+   <ClassModel class="RSSChannel" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/RSSChannel.meta" visibleAttributes="skipHours generator title skipMonday textInputDescription textInputName skipThursday docs link skipTuesday lastBuildDate managingEditor skipSunday ttl textInputLink copyright items skipFriday skipWednesday image pubDate skipSaturday textInputTitle webMaster description language" visibleEvents="" x="334" y="88">
+      <Association name="categories" srcAnchorAlignment="right" srcAnchorOffset="23"/>
+      <Association name="cloud" srcAnchorAlignment="left" srcAnchorOffset="10">
+         <Bendpoint x="277" y="135"/>
+      </Association>
+      <Association name="image" srcAnchorAlignment="left" srcAnchorOffset="131">
+         <Bendpoint x="254" y="271"/>
+      </Association>
+      <Association name="skipHours" srcAnchorAlignment="left" srcAnchorOffset="273"/>
+      <Association name="items" srcAnchorAlignment="right" srcAnchorOffset="135"/>
+   </ClassModel>
+   <ClassModel class="RSSCloud" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/RSSCloud.meta" visibleAttributes="path domain registerProcedure protocol port" visibleEvents="" x="66" y="88"/>
+   <ClassModel class="RSSItem" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/RSSItem.meta" visibleAttributes="sourceURL isPermalink pubDate description author link title comments guidValue channel" visibleEvents="" x="612" y="177">
+      <Association name="categories" srcAnchorAlignment="default" srcAnchorOffset="-1"/>
+      <Association name="enclosure" srcAnchorAlignment="bottom" srcAnchorOffset="62"/>
+   </ClassModel>
+   <ClassModel class="RSSImage" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/RSSImage.meta" visibleAttributes="url description link width title height" visibleEvents="" x="66" y="212"/>
+   <ClassModel class="RSSSkipHour" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/RSSSkipHour.meta" visibleAttributes="hour" visibleEvents="" x="66" y="342"/>
+   <ClassModel class="RSSEnclosure" hideAttributes="false" hideEvents="false" iFilePath="meta/classes/RSSEnclosure.meta" visibleAttributes="type url length" visibleEvents="" x="638" y="422"/>
+   <Notes>
+      <Note h="-1" w="150" x="-94" y="11">
+         <Text><![CDATA[Web Feed Model
+]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="-105" y="99">
+         <Attachments>
+            <Attachment ref="RSSCloud"/>
+         </Attachments>
+         <Text><![CDATA[Allows processes to register with a cloud to be notified of updates to the channel, implementing a lightweight publish-subscribe protocol for RSS feeds.]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="-43" y="438">
+         <Attachments>
+            <Attachment ref="RSSSkipHour"/>
+         </Attachments>
+         <Text><![CDATA[A hint for aggregators telling them which hours they can skip.]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="717" y="14">
+         <Attachments>
+            <Attachment ref="RSSCategory"/>
+         </Attachments>
+         <Text><![CDATA[Specify one or more categories that the channel belongs to. Follows the same rules as the <item>-level category element.]]></Text>
+      </Note>
+      <Note h="-1" w="150" x="446" y="489">
+         <Attachments>
+            <Attachment ref="RSSEnclosure"/>
+         </Attachments>
+         <Text><![CDATA[Describes a media object that is attached to the item.]]></Text>
+      </Note>
+   </Notes>
+</ClassModelCollection>

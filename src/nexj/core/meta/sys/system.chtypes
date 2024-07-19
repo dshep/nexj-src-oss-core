@@ -1,0 +1,44 @@
+<ChannelTypes>
+   <ChannelType name="HTTP" element="HTTP"
+      loader="nexj.core.meta.integration.channel.http.XMLHTTPMetadataLoader"
+      exporter="nexj.core.meta.integration.channel.http.XMLHTTPMetadataExporter"
+      sender="nexj.core.rpc.http.HTTPAdapter"
+      receiver="nexj.core.rpc.http.HTTPAdapter"
+      description="HTTP client/server"/>
+   <ChannelType name="Mail" element="Mail"
+      loader="nexj.core.meta.integration.channel.mail.XMLMailMetadataLoader"
+      exporter="nexj.core.meta.integration.channel.mail.XMLMailMetadataExporter"
+      sender="nexj.core.rpc.mail.MailSender"
+      receiver="nexj.core.rpc.mail.MailReceiver"
+      description="Mail client"/>
+   <ChannelType name="MessageQueue" element="MessageQueue"
+      loader="nexj.core.meta.integration.channel.jms.XMLMessageQueueMetadataLoader"
+      exporter="nexj.core.meta.integration.channel.jms.XMLMessageQueueMetadataExporter"
+      sender="nexj.core.rpc.jms.JMSSender"
+      receiver="nexj.core.rpc.jms.JMSReceiver"
+      description="Message queue"/>
+   <ChannelType name="UDP" element="UDP"
+      loader="nexj.core.meta.integration.channel.udp.XMLUDPMetadataLoader"
+      exporter="nexj.core.meta.integration.channel.udp.XMLUDPMetadataExporter"
+      sender="nexj.core.rpc.udp.UDPSender"
+      receiver="nexj.core.rpc.udp.UDPReceiver"
+      description="UDP client/server"/>
+   <ChannelType name="TCP" element="TCP"
+      loader="nexj.core.meta.integration.channel.tcp.XMLTCPMetadataLoader"
+      exporter="nexj.core.meta.integration.channel.tcp.XMLTCPMetadataExporter"
+      sender="nexj.core.rpc.tcp.TCPSender"
+      receiver="nexj.core.rpc.tcp.TCPReceiver"
+      description="TCP client/server"/>
+   <ChannelType name="File" element="File"
+      loader="nexj.core.meta.integration.channel.file.XMLFileChannelMetadataLoader"
+      exporter="nexj.core.meta.integration.channel.file.XMLFileChannelMetadataExporter"
+      sender="nexj.core.rpc.file.FileSender"
+      receiver="nexj.core.rpc.file.FileReceiver"
+      description="Send and receive messages to files"/>
+   <ChannelType name="ObjectQueue" element="ObjectQueue"
+      loader="nexj.core.meta.integration.channel.queueing.XMLObjectQueueMetadataLoader"
+      exporter="nexj.core.meta.integration.channel.queueing.XMLObjectQueueMetadataExporter"
+      receiver="nexj.core.rpc.queueing.ObjectReceiver"
+      sender="nexj.core.rpc.queueing.ObjectSender"
+      description="Object queue"/>
+</ChannelTypes>

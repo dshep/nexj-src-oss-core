@@ -1,0 +1,31 @@
+<UnitTest dump="UnitTest" mode="dirty">
+   <TestCase description="Create a new &quot;DebugConfig&quot; privilege group and apply it to nexjsa" name="debugConfig"><![CDATA[(define nexjsaUser (User'getUser "nexjsa"))
+
+; Create privilege group
+(define debugConfig (UserGroup'new (: name "DebugConfig")))
+
+; Assign privileges to the new group
+(for-each
+   (lambda (privilege)
+      (UserGroupPrivilegeLink'new
+         (: userGroup debugConfig)
+         (: privilege privilege)
+      )
+   )
+   '("Debug" "DebugEval")
+)
+
+(UserGroupLink'new 
+   (: user nexjsaUser)
+   (: userGroup debugConfig)
+)
+(commit)
+
+; Test the user's privilege configuration
+(begin-switch-user "nexjsa"      ; start a new invocation context, reloads privileges
+   (assert-eq #t (in-privilege? "UserCreate"))  ; nexjsa is in gCoreAdmin which has UserCreate
+   (assert-eq #t (in-privilege? "Debug"))
+   (assert-eq #t (in-privilege? "DebugEval"))
+)
+]]></TestCase>
+</UnitTest>

@@ -1,0 +1,29 @@
+<SOADefinition name="nexj:test:FaultReferenceToType">
+   <Service>
+      <Interfaces>
+         <Interface default="true" ref="Test"/>
+      </Interfaces>
+   </Service>
+   <Interfaces>
+      <Interface name="Test">
+         <Method name="test">
+            <Arguments>
+               <Argument collection="false" name="arg1" type="sys:string"/>
+            </Arguments>
+            <Faults>
+               <Fault type="NotAFault"/>
+            </Faults>
+         </Method>
+      </Interface>
+   </Interfaces>
+   <Types>
+      <Type name="NotAFault">
+         <Attributes>
+            <Attribute name="data" type="string"/>
+         </Attributes>
+      </Type>
+   </Types>
+   <Bindings>
+      <Binding protocol="trpc"/>
+   </Bindings>
+</SOADefinition>

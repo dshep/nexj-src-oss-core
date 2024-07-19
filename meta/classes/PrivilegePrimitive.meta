@@ -1,0 +1,6 @@
+<Class base="Privilege" description="Atomic Privilege Primitives">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;P&quot;"/>
+      <Attribute name="icon" type="string"/>
+   </Attributes>
+</Class>

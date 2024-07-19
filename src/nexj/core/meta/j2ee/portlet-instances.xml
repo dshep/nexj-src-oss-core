@@ -1,0 +1,11 @@
+<?xml version="1.0" standalone="yes"?>
+<!-- Copyright 2010 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+
+<deployments>
+   ${ifenterprise:
+      ${if:wsrp.enabled:
+         ${portlet-instances}
+      }
+   }
+</deployments>
+   

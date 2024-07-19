@@ -1,0 +1,2060 @@
+<!-- Copyright 2010-2011 NexJ Systems Inc. This software is licensed under the terms of the Eclipse Public License 1.0 -->
+<project name="core" basedir="." default="app.ear">
+   <condition property="build.properties.file" value="build.properties" else="../../build.properties">
+      <available file="build.properties"/>
+   </condition>
+   <property file="${build.properties.file}"/>
+
+   <property name="build.core" value="false"/>
+   <property name="project" value="core"/>
+   <property name="bus.name" value="nexj"/>
+   <property name="base.jar" value=""/>
+
+   <property name="product" value="nexj"/>
+   <property name="jboss.memory" value="512M"/>
+
+   <property name="activemq.version" value="5.4.2"/>
+   <property name="eclipse.version" value="3.7.0"/>
+   <property name="eclipse.launcher.version" value="1.2.0.v20110502"/>
+   <property name="eclipse.launcher.lib.version" value="1.1.100.v20110502"/>
+   <property name="ejb.version" value="2.1"/>
+   <property name="jaf.version" value="1.0.2"/>
+   <property name="javamail.version" value="1.2"/>
+   <property name="jboss.version" value="5.1.0.GA"/>
+   <property name="jbossportal.version" value="2.4.1"/>
+   <property name="jca.version" value="1.5"/>
+   <property name="jcommon.version" value="1.0.16"/>
+   <property name="jms.version" value="1.1"/>
+   <property name="jmx.version" value="1_0"/>
+   <property name="jta.version" value="1_1"/>
+   <property name="junit.version" value="3.8.1"/>
+   <property name="log4j.version" value="1.2.14"/>
+   <property name="mysql-connector.version" value="5.1.7"/>
+   <property name="portlet.version" value="1_0"/>
+   <property name="postgresql.jdbc.version" value="9.1-901"/>
+   <property name="tomcat.version" value="6.0.33-1"/>
+   <property name="xalan.version" value="2_7_1"/>
+   <property name="xerces.version" value="2_11_0"/>
+
+   <property name="app.descriptors" value="jboss-app.xml,ibm-application-bnd.xmi,ibm-application-ext.xmi,was.policy,
+      ibmconfig/cells/defaultCell/applications/defaultApp/deployments/defaultApp/deployment.xml"/>
+   <property name="web.descriptors" value="context.xml,jboss-web.xml,ibm-web-bnd.xmi,ibm-web-ext.xmi,portlet.xml,portlet-instances.xml"/>
+   <property name="web.cert.descriptors" value="context.xml,jboss-web.xml"/>
+   <property name="web.anon.descriptors" value="context.xml,jboss-web.xml,ibm-web-ext.xmi"/>
+   <property name="web.form.descriptors" value="context.xml,jboss-web.xml,ibm-web-ext.xmi"/>
+   <property name="ejb.descriptors" value="ejb-jar.xml,jboss.xml,ibm-ejb-jar-bnd.xmi,ibm-ejb-jar-ext.xmi,teee.xml"/>
+
+   <property name="/" value="${file.separator}"/>
+   <property name=":" value="${path.separator}"/>
+   <property name=";" value="${line.separator}"/>
+
+   <property name="scheme.classes" value="**/meta/ArgumentTypeMismatchException.*,
+      **/meta/AttributeTypeMismatchException.*,
+      **/meta/BinaryFunction.*,
+      **/meta/ContextMetadata.*, 
+      **/meta/Documented.*,
+      **/meta/DocumentedNamedMetadataObject.*,
+      **/meta/GenericType.*,
+      **/meta/MetadataCompoundValidationException.*, 
+      **/meta/MetadataException.*, 
+      **/meta/MetadataLookupException.*,
+      **/meta/MetadataMarker.*, 
+      **/meta/MetadataObject.*, 
+      **/meta/MetadataValidationException.*, 
+      **/meta/NamedMetadataObject.*,
+      **/meta/Primitive.*,
+      **/meta/PrimitivePrivilege.*, 
+      **/meta/Privilege.*, 
+      **/meta/PrivilegeSet.*, 
+      **/meta/ResultTypeMismatchException.*,
+      **/meta/Type.*, 
+      **/meta/TypeConversionException.*, 
+      **/meta/TypeMismatchException.*, 
+      **/meta/Typed.*, 
+      **/meta/UnaryFunction.*,
+      **/monitoring/Counter.*,
+      **/monitoring/Statistic.*,
+      **/monitoring/ThreadLocalCounter.*,
+      **/persistence/OID.*, 
+      **/persistence/OIDHolder.*,
+      **/runtime/Context.*, 
+      **/runtime/MinimalContext.*, 
+      **/runtime/SecurityViolationException.*, 
+      **/runtime/ThreadContextHolder.*, 
+      **/rpc/TransferObject.*, 
+      **/scripting/Comment.*, 
+      **/scripting/Compiler.*, 
+      **/scripting/CompilerException.*, 
+      **/scripting/ConstPair.*,  
+      **/scripting/EnumSet.*,
+      **/scripting/EqHashHolder.*,
+      **/scripting/EqHashTab.*,
+      **/scripting/EqualHashHolder.*,
+      **/scripting/EqualHashTab.*,
+      **/scripting/EqvHashHolder.*,
+      **/scripting/EqvHashTab.*,
+      **/scripting/FrameAware.*, 
+      **/scripting/FormattingWriter.*,
+      **/scripting/Function.*, 
+      **/scripting/GenericParser.*, 
+      **/scripting/GenericPropertyMap.*,
+      **/scripting/GlobalEnvironment.*, 
+      **/scripting/HashFunctionHolder.*,
+      **/scripting/ImmutableHolder.*,
+      **/scripting/ImmutableLookup.*,
+      **/scripting/ImmutableMap.*,
+      **/scripting/ImmutableSet.*,
+      **/scripting/Intrinsic.*, 
+      **/scripting/IntrinsicFunction.*, 
+      **/scripting/JavaConstructor.*, 
+      **/scripting/JavaMethod.*, 
+      **/scripting/JavaMethodHolder.*, 
+      **/scripting/Machine.*, 
+      **/scripting/Macro.*, 
+      **/scripting/PCodeFunction.*, 
+      **/scripting/PCodeMacro.*, 
+      **/scripting/Pair.*, 
+      **/scripting/Parser.*, 
+      **/scripting/ParserError.*, 
+      **/scripting/ParserException.*, 
+      **/scripting/PCodeHolder.*, 
+      **/scripting/PrettyWriter.*,
+      **/scripting/ReadOnlyException.*,
+      **/scripting/SchemeParser.*, 
+      **/scripting/ScriptedPropertyHolder.*,
+      **/scripting/ScriptingError.*, 
+      **/scripting/ScriptingException.*, 
+      **/scripting/ScriptingHashHolder.*,
+      **/scripting/ScriptingHashTab.*, 
+      **/scripting/SourceLocator.*, 
+      **/scripting/Symbol.*, 
+      **/scripting/match/ExpressionParser.*, 
+      **/scripting/match/MatchNode.*, 
+      **/scripting/object/*.*,
+      **/scripting/syntax/*.*,
+      **/tools/ContextREPL.*, 
+      **/tools/GenericREPL.*, 
+      **/tools/GenericTool.*, 
+      **/tools/MinimalREPL.*, 
+      **/util/ArrayIterator.*, 
+      **/util/Base64Exception.*, 
+      **/util/Base64Util.*, 
+      **/util/Binary.*, 
+      **/util/BinaryUtil.*, 
+      **/util/Cancellable.*,
+      **/util/Captioned.*, 
+      **/util/CheckedException.*, 
+      **/util/ClassProperty.*,
+      **/util/DetachableByteArrayOutputStream.*,
+      **/util/Deque.*,
+      **/util/Ditto.*, 
+      **/util/DuplicateItemException.*,
+      **/util/EmptyIterator.*, 
+      **/util/ErrorCode.*, 
+      **/util/ExceptionHolder.*, 
+      **/util/Executable.*,
+      **/util/GenericCollection.*, 
+      **/util/GenericException.*, 
+      **/util/GenericHashDeque.*,
+      **/util/GenericHashHolder.*, 
+      **/util/GenericHashTab.*, 
+      **/util/GenericHashTab2D.*, 
+      **/util/GenericLinkedHashTab.*, 
+      **/util/HashDeque.*,
+      **/util/HashHolder.*, 
+      **/util/HashTab.*, 
+      **/util/HashTab2D.*, 
+      **/util/Heap.*,
+      **/util/Holder.*, 
+      **/util/HolderDeque.*,
+      **/util/IOUtil.*, 
+      **/util/IdentityHashHolder.*, 
+      **/util/IdentityHashTab.*, 
+      **/util/Invalid.*,
+      **/util/Iteratable.*, 
+      **/util/LimitWriter.*, 
+      **/util/LinkedHashTab.*,
+      **/util/LocaleUtil.*,
+      **/util/Localization.*, 
+      **/util/Logger.*, 
+      **/util/LoggerHolder.*, 
+      **/util/Lookup.*, 
+      **/util/Lookup2D.*,
+      **/util/LookupDeque.*,
+      **/util/LookupException.*, 
+      **/util/MathUtil.*, 
+      **/util/MultiMap.*,
+      **/util/Named.*, 
+      **/util/Null.*,
+      **/util/NullableHashHolder.*,
+      **/util/NullableHashTab.*,
+      **/util/ObjUtil.*, 
+      **/util/PrintWriter.*, 
+      **/util/Printable.*, 
+      **/util/ProgressListener.*,
+      **/util/PropertyHashTab.*,
+      **/util/PropertyIterator.*, 
+      **/util/PropertyMap.*, 
+      **/util/PropertyUtil.*,
+      **/util/RandUtil.*, 
+      **/util/SingletonIterator.*, 
+      **/util/SoftHashTab.*, 
+      **/util/SoftHashTab2D.*, 
+      **/util/Sortable.*, 
+      **/util/StackTrace.*, 
+      **/util/StringId.*, 
+      **/util/StringTable.*, 
+      **/util/StringUtil.*, 
+      **/util/SubstReader.*, 
+      **/util/SysUtil.*, 
+      **/util/TZ.*, 
+      **/util/TextPosition.*, 
+      **/util/TextPositionHolder.*, 
+      **/util/TextPositionReader.*, 
+      **/util/URIUtil.*, 
+      **/util/URLUtil.*, 
+      **/util/UncheckedException.*, 
+      **/util/Undefined.*, 
+      **/util/WeakHashHolder.*,
+      **/util/WrapperException.*, 
+      **/util/XMLException.*,
+      **/util/XMLParserException.*,
+      **/util/auth/SimplePrincipal.*, 
+      **/util/log/LoggerFactory.*, 
+      **/util/log/LoggerFactory.*, 
+      **/util/log/j2se/FatalLevel.*, 
+      **/util/log/j2se/J2SELogger.*, 
+      **/util/log/j2se/J2SELoggerFactory.*,
+      **/version/Version.*"/>
+
+   <condition property="init.3rd.skip">
+      <not>
+         <isset property="3rd.dir"/>
+      </not>
+   </condition>
+
+   <condition property="init.plugin.skip">
+      <isset property="3rd.dir"/>
+   </condition>
+
+   <condition property="micro.debug.clean.skip">
+      <istrue value="${micro.debug}"/>
+   </condition>
+
+   <condition property="upgrade.skip">
+      <not><istrue value="${automatic.upgrade}"/></not>
+   </condition>
+
+   <target name="init.3rd" depends="3rd.setup,init.3rd.base,init.3rd.enterprise" unless="init.3rd.skip">
+      <property name="init.3rd.skip" value="true"/>
+   </target>
+
+   <target name="3rd.setup"/>
+   <target name="init.3rd.enterprise"/>
+
+   <target name="init.3rd.base" unless="init.3rd.skip">
+      <available property="3rd.dir.exists" file="${3rd.dir}" type="dir"/>
+      <fail unless="3rd.dir.exists" message="${3rd.dir} does not exist (3rd.dir)"/>
+      <echo message="3rd.dir = ${3rd.dir}"/>
+
+      <property name="activemq.dir" location="${3rd.dir}/apache-activemq-${activemq.version}"/>
+      <property name="eclipse.dir" location="${3rd.dir}/eclipse-${eclipse.version}"/>
+      <property name="j2ee.ejb.dir" location="${3rd.dir}/ejb-${ejb.version}-api"/>
+      <property name="j2ee.jaf.dir" location="${3rd.dir}/jaf-${jaf.version}"/>  
+      <property name="j2ee.javamail.dir" location="${3rd.dir}/javamail-${javamail.version}"/>
+      <property name="j2ee.jca.dir" location="${3rd.dir}/jca-${jca.version}"/>
+      <property name="j2ee.jms.dir" location="${3rd.dir}/jms${jms.version}"/>
+      <property name="j2ee.jta.dir" location="${3rd.dir}/jta-${jta.version}"/>
+      <property name="j2ee.management.dir" location="${3rd.dir}/j2ee_management-${jmx.version}-fr"/>
+      <property name="j2ee.portlet.dir" location="${3rd.dir}/portlet${portlet.version}"/> 
+      <property name="jboss.dir" location="${3rd.dir}/jboss-${jboss.version}"/>
+      <available property="jboss.dir.exists" file="${jboss.dir}" type="dir"/>
+      <fail unless="jboss.dir.exists" message="JBoss does not exist in ${jboss.dir}"/>
+      <property name="junit.dir" location="${3rd.dir}/junit${junit.version}"/>
+      <property name="log4j.dir" location="${3rd.dir}/logging-log4j-${log4j.version}"/>
+      <property name="mysql.dir" location="${3rd.dir}/mysql-connector-java-${mysql-connector.version}"/>
+      <property name="postgresql.dir" location="${3rd.dir}/postgresql-jdbc"/>
+      <property name="tomcat.dir" location="${3rd.dir}/apache-tomcat-${tomcat.version}"/>
+      <property name="xerces.dir" location="${3rd.dir}/xerces-${xerces.version}"/>
+      <property name="xalan.dir" location="${3rd.dir}/xalan-j_${xalan.version}"/>
+
+      <property name="activemq.lib.dir" location="${activemq.dir}/lib"/>      
+      <property name="ant.lib.dir" location="${ant.home}/lib"/>
+      <property name="boot.lib.dir" location="${3rd.dir}"/>
+
+      <property name="j2ee.ejb.lib.dir" location="${j2ee.ejb.dir}"/>
+      <available property="ejb.exists" file="ejb-2_1-api.jar" filepath="${j2ee.ejb.lib.dir}" type="file"/>
+      <fail unless="ejb.exists" message="EJB ${ejb.version} does not exist in ${j2ee.ejb.dir}"/>
+
+      <property name="j2ee.jaf.lib.dir" location="${j2ee.jaf.dir}"/>
+      <available property="jaf.exists" file="activation.jar" filepath="${j2ee.jaf.lib.dir}" type="file"/>
+      <fail unless="jaf.exists" message="JAF ${jaf.version} does not exist in ${j2ee.jaf.dir}"/>
+
+      <property name="j2ee.javamail.lib.dir" location="${j2ee.javamail.dir}"/>
+      <available property="javamail.exists" file="mail.jar" filepath="${j2ee.javamail.lib.dir}" type="file"/>
+      <fail unless="javamail.exists" message="Java Mail ${javamail.version} does not exist in ${j2ee.javamail.dir}"/>
+
+      <property name="j2ee.jca.lib.dir" location="${j2ee.jca.dir}"/>
+      <available property="jca.exists" file="connector-api.jar" filepath="${j2ee.jca.lib.dir}" type="file"/>
+      <fail unless="jca.exists" message="JCA ${jca.version} does not exist in ${j2ee.jca.dir}"/>
+
+      <property name="j2ee.jms.lib.dir" location="${j2ee.jms.dir}/lib"/>
+      <available property="jms.exists" file="jms.jar" filepath="${j2ee.jms.lib.dir}" type="file"/>
+      <fail unless="jms.exists" message="JMS ${jms.version} does not exist in ${j2ee.jms.dir}"/>
+
+      <property name="j2ee.jta.lib.dir" location="${j2ee.jta.dir}"/>
+      <available property="jta.exists" file="jta-1_1-classes.zip" filepath="${j2ee.jta.lib.dir}" type="file"/>
+      <fail unless="jta.exists" message="JTA ${jta.version} does not exist in ${j2ee.jta.dir}"/>
+
+      <property name="j2ee.management.lib.dir" location="${j2ee.management.dir}"/>
+      <property name="j2ee.portlet.lib.dir" location="${j2ee.portlet.dir}/lib"/>
+      <property name="jboss.lib.dir" location="${jboss.dir}/server/all/lib"/>
+
+      <property name="junit.lib.dir" location="${junit.dir}"/>
+      <available property="junit.exists" file="junit.jar" filepath="${junit.lib.dir}" type="file"/>
+      <fail unless="junit.exists" message="JUnit ${junit.version} does not exist in ${junit.dir}"/>
+
+      <property name="log4j.lib.dir" location="${log4j.dir}/dist/lib"/>
+      <available property="log4j.exists" file="log4j-${log4j.version}.jar" filepath="${log4j.lib.dir}" type="file"/>
+      <fail unless="log4j.exists" message="Apache Log4J ${log4j.version} does not exist in ${log4j.dir}"/>
+
+      <property name="tomcat.lib.dir" location="${tomcat.dir}/lib"/>
+      <available property="tomcat.exists" file="servlet-api.jar" filepath="${tomcat.lib.dir}" type="file"/>
+      <fail unless="tomcat.exists" message="Apache Tomcat ${tomcat.version} does not exist in ${tomcat.dir}"/>
+
+      <property name="xerces.lib.dir" location="${xerces.dir}"/>
+      <available property="xerces.exists" file="xercesImpl.jar" filepath="${xerces.lib.dir}" type="file"/>
+      <fail unless="xerces.exists" message="Apache Xerces ${xerces.version} does not exist in ${xerces.dir}"/>
+
+      <property name="xalan.lib.dir" location="${xalan.dir}"/>
+      <condition property="xalan.exists">
+          <and>
+            <available file="xalan.jar" filepath="${xalan.lib.dir}"/>
+            <available file="serializer.jar" filepath="${xalan.lib.dir}"/>
+          </and>
+      </condition>
+      <fail unless="xalan.exists" message="Apache Xalan ${xalan.version} does not exist in ${xalan.dir}"/>
+   </target>
+   
+
+   <target name="init.ant" depends="init.3rd,init.dir" unless="core.jar.skip">
+      <mkdir dir="${core.class.dir}"/>
+      <javac debug="true" optimize="true" source="1.4" target="1.5"
+         destdir="${core.class.dir}" srcdir="${core.src.dir}/src" sourcepath="" includeAntRuntime="true">
+         <classpath>
+            <pathelement location="${xerces.lib.dir}/xercesImpl.jar"/>
+            <pathelement location="${log4j.lib.dir}/log4j-${log4j.version}.jar"/>
+            <pathelement location="${ant.lib.dir}/ant.jar"/>
+         </classpath>
+         <include name="${product}/core/build/VersionFilter.java"/>
+         <include name="${product}/core/build/XMLPropertyDecryptor.java"/>
+         <include name="${product}/core/version/**"/>
+         <include name="${product}/core/util/**"/>
+         <exclude name="${product}/core/util/HTTPClient*.*"/>
+         <exclude name="**/micro/**"/>
+         <exclude name="**/pool/**"/>
+      </javac>
+   </target>
+
+   <target name="init.plugin" depends="init.plugin.base,init.plugin.enterprise" unless="init.plugin.skip">
+      <property name="init.plugin.skip" value="true"/>
+   </target>
+   
+   <target name="init.plugin.enterprise"/>
+   
+   <target name="init.plugin.base" unless="init.plugin.skip">
+      <fail unless="plugin.dir" message="3rd.dir is undefined"/>
+      <property name="eclipse.dir" location="${plugin.dir}/../.."/>
+      <condition property="jre.dir" value="${java.home}" else="${java.home}${/}jre">
+         <not>
+            <available file="${java.home}${/}jre" type="dir"/>
+         </not>
+      </condition>
+      <property name="activemq.lib.dir" location="${plugin.dir}"/>
+      <property name="ant.lib.dir" location="${ant.home}/lib"/>
+      <property name="boot.lib.dir" location="${plugin.dir}"/>
+      <property name="j2ee.ejb.lib.dir" location="${plugin.dir}"/>
+      <property name="j2ee.portlet.lib.dir" location="${plugin.dir}"/>
+      <property name="j2ee.jaf.lib.dir" location="${plugin.dir}"/>
+      <property name="j2ee.javamail.lib.dir" location="${plugin.dir}"/>
+      <property name="j2ee.jca.lib.dir" location="${plugin.dir}"/>
+      <property name="j2ee.jms.lib.dir" location="${plugin.dir}"/>
+      <property name="j2ee.jta.lib.dir" location="${plugin.dir}"/>
+      <property name="j2ee.management.lib.dir" location="${plugin.dir}"/>
+      <property name="junit.lib.dir" location="${eclipse.dir}/plugins/org.junit_3.8.1"/>
+      <property name="log4j.lib.dir" location="${plugin.dir}"/>
+      <property name="mysql.dir" location="${plugin.dir}/ext"/>
+      <property name="tomcat.lib.dir" location="${plugin.dir}"/>
+      <property name="xerces.lib.dir" location="${plugin.dir}"/>
+      <property name="xalan.lib.dir" location="${plugin.dir}"/>
+   </target>
+
+   <target name="init" depends="init.3rd,init.plugin,init.base,init.enterprise" unless="initialized">
+      <property name="enterprise.jar.dir" location="${empty.dir}"/>
+
+      <path id="core.lib.path">
+         <pathelement location="${xerces.lib.dir}/xercesImpl.jar"/>
+         <pathelement location="${xerces.lib.dir}/xml-apis.jar"/>
+         <pathelement location="${xalan.lib.dir}/xalan.jar"/>
+         <pathelement location="${xalan.lib.dir}/serializer.jar"/>
+         <pathelement location="${log4j.lib.dir}/log4j-${log4j.version}.jar"/>
+         <pathelement location="${ant.lib.dir}/ant.jar"/>
+         <pathelement location="${jboss.lib.dir}/jbosssx.jar"/>        <!-- JBoss 4 -->
+         <pathelement location="${jboss.dir}/common/lib/jbosssx.jar"/> <!-- JBoss 5 -->
+         <pathelement location="${jboss.dir}/lib/jboss-j2se.jar"/>     <!-- JBoss 5 -->
+         <pathelement location="${jboss.dir}/common/lib/jbossjts.jar"/> <!-- JBoss 5 -->
+         <pathelement location="${jboss.dir}/common/lib/jbossjts-integration.jar"/>  <!-- JBoss 5 -->
+         <pathelement location="${jboss.dir}/lib/jboss-jmx.jar"/>
+         <pathelement location="${j2ee.portlet.lib.dir}/portlet.jar"/>
+         <pathelement location="${j2ee.jms.lib.dir}/jms.jar"/>
+         <pathelement location="${j2ee.ejb.lib.dir}/ejb-2_1-api.jar"/>
+         <pathelement location="${j2ee.jaf.lib.dir}/activation.jar"/>
+         <pathelement location="${j2ee.javamail.lib.dir}/mail.jar"/>
+         <pathelement location="${j2ee.jca.lib.dir}/connector-api.jar"/>
+         <pathelement location="${j2ee.jta.lib.dir}/jta-1_1-classes.zip"/>
+         <pathelement location="${tomcat.lib.dir}/servlet-api.jar"/>
+         <pathelement location="${activemq.lib.dir}/activemq-core-${activemq.version}.jar"/>
+         <pathelement location="${mysql.dir}/mysql-connector-java-${mysql-connector.version}-bin.jar"/>
+         <pathelement location="${postgresql.dir}/postgresql-${postgresql.jdbc.version}.jdbc3.jar"/>
+         <path refid="enterprise.lib.path"/>
+         <fileset dir="${eclipse.dir}">
+            <include name="plugins/com.jcraft.jsch_*.jar"/>
+         </fileset>
+      </path>
+
+      <property name="initialized" value="true"/>
+   </target>
+   
+   <target name="init.enterprise">
+      <path id="enterprise.lib.path"/>
+      <path id="enterprise.lib.files"/>
+      <filelist id="enterprise.jar.files"/>
+   </target>
+
+   <target name="init.dir" unless="initialized">
+      <condition property="jvm.type" value="-server">
+         <contains string="${java.vm.name}" substring="HotSpot"/>
+      </condition>
+      <property name="jvm.type" value="-classic"/>
+
+      <condition property="tmp.project">
+         <equals arg1=".tmp" arg2="${project}"/>
+      </condition>
+
+      <condition property="src.dir" value=".">
+         <isset property="tmp.project"/>
+      </condition>
+
+      <fail unless="src.dir" message="src.dir is undefined"/>
+      <fail unless="out.dir" message="out.dir is undefined"/>
+
+      <available property="src.dir.exists" file="${src.dir}" type="dir"/>
+      <fail unless="src.dir.exists" message="${src.dir} does not exist (src.dir)"/>
+
+      <property name="jboss.lib.dir" location="${jboss.dir}/server/all/lib"/>
+      <property name="profiler.lib.dir" location="${eclipse.dir}/plugins/ru.nlmk.eclipse.plugins.profiler"/>
+      <property name="tomcat.lib.dir" location="${tomcat.dir}/lib"/>
+
+      <property name="class.dir" location="${out.dir}/classes"/>
+      <property name="deploy.dir" location="${out.dir}/deploy"/>
+      <property name="buildnum.dir" location="${out.dir}/buildnum"/>
+      <property name="empty.dir" location="${out.dir}/empty"/>
+      
+      <condition property="jre.dir" value="${java.home}" else="${java.home}${/}jre">
+         <not>
+            <available file="${java.home}${/}jre" type="dir"/>
+         </not>
+      </condition>
+
+      <path id="boot.lib.path">
+         <fileset dir="${boot.lib.dir}" includes="endorsed/*.jar,endorsed/*.zip"/>
+         <pathelement path="${sun.boot.class.path}"/>
+      </path>
+
+      <path id="app.lib.path">
+         <pathelement path="${app.lib.path}"/>
+      </path>
+
+      <condition property="plugin.dir.exists">
+         <or>
+            <istrue value="${build.core}"/>
+            <available file="${plugin.dir}" type="dir"/>
+         </or>
+      </condition>
+      <fail unless="plugin.dir.exists" message="${plugin.dir} does not exist (plugin.dir) - please install the ${product} plugin or enable the core build"/>
+
+      <condition property="core.jar.skip">
+         <isfalse value="${build.core}"/>
+      </condition>
+
+      <condition property="core.config.dir" value="${plugin.dir}/build" else="${src.dir}/core/build">
+         <isset property="plugin.dir"/>
+      </condition>
+
+      <condition property="core.src.dir" value="${plugin.dir}/core">
+         <isset property="plugin.dir"/>
+      </condition>
+      <property name="core.src.dir" location="${src.dir}/core"/>
+
+      <condition property="enterprise.src.dir" value="${plugin.dir}/enterprise">
+         <isset property="core.jar.skip"/>
+      </condition>
+      <property name="enterprise.src.dir" location="${src.dir}/enterprise"/>
+
+      <condition property="core.jar.dir" value="${plugin.dir}">
+         <isset property="core.jar.skip"/>
+      </condition>
+      <property name="core.jar.dir" location="${deploy.dir}/core"/>
+
+      <available property="core.src.dir.exists" file="${core.src.dir}" type="dir"/>
+      <fail unless="core.src.dir.exists" message="${core.src.dir} does not exist (core.src.dir)"/>
+
+      <property name="core.class.dir" location="${class.dir}/core"/>
+      <property name="enterprise.class.dir" location="${class.dir}/enterprise"/>
+   </target>
+
+   <target name="init.base" depends="init.dir" unless="initialized">
+      <property name="server" location="${core.src.dir}/etc/config/server/nexj/default.config"/>
+      <property name="connections" location="${server}"/>
+
+      <basename property="server.base" file="${server}"/>
+      <basename property="connections.base" file="${connections}"/>
+
+      <antcall target="init.ant"/>
+      <condition property="init.xmldecrypt.path"
+         value="${plugin.dir}${/}${product}-build.jar${:}
+            ${plugin.dir}${/}${product}-enterprise.jar${:}
+            ${plugin.dir}${/}${product}-scheme.jar${:}
+            ${plugin.dir}${/}${product}-server.jar${:}
+            ${xerces.lib.dir}${/}xercesImpl.jar${:}
+            ${xerces.lib.dir}${/}xml-apis.jar${:}
+            ${xalan.lib.dir}${/}xalan.jar${:}
+            ${xalan.lib.dir}${/}serializer.jar${:}
+            ${plugin.dir}${/}core${/}etc${/}config${/}server${/}"
+         else="${enterprise.class.dir}${:}
+            ${core.class.dir}${:}
+            ${xerces.lib.dir}${/}xercesImpl.jar${:}
+            ${xerces.lib.dir}${/}xml-apis.jar${:}
+            ${xalan.lib.dir}${/}xalan.jar${:}
+            ${xalan.lib.dir}${/}serializer.jar${:}
+            ${core.src.dir}${/}etc${/}config${/}server${/}">
+         <isset property="core.jar.skip"/>
+      </condition>
+      <taskdef name="xmldecrypt"
+         classname="${product}.core.build.XMLPropertyDecryptor"
+         classpath="${init.xmldecrypt.path}"/>
+      <xmldecrypt file="${server}" prefix="server."/>
+
+      <property name="server.dynamic" value="false"/>
+
+      <condition property="empty.project">
+         <equals arg1="" arg2="${project}" trim="true"/>
+      </condition>
+      <fail if="empty.project" message="Project name is empty - please set the project property"/>
+
+      <property name="project.jar.dir" location="${deploy.dir}/${project}"/>
+      <property name="project.buildnum.dir" location="${buildnum.dir}/${project}"/>
+      <condition property="project.src.dir" value="${project.jar.dir}${/}nexj">
+         <isset property="tmp.project"/>
+      </condition>
+      <property name="project.src.dir" location="${src.dir}/${project}"/>
+      <property name="project.meta.dir" location="${project.src.dir}/meta"/>
+
+      <condition property="base.jar.skip">
+         <or>
+            <equals arg1="${base.jar}" arg2="" trim="true"/>
+            <isset property="core.project"/>
+            <isset property="tmp.project"/>
+         </or>
+      </condition>
+
+      <condition property="base.jar.name" value="">
+         <isset property="base.jar.skip"/>
+      </condition>
+      <basename property="base.jar.name" file="${base.jar}"/>
+      <dirname property="base.jar.dir.0" file="${base.jar}"/>
+      <condition property="base.jar.dir" value="${empty.dir}" else="${base.jar.dir.0}">
+         <isset property="base.jar.skip"/>
+      </condition>
+      <condition property="app.deps.skip" >
+         <isset property="tmp.project"/>
+      </condition>
+
+      <condition property="published.jar" value="${base.jar}">
+         <isset property="tmp.project"/>
+      </condition>
+      <condition property="published.jar.skip">
+         <not>
+            <isset property="tmp.project"/>
+         </not>
+      </condition>
+      <condition property="published.jar.name" value="">
+         <isset property="published.jar.skip"/>
+      </condition>
+      <basename property="published.jar.name" file="${published.jar}"/>
+      <dirname property="published.jar.dir.0" file="${published.jar}"/>
+      <condition property="published.jar.dir" value="${empty.dir}" else="${published.jar.dir.0}">
+         <isset property="published.jar.skip"/>
+      </condition>
+
+      <property name="publish.dir" value="${out.dir}/publish"/>
+      <condition property="base.search.dir" value="${publish.dir}" else="${base.jar.dir}">
+         <isset property="base.jar.skip"/>
+      </condition>
+
+      <condition property="server.jboss" else="false">
+         <or>
+            <not>
+               <isset property="server.type"/>
+            </not>
+            <equals arg1="${server.type}" arg2="" trim="true"/>
+            <equals arg1="${server.type}" arg2="JBoss" trim="true"/>
+         </or>
+      </condition>
+      <property name="build.jboss" value="${server.jboss}"/>
+
+      <condition property="jboss.dir.ok">
+         <or>
+            <isfalse value="${build.jboss}"/>
+            <and>
+               <isset property="jboss.dir"/>
+               <available file="${jboss.dir}" type="dir"/>
+            </and>
+         </or>
+      </condition>
+      <property name="jboss.dir" value=""/>
+      <fail unless="jboss.dir.ok" message="Invalid JBoss folder (jboss.dir=${jboss.dir})"/>
+
+      <condition property="jboss.skip">
+         <isfalse value="${build.jboss}"/>
+      </condition>
+
+      <condition property="jboss.location" value="${server.location}">
+         <and>
+            <istrue value="${server.jboss}"/>
+            <isset property="server.location"/>
+            <not>
+               <equals arg1="${server.location}" arg2="" trim="true"/>
+            </not>
+         </and>
+      </condition>
+      <property name="jboss.location" location="${jboss.dir}/server/default"/>
+      <property name="jboss.home" location="${jboss.location}/../.."/>
+      <basename property="jboss.config" file="${jboss.location}"/>
+
+      <condition property="server.websphere" else="false">
+         <equals arg1="${server.type}" arg2="WebSphere" trim="true"/>
+      </condition>
+      <property name="build.websphere" value="${server.websphere}"/>
+
+      <condition property="websphere.skip">
+         <isfalse value="${build.websphere}"/>
+      </condition>
+
+      <condition property="server.teee" else="false">
+         <equals arg1="${server.type}" arg2="Generic" trim="true"/>
+      </condition>
+
+      <condition property="platform" value="websphere">
+         <istrue value="${server.websphere}"/>
+      </condition>
+      <condition property="platform" value="teee">
+         <istrue value="${server.teee}"/>
+      </condition>
+      <property name="platform" value="jboss"/>
+
+      <condition property="http.debug.skip">
+         <not>
+            <istrue value="${server.http.debug}"/>
+         </not>
+      </condition>
+
+      <property name="build.release" value=""/>
+
+      <echo message="src.dir         = ${src.dir}"/>
+      <echo message="out.dir         = ${out.dir}"/>
+      <echo message="project         = ${project}"/>
+      <echo message="build.core      = ${build.core}"/>
+      <echo message="build.jboss     = ${build.jboss}"/>
+      <echo message="build.websphere = ${build.websphere}"/>
+      <echo message="release         = ${build.release}"/>
+      <echo message="base.jar        = ${base.jar.name}"/>
+      <echo message="server          = ${server.base} (${server.type})"/>
+      <echo message="connections     = ${connections.base}"/>
+
+      <condition property="core.project">
+         <and>
+            <equals arg1="${project}" arg2="core"/>
+            <available file="${project.src.dir}/src/nexj/core/util/ErrorCode.java"/>
+         </and>
+      </condition>
+      
+      <condition property="enterprise.project">
+         <and>
+            <equals arg1="${project}" arg2="enterprise"/>
+            <available file="${project.src.dir}/src/nexj/core/util/cipher/MasterPasswordStreamCipher.java"/>
+         </and>
+      </condition>
+
+      <condition property="core.enterprise.project">
+         <or>
+            <isset property="core.project"/>
+            <isset property="enterprise.project"/>
+         </or>
+      </condition>
+
+      <condition property="project.class.dir" value="${empty.dir}" else="${class.dir}/${project}">
+         <or>
+            <isset property="core.project"/>
+            <isset property="enterprise.project"/>
+         </or>
+      </condition>
+
+      <condition property="app.deps.skip">
+         <isset property="core.enterprise.project"/>
+      </condition>
+
+      <antcall target="tmp.unjar.src" inheritrefs="true"/>
+
+      <condition property="project.java.dir" value="${project.src.dir}/src" else="${empty.dir}">
+         <and>
+            <available file="${project.src.dir}/src" type="dir"/>
+            <not>
+               <isset property="core.project"/>
+            </not>
+            <not>
+               <isset property="enterprise.project"/>
+            </not>
+         </and>
+      </condition>
+
+      <available property="project.lib.dir" file="${project.src.dir}/lib" type="dir"
+         value="${project.src.dir}${/}lib"/>
+      <property name="project.lib.dir" location="${empty.dir}"/>
+
+      <available property="project.src.dir.exists" file="${project.src.dir}" type="dir"/>
+      <fail unless="project.src.dir.exists" message="${project.src.dir} does not exist (project.src.dir)"/>
+
+      <available property="project.metadata.exists" file="${project.meta.dir}${/}.metadata" type="file"/>
+      <fail unless="project.metadata.exists" message="${project.meta.dir}${/}.metadata does not exist - please create the repository"/>
+
+      <condition property="script.ext" value=".bat">
+         <os family="windows"/>
+      </condition>
+      <property name="script.ext" value=".sh"/>
+
+      <tstamp>
+         <format property="build.date" pattern="yyyy'-'MM'-'dd' 'HH':'mm':'ss.SSSZ" timezone="Etc/UTC"/>
+         <format property="build.date.year" pattern="yyyy" timezone="Etc/UTC"/>
+      </tstamp>
+   </target>
+
+   <target name="tmp.unjar.src" if="tmp.project">
+      <mkdir dir="${project.jar.dir}"/>
+      <delete includeemptydirs="true">
+         <fileset dir="${project.jar.dir}" includes="**/*"/>
+      </delete>
+      <mkdir dir="${project.src.dir}"/>
+      <condition property="unjar.strip.pattern" value="^nexj/meta/(.*)$$" else="^nexj/meta/[^/]*/(.*)$$">
+         <available classpath="${published.jar}" resource="nexj/meta/.metadata"/>
+      </condition>
+      <unjar src="${published.jar}" dest="${project.jar.dir}">
+         <patternset includes="nexj/meta/**,nexj/lib/**"/>
+         <regexpmapper from="${unjar.strip.pattern}" to="nexj/meta/\1" handledirsep="true"/>
+      </unjar>
+   </target>
+
+   <target name="tmp.unjar.class" if="tmp.project">
+      <delete includeemptydirs="true">
+         <fileset dir="${project.class.dir}" includes="**/*"/>
+      </delete>
+      <unjar src="${published.jar}" dest="${project.class.dir}">
+         <patternset excludes="META-INF/**,nexj/meta/**,nexj/lib/**"/>
+      </unjar>
+   </target>
+
+   <target name="jboss.jar" depends="init" unless="jboss.skip">
+      <jar destfile="${deploy.dir}/core/${product}-jboss.jar" index="true" filesonly="true">
+         <fileset dir="${core.class.dir}"
+            includes="nexj/core/container/platform/*.*,
+               nexj/core/container/platform/jboss/**,
+               **/rpc/jms/ra/*/*/platform/jboss/*.*,
+               nexj/core/util/**"
+            excludes="**/sasl/**"/>
+         <fileset dir="${core.src.dir}/src"
+            includes="nexj/core/container/platform/*.*,
+               nexj/core/container/platform/jboss/**,
+               **/rpc/jms/ra/*/*/platform/jboss/*.*,
+               nexj/core/util/**"
+            excludes="**/*.java,**/micro/**,**/sasl/**,"/>
+         <fileset dir="${core.src.dir}/etc/config/server" includes="nexj/default.config"/>
+      </jar>
+   </target>
+   
+   <target name="core.classes" depends="init" unless="core.jar.skip">
+      <mkdir dir="${core.class.dir}"/>
+      <javac debug="true" optimize="true" source="1.4" target="1.5"
+         destdir="${core.class.dir}"
+         srcdir="${core.src.dir}/src"
+         bootclasspathref="boot.lib.path"
+         classpathref="core.lib.path" includeAntRuntime="true">
+         <exclude name="**/platform/jboss/**" if="jboss.skip"/>
+         <exclude name="**/build/translator/**"/>
+         <exclude name="**/micro/**"/>
+      </javac>
+   </target>
+   
+   <target name="core.jar" depends="init,core.classes" unless="core.jar.skip">
+      <mkdir dir="${deploy.dir}/core/web/includes"/>
+      <jar destfile="${deploy.dir}/core/${product}-jmsbrowser.jar" index="true">  
+         <fileset dir="${core.src.dir}/etc/config/jmsbrowser" includes="nexj/**"/>
+         <fileset dir="${core.src.dir}/etc/config/jmsbrowser" includes="README.txt"/> 
+         <fileset dir="${core.src.dir}/etc/config/jmsbrowser" includes="log4j.properties"/>   
+         <fileset dir="${core.src.dir}/etc/config/jmsbrowser" includes="jmsbrowser.bat"/> 
+      </jar> 
+     <jar destfile="${deploy.dir}/core/${product}-scheme.jar" index="true">
+         <fileset dir="${core.class.dir}" includes="${scheme.classes}"/>
+         <fileset dir="${core.src.dir}/src/nexj/core" includes="meta/sys/scheme.scm"/>
+      </jar>
+      <jar destfile="${deploy.dir}/core/${product}-server.jar" index="true">
+         <fileset dir="${core.class.dir}" excludes="**/swt/**,
+            **/build/**,**/container/**,**/rpc/jms/ra/*/*/platform/jboss/**,**/jni/**,org/**,test/**"/>
+         <fileset dir="${core.src.dir}/src" excludes="**/micro/**,**/swt/**,
+            **/build/**,**/container/**,**/rpc/jms/ra/*/*/platform/jboss/**,**/jni/**,org/**,**/*.java"/>
+      </jar>
+      <jar destfile="${deploy.dir}/core/${product}-jni.jar" index="true">
+         <fileset dir="${core.class.dir}" includes="nexj/core/util/**/jni/**" excludes="test/**"/>
+         <fileset dir="${core.src.dir}/src" includes="nexj/core/util/**/jni/**" excludes="**/*.java"/>
+      </jar>
+      <jar destfile="${deploy.dir}/core/${product}-build.jar" index="true" filesonly="true">
+         <fileset dir="${core.class.dir}" includes="**/build/**" excludes="**/translator/**"/>
+         <fileset dir="${core.src.dir}/src" includes="**/build/**" excludes="**/translator/**,**/*.java"/>
+      </jar>
+      <mkdir dir="${deploy.dir}/core/etc/META-INF"/>
+      <dependset>
+         <srcfileset dir="${core.src.dir}/src/nexj/core/meta/j2ee" includes="**/*.xml"/>
+         <targetfileset dir="${deploy.dir}/core/etc/META-INF"/>
+      </dependset>
+      <copy file="${core.src.dir}/etc/META-INF/core.mf" todir="${deploy.dir}/core/etc/META-INF">
+         <filterset>
+            <filter token="extlibs" value=""/>
+            <filter token="metalibs" value=""/>
+         </filterset>
+      </copy>
+      <jar destfile="${deploy.dir}/core/${product}-ejb.jar"
+           manifest="${deploy.dir}/core/etc/META-INF/core.mf" index="true">
+         <metainf dir="${deploy.dir}/core/etc/META-INF" includes="${ejb.descriptors}"/>
+      </jar>
+      <war destfile="${deploy.dir}/core/${product}-web-0.war"
+         needxmlfile="false"
+         manifest="${deploy.dir}/core/etc/META-INF/core.mf"/>
+      <war destfile="${deploy.dir}/core/${product}-web-cert-0.war"
+         needxmlfile="false"
+         manifest="${deploy.dir}/core/etc/META-INF/core.mf"/>
+      <war destfile="${deploy.dir}/core/${product}-web-anon-0.war"
+         needxmlfile="false"
+         manifest="${deploy.dir}/core/etc/META-INF/core.mf"/>
+      <war destfile="${deploy.dir}/core/${product}-web-form-0.war"
+         needxmlfile="false"
+         manifest="${deploy.dir}/core/etc/META-INF/core.mf"/>
+      <antcall target="jboss.jar" inheritrefs="true"/>
+      <jar destfile="${deploy.dir}/core/${product}-env.jar" index="true">
+         <fileset dir="${core.src.dir}/etc/config/server"/>
+      </jar>
+      <mkdir dir="${empty.dir}"/>
+      <!-- projectjarname is defined in anttask.init, but anttask.init has a dependency on core.jar, and may include additional libraries on the
+         classpath that are not yet built -->
+      <taskdef name="corejarname" classname="nexj.core.build.ProjectJarName">
+         <classpath>
+            <pathelement location="${core.jar.dir}/${product}-build.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-scheme.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-server.jar"/>
+            <pathelement location="${log4j.lib.dir}/log4j-${log4j.version}.jar"/>
+            <pathelement location="${xalan.lib.dir}/xalan.jar"/>
+            <pathelement location="${xerces.lib.dir}/xercesImpl.jar"/>
+            <pathelement location="${core.src.dir}/etc/config/tools"/>
+         </classpath>
+      </taskdef>
+      <corejarname project="core" srcdir="${src.dir}" outdir="${deploy.dir}/core/" basedir="" metajarproperty="core.meta.jar" metapathproperty="core.meta.path"/>
+      <jar destfile="${core.meta.jar}" index="true">
+         <zipfileset prefix="${core.meta.path}" dir="${core.src.dir}/meta"/>
+      </jar>
+      <property name="core.jar.skip" value="true"/>
+   </target>
+
+   <target name="base.unjar" depends="base.unjar.create,base.unjar.delete"/>
+
+   <target name="base.unjar.create" unless="base.jar.skip">
+      <property name="base.unjar.pattern" value="**"/>
+      <mkdir dir="${project.jar.dir}/base"/>
+      <unjar src="${base.jar}" dest="${project.jar.dir}/base">
+         <patternset excludes="META-INF/**"/>
+         <patternset includes="${base.unjar.pattern}"/>
+      </unjar>
+   </target>
+
+   <target name="base.unjar.delete" if="base.jar.skip">
+      <!-- The directory must exist, but must be empty-->
+      <delete dir="${project.jar.dir}/base"/>
+      <mkdir dir="${project.jar.dir}/base"/>
+   </target>
+
+   <target name="meta.jar" depends="enterprise.meta.jar" unless="meta.jar.skip">
+      <java classname="nexj.core.tools.MetadataTool" fork="false" failonerror="true">
+         <classpath>
+            <path refid="core.lib.path"/>
+            <filelist refid="enterprise.jar.files"/>
+            <pathelement location="${core.jar.dir}/${product}-scheme.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-server.jar"/>
+            <pathelement location="${core.src.dir}/etc/config/tools"/>
+            <pathelement path="${dep.jars.path}"/>
+         </classpath>
+         <arg value="merge"/>
+         <sysproperty key="nexj.config" value="/nexj/default.config"/>
+         <sysproperty key="out.file" file="${project.jar.dir}/meta/.metadata"/>
+         <sysproperty key="base.list" file="${project.jar.dir}/meta/base.lst"/>
+         <sysproperty key="root.list" file="${project.jar.dir}/meta/root.lst"/>
+         <sysproperty key="root.url" file="${project.meta.dir}"/>
+         <sysproperty key="base.url" value="${base.url}"/>
+         <syspropertyset>
+            <propertyref prefix="cipher."/>
+            <mapper type="glob" from="cipher.*" to="nexj.cipher.*"/>
+         </syspropertyset>
+      </java>
+      <property name="meta.jar" location="${project.jar.dir}/${product}-meta-x.jar"/>
+   
+      <jar destfile="${meta.jar}" index="true" duplicate="preserve">
+         <fileset dir="${project.class.dir}"/>
+         <fileset dir="${project.java.dir}" excludes="**/*.java"/>
+         <zipfileset prefix="${meta.path}" dir="${project.meta.dir}">
+            <includesfile name="${project.jar.dir}/meta/root.lst"/>
+         </zipfileset>
+         <zipfileset prefix="${meta.path}" dir="${project.jar.dir}/meta">
+            <include name=".metadata"/>
+         </zipfileset>
+         <zipfileset prefix="nexj" dir="${project.src.dir}">
+            <include name="lib/**"/>
+         </zipfileset>
+         <zipfileset refid="enterprise.meta.jar"/>
+         <fileset dir="${project.jar.dir}/base" excludes="nexj/meta/**"/>
+         <zipfileset prefix="${meta.path}" dir="${project.jar.dir}/base/${base.path}">
+            <includesfile name="${project.jar.dir}/meta/base.lst"/>
+         </zipfileset>
+      </jar>
+      <checksum file="${meta.jar}" algorithm="MD5" forceoverwrite="yes" fileext=".md5"/>
+   </target>
+
+   <target name="build.upgrade"/>
+   <target name="enterprise.jar"/>
+   <target name="enterprise.app.jar"/>
+
+   <target name="enterprise.meta.jar">
+      <fileset id="enterprise.meta.jar" dir="${empty.dir}"/>
+   </target>
+
+   
+   <target name="meta.jarname" depends="anttask.init" unless="meta.jarname.skip">
+      <condition property="meta.jar" value="${published.jar}">
+         <isset property="tmp.project"/>
+      </condition>
+      <!-- if a published repository is supplied, copy it to the project jar dir, because we won't be rebuilding it -->
+      <mkdir dir="${empty.dir}"/>
+      <copy todir="${project.jar.dir}">
+         <fileset dir="${published.jar.dir}">
+            <include name="${published.jar.name}" unless="published.jar.skip"/>  
+         </fileset>
+      </copy>
+      <condition property="env.name" value="${server.name}" else="">
+         <isset property="server.name"/>
+      </condition>
+      <projectjarname project="${project}" srcdir="${src.dir}" metadir="${project.meta.dir}"
+         outdir="${project.jar.dir}" basedir="${base.search.dir}" mixinjarsproperty="mixin.jars"
+         metajarproperty="meta.jar" metapathproperty="meta.path" basejarproperty="base.jar"
+         basepathproperty="base.path" revisionproperty="meta.jar.revision" environmentnameproperty="env.name"/>
+      <basename property="meta.jar.name" file="${meta.jar}"/>
+      <condition property="base.url" value="jar:file:${base.jar}!/${base.path}" else="">
+         <not>
+            <isset property="base.jar.skip"/>
+         </not>
+      </condition>
+      <property name="mixin.jars" value=""/>
+      <condition property="dep.jars.path" value="${mixin.jars}" else="${base.jar}${:}${mixin.jars}">
+         <isset property="base.jar.skip"/>
+      </condition>
+      <pathconvert property="meta.libs" pathsep=" ">
+         <path>
+            <pathelement path="${mixin.jars}"/>
+         </path>
+         <flattenmapper/>
+      </pathconvert>
+      <echo message="dep.jars.path   = ${dep.jars.path}"/>
+      <property name="meta.jarname.skip" value="true"/>
+   </target>
+   
+   <target name="app.deps" depends="init,anttask.init" unless="app.deps.skip">
+      <dependstate statefile="${project.jar.dir}/project.state">
+         <srcfileset file="${core.jar.dir}/${product}-server.jar"/>
+         <targetdirset dir="${project.class.dir}"/>
+         <targetdirset dir="${project.jar.dir}"/>
+      </dependstate>
+      <dependstate statefile="${project.jar.dir}/mixin.state">
+         <srcfileset file="${project.src.dir}/meta/.metadata"/>
+         <targetfileset file="${project.jar.dir}/nexj.ear"/>
+         <targetdirset dir="${project.jar.dir}/mixins"/>
+      </dependstate>
+   </target>
+   
+   <target name="cluster.keystore"/>
+
+   <target name="app.jar" depends="init,core.jar,app.deps,enterprise.jar,build.upgrade,meta.jarname,cluster.keystore" description="Publishes the model for the current project" unless="app.jar.skip">
+      <mkdir dir="${empty.dir}"/>
+      <mkdir dir="${project.class.dir}"/>
+      <mkdir dir="${project.jar.dir}/base/${base.path}"/>
+      <antcall target="base.unjar" inheritrefs="true"/>
+      <available property="base.lib.dir" file="${project.jar.dir}/base/nexj/lib" type="dir"
+         value="${project.jar.dir}${/}base${/}nexj${/}lib"/>
+      <available property="enterprise.available" file="${enterprise.jar.dir}/${product}-enterprise.jar"/>
+      <property name="base.lib.dir" location="${empty.dir}"/>
+      <antcall target="enterprise.app.jar" inheritrefs="true"/>
+
+      <!-- handle potentially encrypted server/config files -->
+      <mkdir dir="${project.jar.dir}/etc/config/server/nexj"/>
+      <copy file="${server}" tofile="${project.jar.dir}/etc/config/server/nexj/current.config"
+         overwrite="true" preservelastmodified="false"/>
+      <condition property="project.config.overwrite" else="false">
+         <not>
+            <checksum file="${project.jar.dir}/etc/config/server/nexj/current.config"/>
+         </not>
+      </condition>
+      <checksum file="${project.jar.dir}/etc/config/server/nexj/current.config" forceoverwrite="true"/>
+      <copy file="${server}" tofile="${project.jar.dir}/etc/config/server/nexj/default0.config"
+         overwrite="${project.config.overwrite}" preservelastmodified="false"/>
+      <condition property="keep.passwords" value="true" else="">
+         <istrue value="${server.teee}"/>
+      </condition>
+      <condition property="cluster.keystore" value="${project.jar.dir}/etc/config/server/nexj/cluster.pkcs12">
+         <isset property="cluster.password"/>
+      </condition>
+      <condition property="cluster.password.enabled">
+         <isset property="cluster.password"/>
+      </condition>
+      <xmldecrypt file="${server}" style="${core.config.dir}/etc/config.xslt"
+         tofile="${project.jar.dir}/etc/config/server/nexj/default.config"
+         keystoreFile="${cluster.keystore}"
+         force="${project.config.overwrite}">
+         <param name="meta.url" expression="${meta.path}"/>
+         <param name="meta.connections.url" expression="/nexj/default.connections"/>
+         <param name="keep.passwords" expression="${keep.passwords}"/>
+         <param name="clusterPassword" expression="${cluster.password}" if="cluster.password.enabled"/>
+      </xmldecrypt>
+
+      <condition property="server.classpath" value="${environment.classpath}" else="${empty.dir}">
+         <isset property="environment.classpath"/>
+      </condition>
+
+      <copy file="${connections}" tofile="${project.jar.dir}/etc/config/server/nexj/current.connections"
+         overwrite="true" preservelastmodified="false"/>
+      <condition property="project.connections.overwrite" else="false">
+         <not>
+            <checksum file="${project.jar.dir}/etc/config/server/nexj/current.connections"/>
+         </not>
+      </condition>
+      <checksum file="${project.jar.dir}/etc/config/server/nexj/current.connections" forceoverwrite="true"/>
+      <copy file="${connections}" tofile="${project.jar.dir}/etc/config/server/nexj/default0.connections"
+         overwrite="${project.connections.overwrite}" preservelastmodified="false"/>
+      <xmldecrypt file="${connections}" style="${core.config.dir}/etc/config.xslt"
+         tofile="${project.jar.dir}/etc/config/server/nexj/default.connections"
+         force="${project.connections.overwrite}">
+         <param name="keep.passwords" expression="${keep.passwords}"/>
+      </xmldecrypt>
+      
+      <!-- form project library paths -->
+      <path id="project.lib.path">
+         <fileset dir="${project.lib.dir}" excludes="blackberry/*"/>
+         <fileset dir="${base.lib.dir}" excludes="blackberry/*"/>
+         <pathelement path="${server.classpath}"/>
+      </path>
+      <path id="temp.lib.path">
+         <fileset dir="${project.lib.dir}"/>
+         <fileset dir="${base.lib.dir}"/>
+      </path>
+      <pathconvert property="project.libs" pathsep=" " dirsep="/" refid="temp.lib.path">
+         <map from="${project.lib.dir}${/}" to=""/>
+         <map from="${base.lib.dir}${/}" to=""/>
+      </pathconvert>
+
+      <dependset>
+         <srcfilelist dir="${core.jar.dir}" files="${product}-scheme.jar,${product}-server.jar"/>
+         <srcfilelist refid="enterprise.jar.files"/>
+         <srcfileset dir="${base.jar.dir}">
+            <include name="${base.jar.name}" unless="base.jar.skip"/>
+         </srcfileset>
+         <targetfileset dir="${project.class.dir}">
+            <include name="**/*" unless="core.enterprise.project"/>
+         </targetfileset>
+      </dependset>
+      <javac debug="true" optimize="true" source="1.4" target="1.5"
+         destdir="${project.class.dir}"
+         srcdir="${project.java.dir}"
+         bootclasspathref="boot.lib.path" includeAntRuntime="true">
+         <classpath>
+            <path refid="core.lib.path"/>
+            <filelist refid="enterprise.jar.files"/>
+            <pathelement location="${core.jar.dir}/${product}-scheme.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-server.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-jboss.jar"/>
+            <pathelement location="${enterprise.jar.dir}/${product}-websphere.jar"/>
+            <fileset dir="${base.jar.dir}">
+               <include name="${base.jar.name}" unless="base.jar.skip"/>
+            </fileset>
+            <path refid="project.lib.path"/>
+         </classpath>
+      </javac>
+      <antcall target="tmp.unjar.class" inheritrefs="true"/>
+      <mkdir dir="${project.jar.dir}/etc/META-INF"/>
+      <dependset>
+         <srcfileset dir="${enterprise.jar.dir}">
+            <include name="${product}-ejb.jar" unless="enterprise.project"/>
+            <include name="${product}-web-0.war" unless="enterprise.project"/>
+            <include name="${product}-web-cert-0.war" unless="enterprise.project"/>
+            <include name="${product}-web-anon-0.war" unless="enterprise.project"/>
+            <include name="${product}-web-form-0.war" unless="enterprise.project"/>
+         </srcfileset>
+         <srcfileset dir="${project.meta.dir}" includes="**/*.datasource,**/*.channel"/>
+         <targetfileset dir="${project.jar.dir}/etc/META-INF" includes="**/*"/>
+      </dependset>
+
+      <condition property="enterprise.config.server.dir" value="${enterprise.src.dir}/etc/config/server" else="${empty.dir}">
+         <isset property="enterprise.available"/>
+      </condition>
+      <jar destfile="${project.jar.dir}/${product}-env.jar" update="true">
+         <fileset dir="${project.jar.dir}/etc/config/server" includes="nexj/default.*"/>
+         <fileset dir="${core.src.dir}/etc/config/server" includes="*.properties"/>
+         <fileset dir="${enterprise.config.server.dir}" includes="*.properties"/>
+      </jar>
+      <mkdir dir="${project.jar.dir}/meta"/>
+      <condition property="meta.jar.skip">
+         <and>
+            <or>
+               <isset property="tmp.project"/>
+               <available file="${project.jar.dir}/meta/.metadata" type="file"/>
+            </or>
+            <available file="${meta.jar}" type="file"/>
+         </and>
+      </condition>
+      <antcall target="meta.jar" inheritrefs="true"/>
+      <condition property="project.descriptors.overwrite" else="false">
+         <not>
+            <or>
+               <isset property="tmp.project"/>
+               <and>
+                  <checksum>
+                     <fileset dir="${project.jar.dir}/etc/META-INF" includes="**/*.xm?"/>
+                     <fileset dir="${project.jar.dir}/etc/config/server/nexj" includes="default0.config,default0.connections"/>
+                  </checksum>
+                  <uptodate targetfile="${project.jar.dir}/etc/META-INF/portlet.xml" srcfile="${project.jar.dir}/meta/.metadata"/>
+               </and>
+            </or>
+         </not>
+      </condition>
+      <java classname="nexj.core.tools.J2EEDescriptorTool" fork="false" failonerror="true">
+         <classpath>
+            <path refid="core.lib.path"/>
+            <filelist refid="enterprise.jar.files"/>
+            <pathelement location="${core.jar.dir}/${product}-scheme.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-server.jar"/>
+            <pathelement location="${core.src.dir}/etc/config/tools"/>
+            <pathelement location="${project.class.dir}"/>
+            <pathelement path="${dep.jars.path}"/>
+            <path refid="project.lib.path"/>
+         </classpath>
+         <sysproperty key="nexj.config" value="/nexj/default.config"/>
+         <sysproperty key="out.dir" file="${project.jar.dir}/etc/META-INF"/>
+         <sysproperty key="root.url" file="${project.meta.dir}"/>
+         <sysproperty key="base.url" value="${base.url}"/>
+         <sysproperty key="cfg.url" file="${server}"/>
+         <sysproperty key="con.url" file="${connections}"/>
+         <syspropertyset>
+            <propertyref prefix="cipher."/>
+            <mapper type="glob" from="cipher.*" to="nexj.cipher.*"/>
+         </syspropertyset>
+         <sysproperty key="overwrite" value="${project.descriptors.overwrite}"/>
+         <sysproperty key="nexj.dynamic" value="${server.dynamic}"/>
+         <syspropertyset>
+            <propertyref prefix="server.meta."/>
+            <mapper type="glob" from="server.meta.*" to="nexj.meta.*"/>
+         </syspropertyset>
+      </java>
+      <checksum forceoverwrite="true">
+         <fileset dir="${project.jar.dir}/etc/META-INF" includes="**/*.xm?"/>
+         <fileset dir="${project.jar.dir}/etc/config/server/nexj" includes="default0.config,default0.connections"/>
+      </checksum>
+      <delete file="${project.jar.dir}/etc/META-INF/core.mf"/>
+      <condition property="enterprise.metainf.dir" value="${enterprise.src.dir}/etc/META-INF" else="${core.src.dir}/etc/META-INF">
+         <isset property="enterprise.available"/>
+      </condition>
+      <copy file="${enterprise.metainf.dir}/core.mf" todir="${project.jar.dir}/etc/META-INF" failonerror="false">
+         <filterset>
+            <filter token="extlibs" value="${project.libs}"/>
+            <filter token="metalibs" value="${meta.jar.name} ${meta.libs}"/>
+         </filterset>
+      </copy>
+      <jar destfile="${project.jar.dir}/${product}-pool.rar"
+           manifest="${project.jar.dir}/etc/META-INF/core.mf" index="true">
+         <fileset dir="${core.src.dir}/etc" includes="META-INF/ra.xml"/>
+      </jar>
+      <jar destfile="${project.jar.dir}/${product}-jms.rar"
+           manifest="${project.jar.dir}/etc/META-INF/core.mf" index="true">
+         <fileset dir="${project.jar.dir}/etc/META-INF/ra/jms" includes="META-INF/ra.xml,jboss-ra-ds.xml,teee-ra.xml"/>
+      </jar>
+      <jar destfile="${project.jar.dir}/${product}-timer.rar"
+           manifest="${project.jar.dir}/etc/META-INF/core.mf" index="true">
+         <fileset dir="${project.jar.dir}/etc/META-INF/ra/timer" includes="META-INF/ra.xml"/>
+      </jar>
+      <jar destfile="${project.jar.dir}/${product}-file.rar"
+           manifest="${project.jar.dir}/etc/META-INF/core.mf" index="true">
+         <fileset dir="${project.jar.dir}/etc/META-INF/ra/file" includes="META-INF/ra.xml,jboss-ra-ds.xml,teee-ra.xml"/>
+      </jar>
+      <jar destfile="${project.jar.dir}/${product}-mail.rar"
+           manifest="${project.jar.dir}/etc/META-INF/core.mf" index="true">
+         <fileset dir="${project.jar.dir}/etc/META-INF/ra/mail" includes="META-INF/ra.xml,jboss-ra-ds.xml,teee-ra.xml"/>
+      </jar>
+      <jar destfile="${project.jar.dir}/${product}-sql.rar"
+           manifest="${project.jar.dir}/etc/META-INF/core.mf" index="true">
+         <fileset dir="${project.jar.dir}/etc/META-INF/ra/sql" includes="META-INF/ra.xml,teee-ra.xml"/>
+      </jar>
+      <jar destfile="${project.jar.dir}/${product}-tcp.rar" 
+           manifest="${project.jar.dir}/etc/META-INF/core.mf" index="true">
+         <fileset dir="${project.jar.dir}/etc/META-INF/ra/tcp" includes="META-INF/ra.xml,jboss-ra-ds.xml,teee-ra.xml"/>
+      </jar>
+      <jar destfile="${project.jar.dir}/${product}-queueing.rar" 
+           manifest="${project.jar.dir}/etc/META-INF/core.mf" index="true">
+         <fileset dir="${project.jar.dir}/etc/META-INF/ra/queueing" includes="META-INF/ra.xml,jboss-ra-ds.xml,teee-ra.xml"/>
+      </jar>
+      <jar destfile="${project.jar.dir}/${product}-tomcat.rar"
+           manifest="${project.jar.dir}/etc/META-INF/core.mf" index="true">
+         <fileset dir="${project.jar.dir}/etc/META-INF/ra/tomcat" includes="META-INF/ra.xml"/>
+      </jar>
+      <jar destfile="${project.jar.dir}/${product}-ejb.jar"
+         manifest="${project.jar.dir}/etc/META-INF/core.mf" index="true">
+         <metainf dir="${project.jar.dir}/etc/META-INF" includes="${ejb.descriptors}"/>
+      </jar>
+      <condition property="web.jar.dir" value="${enterprise.jar.dir}" else="${core.jar.dir}">
+         <istrue value="${enterprise.available}"/>
+      </condition>
+      <copy file="${web.jar.dir}/${product}-web-0.war" todir="${project.jar.dir}" preservelastmodified="true"/>
+      <copy file="${web.jar.dir}/${product}-web-cert-0.war" todir="${project.jar.dir}" preservelastmodified="true"/>
+      <copy file="${web.jar.dir}/${product}-web-anon-0.war" todir="${project.jar.dir}" preservelastmodified="true"/>
+      <copy file="${web.jar.dir}/${product}-web-form-0.war" todir="${project.jar.dir}" preservelastmodified="true"/>
+      <mkdir dir="${project.jar.dir}/web"/>
+      <!--
+         1) get topological ordering of repositories
+         2) copy icons and web resources from repositories into a filesystem directory to ensure correct overriding with no duplicates
+         3) copy results from filesystem to ${product}-web.war
+      -->
+      <java classname="nexj.core.tools.MetadataTool" fork="false" failonerror="true">
+         <classpath>
+            <path refid="core.lib.path"/>
+            <filelist refid="enterprise.jar.files"/>
+            <pathelement location="${core.jar.dir}/${product}-scheme.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-server.jar"/>
+            <pathelement location="${core.src.dir}/etc/config/tools"/>
+            <pathelement location="${meta.jar}"/>
+            <pathelement path="${dep.jars.path}"/>
+         </classpath>
+         <arg value="sort"/>
+         <sysproperty key="nexj.config" value="/nexj/default.config"/>
+         <sysproperty key="out.file" file="${project.jar.dir}/order"/>
+         <sysproperty key="root.url" value="jar:file:${meta.jar}!/${meta.path}"/> <!-- use new jar, so that it gets included in ordered list of published repositories -->
+         <syspropertyset>
+            <propertyref prefix="cipher."/>
+            <mapper type="glob" from="cipher.*" to="nexj.cipher.*"/>
+         </syspropertyset>
+      </java>
+      <foreach file="${project.jar.dir}/order" property="source.jar" pattern="line">
+         <sequential>
+            <copy todir="${project.jar.dir}/web" overwrite="true">
+               <zipfileset src="${source.jar}" includes="nexj/meta/*/web/**,nexj/meta/*/icons/**"/>
+               <regexpmapper from="^nexj/meta/[^/]*/(web|icons)(.*)$$" to="\1\2"/>
+            </copy>
+         </sequential>
+      </foreach>
+      <war destfile="${project.jar.dir}/${product}-web-0.war"
+         webxml="${project.jar.dir}/etc/META-INF/web.xml"
+         manifest="${project.jar.dir}/etc/META-INF/core.mf"
+         update="true">
+         <webinf dir="${project.jar.dir}/etc/META-INF" includes="${web.descriptors}"/>
+         <fileset dir="${project.jar.dir}/web/web" erroronmissingdir="false"/>
+         <fileset dir="${project.jar.dir}/web" includes="icons/**"/>
+      </war>
+      <war destfile="${project.jar.dir}/${product}-web-cert-0.war"
+         webxml="${project.jar.dir}/etc/META-INF/cert/web.xml"
+         manifest="${project.jar.dir}/etc/META-INF/core.mf"
+         update="true">
+         <webinf dir="${project.jar.dir}/etc/META-INF/cert" includes="${web.cert.descriptors}"/>
+         <webinf dir="${project.jar.dir}/etc/META-INF" includes="${web.descriptors}" excludes="${web.cert.descriptors},portlet*.xml"/>
+      </war>
+      <war destfile="${project.jar.dir}/${product}-web-anon-0.war"
+         webxml="${project.jar.dir}/etc/META-INF/anon/web.xml"
+         manifest="${project.jar.dir}/etc/META-INF/core.mf"
+         update="true">
+         <webinf dir="${project.jar.dir}/etc/META-INF/anon" includes="${web.anon.descriptors}"/>
+         <webinf dir="${project.jar.dir}/etc/META-INF" includes="${web.descriptors}" excludes="${web.anon.descriptors},portlet*.xml"/>
+      </war>
+      <war destfile="${project.jar.dir}/${product}-web-form-0.war"
+         webxml="${project.jar.dir}/etc/META-INF/form/web.xml"
+         manifest="${project.jar.dir}/etc/META-INF/core.mf"
+         update="true">
+         <webinf dir="${project.jar.dir}/etc/META-INF/form" includes="${web.form.descriptors}"/>
+         <webinf dir="${project.jar.dir}/etc/META-INF" includes="${web.descriptors}" excludes="${web.form.descriptors},portlet*.xml"/>
+      </war>
+      <property name="app.jar.skip" value="true"/>
+   </target>
+
+   <target name="app.sql" depends="init,app.jar,base.unjar" unless="app.sql.skip" description="Runs the database schema tool">
+      <property name="app.sql.meta.url" value="file:${project.src.dir}/meta"/>
+      <property name="app.sql.base.url" value="${base.url}"/>
+      <property name="app.sql.datasource" value="DefaultRelationalDatabase"/> <!-- default to DefaultRelationalDatabase -->
+      <property name="app.sql.command" value="upgrade"/> <!-- default to upgrade -->
+      <property name="app.sql.dir" value="${out.dir}/publish"/>
+      <property name="app.sql.file" value="${app.sql.dir}/${project}_${app.sql.datasource}_${app.sql.command}.sql"/>
+      <property name="app.sql.config" value="${server}"/>
+      <property name="app.sql.connections" value="${connections}"/>
+      <property name="app.sql.heap" value="256M"/>
+
+      <fail message="Must set .environment file &quot;app.sql.config&quot; or .server and .connection file &quot;app.sql.config&quot; and &quot;app.sql.connections&quot;.">
+         <condition>
+            <not>
+               <or>
+                  <isset property="app.sql.config"/>
+                  <isset property="app.sql.connections"/>
+               </or>
+            </not>
+         </condition>
+      </fail>
+
+      <mkdir dir="${app.sql.dir}"/>
+
+      <java classname="nexj.core.tools.DatabaseSchemaTool" failonerror="false"
+         outputproperty="app.sql.log" resultproperty="app.sql.result" fork="true">
+         <jvmarg value="-Xmx${app.sql.heap}"/>
+         <classpath>
+            <path refid="core.lib.path"/>
+            <filelist refid="enterprise.jar.files"/>
+            <pathelement location="${core.jar.dir}/${product}-scheme.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-server.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-jboss.jar"/>
+            <pathelement location="${enterprise.jar.dir}/${product}-websphere.jar"/>
+            <pathelement location="${project.class.dir}"/>
+            <pathelement path="${dep.jars.path}"/>
+            <fileset dir="${project.lib.dir}">
+               <include name="**/*.jar"/>
+            </fileset>
+            <fileset dir="${project.jar.dir}/base">
+               <include name="**/*.jar"/>
+            </fileset>
+         </classpath>
+         <sysproperty key="dump.file" value="file:${project.src.dir}/meta/dumps/UnitTest.dump"/>
+         <sysproperty key="log4j.appender.console" value="org.apache.log4j.ConsoleAppender"/>
+         <sysproperty key="log4j.appender.console.layout" value="org.apache.log4j.PatternLayout"/>
+         <sysproperty key="log4j.appender.console.layout.ConversionPattern" value="; %d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
+         <sysproperty key="log4j.rootLogger" value="INFO, console"/>
+         <sysproperty key="log4j.logger.nexj.core.meta.workflow" value="INFO"/>
+         <sysproperty key="meta.datasource" value="${app.sql.datasource}"/>
+         <sysproperty key="sql.file" value="${app.sql.file}"/>
+         <sysproperty key="nexj.meta.url" value="${app.sql.meta.url}"/>
+         <sysproperty key="nexj.meta.base.url" value="${app.sql.base.url}"/>
+         <sysproperty key="nexj.config" value="file:${app.sql.config}"/>
+         <sysproperty key="nexj.meta.connections.url" value="file:${app.sql.connections}"/>
+         <arg value="${app.sql.command}"/>
+      </java>
+
+      <condition property="app.sql.message"
+         value="Generated ${app.sql.file} using ${app.sql.connections}"
+         else="Cannot generate ${app.sql.file}:${line.separator}${app.sql.log}">
+         <equals arg1="${app.sql.result}" arg2="0"/>
+      </condition>
+
+      <fail message="${app.sql.message}">
+         <condition>
+            <and>
+               <equals arg1="${app.sql.result}" arg2="0"/>
+               <isset property="app.sql.failonerror"/>
+            </and>
+         </condition>
+      </fail>
+
+      <echo message="${app.sql.message}"/>
+   </target>
+   
+   <target name="app.dump" depends="init,app.jar" description="Runs the data load tool">
+      <property name="app.dump.meta.url" value="file:${project.src.dir}/meta"/>
+      <property name="app.dump.base.url" value="${base.url}"/>
+      <property name="app.dump.datasource" value="DefaultRelationalDatabase"/> <!-- default to DefaultRelationalDatabase -->
+      <property name="app.dump.command" value="recreate"/> <!-- default to upgrade -->
+      <property name="app.dump.url" value="${app.dump.meta.url}/dumps/UnitTest.dump"/> <!-- default to UnitTest.dump -->
+      <property name="app.dump.config" value="${server}"/>
+      <property name="app.dump.connections" value="${connections}"/>
+      
+      <fail message="Must set .environment file &quot;app.dump.config&quot; or .server and .connection file &quot;app.dump.config&quot; and &quot;app.dump.connections&quot;.">
+         <condition>
+            <not>
+               <or>
+                  <isset property="app.dump.config"/>
+                  <isset property="app.dump.connections"/>
+               </or>
+            </not>
+         </condition>
+      </fail>
+
+      <antcall target="base.unjar">
+         <propertyset>
+            <propertyref name="base.unjar.skip"/>
+            <mapper type="glob" from="base.unjar.skip" to="base.jar.skip"/>
+         </propertyset>
+      </antcall>
+
+      <java classname="nexj.core.tools.DataLoadTool" failonerror="false"
+         outputproperty="app.dump.log" resultproperty="app.dump.result" fork="true">
+         <jvmarg value="-Xmx256M"/>
+         <classpath>
+            <path refid="core.lib.path"/>
+            <filelist refid="enterprise.jar.files"/>
+            <pathelement location="${core.jar.dir}/${product}-scheme.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-server.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-jboss.jar"/>
+            <pathelement location="${project.class.dir}"/>
+            <pathelement path="${dep.jars.path}"/>
+         </classpath>
+         <sysproperty key="log4j.appender.console" value="org.apache.log4j.ConsoleAppender"/>
+         <sysproperty key="log4j.appender.console.layout" value="org.apache.log4j.PatternLayout"/>
+         <sysproperty key="log4j.appender.console.layout.ConversionPattern" value="; %d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
+         <sysproperty key="log4j.rootLogger" value="INFO, console"/>
+         <sysproperty key="log4j.logger.nexj.core.meta.workflow" value="INFO"/>
+         <sysproperty key="meta.datasource" value="${app.dump.datasource}"/>
+         <sysproperty key="nexj.meta.url" value="${app.dump.meta.url}"/>
+         <sysproperty key="nexj.meta.base.url" value="${app.dump.base.url}"/>
+         <sysproperty key="nexj.dump.url" value="${app.dump.url}"/>
+         <sysproperty key="nexj.config" value="file:${app.dump.config}"/>
+         <sysproperty key="nexj.meta.connections.url" value="file:${app.dump.connections}"/>
+         <arg value="${app.dump.command}"/>
+      </java>
+
+      <condition property="app.dump.message"
+         value="Performed command ${app.dump.command} using ${app.dump.connections} and ${app.dump.url}"
+         else="Cannot perform command ${app.dump.command}:${line.separator}${app.dump.log}">
+         <equals arg1="${app.dump.result}" arg2="0"/>
+      </condition>
+
+      <fail message="${app.dump.message}">
+         <condition>
+            <and>
+               <equals arg1="${app.dump.result}" arg2="0"/>
+               <isset property="app.dump.failonerror"/>
+            </and>
+         </condition>
+      </fail>
+
+      <echo message="${app.dump.message}"/>
+   </target>
+
+   <target name="app.test" depends="init" unless="app.test.skip">
+      <!-- tracker properties-->
+      <property name="tracker.url" value=""/>
+      <property name="tracker.tags" value=""/>
+      <property name="tracker.exclusions" value=""/>
+      <property name="build.release" value=""/>
+      <echo message="Using tracker ${tracker.url}"/>
+
+      <!-- base setup -->
+      <antcall target="base.unjar">
+         <param name="base.unjar.pattern" value="nexj/lib/*.jar"/>
+      </antcall>
+
+      <!-- Use ant log dir, already exists -->
+      <condition property="meta.test.log" value="${build.deploy.dir}/logs" else="${deploy.dir}">
+         <isset property="build.deploy.dir"/>
+      </condition>
+      <mkdir dir="${meta.test.log}"/>
+      <property name="meta.test.log.file" value="${meta.test.log}/unittest_${project}.txt" />
+
+      <echo file="${meta.test.log.file}" message="Meta Data unit tests for ${project}${line.separator}"/>
+      <echo message="Running metadata unit tests for project &quot;${project}&quot;."/>
+      <echo message="Log file is available at: ${meta.test.log.file}" />
+
+      <pathconvert property="bootstrap.classpath">
+         <path>
+            <filelist refid="enterprise.jar.files"/>
+            <pathelement location="${core.jar.dir}/${product}-scheme.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-server.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-ejb.jar"/>
+            <path refid="core.lib.path"/>
+            <pathelement path="${dep.jars.path}"/>
+            <pathelement location="${core.src.dir}/etc/config/tools"/>
+            <fileset dir="${project.jar.dir}/base">
+               <include name="**/*.jar"/>
+            </fileset>
+            <fileset dir="${project.lib.dir}">
+               <include name="**/*.jar"/>
+            </fileset>
+            <pathelement location="${project.class.dir}"/>
+            <fileset dir="${tomcat.lib.dir}">
+               <include name="annotations-api.jar"/>
+               <include name="catalina.jar"/>
+               <include name="el-api.jar"/>
+               <include name="jasper.jar"/>
+               <include name="jasper-el.jar"/>
+               <include name="ecj-3.3.1.jar"/>
+               <include name="jsp-api.jar"/>
+               <include name="servlet-api.jar"/>
+               <include name="tomcat-coyote.jar"/>
+               <include name="tomcat-dbcp.jar"/>
+            </fileset>
+            <fileset dir="${j2ee.management.lib.dir}" includes="javax77.jar"/>
+         </path>
+      </pathconvert>
+
+      <!-- Unit Tests to run -->
+      <property name="app.test.name" value="\\*"/>
+      <property name="app.test.mailbox.prefix03" value=""/>
+      <property name="app.test.mailbox.prefix07" value=""/>
+      <property name="app.test.mailbox.prefix10" value=""/>
+      <property name="app.test.heap" value="512M"/>
+
+      <java classname="nexj.core.container.platform.teee.BootstrapLoader" failonerror="false"
+         resultproperty="unittest.exit" output="${meta.test.log.file}" error="${meta.test.log.file}" append="true"
+         fork="true">
+         <jvmarg value="-Xmx${app.test.heap}"/>
+         <jvmarg value="-ea"/>
+         <arg value="nexj.core.tools.UnitTestTool"/>
+         <arg value="main"/>
+         <arg line="${app.test.name}"/>
+         <classpath>
+            <pathelement location="${enterprise.jar.dir}/${product}-bootstrap.jar"/>
+         </classpath>
+         <sysproperty key="java.naming.factory.initial" value="org.apache.naming.java.javaURLContextFactory"/>
+         <sysproperty key="java.naming.factory.url.pkgs" value="org.apache.naming"/>
+         <sysproperty key="log4j.appender.console" value="org.apache.log4j.ConsoleAppender"/>
+         <sysproperty key="log4j.appender.console.layout" value="org.apache.log4j.PatternLayout"/>
+         <sysproperty key="log4j.appender.console.layout.ConversionPattern" value="; %d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
+         <sysproperty key="log4j.logger.nexj.core.meta.workflow" value="INFO"/>
+         <sysproperty key="log4j.logger.nexj.core.rpc.file.ra" value="WARN"/>
+         <sysproperty key="log4j.logger.nexj.core.rpc.jms.ra" value="WARN"/>
+         <sysproperty key="log4j.logger.nexj.core.rpc.sql.ra" value="WARN"/>
+         <sysproperty key="log4j.logger.nexj.core.rpc.timer.ra" value="WARN"/>
+         <sysproperty key="log4j.logger.nexj.core.rpc.tomcat.ra" value="WARN"/>
+         <sysproperty key="log4j.logger.nexj.core.rpc.udp.ra" value="WARN"/>
+         <sysproperty key="log4j.logger.nexj.core.rpc.tcp.ra" value="WARN"/>
+         <sysproperty key="log4j.logger.nexj.core.rpc.timer" value="WARN"/>
+         <sysproperty key="log4j.logger.org.apache" value="WARN"/>
+         <sysproperty key="log4j.rootLogger" value="INFO, console"/>
+         <sysproperty key="net.sf.jasperreports.properties" value="${enterprise.src.dir}/etc/config/server/jasperreports.properties"/>
+         <sysproperty key="nexj.bootstrap.classpath" value="${bootstrap.classpath}"/>
+         <sysproperty key="nexj.bootstrap.classpath.lax" value="true"/>
+         <sysproperty key="nexj.config" value="file:${unittest.server}"/>
+         <sysproperty key="nexj.container.enabled" value="true"/>
+         <sysproperty key="nexj.container.war" value="${core.jar.dir}/nexj-web.war"/>
+         <sysproperty key="nexj.metadata.branch" value="${scc.branch}"/>
+         <sysproperty key="nexj.meta.base.url" value="${base.url}"/>
+         <sysproperty key="nexj.meta.connections.url" value="file:${unittest.connections}"/>
+         <sysproperty key="nexj.meta.url" value="file:${project.src.dir}/meta"/>
+         <sysproperty key="nexj.test.exchange.mailbox-prefix" value="${app.test.mailbox.prefix03}"/>
+         <sysproperty key="nexj.test.exchange03.mailbox-prefix" value="${app.test.mailbox.prefix03}"/>
+         <sysproperty key="nexj.test.exchange07.mailbox-prefix" value="${app.test.mailbox.prefix07}"/>
+         <sysproperty key="nexj.test.exchange10.mailbox-prefix" value="${app.test.mailbox.prefix10}"/>
+         <sysproperty key="nexj.tracker.url" value="${tracker.url}"/>
+         <sysproperty key="nexj.tracker.password" value="${tracker.password}"/>
+         <sysproperty key="nexj.tracker.user" value="${tracker.user}"/>
+         <sysproperty key="nexj.tracker.protocol" value="text"/>
+         <sysproperty key="nexj.tracker.release" value="${build.release}"/>
+         <sysproperty key="nexj.tracker.tags" value="${tracker.tags}"/>
+         <sysproperty key="nexj.tracker.exclusions" value="${tracker.exclusions}"/>
+         <sysproperty key="org.apache.juli.logging.Log" value="nexj.core.rpc.tomcat.ra.LoggerLog"/>
+         <sysproperty key="test.admin" value="nexjsa"/>
+         <sysproperty key="app.user" value="nexjsa"/>
+      </java>
+   </target>
+
+   <target name="app.validate" depends="init,app.deps,meta.jarname" description="Validates the model" unless="app.validate.skip">
+      <property name="app.validate.meta.url" value="file:${project.src.dir}/meta"/>
+      <property name="app.validate.config" value="${server}"/>
+      <property name="app.validate.connections" value="${connections}"/>
+      <property name="app.validate.heap" value="512M"/>
+      <condition property="app.validate.base.url" value="" else="file:${project.jar.dir}/base/${base.path}">
+         <or>
+            <equals arg1="${base.project}" arg2=""/>
+            <isset property="core.project"/>
+         </or>
+      </condition>
+
+      <fail message="Must set .environment file &quot;app.validate.config&quot; or .server and .connection file &quot;app.validate.config&quot; and &quot;app.validate.connections&quot;.">
+         <condition>
+            <not>
+               <or>
+                  <isset property="app.validate.config"/>
+                  <isset property="app.validate.connections"/>
+               </or>
+            </not>
+         </condition>
+      </fail>
+
+      <antcall target="base.unjar">
+         <propertyset>
+            <propertyref name="base.unjar.skip"/>
+            <mapper type="glob" from="base.unjar.skip" to="base.jar.skip"/>
+         </propertyset>
+      </antcall>
+
+      <java classname="nexj.core.tools.MetadataTool" failonerror="false"
+         outputproperty="app.validate.log" resultproperty="app.validate.result" fork="true">
+         <jvmarg value="-Xmx${app.validate.heap}"/>
+         <classpath>
+            <path refid="core.lib.path"/>
+            <filelist refid="enterprise.jar.files"/>
+            <pathelement location="${core.jar.dir}/${product}-scheme.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-server.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-jboss.jar"/>
+            <pathelement location="${project.class.dir}"/>
+            <fileset dir="${project.lib.dir}" includes="**/*.jar"/>
+            <fileset dir="${project.jar.dir}" includes="base/**/*.jar"/>
+            <pathelement path="${dep.jars.path}"/>
+         </classpath>
+         <sysproperty key="log4j.appender.console" value="org.apache.log4j.ConsoleAppender"/>
+         <sysproperty key="log4j.appender.console.layout" value="org.apache.log4j.PatternLayout"/>
+         <sysproperty key="log4j.appender.console.layout.ConversionPattern" value="; %d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
+         <sysproperty key="log4j.rootLogger" value="INFO, console"/>
+         <sysproperty key="log4j.logger.nexj.core.meta.workflow" value="INFO"/>
+         <sysproperty key="nexj.root.url" value="${app.validate.meta.url}"/>
+         <sysproperty key="nexj.base.url" value="${app.validate.base.url}"/>
+         <sysproperty key="nexj.config" value="file:${app.validate.config}"/>
+         <sysproperty key="nexj.meta.connections.url" value="file:${app.validate.connections}"/>
+         <arg value="validate"/>
+      </java>
+
+      <condition property="app.validate.message"
+         value="Validated using ${app.validate.connections}"
+         else="Failed validation:${line.separator}${app.validate.log}">
+         <equals arg1="${app.validate.result}" arg2="0"/>
+      </condition>
+
+      <fail message="${app.validate.message}">
+         <condition>
+            <not>
+               <or>
+                  <equals arg1="${app.validate.result}" arg2="0"/>
+                  <isset property="app.validate.pass"/>
+               </or>
+            </not>
+         </condition>
+      </fail>
+
+      <echo message="${app.validate.message}"/>
+   </target>
+
+   <target name="buildnum.incr" depends="init" unless="buildnum.incr.skip">
+      <mkdir dir="${project.buildnum.dir}"/>
+      <propertyfile file="${project.buildnum.dir}/build.number">
+         <entry key="build.number" type="int" pattern="#" default="0" operation="+" value="1"/>
+         <entry key="build.date" type="string" value="${build.date}"/>
+      </propertyfile>
+      <mkdir dir="${project.jar.dir}"/>
+      <jar destfile="${project.jar.dir}/${product}-ver.jar" update="true">
+         <zipfileset prefix="${product}" dir="${project.buildnum.dir}" includes="build.number"/>
+      </jar>
+   </target>
+   
+   <target name="enterprise.jnlp"/>
+
+   <target name="app.ear" depends="init,core.jar,app.jar" description="Builds the application deployment package">
+      <mkdir dir="${project.jar.dir}/jnlp/win32-x86"/>
+      <mkdir dir="${project.jar.dir}/jnlp/win32-x64"/>
+      <mkdir dir="${project.jar.dir}/jnlp/linux-x86"/>
+      <antcall target="enterprise.jnlp" inheritrefs="true"/>
+      <copy file="${project.jar.dir}/${product}-web-0.war" tofile="${project.jar.dir}/${product}-web.war" preservelastmodified="true"/>
+      <copy file="${project.jar.dir}/${product}-web-cert-0.war" tofile="${project.jar.dir}/${product}-web-cert.war" preservelastmodified="true"/>
+      <copy file="${project.jar.dir}/${product}-web-anon-0.war" tofile="${project.jar.dir}/${product}-web-anon.war" preservelastmodified="true"/>
+      <copy file="${project.jar.dir}/${product}-web-form-0.war" tofile="${project.jar.dir}/${product}-web-form.war" preservelastmodified="true"/>
+      <war destfile="${project.jar.dir}/${product}-web.war"
+         webxml="${project.jar.dir}/etc/META-INF/web.xml"
+         manifest="${project.jar.dir}/etc/META-INF/core.mf"
+         update="true">
+         <webinf dir="${project.jar.dir}/etc/META-INF" includes="${web.descriptors}"/>
+         <zipfileset prefix="jnlp" dir="${project.jar.dir}/jnlp">
+            <include name="**/*.jar" unless="skip.jnlp.jar"/>
+         </zipfileset>
+      </war>
+      <war destfile="${project.jar.dir}/${product}-web-cert.war"
+         webxml="${project.jar.dir}/etc/META-INF/cert/web.xml"
+         manifest="${project.jar.dir}/etc/META-INF/core.mf"
+         update="true">
+         <webinf dir="${project.jar.dir}/etc/META-INF/cert" includes="${web.cert.descriptors}"/>
+         <webinf dir="${project.jar.dir}/etc/META-INF" includes="${web.descriptors}" excludes="${web.cert.descriptors},portlet*.xml"/>
+      </war>
+      <war destfile="${project.jar.dir}/${product}-web-anon.war"
+         webxml="${project.jar.dir}/etc/META-INF/anon/web.xml"
+         manifest="${project.jar.dir}/etc/META-INF/core.mf"
+         update="true">
+         <webinf dir="${project.jar.dir}/etc/META-INF/anon" includes="${web.anon.descriptors}"/>
+         <webinf dir="${project.jar.dir}/etc/META-INF" includes="${web.descriptors}" excludes="${web.anon.descriptors},portlet*.xml"/>
+      </war>
+      <war destfile="${project.jar.dir}/${product}-web-form.war"
+         webxml="${project.jar.dir}/etc/META-INF/form/web.xml"
+         manifest="${project.jar.dir}/etc/META-INF/core.mf"
+         update="true">
+         <webinf dir="${project.jar.dir}/etc/META-INF/form" includes="${web.form.descriptors}"/>
+         <webinf dir="${project.jar.dir}/etc/META-INF" includes="${web.descriptors}" excludes="${web.form.descriptors},portlet*.xml"/>
+      </war>
+      <uptodate property="buildnum.incr.skip" targetfile="${project.jar.dir}/${product}-ver.jar">
+         <srcfiles dir="${core.src.dir}/etc/META-INF" includes="${app.descriptors}"/>
+         <srcfiles dir="${xerces.lib.dir}" includes="xercesImpl.jar,xml-apis.jar"/>
+         <srcfiles dir="${xalan.lib.dir}" includes="xalan.jar,serializer.jar"/>
+         <srcfiles dir="${core.jar.dir}" includes="${product}-scheme.jar"/>
+         <srcfiles dir="${core.jar.dir}" includes="${product}-server.jar"/>
+         <srcfiles dir="${core.jar.dir}" includes="${product}-boot.jar"/>
+         <srcfiles dir="${enterprise.metainf.dir}" includes="${app.descriptors}"/>
+         <srcresources>
+            <resources refid="enterprise.lib.files"/>
+         </srcresources>
+         <srcfiles dir="${enterprise.jar.dir}" includes="${product}-enterprise.jar"/>
+         <srcfiles dir="${project.jar.dir}" includes="${product}-pool.rar"/>
+         <srcfiles dir="${project.jar.dir}" includes="${product}-jms.rar"/>
+         <srcfiles dir="${project.jar.dir}" includes="${product}-timer.rar"/>
+         <srcfiles dir="${project.jar.dir}" includes="${product}-file.rar"/>
+         <srcfiles dir="${project.jar.dir}" includes="${product}-mail.rar"/>
+         <srcfiles dir="${project.jar.dir}" includes="${product}-sql.rar"/>
+         <srcfiles dir="${project.jar.dir}" includes="${product}-tcp.rar"/>
+         <srcfiles dir="${project.jar.dir}" includes="${product}-queueing.rar"/>
+         <srcfiles dir="${project.jar.dir}" includes="${product}-tomcat.rar"/>
+         <srcfiles dir="${project.jar.dir}" includes="${product}-ejb.jar"/>
+         <srcfiles dir="${project.jar.dir}" includes="${product}-web.war"/>
+         <srcfiles dir="${project.jar.dir}" includes="${product}-web-cert.war"/>
+         <srcfiles dir="${project.jar.dir}" includes="${product}-web-anon.war"/>
+         <srcfiles dir="${project.jar.dir}" includes="${product}-web-form.war"/>
+         <srcfiles dir="${project.jar.dir}" includes="${product}-env.jar"/>
+         <srcfiles dir="${project.jar.dir}" includes="${meta.jar.name}"/>
+         <srcfiles dir="${project.lib.dir}"/>
+         <srcfiles dir="${base.lib.dir}"/>
+      </uptodate>
+      <mkdir dir="${project.jar.dir}/mixins"/>
+      <copy todir="${project.jar.dir}/mixins" flatten="true">
+         <path>
+            <pathelement path="${mixin.jars}"/>
+         </path>
+      </copy>
+      <antcall target="buildnum.incr" inheritrefs="true"/>
+      <ear destfile="${project.jar.dir}/${product}-${env.name}.ear" appxml="${project.jar.dir}/etc/META-INF/application.xml">
+         <metainf dir="${core.src.dir}/etc/META-INF" includes="${app.descriptors}"/>
+         <metainf dir="${enterprise.metainf.dir}" includes="${app.descriptors}"/>
+         <metainf dir="${project.jar.dir}/etc/META-INF" includes="${app.descriptors}"/>
+         <fileset dir="${xerces.lib.dir}" includes="xercesImpl.jar"/>
+         <fileset dir="${xalan.lib.dir}" includes="xalan.jar,serializer.jar"/>
+         <path refid="enterprise.lib.files"/>
+         <fileset dir="${core.jar.dir}" includes="${product}-scheme.jar"/>
+         <fileset dir="${core.jar.dir}" includes="${product}-server.jar"/>
+         <fileset dir="${enterprise.jar.dir}" includes="${product}-enterprise.jar"/>
+         <fileset dir="${enterprise.jar.dir}" includes="${product}-deployment.jar"/>
+         <fileset dir="${project.jar.dir}" includes="${product}-pool.rar"/>
+         <fileset dir="${project.jar.dir}" includes="${product}-jms.rar"/>
+         <fileset dir="${project.jar.dir}" includes="${product}-timer.rar"/>
+         <fileset dir="${project.jar.dir}" includes="${product}-file.rar"/>
+         <fileset dir="${project.jar.dir}" includes="${product}-mail.rar"/>
+         <fileset dir="${project.jar.dir}" includes="${product}-sql.rar"/>
+         <fileset dir="${project.jar.dir}" includes="${product}-tcp.rar"/>
+         <fileset dir="${project.jar.dir}" includes="${product}-queueing.rar"/>
+         <fileset dir="${project.jar.dir}" includes="${product}-ejb.jar"/>
+         <fileset dir="${project.jar.dir}" includes="${product}-web.war"/>
+         <fileset dir="${project.jar.dir}" includes="${product}-web-cert.war"/>
+         <fileset dir="${project.jar.dir}" includes="${product}-web-anon.war"/>
+         <fileset dir="${project.jar.dir}" includes="${product}-web-form.war"/>
+         <fileset dir="${project.jar.dir}" includes="${product}-env.jar"/>
+         <fileset dir="${project.jar.dir}" includes="${meta.jar.name}"/>
+         <fileset dir="${project.jar.dir}" includes="${product}-ver.jar"/>
+         <fileset dir="${project.lib.dir}"/>
+         <fileset dir="${base.lib.dir}"/>
+         <fileset dir="${project.jar.dir}/mixins"/>
+      </ear>
+   </target>
+
+   <target name="enterprise.clean"/>
+
+   <target name="clean" depends="init.3rd,init.plugin,init.dir,enterprise.clean" description="Deletes all the build results">
+      <delete dir="${class.dir}"/>
+      <delete dir="${deploy.dir}"/>
+   </target>
+
+   <target name="jboss.config" depends="app.jar">
+      <echo message="Configuring ${server.location}"/>
+      <java classname="nexj.core.tools.SetupTool" failonerror="true">
+         <classpath>
+            <path refid="core.lib.path"/>
+            <filelist refid="enterprise.jar.files"/>
+            <pathelement location="${core.jar.dir}/${product}-scheme.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-server.jar"/>
+            <pathelement location="${core.src.dir}/etc/config/tools"/>
+            <pathelement path="${project.class.dir}"/>
+            <pathelement path="${dep.jars.path}"/>
+            <path refid="project.lib.path"/>
+         </classpath>
+         <sysproperty key="nexj.config" value="/nexj/default.config"/>
+         <sysproperty key="root.url" file="${project.meta.dir}"/>
+         <sysproperty key="base.url" value="${base.url}"/>
+         <sysproperty key="cfg.url" file="${server}"/>
+         <sysproperty key="con.url" file="${connections}"/>
+         <sysproperty key="src.dir" value="${core.jar.dir}"/>
+         <sysproperty key="bus.name" value="${bus.name}"/>
+         <syspropertyset>
+            <propertyref prefix="cipher."/>
+            <mapper type="glob" from="cipher.*" to="nexj.cipher.*"/>
+         </syspropertyset>
+         <syspropertyset>
+            <propertyref prefix="installer.cmd."/>
+         </syspropertyset>
+         <sysproperty key="nexj.dynamic" value="${server.dynamic}"/>
+         <syspropertyset>
+            <propertyref prefix="server.meta."/>
+            <mapper type="glob" from="server.meta.*" to="nexj.meta.*"/>
+         </syspropertyset>
+         <arg value="install"/>
+      </java>
+   </target>
+
+   <target name="jboss.deploy" depends="app.ear" unless="jboss.skip">
+      <echo message="Deploying to ${server.location}"/>
+      <java classname="nexj.core.tools.SetupTool" failonerror="true">
+         <classpath>
+            <path refid="core.lib.path"/>
+            <filelist refid="enterprise.jar.files"/>
+            <pathelement location="${core.jar.dir}/${product}-scheme.jar"/>
+            <pathelement location="${core.jar.dir}/${product}-server.jar"/>
+            <pathelement location="${core.src.dir}/etc/config/tools"/>
+            <pathelement path="${project.class.dir}"/>
+            <pathelement path="${dep.jars.path}"/>
+            <path refid="project.lib.path"/>
+         </classpath>
+         <sysproperty key="nexj.config" value="/nexj/default.config"/>
+         <sysproperty key="root.url" file="${project.meta.dir}"/>
+         <sysproperty key="base.url" value="${base.url}"/>
+         <sysproperty key="cfg.url" file="${server}"/>
+         <sysproperty key="con.url" file="${connections}"/>
+         <sysproperty key="src.dir" value="${core.jar.dir}"/>
+         <sysproperty key="ear.file" file="${project.jar.dir}/${product}-${env.name}.ear"/>
+         <syspropertyset>
+            <propertyref prefix="cipher."/>
+            <mapper type="glob" from="cipher.*" to="nexj.cipher.*"/>
+         </syspropertyset>
+         <syspropertyset>
+            <propertyref prefix="installer.cmd."/>
+         </syspropertyset>
+         <sysproperty key="nexj.dynamic" value="${server.dynamic}"/>
+         <syspropertyset>
+            <propertyref prefix="server.meta."/>
+            <mapper type="glob" from="server.meta.*" to="nexj.meta.*"/>
+         </syspropertyset>
+         <arg value="deploy"/>
+      </java>
+   </target>
+
+   <target name="jboss.start" depends="init" description="Starts JBoss">
+      <java classname="org.jboss.Main" fork="true" failonerror="true" maxmemory="${jboss.memory}">
+         <classpath>
+            <pathelement location="${java.home}/lib/tools.jar"/>
+            <pathelement location="${jboss.home}/bin/run.jar"/>
+         </classpath>
+         <env key="JBOSS_HOME" value="${jboss.home}"/>
+         <jvmarg value="${jvm.type}"/>
+         <jvmarg value="-XX:MaxPermSize=128M"/>
+         <jvmarg value="-Xss1024k"/>
+         <sysproperty key="program.name" value="jboss.start"/>
+         <arg value="-c${jboss.config}"/>
+      </java>
+   </target>
+
+   <target name="jboss.debug" depends="init" description="Starts JBoss in debug mode">
+      <java classname="org.jboss.Main" fork="true" failonerror="true" maxmemory="${jboss.memory}">
+         <classpath>
+            <pathelement location="${java.home}/lib/tools.jar"/>
+            <pathelement location="${jboss.home}/bin/run.jar"/>
+         </classpath>
+         <env key="JBOSS_HOME" file="${jboss.home}"/>
+         <jvmarg value="${jvm.type}"/>
+         <jvmarg value="-XX:MaxPermSize=128M"/>
+         <jvmarg value="-Xss1024k"/>
+         <jvmarg value="-ea"/>
+         <jvmarg value="-Xdebug"/>
+         <jvmarg value="-Xnoagent"/>
+         <jvmarg value="-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y"/>
+         <sysproperty key="program.name" value="jboss.start"/>
+         <sysproperty key="java.compiler" value="NONE"/>
+         <arg value="-c${jboss.config}"/>
+      </java>
+   </target>
+
+   <target name="jboss.stop" depends="init" description="Stops JBoss">
+      <java classname="org.jboss.Shutdown" fork="true" failonerror="false" maxmemory="${jboss.memory}">
+         <classpath>
+            <pathelement location="${jboss.home}/bin/shutdown.jar"/>
+            <pathelement location="${jboss.home}/client/jbossall-client.jar"/>
+            <pathelement location="${jboss.home}/client/jnet.jar"/>
+         </classpath>
+         <env key="JBOSS_HOME" value="${jboss.home}"/>
+         <sysproperty key="jboss.boot.loader.name" value="jboss.stop"/>
+         <arg value="-S"/>
+         <arg value="-u"/>
+         <arg value="${server.user}"/>
+         <arg value="-p"/>
+         <arg value="${server.password}"/>
+      </java>
+   </target>
+
+   <target name="server.location" depends="init">
+      <fail message="No location specified in &quot;${server}&quot;" unless="server.location"/>
+   </target>
+
+   <target name="server.config" depends="init,server.location,app.jar" description="Configures the server resources">
+      <antcall target="${platform}.config" inheritrefs="true"/>
+   </target>
+
+   <target name="server.deploy" depends="init,server.location,app.ear" description="Builds the application and deploys it to the server">
+      <antcall target="${platform}.deploy" inheritrefs="true"/>
+   </target>
+
+   <target name="anttask.path" depends="init,core.jar,enterprise.jar">
+      <path id="build.lib.path">
+         <pathelement location="${enterprise.jar.dir}/${product}-build.jar"/>
+         <pathelement location="${enterprise.jar.dir}/${product}-enterprise.jar"/>
+         <pathelement location="${core.jar.dir}/${product}-build.jar"/>
+         <pathelement location="${core.jar.dir}/${product}-scheme.jar"/>
+         <pathelement location="${core.jar.dir}/${product}-server.jar"/>
+         <pathelement location="${log4j.lib.dir}/log4j-${log4j.version}.jar"/>
+         <pathelement location="${xalan.lib.dir}/xalan.jar"/>
+         <pathelement location="${xerces.lib.dir}/xercesImpl.jar"/>
+         <pathelement location="${core.src.dir}/etc/config/tools"/>
+      </path>
+   </target>
+
+   <target name="anttask.init" depends="anttask.path" unless="anttask.initialized">
+      <taskdef name="foreach" classname="nexj.core.build.ForEach" classpathref="build.lib.path"/>
+      <taskdef name="projectjarname" classname="nexj.core.build.ProjectJarName" classpathref="build.lib.path"/>
+      <taskdef name="shellwriter" classname="nexj.core.build.ShellWriter" classpathref="build.lib.path"/>
+      <typedef name="dependstate" classname="nexj.core.build.DependState" classpathref="build.lib.path"/>
+      <taskdef name="if" classname="nexj.core.build.If" classpathref="build.lib.path"/>
+      <property name="anttask.initialized" value="true"/>
+   </target>
+
+   <target name="core.test.jar" depends="init,core.jar">
+      <mkdir dir="${core.class.dir}/test"/>
+      <javac debug="true" optimize="true" source="1.4" target="1.5"
+         destdir="${core.class.dir}/test"
+         srcdir="${core.src.dir}/test"
+         bootclasspathref="boot.lib.path" includeAntRuntime="true">
+         <classpath>
+            <path refid="core.lib.path"/>
+            <pathelement location="${core.class.dir}"/>
+            <pathelement location="${junit.lib.dir}/junit.jar"/>
+         </classpath>
+         <exclude name="**/platform/jboss/**" if="jboss.skip"/>
+         <exclude name="**/platform/websphere/**" if="websphere.skip"/>
+         <exclude name="**/micro/**"/>
+      </javac>
+      <jar destfile="${deploy.dir}/core/${product}-test.jar" index="true">
+         <fileset dir="${core.class.dir}/test" includes="**/**"/>
+         <fileset dir="${core.src.dir}/src" includes="**/**" excludes="**/*.java"/>
+         <fileset dir="${core.src.dir}/test" includes="**/**" excludes="**/*.java"/>
+      </jar>
+   </target>
+
+   <target name="core.test" depends="init,core.test.jar" unless="core.test.skip">
+      <condition property="test.log.dir" value="${build.deploy.dir}/junit">
+         <isset property="build.deploy.dir"/>
+      </condition>
+      <property name="core.test.haltonerror" value="false"/>
+      <property name="test.log.dir" location="${deploy.dir}/junit"/>
+      <mkdir dir="${test.log.dir}"/>
+
+      <property name="core.test.name" value="nexj.core.AllTests"/>
+
+      <junit printsummary="true" filtertrace="false" maxmemory="512M" 
+         fork="yes" forkmode="once" outputtoformatters="false">
+         <jvmarg value="-Xms512M"/>
+         <jvmarg value="-XX:MaxPermSize=128M"/>
+         <assertions/>
+         <classpath>
+            <path refid="core.lib.path"/>
+            <pathelement location="${junit.lib.dir}/junit.jar"/>
+            <pathelement location="${deploy.dir}/core/${product}-test.jar"/>
+            <pathelement location="${deploy.dir}/core/${product}-build.jar"/>
+            <pathelement location="${deploy.dir}/core/${product}-scheme.jar"/>
+            <pathelement location="${deploy.dir}/core/${product}-server.jar"/>
+         </classpath>
+         <syspropertyset>
+            <propertyref prefix="test.sysproperty."/>
+            <mapper type="glob" from="test.sysproperty.*" to="*"/>
+         </syspropertyset>
+         <test name="${core.test.name}" haltonfailure="${core.test.haltonerror}" filtertrace="false" todir="${test.log.dir}" outfile="core.junit.result" failureproperty="core.test.fail">
+            <formatter type="xml"/>
+         </test>
+      </junit>
+
+      <condition property="build.status" value="core.test.failed">
+         <isset property="core.test.fail"/>
+      </condition>
+      <antcall target="build.notify">
+         <param name="notify.wiki.colour" value="#FF5353"/>
+      </antcall>
+
+      <fail message="Core JUnit tests have failed. See above output for details.">
+         <condition>
+            <and>
+               <isset property="core.test.fail"/>
+               <not><istrue value="${core.test.pass}"/></not>
+            </and>
+         </condition>
+      </fail>
+   </target>
+
+   <target name="build.notify" />
+
+   <target name="REPL.script" depends="app.jar,anttask.init"
+      description="Creates a script for running the NexJ Scheme console">
+      <property name="nexj.app.user" value="nexjsa"/>
+      <shellwriter classname="nexj.core.tools.REPL" dest="${deploy.dir}/REPL">
+         <classpath>
+            <path>
+               <path refid="core.lib.path"/>
+               <filelist refid="enterprise.jar.files"/>
+               <pathelement location="${core.jar.dir}/${product}-scheme.jar"/>
+               <pathelement location="${core.jar.dir}/${product}-server.jar"/>
+               <pathelement path="${project.class.dir}"/>
+               <pathelement path="${dep.jars.path}"/>
+               <path refid="project.lib.path"/>
+            </path>
+         </classpath>
+         <jvmarg value="-Xmx256M"/>
+         <sysproperty key="nexj.meta.base.url" value="${base.url}"/>
+         <sysproperty key="nexj.meta.connections.url" value="file:${connections}"/>
+         <sysproperty key="nexj.app.user" value="${nexj.app.user}"/>
+         <sysproperty key="nexj.meta.url" value="file:${project.meta.dir}"/>
+         <sysproperty key="nexj.config" value="file:${server}"/>
+         <sysproperty key="log4j.appender.console" value="org.apache.log4j.ConsoleAppender"/>
+         <sysproperty key="log4j.appender.console.layout" value="org.apache.log4j.PatternLayout"/>
+         <sysproperty key="log4j.appender.console.layout.ConversionPattern" value="; %d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
+         <sysproperty key="log4j.rootLogger" value="INFO, console"/>
+         <sysproperty key="net.sf.jasperreports.properties" value="${enterprise.src.dir}/etc/config/server/jasperreports.properties"/>
+         <arg value="$*"/>
+      </shellwriter>
+   </target>
+
+   <target name="src.scheme.zip" depends="init" description="Builds a Zip archive with the NexJ Scheme source code">
+      <delete dir="${deploy.dir}/${product}-src-scheme" quiet="true"/>
+      <mkdir dir="${deploy.dir}/${product}-src-scheme"/>
+      <copy todir="${deploy.dir}/${product}-src-scheme" overwrite="true">
+         <fileset dir="${core.src.dir}" includes="${scheme.classes}" excludes="bin/**,test/**"/>
+         <fileset dir="${core.src.dir}" includes="src/nexj/core/meta/sys/scheme.scm"/>
+         <fileset dir="${core.src.dir}/build/etc/scheme" includes="**/*.xml,**/*.txt"/>
+         <fileset dir="${core.src.dir}/etc/legal"/>
+      </copy>
+      <zip destfile="${deploy.dir}/${product}-src-scheme.zip">
+         <zipfileset dir="${deploy.dir}/${product}-src-scheme"/>
+      </zip>
+   </target>
+</project>

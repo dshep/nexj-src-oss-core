@@ -1,0 +1,20 @@
+<Class description="A sync target to be used for testing purposes" visibility="public">
+   <Attributes>
+      <Attribute name="logger" required="true" type="string"/>
+      <Attribute name="level" required="true" type="string"/>
+      <Attribute name="code" required="true" type="string"/>
+      <Attribute name="argCount" required="true" type="integer"/>
+      <Attribute name="hasException" required="true" type="boolean"/>
+   </Attributes>
+   <PersistenceMapping dataSource="DefaultRelationalDatabase">
+      <RelationalMapping keyGenerator="KeyGenerator.GUIDGen" primaryTable="test.TestLogMessage">
+         <AttributeMappings>
+            <AttributeMapping column="logger" name="logger"/>
+            <AttributeMapping column="argCount" name="argCount"/>
+            <AttributeMapping column="code" name="code"/>
+            <AttributeMapping column="hasException" name="hasException"/>
+            <AttributeMapping column="level" name="level"/>
+         </AttributeMappings>
+      </RelationalMapping>
+   </PersistenceMapping>
+</Class>

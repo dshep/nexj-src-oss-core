@@ -1,0 +1,51 @@
+<Class aspects="!LOCKING" base="SysMessage">
+   <Attributes>
+      <Attribute name="classCode" required="true" type="string" value="&quot;EQMSG&quot;"/>
+   </Attributes>
+   <Events>
+      <Event name="receive">
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(let ((queue (SysQueue'getQueue (@ body queue))))
+   (for-each-page SysMessage '(state) 
+      `(and 
+         (= (@ queue) ,queue) 
+         (= (@ state)
+            ,(if (queue'receiveEnabled) 
+               (SysMessageState'get'BLOCKED)
+               (SysMessageState'get'WAITING)
+            )
+         )
+      )
+      '() '() (SysObjectQueueDispatcher'DISPATCH_BATCH_SIZE) #f
+      (lambda (page)
+         (begin-privileged
+            (for-each
+               (lambda (msg)
+                  (SysObjectQueueDispatcher'releaseSemaphores msg)
+               )
+               page
+            )
+         )
+         (pre-commit)
+      )
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+      <Event args="queue" description="Creates an instance of SysResubmitMessage  that when received will repost msgs to queue." name="createSetEnabled" static="true">
+         <Arguments>
+            <Argument description="the queue to which to send msgs" name="queue" type="SysObjectQueue"/>
+         </Arguments>
+         <Result description="an instance of SysEnableQueueMessage." type="SysEnableQueueMessage"/>
+         <Actions>
+            <Action name="main" type="main"><![CDATA[(SysEnableQueueMessage'new (: name (string-append "Enable/Disable SysObjectQueue " (queue'name)))
+   (: body
+      (message
+         (: queue (queue'name))
+      )
+   )
+)]]></Action>
+         </Actions>
+      </Event>
+   </Events>
+</Class>
